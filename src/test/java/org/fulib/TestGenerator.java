@@ -2,6 +2,7 @@ package org.fulib;
 
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class TestGenerator
@@ -18,5 +19,9 @@ public class TestGenerator
       Clazz studi = model.createClasses().withName("Student");
 
       Generator.generate(model);
+
+      int returnCode = Javac.compile(model);
+
+      Assert.assertEquals("compiler return code: ", 0, returnCode);
    }
 }
