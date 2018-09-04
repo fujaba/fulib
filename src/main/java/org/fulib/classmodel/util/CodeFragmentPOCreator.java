@@ -16,7 +16,5 @@ public class CodeFragmentPOCreator extends PatternObjectCreator
       }
    }
    
-   public static IdMap createIdMap(String sessionID) {
-      return org.fulib.classmodel.util.CreatorCreator.createIdMap(sessionID);
-   }
+
 }

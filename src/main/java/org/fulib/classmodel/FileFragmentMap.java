@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import de.uniks.networkparser.EntityUtil;
+import org.fulib.Parser;
 
 public  class FileFragmentMap implements SendableEntity
 {
@@ -170,14 +171,22 @@ public  class FileFragmentMap implements SendableEntity
 
       if (result != null)
       {
-         result.withText(newText);
+         result.withText(newText.trim());
 
          return result;
       }
 
       result = new CodeFragment().withKey(key).withText(newText);
 
-      this.add(result);
+      if (key.startsWith(Parser.ATTRIBUTE) || key.startsWith(Parser.METHOD))
+      {
+         add(result, Parser.CLASS_END);
+      }
+      else
+      {
+         this.add(result);
+      }
+
 
       CodeFragment gap = new CodeFragment().withKey("gap:");
 
@@ -189,9 +198,25 @@ public  class FileFragmentMap implements SendableEntity
 
       gap.withText(text);
 
-      add(gap);
+      add(gap, Parser.CLASS_END);
 
       return result;
+   }
+
+   private void add(CodeFragment result, String posKey)
+   {
+      CodeFragment classEnd = codeMap.get(posKey);
+      int pos = fragmentList.indexOf(classEnd);
+      if (pos == -1)
+      {
+         fragmentList.add(result);
+      }
+      else
+      {
+         fragmentList.add(pos, result);
+      }
+
+      codeMap.put(result.getKey(), result);
    }
 
    public void add(CodeFragment fragment)

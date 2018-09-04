@@ -61,10 +61,6 @@ public class ClazzSet extends SimpleSet<Clazz>
    public static final ClazzSet EMPTY_SET = new ClazzSet().withFlag(ClazzSet.READONLY);
 
 
-   public ClazzPO createClazzPO()
-   {
-      return new ClazzPO(this.toArray(new Clazz[this.size()]));
-   }
 
 
    public String getEntryType()
@@ -413,4 +409,10 @@ public class ClazzSet extends SimpleSet<Clazz>
       return this;
    }
 
+
+
+   public ClazzPO createClazzPO()
+   {
+      return new ClazzPO(this.toArray(new Clazz[this.size()]));
+   }
 }

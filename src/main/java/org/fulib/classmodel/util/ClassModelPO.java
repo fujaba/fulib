@@ -44,6 +44,67 @@ public class ClassModelPO extends PatternObject<ClassModelPO, ClassModel>
    {
       this.setModifier(modifier);
    }
+   public ClassModelPO createMainJavaDirCondition(String value)
+   {
+      new AttributeConstraint()
+      .withAttrName(ClassModel.PROPERTY_MAINJAVADIR)
+      .withTgtValue(value)
+      .withSrc(this)
+      .withModifier(this.getPattern().getModifier())
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public ClassModelPO createMainJavaDirCondition(String lower, String upper)
+   {
+      new AttributeConstraint()
+      .withAttrName(ClassModel.PROPERTY_MAINJAVADIR)
+      .withTgtValue(lower)
+      .withUpperTgtValue(upper)
+      .withSrc(this)
+      .withModifier(this.getPattern().getModifier())
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public ClassModelPO createMainJavaDirAssignment(String value)
+   {
+      new AttributeConstraint()
+      .withAttrName(ClassModel.PROPERTY_MAINJAVADIR)
+      .withTgtValue(value)
+      .withSrc(this)
+      .withModifier(Pattern.CREATE)
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public String getMainJavaDir()
+   {
+      if (this.getPattern().getHasMatch())
+      {
+         return ((ClassModel) getCurrentMatch()).getMainJavaDir();
+      }
+      return null;
+   }
+   
+   public ClassModelPO withMainJavaDir(String value)
+   {
+      if (this.getPattern().getHasMatch())
+      {
+         ((ClassModel) getCurrentMatch()).setMainJavaDir(value);
+      }
+      return this;
+   }
+   
    public ClassModelPO createPackageNameCondition(String value)
    {
       new AttributeConstraint()
@@ -105,6 +166,67 @@ public class ClassModelPO extends PatternObject<ClassModelPO, ClassModel>
       return this;
    }
    
+   public ClassModelPO createTestJavaDirCondition(String value)
+   {
+      new AttributeConstraint()
+      .withAttrName(ClassModel.PROPERTY_TESTJAVADIR)
+      .withTgtValue(value)
+      .withSrc(this)
+      .withModifier(this.getPattern().getModifier())
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public ClassModelPO createTestJavaDirCondition(String lower, String upper)
+   {
+      new AttributeConstraint()
+      .withAttrName(ClassModel.PROPERTY_TESTJAVADIR)
+      .withTgtValue(lower)
+      .withUpperTgtValue(upper)
+      .withSrc(this)
+      .withModifier(this.getPattern().getModifier())
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public ClassModelPO createTestJavaDirAssignment(String value)
+   {
+      new AttributeConstraint()
+      .withAttrName(ClassModel.PROPERTY_TESTJAVADIR)
+      .withTgtValue(value)
+      .withSrc(this)
+      .withModifier(Pattern.CREATE)
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public String getTestJavaDir()
+   {
+      if (this.getPattern().getHasMatch())
+      {
+         return ((ClassModel) getCurrentMatch()).getTestJavaDir();
+      }
+      return null;
+   }
+   
+   public ClassModelPO withTestJavaDir(String value)
+   {
+      if (this.getPattern().getHasMatch())
+      {
+         ((ClassModel) getCurrentMatch()).setTestJavaDir(value);
+      }
+      return this;
+   }
+   
    public ClazzPO createClassesPO()
    {
       ClazzPO result = new ClazzPO(new Clazz[]{});
@@ -144,65 +266,4 @@ public class ClassModelPO extends PatternObject<ClassModelPO, ClassModel>
       return null;
    }
 
-   public ClassModelPO createCodeDirCondition(String value)
-   {
-      new AttributeConstraint()
-      .withAttrName(ClassModel.PROPERTY_CODEDIR)
-      .withTgtValue(value)
-      .withSrc(this)
-      .withModifier(this.getPattern().getModifier())
-      .withPattern(this.getPattern());
-      
-      super.filterAttr();
-      
-      return this;
-   }
-   
-   public ClassModelPO createCodeDirCondition(String lower, String upper)
-   {
-      new AttributeConstraint()
-      .withAttrName(ClassModel.PROPERTY_CODEDIR)
-      .withTgtValue(lower)
-      .withUpperTgtValue(upper)
-      .withSrc(this)
-      .withModifier(this.getPattern().getModifier())
-      .withPattern(this.getPattern());
-      
-      super.filterAttr();
-      
-      return this;
-   }
-   
-   public ClassModelPO createCodeDirAssignment(String value)
-   {
-      new AttributeConstraint()
-      .withAttrName(ClassModel.PROPERTY_CODEDIR)
-      .withTgtValue(value)
-      .withSrc(this)
-      .withModifier(Pattern.CREATE)
-      .withPattern(this.getPattern());
-      
-      super.filterAttr();
-      
-      return this;
-   }
-   
-   public String getCodeDir()
-   {
-      if (this.getPattern().getHasMatch())
-      {
-         return ((ClassModel) getCurrentMatch()).getCodeDir();
-      }
-      return null;
-   }
-   
-   public ClassModelPO withCodeDir(String value)
-   {
-      if (this.getPattern().getHasMatch())
-      {
-         ((ClassModel) getCurrentMatch()).setCodeDir(value);
-      }
-      return this;
-   }
-   
 }

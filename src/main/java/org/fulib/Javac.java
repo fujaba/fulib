@@ -2,26 +2,29 @@ package org.fulib;
 
 import org.fulib.classmodel.ClassModel;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.logging.Logger;
 
 public class Javac
 {
-   public static int compile(ClassModel model)
+   public static int compile(String mainFiles)
    {
-      return new Javac().doCompile(model);
+      return new Javac().doCompile(mainFiles);
    }
 
-   private int doCompile(ClassModel model)
+   private int doCompile(String mainFiles)
    {
+      String classPath = System.getProperty("java.class.path");
+
       ProcessBuilder javac = new ProcessBuilder()
+            .redirectErrorStream(true)
             .command(
                   "javac",
-                  "-version")
-            .redirectErrorStream(true);
+                  "-classpath", classPath,
+                  "-d", "out",
+                  mainFiles);
 
       try
       {
@@ -55,4 +58,5 @@ public class Javac
 
       return 23;
    }
+
 }

@@ -48,6 +48,8 @@ public class Parser
 
    public static final String METHOD = "method";
 
+   public static final String METHOD_END = "methodEnd";
+
    public static final String IMPORT = "import";
 
    public static final String CLASS_BODY = "classBody";
@@ -55,8 +57,6 @@ public class Parser
    public static final String CLASS_END = "classEnd";
 
    public static final String NAME_TOKEN = "nameToken";
-
-   public static final String METHOD_END = "methodEnd";
 
    public static final String LAST_RETURN_POS = "lastReturnPos";
 
@@ -155,15 +155,15 @@ public class Parser
    private String classModifier;
 
 
-   public static FileFragmentMap parse(Clazz clazz)
+   public static FileFragmentMap parse(String fileName)
    {
       return new Parser()
-            .doParse(clazz);
+            .doParse(fileName);
    }
 
-   public FileFragmentMap  doParse(Clazz clazz)
+   public FileFragmentMap  doParse(String fileName)
    {
-      loadFile(clazz);
+      loadFile(fileName);
 
       if (fileBody != null)
       {
@@ -173,13 +173,9 @@ public class Parser
       return fragmentMap;
    }
 
-   private void loadFile(Clazz clazz)
+   private void loadFile(String fileName)
    {
       // load file
-      String fileName = clazz.getModel().getCodeDir() +
-            "/" + clazz.getModel().getPackageName().replaceAll("\\.", "/") +
-            "/" + clazz.getName() + ".java";
-
       fragmentMap = new FileFragmentMap(fileName);
 
       Path path = Paths.get(fileName);
@@ -618,43 +614,17 @@ public class Parser
 
             endOfAttributeInitialization = previousRealToken.startPos;
 
+            addCodeFragment(ATTRIBUTE + ":" + memberName, startPos, currentRealToken.endPos);
+
             skip(";");
 
-            symTab.put(ATTRIBUTE + ":" + memberName,
-                  new SymTabEntry()
-                        .withMemberName(memberName)
-                        .withKind(ATTRIBUTE)
-                        .withType(type)
-                        .withStartPos(startPos)
-                        .withEndPos(previousRealToken.startPos)
-                        .withModifiers(modifiers)
-                        .withPreCommentStartPos(preCommentStartPos)
-                        .withPreCommentEndPos(preCommentEndPos)
-                        .withAnnotationsStartPos(annotationsStartPos)
-
-            );
-
-            checkSearchStringFound(ATTRIBUTE + ":" + memberName, startPos);
-         } else if (currentRealKindEquals(';') && !",".equals(memberName))
+         }
+         else if (currentRealKindEquals(';') && !",".equals(memberName))
          {
             // field declaration
-            checkSearchStringFound(NAME_TOKEN + ":" + searchString, startPos);
+            addCodeFragment(ATTRIBUTE + ":" + memberName, startPos, currentRealToken.endPos);
+
             skip(";");
-
-            symTab.put(ATTRIBUTE + ":" + memberName,
-                  new SymTabEntry()
-                        .withMemberName(memberName)
-                        .withKind(ATTRIBUTE)
-                        .withType(type)
-                        .withStartPos(startPos)
-                        .withEndPos(previousRealToken.startPos)
-                        .withModifiers(modifiers)
-                        .withPreCommentStartPos(preCommentStartPos)
-                        .withPreCommentEndPos(preCommentEndPos)
-                        .withAnnotationsStartPos(annotationsStartPos)
-            );
-
-            checkSearchStringFound(ATTRIBUTE + ":" + memberName, startPos);
          }
          else if (currentRealKindEquals('('))
          {
@@ -684,28 +654,12 @@ public class Parser
             }
 
             else if (currentRealKindEquals(';'))
+            {
                skip(';');
+            }
 
             String methodSignature = org.sdmlib.codegen.Parser.METHOD + ":" + memberName + params;
-            symTab.put(methodSignature,
-                  new SymTabEntry()
-                        .withMemberName(methodSignature)
-                        .withKind(METHOD)
-                        .withThrowsTags(throwsTags)
-                        //FIXME STEFAN RETURN
-                        .withType(methodSignature + ":" + type)
-                        .withStartPos(startPos)
-                        .withEndPos(previousRealToken.startPos)
-                        .withBodyStartPos(methodBodyStartPos)
-                        .withAnnotations(annotations)
-                        .withModifiers(modifiers)
-                        .withPreCommentStartPos(preCommentStartPos)
-                        .withPreCommentEndPos(preCommentEndPos)
-                        .withAnnotationsStartPos(annotationsStartPos)
-            );
-
-            checkSearchStringFound(methodSignature, startPos);
-            // System.out.println(className + " :  " + methodSignature);
+            addCodeFragment(methodSignature, startPos, previousRealToken.endPos);
          }
          else if (ENUM.equals(classType))
          {

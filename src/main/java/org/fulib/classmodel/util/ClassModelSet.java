@@ -23,12 +23,13 @@ package org.fulib.classmodel.util;
 
 import de.uniks.networkparser.list.SimpleSet;
 import org.fulib.classmodel.ClassModel;
-import de.uniks.networkparser.interfaces.Condition;
+
 import java.util.Collection;
 import de.uniks.networkparser.list.ObjectSet;
 import java.util.Collections;
-import org.fulib.classmodel.util.ClazzSet;
+
 import org.fulib.classmodel.Clazz;
+import org.fulib.classmodel.util.ClazzSet;
 
 public class ClassModelSet extends SimpleSet<ClassModel>
 {
@@ -56,11 +57,6 @@ public class ClassModelSet extends SimpleSet<ClassModel>
 
    public static final ClassModelSet EMPTY_SET = new ClassModelSet().withFlag(ClassModelSet.READONLY);
 
-
-   public ClassModelPO createClassModelPO()
-   {
-      return new ClassModelPO(this.toArray(new ClassModel[this.size()]));
-   }
 
 
    public String getEntryType()
@@ -266,17 +262,17 @@ public class ClassModelSet extends SimpleSet<ClassModel>
 
 
    /**
-    * Loop through the current set of ClassModel objects and collect a list of the codeDir attribute values. 
+    * Loop through the current set of ClassModel objects and collect a list of the mainJavaDir attribute values. 
     * 
-    * @return List of String objects reachable via codeDir attribute
+    * @return List of String objects reachable via mainJavaDir attribute
     */
-   public ObjectSet getCodeDir()
+   public ObjectSet getMainJavaDir()
    {
       ObjectSet result = new ObjectSet();
       
       for (ClassModel obj : this)
       {
-         result.add(obj.getCodeDir());
+         result.add(obj.getMainJavaDir());
       }
       
       return result;
@@ -284,19 +280,19 @@ public class ClassModelSet extends SimpleSet<ClassModel>
 
 
    /**
-    * Loop through the current set of ClassModel objects and collect those ClassModel objects where the codeDir attribute matches the parameter value. 
+    * Loop through the current set of ClassModel objects and collect those ClassModel objects where the mainJavaDir attribute matches the parameter value. 
     * 
     * @param value Search value
     * 
     * @return Subset of ClassModel objects that match the parameter
     */
-   public ClassModelSet createCodeDirCondition(String value)
+   public ClassModelSet createMainJavaDirCondition(String value)
    {
       ClassModelSet result = new ClassModelSet();
       
       for (ClassModel obj : this)
       {
-         if (value.equals(obj.getCodeDir()))
+         if (value.equals(obj.getMainJavaDir()))
          {
             result.add(obj);
          }
@@ -307,20 +303,20 @@ public class ClassModelSet extends SimpleSet<ClassModel>
 
 
    /**
-    * Loop through the current set of ClassModel objects and collect those ClassModel objects where the codeDir attribute is between lower and upper. 
+    * Loop through the current set of ClassModel objects and collect those ClassModel objects where the mainJavaDir attribute is between lower and upper. 
     * 
     * @param lower Lower bound 
     * @param upper Upper bound 
     * 
     * @return Subset of ClassModel objects that match the parameter
     */
-   public ClassModelSet createCodeDirCondition(String lower, String upper)
+   public ClassModelSet createMainJavaDirCondition(String lower, String upper)
    {
       ClassModelSet result = new ClassModelSet();
       
       for (ClassModel obj : this)
       {
-         if (lower.compareTo(obj.getCodeDir()) <= 0 && obj.getCodeDir().compareTo(upper) <= 0)
+         if (lower.compareTo(obj.getMainJavaDir()) <= 0 && obj.getMainJavaDir().compareTo(upper) <= 0)
          {
             result.add(obj);
          }
@@ -331,20 +327,109 @@ public class ClassModelSet extends SimpleSet<ClassModel>
 
 
    /**
-    * Loop through the current set of ClassModel objects and assign value to the codeDir attribute of each of it. 
+    * Loop through the current set of ClassModel objects and assign value to the mainJavaDir attribute of each of it. 
     * 
     * @param value New attribute value
     * 
     * @return Current set of ClassModel objects now with new attribute values.
     */
-   public ClassModelSet withCodeDir(String value)
+   public ClassModelSet withMainJavaDir(String value)
    {
       for (ClassModel obj : this)
       {
-         obj.setCodeDir(value);
+         obj.setMainJavaDir(value);
       }
       
       return this;
    }
 
+
+   /**
+    * Loop through the current set of ClassModel objects and collect a list of the testJavaDir attribute values. 
+    * 
+    * @return List of String objects reachable via testJavaDir attribute
+    */
+   public ObjectSet getTestJavaDir()
+   {
+      ObjectSet result = new ObjectSet();
+      
+      for (ClassModel obj : this)
+      {
+         result.add(obj.getTestJavaDir());
+      }
+      
+      return result;
+   }
+
+
+   /**
+    * Loop through the current set of ClassModel objects and collect those ClassModel objects where the testJavaDir attribute matches the parameter value. 
+    * 
+    * @param value Search value
+    * 
+    * @return Subset of ClassModel objects that match the parameter
+    */
+   public ClassModelSet createTestJavaDirCondition(String value)
+   {
+      ClassModelSet result = new ClassModelSet();
+      
+      for (ClassModel obj : this)
+      {
+         if (value.equals(obj.getTestJavaDir()))
+         {
+            result.add(obj);
+         }
+      }
+      
+      return result;
+   }
+
+
+   /**
+    * Loop through the current set of ClassModel objects and collect those ClassModel objects where the testJavaDir attribute is between lower and upper. 
+    * 
+    * @param lower Lower bound 
+    * @param upper Upper bound 
+    * 
+    * @return Subset of ClassModel objects that match the parameter
+    */
+   public ClassModelSet createTestJavaDirCondition(String lower, String upper)
+   {
+      ClassModelSet result = new ClassModelSet();
+      
+      for (ClassModel obj : this)
+      {
+         if (lower.compareTo(obj.getTestJavaDir()) <= 0 && obj.getTestJavaDir().compareTo(upper) <= 0)
+         {
+            result.add(obj);
+         }
+      }
+      
+      return result;
+   }
+
+
+   /**
+    * Loop through the current set of ClassModel objects and assign value to the testJavaDir attribute of each of it. 
+    * 
+    * @param value New attribute value
+    * 
+    * @return Current set of ClassModel objects now with new attribute values.
+    */
+   public ClassModelSet withTestJavaDir(String value)
+   {
+      for (ClassModel obj : this)
+      {
+         obj.setTestJavaDir(value);
+      }
+      
+      return this;
+   }
+
+
+
+   public ClassModelPO createClassModelPO()
+   {
+      return new ClassModelPO(this.toArray(new ClassModel[this.size()]));
+   }
 }

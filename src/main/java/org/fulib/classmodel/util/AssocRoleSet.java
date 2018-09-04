@@ -58,12 +58,6 @@ public class AssocRoleSet extends SimpleSet<AssocRole>
    public static final AssocRoleSet EMPTY_SET = new AssocRoleSet().withFlag(AssocRoleSet.READONLY);
 
 
-   public AssocRolePO createAssocRolePO()
-   {
-      return new AssocRolePO(this.toArray(new AssocRole[this.size()]));
-   }
-
-
    public String getEntryType()
    {
       return "org.fulib.classmodel.AssocRole";
@@ -429,4 +423,10 @@ public class AssocRoleSet extends SimpleSet<AssocRole>
       return this;
    }
 
+
+
+   public AssocRolePO createAssocRolePO()
+   {
+      return new AssocRolePO(this.toArray(new AssocRole[this.size()]));
+   }
 }

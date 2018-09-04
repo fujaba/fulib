@@ -30,8 +30,6 @@ import org.fulib.classmodel.Clazz;
 
 public  class ClassModel implements SendableEntity
 {
-
-   
    //==========================================================================
    
    protected PropertyChangeSupport listeners = null;
@@ -121,7 +119,9 @@ public  class ClassModel implements SendableEntity
       StringBuilder result = new StringBuilder();
       
       result.append(" ").append(this.getPackageName());
-      result.append(" ").append(this.getCodeDir());
+      result.append(" ").append(getMainJavaDir());
+      result.append(" ").append(this.getMainJavaDir());
+      result.append(" ").append(this.getTestJavaDir());
       return result.substring(1);
    }
 
@@ -203,26 +203,67 @@ public  class ClassModel implements SendableEntity
    
    public static final String PROPERTY_CODEDIR = "codeDir";
    
-   private String codeDir;
+   //==========================================================================
+   
+   public static final String PROPERTY_MAINJAVADIR = "mainJavaDir";
+   
+   private String mainJavaDir = "src/main/java";
 
-   public String getCodeDir()
+   public String getMainJavaDir()
    {
-      return this.codeDir;
+      return this.mainJavaDir;
    }
    
-   public void setCodeDir(String value)
+   public void setMainJavaDir(String value)
    {
-      if ( ! EntityUtil.stringEquals(this.codeDir, value)) {
+      if ( ! EntityUtil.stringEquals(this.mainJavaDir, value)) {
       
-         String oldValue = this.codeDir;
-         this.codeDir = value;
-         this.firePropertyChange(PROPERTY_CODEDIR, oldValue, value);
+         String oldValue = this.mainJavaDir;
+         this.mainJavaDir = value;
+         this.firePropertyChange(PROPERTY_MAINJAVADIR, oldValue, value);
       }
    }
    
-   public ClassModel withCodeDir(String value)
+   public ClassModel withSrcFolder(String value)
    {
-      setCodeDir(value);
+      setMainJavaDir(value);
+      return this;
+   }
+
+   public String getPackageSrcFolder()
+   {
+      return this.getMainJavaDir() + "/" + this.getPackageName().replaceAll("\\.", "/");
+   }
+
+   public String getTestPackageDirName()
+   {
+      return this.getTestJavaDir() + "/" + this.getPackageName().replaceAll("\\.", "/");
+   }
+   
+   //==========================================================================
+   
+   public static final String PROPERTY_TESTJAVADIR = "testJavaDir";
+   
+   private String testJavaDir = "src/test/java";
+
+   public String getTestJavaDir()
+   {
+      return this.testJavaDir;
+   }
+   
+   public void setTestJavaDir(String value)
+   {
+      if ( ! EntityUtil.stringEquals(this.testJavaDir, value)) {
+      
+         String oldValue = this.testJavaDir;
+         this.testJavaDir = value;
+         this.firePropertyChange(PROPERTY_TESTJAVADIR, oldValue, value);
+      }
+   }
+   
+   public ClassModel withTestJavaDir(String value)
+   {
+      setTestJavaDir(value);
       return this;
    } 
 }

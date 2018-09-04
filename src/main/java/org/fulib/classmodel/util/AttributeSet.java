@@ -56,10 +56,6 @@ public class AttributeSet extends SimpleSet<Attribute>
    public static final AttributeSet EMPTY_SET = new AttributeSet().withFlag(AttributeSet.READONLY);
 
 
-   public AttributePO createAttributePO()
-   {
-      return new AttributePO(this.toArray(new Attribute[this.size()]));
-   }
 
 
    public String getEntryType()
@@ -414,4 +410,10 @@ public class AttributeSet extends SimpleSet<Attribute>
       return this;
    }
 
+
+
+   public AttributePO createAttributePO()
+   {
+      return new AttributePO(this.toArray(new Attribute[this.size()]));
+   }
 }

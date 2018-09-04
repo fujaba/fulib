@@ -9,6 +9,15 @@ package org.fulib.test.studyright;
 public class University
 {
    // important content
-}
+   
+   private int foundedIn = 2042;
 
-// fare well
+   public int getFoundedIn()
+   {
+      return foundedIn;
+   }
+
+   private String name;
+
+
+}

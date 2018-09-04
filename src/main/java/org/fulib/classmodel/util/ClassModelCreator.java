@@ -23,7 +23,6 @@ package org.fulib.classmodel.util;
 
 import de.uniks.networkparser.interfaces.AggregatedEntityCreator;
 import org.fulib.classmodel.ClassModel;
-import de.uniks.networkparser.list.ObjectSet;
 import de.uniks.networkparser.interfaces.SendableEntityCreator;
 import de.uniks.networkparser.IdMap;
 import org.fulib.classmodel.Clazz;
@@ -36,7 +35,8 @@ public class ClassModelCreator implements AggregatedEntityCreator
    {
       ClassModel.PROPERTY_PACKAGENAME,
       ClassModel.PROPERTY_CLASSES,
-      ClassModel.PROPERTY_CODEDIR,
+      ClassModel.PROPERTY_MAINJAVADIR,
+      ClassModel.PROPERTY_TESTJAVADIR,
    };
    
    private final String[] upProperties = new String[]
@@ -93,9 +93,14 @@ public class ClassModelCreator implements AggregatedEntityCreator
          return ((ClassModel) target).getClasses();
       }
 
-      if (ClassModel.PROPERTY_CODEDIR.equalsIgnoreCase(attribute))
+      if (ClassModel.PROPERTY_MAINJAVADIR.equalsIgnoreCase(attribute))
       {
-         return ((ClassModel) target).getCodeDir();
+         return ((ClassModel) target).getMainJavaDir();
+      }
+
+      if (ClassModel.PROPERTY_TESTJAVADIR.equalsIgnoreCase(attribute))
+      {
+         return ((ClassModel) target).getTestJavaDir();
       }
       
       return null;
@@ -104,9 +109,15 @@ public class ClassModelCreator implements AggregatedEntityCreator
    @Override
    public boolean setValue(Object target, String attrName, Object value, String type)
    {
-      if (ClassModel.PROPERTY_CODEDIR.equalsIgnoreCase(attrName))
+      if (ClassModel.PROPERTY_TESTJAVADIR.equalsIgnoreCase(attrName))
       {
-         ((ClassModel) target).setCodeDir((String) value);
+         ((ClassModel) target).setTestJavaDir((String) value);
+         return true;
+      }
+
+      if (ClassModel.PROPERTY_MAINJAVADIR.equalsIgnoreCase(attrName))
+      {
+         ((ClassModel) target).setMainJavaDir((String) value);
          return true;
       }
 
@@ -139,11 +150,7 @@ public class ClassModelCreator implements AggregatedEntityCreator
       
       return false;
    }
-   public static IdMap createIdMap(String sessionID)
-   {
-      return org.fulib.classmodel.util.CreatorCreator.createIdMap(sessionID);
-   }
-   
+
    //==========================================================================
       public void removeObject(Object entity)
    {

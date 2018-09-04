@@ -15,10 +15,10 @@ class CreatorCreator{
       jsonIdMap.with(new ClassModelPOCreator());
       jsonIdMap.with(new ClazzCreator());
       jsonIdMap.with(new ClazzPOCreator());
-      jsonIdMap.with(new FileFragmentMapCreator());
-      jsonIdMap.with(new FileFragmentMapPOCreator());
       jsonIdMap.with(new CodeFragmentCreator());
       jsonIdMap.with(new CodeFragmentPOCreator());
+      jsonIdMap.with(new FileFragmentMapCreator());
+      jsonIdMap.with(new FileFragmentMapPOCreator());
       return jsonIdMap;
    }
 }
