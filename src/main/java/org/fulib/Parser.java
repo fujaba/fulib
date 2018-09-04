@@ -142,16 +142,6 @@ public class Parser
 
    private int methodBodyStartPos;
 
-   private int endOfAttributeInitialization;
-
-   private int endOfImplementsClause;
-
-   private int endOfClassName;
-
-   private int endOfExtendsClause;
-
-   private int endOfImports;
-
    private String classModifier;
 
 
@@ -194,64 +184,6 @@ public class Parser
    }
 
 
-   public int getEndOfImports()
-   {
-      return endOfImports;
-   }
-
-   public int getEndOfExtendsClause()
-   {
-      return endOfExtendsClause;
-   }
-
-   public int getEndOfClassName()
-   {
-      return endOfClassName;
-   }
-
-   public int getEndOfImplementsClause()
-   {
-      return endOfImplementsClause;
-   }
-
-   public int getEndOfAttributeInitialization()
-   {
-      return endOfAttributeInitialization;
-   }
-
-   public int getMethodBodyStartPos()
-   {
-      return methodBodyStartPos;
-   }
-
-   public int insert(int offset, String text)
-   {
-      if (this.fileBody == null)
-      {
-         this.fileBody = new StringBuilder(text);
-      }
-      else
-      {
-         this.fileBody.insert(offset, text);
-      }
-      this.fileBodyHasChanged = true;
-      return offset + text.length();
-   }
-
-   public int search(String searchText, int pos)
-   {
-      return this.fileBody.indexOf(searchText, pos);
-   }
-
-   public int search(String searchText)
-   {
-      return this.fileBody.indexOf(searchText);
-   }
-
-   public String getClassName()
-   {
-      return className;
-   }
 
    class SearchStringFoundException extends RuntimeException
    {
@@ -357,10 +289,6 @@ public class Parser
          parseImport();
       }
 
-      endOfImports = previousRealToken.endPos;
-
-      addCodeFragment(IMPORT, endOfImports+1, endOfImports+1);
-
       parseClassDecl();
    }
 
@@ -398,7 +326,6 @@ public class Parser
       // class or interface or enum
       String classTyp = parseClassType();
       className = currentRealWord();
-      endOfClassName = currentRealToken.endPos;
 
       // skip name
       nextRealToken();
@@ -415,7 +342,6 @@ public class Parser
          // skip superclass name
          parseTypeRef();
 
-         endOfExtendsClause = previousRealToken.endPos;
       }
 
       // implements
@@ -435,9 +361,6 @@ public class Parser
                nextRealToken();
             }
          }
-
-         endOfImplementsClause = previousRealToken.endPos;
-
       }
 
       addCodeFragment("class", startPosClazz, currentRealToken.endPos);
@@ -611,8 +534,6 @@ public class Parser
             skip("=");
 
             parseExpression();
-
-            endOfAttributeInitialization = previousRealToken.startPos;
 
             addCodeFragment(ATTRIBUTE + ":" + memberName, startPos, currentRealToken.endPos);
 
@@ -2267,41 +2188,5 @@ public class Parser
       return lineString + posString;
    }
 
-   public void insertImport(String className)
-   {
-      if(className == null || className.indexOf(".")<0) {
-         return;
-      }
-      int genericType = className.indexOf("<");
-      String[] strings;
-      if (genericType > 0)
-      {
-         // Try to rekursiv add
-         insertImport(className.substring(genericType+1, className.lastIndexOf(">")));
-         String preType = className.substring(0, genericType);
-         strings = preType.split(",");
-      } else {
-         strings = className.split(",");
-      }
-      int pos = indexOf(org.sdmlib.codegen.Parser.IMPORT);
-      String prefix = "";
-      if (search(org.sdmlib.codegen.Parser.IMPORT, pos) < 0)
-      {
-         prefix = "\n";
-      }
-      for (String string : strings) {
-         if (EntityUtil.isPrimitiveType(string) )
-         {
-            continue;
-         }
-         while(string.endsWith(".")) {
-            string = string.substring(0, string.length() - 1);
-         }
-         SymTabEntry symTabEntry = getSymTab().get(org.sdmlib.codegen.Parser.IMPORT + ":" + string);
-         if (symTabEntry == null)
-         {
-            insert(getEndOfImports() + 1, prefix + "\nimport " + string + ";");
-         }
-      }
-   }
+
 }
