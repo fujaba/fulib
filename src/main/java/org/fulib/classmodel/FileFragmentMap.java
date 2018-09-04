@@ -177,17 +177,42 @@ public  class FileFragmentMap implements SendableEntity
       }
 
       result = new CodeFragment().withKey(key).withText(newText);
+      CodeFragment gap = getNewLineGapFragment(newLines);
 
       if (key.startsWith(Parser.ATTRIBUTE) || key.startsWith(Parser.METHOD))
       {
          add(result, Parser.CLASS_END);
+
+         add(gap, Parser.CLASS_END);
+
+         return result;
       }
-      else
+
+      if (key.startsWith(Parser.IMPORT))
       {
-         this.add(result);
+         CodeFragment oldFragment = codeMap.get(Parser.CLASS);
+         int pos = fragmentList.indexOf(oldFragment);
+
+         // go to the gap before this
+         pos--;
+
+         fragmentList.add(pos, gap);
+         pos++;
+         fragmentList.add(pos, gap);
+         pos++;
+         fragmentList.add(pos, result);
+
+         return result;
       }
 
+      add(result);
+      add(gap, Parser.CLASS_END);
 
+      return result;
+   }
+
+   private CodeFragment getNewLineGapFragment(int newLines)
+   {
       CodeFragment gap = new CodeFragment().withKey("gap:");
 
       String text = "";
@@ -197,16 +222,13 @@ public  class FileFragmentMap implements SendableEntity
       }
 
       gap.withText(text);
-
-      add(gap, Parser.CLASS_END);
-
-      return result;
+      return gap;
    }
 
    private void add(CodeFragment result, String posKey)
    {
-      CodeFragment classEnd = codeMap.get(posKey);
-      int pos = fragmentList.indexOf(classEnd);
+      CodeFragment oldFragment = codeMap.get(posKey);
+      int pos = fragmentList.indexOf(oldFragment);
       if (pos == -1)
       {
          fragmentList.add(result);

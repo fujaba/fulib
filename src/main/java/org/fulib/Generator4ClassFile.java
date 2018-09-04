@@ -13,13 +13,12 @@ public class Generator4ClassFile
       FileFragmentMap fragmentMap = Parser.parse(classFileName);
 
       // doGenerate code for class
-      String result = String.format("package %s;", clazz.getModel().getPackageName());
-      fragmentMap.add(Parser.PACKAGE, result, 2);
+      generatePackageDecl(clazz, fragmentMap);
 
-      result = String.format("public class %s\n{", clazz.getName());
-      fragmentMap.add(Parser.CLASS, result, 2);
+      generateClassDecl(clazz, fragmentMap);
 
-      // doGenerate code for attributes
+      generatePropertyChangeSupport(clazz, fragmentMap);
+
       generateAttributes(clazz, fragmentMap);
 
       // doGenerate code for association
@@ -27,6 +26,36 @@ public class Generator4ClassFile
       fragmentMap.add(Parser.CLASS_END, "}", 1);
 
       fragmentMap.writeFile();
+   }
+
+
+   private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      String result = String.format("package %s;", clazz.getModel().getPackageName());
+      fragmentMap.add(Parser.PACKAGE, result, 2);
+   }
+
+
+   private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      String result = String.format("public class %s\n{", clazz.getName());
+      fragmentMap.add(Parser.CLASS, result, 2);
+   }
+
+
+   private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      fragmentMap.add(Parser.IMPORT + ":java.beans.PropertyChangeSupport", "import java.beans.PropertyChangeSupport;", 1);
+
+      STGroup group = new STGroupDir("templates");
+      group.registerRenderer(String.class, new StringRenderer());
+
+      String result = "   protected PropertyChangeSupport listeners = null;";
+      fragmentMap.add(Parser.ATTRIBUTE + ":listeners", result, 2);
+
+      ST st = group.getInstanceOf("firePropertyChange");
+      result = st.render();
+      fragmentMap.add(Parser.METHOD + ":firePropertyChange(String,Object,Object)", result, 2);
    }
 
 

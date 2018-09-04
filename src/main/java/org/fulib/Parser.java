@@ -359,7 +359,7 @@ public class Parser
 
       endOfImports = previousRealToken.endPos;
 
-      addCodeFragment(IMPORT, startPos, endOfImports);
+      addCodeFragment(IMPORT, endOfImports+1, endOfImports+1);
 
       parseClassDecl();
    }
@@ -985,12 +985,7 @@ public class Parser
 
       skip(";");
 
-      symTab.put(IMPORT + ":" + importName,
-            new SymTabEntry().withMemberName(importName)
-                  .withModifiers(modifier)
-                  .withStartPos(startPos)
-                  .withEndPos(previousRealToken.endPos));
-
+      addCodeFragment(IMPORT + ":" + importName, startPos, previousRealToken.endPos);
    }
 
    private void parsePackageDecl()
