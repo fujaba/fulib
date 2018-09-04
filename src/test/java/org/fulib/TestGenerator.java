@@ -24,6 +24,7 @@ public class TestGenerator
 
       Clazz studi = model.createClasses().withName("Student");
       studi.createAttributes().withName("name").withType("String").withInitialization("\"Karli\"");
+      studi.createAttributes().withName("matrNo").withType("long").withInitialization("0");
 
       deleteFile(studi);
 

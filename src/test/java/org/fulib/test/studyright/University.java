@@ -4,7 +4,7 @@
 package org.fulib.test.studyright;
 
 import java.lang.reflect.*;
-
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 /**
@@ -30,7 +30,12 @@ public class University
 
    public University setName(String value)
    {
-      this.name = value;
+      if ((value == null && this.name == null) || value.equals(this.name))
+      {
+         String oldValue = this.name;
+         this.name = value;
+         firePropertyChange("name", oldValue, value);
+      }
       return this;
    }
    
@@ -44,6 +49,44 @@ public class University
          return true;
       }
       return false;
+   }
+
+   public boolean addPropertyChangeListener(PropertyChangeListener listener)
+   {
+      if (listeners == null)
+      {
+         listeners = new PropertyChangeSupport(this);
+      }
+      listeners.addPropertyChangeListener(listener);
+      return true;
+   }
+
+   public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+   {
+      if (listeners == null)
+      {
+         listeners = new PropertyChangeSupport(this);
+      }
+      listeners.addPropertyChangeListener(propertyName, listener);
+      return true;
+   }
+
+   public boolean removePropertyChangeListener(PropertyChangeListener listener)
+   {
+      if (listeners != null)
+      {
+         listeners.removePropertyChangeListener(listener);
+      }
+      return true;
+   }
+
+   public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
+   {
+      if (listeners != null)
+      {
+         listeners.removePropertyChangeListener(propertyName, listener);
+      }
+      return true;
    }
 
 }

@@ -1,0 +1,22 @@
+
+attrSet(class, name, type, useEquals) ::=
+<<
+   public <class> set<name; format="cap">(<type> value)
+   {
+      if (<condition(name, type, useEquals)>)
+      {
+         <type> oldValue = this.<name>;
+         this.<name> = value;
+         firePropertyChange("<name>", oldValue, value);
+      }
+      return this;
+   }
+>>
+
+condition(name, type, useEquals) ::=
+<%
+<if(useEquals)>(value == null && this.<name> == null) || value.equals(this.<name>)
+<else>
+value == this.<name>
+<endif>
+%>

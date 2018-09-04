@@ -17,11 +17,11 @@ public class Generator4ClassFile
 
       generateClassDecl(clazz, fragmentMap);
 
-      generatePropertyChangeSupport(clazz, fragmentMap);
-
       generateAttributes(clazz, fragmentMap);
 
       // doGenerate code for association
+
+      generatePropertyChangeSupport(clazz, fragmentMap);
 
       fragmentMap.add(Parser.CLASS_END, "}", 1);
 
@@ -46,6 +46,7 @@ public class Generator4ClassFile
    private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap)
    {
       fragmentMap.add(Parser.IMPORT + ":java.beans.PropertyChangeSupport", "import java.beans.PropertyChangeSupport;", 1);
+      fragmentMap.add(Parser.IMPORT + ":java.beans.PropertyChangeListener", "import java.beans.PropertyChangeListener;", 1);
 
       STGroup group = new STGroupDir("templates");
       group.registerRenderer(String.class, new StringRenderer());
@@ -56,6 +57,22 @@ public class Generator4ClassFile
       ST st = group.getInstanceOf("firePropertyChange");
       result = st.render();
       fragmentMap.add(Parser.METHOD + ":firePropertyChange(String,Object,Object)", result, 2);
+
+      st = group.getInstanceOf("addPropertyChangeListener1");
+      result = st.render();
+      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(PropertyChangeListener)", result, 2);
+
+      st = group.getInstanceOf("addPropertyChangeListener2");
+      result = st.render();
+      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", result, 2);
+
+      st = group.getInstanceOf("removePropertyChangeListener1");
+      result = st.render();
+      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(PropertyChangeListener)", result, 2);
+
+      st = group.getInstanceOf("removePropertyChangeListener2");
+      result = st.render();
+      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(String,PropertyChangeListener)", result, 2);
    }
 
 
@@ -102,12 +119,13 @@ public class Generator4ClassFile
 
    private void generateSetMethod(FileFragmentMap fragmentMap, Attribute attr)
    {
-      STGroup group = new STGroupDir("templates");
+      STGroup group = new STGroupFile("templates/attrSet.stg");
       group.registerRenderer(String.class, new StringRenderer());
       ST attrTemplate = group.getInstanceOf("attrSet");
       attrTemplate.add("class", attr.getClazz().getName());
       attrTemplate.add("type", attr.getType());
       attrTemplate.add("name", attr.getName());
+      attrTemplate.add("useEquals", attr.getType().equals("String"));
       String result = attrTemplate.render();
 
       fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() +")", result, 2);

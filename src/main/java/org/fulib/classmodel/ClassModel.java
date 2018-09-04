@@ -24,6 +24,8 @@ package org.fulib.classmodel;
 import de.uniks.networkparser.interfaces.SendableEntity;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
+
 import de.uniks.networkparser.EntityUtil;
 import org.fulib.classmodel.util.ClazzSet;
 import org.fulib.classmodel.Clazz;
@@ -42,36 +44,38 @@ public  class ClassModel implements SendableEntity
    	}
    	return false;
    }
-   
-   public boolean addPropertyChangeListener(PropertyChangeListener listener) 
+
+   public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {
-   	if (listeners == null) {
-   		listeners = new PropertyChangeSupport(this);
-   	}
-   	listeners.addPropertyChangeListener(listener);
-   	return true;
+      if (listeners == null) {
+         listeners = new PropertyChangeSupport(this);
+      }
+      listeners.addPropertyChangeListener(listener);
+      return true;
    }
-   
-   public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-   	if (listeners == null) {
-   		listeners = new PropertyChangeSupport(this);
-   	}
-   	listeners.addPropertyChangeListener(propertyName, listener);
-   	return true;
+
+   public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+   {
+      if (listeners == null)
+      {
+         listeners = new PropertyChangeSupport(this);
+      }
+      listeners.addPropertyChangeListener(propertyName, listener);
+      return true;
    }
-   
+
    public boolean removePropertyChangeListener(PropertyChangeListener listener) {
-   	if (listeners != null) {
-   		listeners.removePropertyChangeListener(listener);
-   	}
-   	return true;
+      if (listeners != null) {
+         listeners.removePropertyChangeListener(listener);
+      }
+      return true;
    }
 
    public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener) {
-   	if (listeners != null) {
-   		listeners.removePropertyChangeListener(propertyName, listener);
-   	}
-   	return true;
+      if (listeners != null) {
+         listeners.removePropertyChangeListener(propertyName, listener);
+      }
+      return true;
    }
 
    
@@ -98,6 +102,7 @@ public  class ClassModel implements SendableEntity
    
    public void setPackageName(String value)
    {
+      Objects.equals(this.packageName, value);
       if ( ! EntityUtil.stringEquals(this.packageName, value)) {
       
          String oldValue = this.packageName;
