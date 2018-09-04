@@ -19,5 +19,15 @@ public class University
 
    private String name;
 
+   public String getName()
+   {
+      return name;
+   }
+
+   public University setName(String value)
+   {
+      this.name = value;
+      return this;
+   }
 
 }

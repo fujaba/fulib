@@ -10,5 +10,11 @@ public class Student
       return name;
    }
 
+   public Student setName(String value)
+   {
+      this.name = value;
+      return this;
+   }
+
 
 }
