@@ -29,5 +29,5 @@ public class University
       this.name = value;
       return this;
    }
-
+   
 }

@@ -81,7 +81,7 @@ public class Generator4ClassFile
       attrTemplate.add("name", attr.getName());
       String result = attrTemplate.render();
 
-      fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "()", result, 2);
+      fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() +")", result, 2);
 
    }
 

@@ -266,4 +266,13 @@ public  class ClassModel implements SendableEntity
       setTestJavaDir(value);
       return this;
    } 
+
+   
+   //==========================================================================
+   
+   public ClassModel withMainJavaDir(String value)
+   {
+      setMainJavaDir(value);
+      return this;
+   } 
 }
