@@ -1,5 +1,7 @@
 package org.fulib;
 
+import org.fulib.builder.ClassBuilder;
+import org.fulib.builder.ClassModelBuilder;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.junit.Assert;
@@ -12,13 +14,12 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Objects;
+
 
 public class TestGenerator
 {
@@ -145,6 +146,37 @@ public class TestGenerator
       Assert.assertEquals("event new value", "StudyFuture", evt.getNewValue());
 
       
+   }
+   
+   
+   
+   @Test
+   public void testGeneratorWithBuilder()
+   {
+
+      ClassModelBuilder mb = ClassModelBuilder.get("org.fulib.test.studyright","src/test/java");
+      
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name","String");
+      
+      ClassBuilder studi = mb.buildClass( "Student")
+         .buildAttribute("name","String","\"Karli\"")
+         .buildAttribute("matrNo","long","0");
+
+
+      deleteFile(studi.getClazz());
+
+      Generator.generate(mb.getClassModel());
+      
+      String uniFileName = mb.getClassModel().getPackageSrcFolder() + "/University.java";
+      Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
+
+      // Generator4CodeGenTests.generate(model);
+
+      int returnCode = Javac.compile(mb.getClassModel().getPackageSrcFolder() + "/*.java");
+      Assert.assertEquals("compiler return code: ", 0, returnCode);
+
+      // run self test
+
    }
 
    private void deleteFile(Clazz clazz)
