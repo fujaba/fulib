@@ -1,4 +1,13 @@
 
+
+attrGet(name, type) ::= <<
+   public <type> get<name; format="cap">()
+   {
+      return <name>;
+   }
+>>
+
+
 attrSet(class, name, type, useEquals) ::=
 <<
    public <class> set<name; format="cap">(<type> value)
@@ -13,9 +22,10 @@ attrSet(class, name, type, useEquals) ::=
    }
 >>
 
+
 condition(name, type, useEquals) ::=
 <%
-<if(useEquals)>(value == null && this.<name> == null) || value.equals(this.<name>)
+<if(useEquals)>(value == null && this.<name> != null) || ! value.equals(this.<name>)
 <else>
 value == this.<name>
 <endif>

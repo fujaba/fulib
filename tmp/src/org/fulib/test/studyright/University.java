@@ -1,25 +1,25 @@
-
 // MIT license
 
 package org.fulib.test.studyright;
 
-import java.lang.reflect.*;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+
+import java.beans.PropertyChangeListener;
 
 /**
  * Important class
  */
 public class University
 {
-   // important content
-   
-   private int foundedIn = 2042;
+    private int foundedYear = 2042;
 
-   public int getFoundedIn()
-   {
-      return foundedIn;
-   }
+    // old comment
+
+    public int getAge()
+    {
+        return 42;
+    }
+
 
    private String name;
 
@@ -30,7 +30,7 @@ public class University
 
    public University setName(String value)
    {
-      if ((value == null && this.name == null) || value.equals(this.name))
+      if ((value == null && this.name != null) || ! value.equals(this.name))
       {
          String oldValue = this.name;
          this.name = value;
@@ -38,7 +38,7 @@ public class University
       }
       return this;
    }
-   
+
    protected PropertyChangeSupport listeners = null;
 
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
@@ -90,3 +90,5 @@ public class University
    }
 
 }
+
+// post comment

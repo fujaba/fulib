@@ -106,7 +106,7 @@ public class Generator4ClassFile
 
    private void generateGetMethod(FileFragmentMap fragmentMap, Attribute attr)
    {
-      STGroup group = new STGroupDir("templates");
+      STGroup group = new STGroupFile("templates/attributes.stg");
       group.registerRenderer(String.class, new StringRenderer());
       ST attrTemplate = group.getInstanceOf("attrGet");
       attrTemplate.add("type", attr.getType());
@@ -119,7 +119,7 @@ public class Generator4ClassFile
 
    private void generateSetMethod(FileFragmentMap fragmentMap, Attribute attr)
    {
-      STGroup group = new STGroupFile("templates/attrSet.stg");
+      STGroup group = new STGroupFile("templates/attributes.stg");
       group.registerRenderer(String.class, new StringRenderer());
       ST attrTemplate = group.getInstanceOf("attrSet");
       attrTemplate.add("class", attr.getClazz().getName());
