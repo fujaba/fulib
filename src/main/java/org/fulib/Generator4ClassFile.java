@@ -1,9 +1,12 @@
 package org.fulib;
 
+import org.fulib.builder.ClassModelBuilder;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.Clazz;
 import org.fulib.classmodel.FileFragmentMap;
 import org.stringtemplate.v4.*;
+
+import java.util.ArrayList;
 
 public class Generator4ClassFile
 {
@@ -22,6 +25,8 @@ public class Generator4ClassFile
       // doGenerate code for association
 
       generatePropertyChangeSupport(clazz, fragmentMap);
+
+      generateToString(clazz, fragmentMap);
 
       fragmentMap.add(Parser.CLASS_END, "}", 1);
 
@@ -42,38 +47,6 @@ public class Generator4ClassFile
       fragmentMap.add(Parser.CLASS, result, 2);
    }
 
-
-   private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap)
-   {
-      fragmentMap.add(Parser.IMPORT + ":java.beans.PropertyChangeSupport", "import java.beans.PropertyChangeSupport;", 1);
-      fragmentMap.add(Parser.IMPORT + ":java.beans.PropertyChangeListener", "import java.beans.PropertyChangeListener;", 1);
-
-      STGroup group = new STGroupDir("templates");
-      group.registerRenderer(String.class, new StringRenderer());
-
-      String result = "   protected PropertyChangeSupport listeners = null;";
-      fragmentMap.add(Parser.ATTRIBUTE + ":listeners", result, 2);
-
-      ST st = group.getInstanceOf("firePropertyChange");
-      result = st.render();
-      fragmentMap.add(Parser.METHOD + ":firePropertyChange(String,Object,Object)", result, 2);
-
-      st = group.getInstanceOf("addPropertyChangeListener1");
-      result = st.render();
-      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(PropertyChangeListener)", result, 2);
-
-      st = group.getInstanceOf("addPropertyChangeListener2");
-      result = st.render();
-      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", result, 2);
-
-      st = group.getInstanceOf("removePropertyChangeListener1");
-      result = st.render();
-      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(PropertyChangeListener)", result, 2);
-
-      st = group.getInstanceOf("removePropertyChangeListener2");
-      result = st.render();
-      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(String,PropertyChangeListener)", result, 2);
-   }
 
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
@@ -132,4 +105,61 @@ public class Generator4ClassFile
 
    }
 
+
+   private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      fragmentMap.add(Parser.IMPORT + ":java.beans.PropertyChangeSupport", "import java.beans.PropertyChangeSupport;", 1);
+      fragmentMap.add(Parser.IMPORT + ":java.beans.PropertyChangeListener", "import java.beans.PropertyChangeListener;", 1);
+
+      STGroup group = new STGroupDir("templates");
+      group.registerRenderer(String.class, new StringRenderer());
+
+      String result = "   protected PropertyChangeSupport listeners = null;";
+      fragmentMap.add(Parser.ATTRIBUTE + ":listeners", result, 2);
+
+      ST st = group.getInstanceOf("firePropertyChange");
+      result = st.render();
+      fragmentMap.add(Parser.METHOD + ":firePropertyChange(String,Object,Object)", result, 2);
+
+      st = group.getInstanceOf("addPropertyChangeListener1");
+      result = st.render();
+      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(PropertyChangeListener)", result, 2);
+
+      st = group.getInstanceOf("addPropertyChangeListener2");
+      result = st.render();
+      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", result, 2);
+
+      st = group.getInstanceOf("removePropertyChangeListener1");
+      result = st.render();
+      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(PropertyChangeListener)", result, 2);
+
+      st = group.getInstanceOf("removePropertyChangeListener2");
+      result = st.render();
+      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(String,PropertyChangeListener)", result, 2);
+   }
+
+
+   private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      ArrayList<String> nameList = new ArrayList<>();
+      for (Attribute attr : clazz.getAttributes())
+      {
+         if (attr.getType().equals(ClassModelBuilder.STRING))
+         {
+            nameList.add(attr.getName());
+         }
+      }
+
+      String result = "";
+      if (nameList.size() > 0)
+      {
+         STGroup group = new STGroupFile("templates/toString.stg");
+         group.registerRenderer(String.class, new StringRenderer());
+         ST st = group.getInstanceOf("toString");
+         st.add("names", nameList.toArray(new String[0]));
+         result = st.render();
+      }
+
+      fragmentMap.add(Parser.METHOD+":toString()", result, 2);
+   }
 }

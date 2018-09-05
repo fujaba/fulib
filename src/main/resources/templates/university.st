@@ -20,6 +20,12 @@ public class University
         return 42;
     }
 
+   @Override // no fulib
+   public String toString()
+   {
+      return "Hello";
+   }
+
 
 }
 

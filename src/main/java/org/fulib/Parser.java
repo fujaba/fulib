@@ -302,18 +302,6 @@ public class Parser
       while ("@".equals(currentRealWord()))
       {
          String annotation = parseAnnotations();
-
-         int endPosAnnotation = currentRealToken.startPos - 1;
-
-         // FIXME please
-         if (annotation != "")
-         {
-            symTab.put(ANNOTATION + ":" + annotation.substring(1),
-                  new SymTabEntry().withKind(ANNOTATION).withMemberName(annotation.substring(1))
-                        .withEndPos(endPosAnnotation).withStartPos(startPosAnnotations));
-         }
-
-         // nextRealToken();
       }
 
       // modifiers class name classbody
@@ -363,7 +351,7 @@ public class Parser
          }
       }
 
-      addCodeFragment("class", startPosClazz, currentRealToken.endPos);
+      addCodeFragment("class", startPosAnnotations, currentRealToken.endPos);
 
       parseClassBody();
    }
@@ -502,21 +490,6 @@ public class Parser
          parseBlock();
 
          String constructorSignature = org.sdmlib.codegen.Parser.CONSTRUCTOR + ":" + className + params;
-         symTab.put(constructorSignature,
-               new SymTabEntry()
-                     .withMemberName(constructorSignature)
-                     .withKind(CONSTRUCTOR)
-                     .withType(constructorSignature + ":" + CONSTRUCTOR)
-                     .withStartPos(startPos)
-                     .withEndPos(previousRealToken.startPos)
-                     .withBodyStartPos(methodBodyStartPos)
-                     .withModifiers(modifiers)
-                     .withPreCommentStartPos(preCommentStartPos)
-                     .withPreCommentEndPos(preCommentEndPos)
-                     .withAnnotationsStartPos(annotationsStartPos)
-         );
-
-         checkSearchStringFound(constructorSignature, startPos);
 
       }
       else
@@ -535,7 +508,7 @@ public class Parser
 
             parseExpression();
 
-            addCodeFragment(ATTRIBUTE + ":" + memberName, startPos, currentRealToken.endPos);
+            addCodeFragment(ATTRIBUTE + ":" + memberName, annotationsStartPos, currentRealToken.endPos);
 
             skip(";");
 
@@ -543,7 +516,7 @@ public class Parser
          else if (currentRealKindEquals(';') && !",".equals(memberName))
          {
             // field declaration
-            addCodeFragment(ATTRIBUTE + ":" + memberName, startPos, currentRealToken.endPos);
+            addCodeFragment(ATTRIBUTE + ":" + memberName, annotationsStartPos, currentRealToken.endPos);
 
             skip(";");
          }
@@ -580,7 +553,7 @@ public class Parser
             }
 
             String methodSignature = org.sdmlib.codegen.Parser.METHOD + ":" + memberName + params;
-            addCodeFragment(methodSignature, startPos, previousRealToken.endPos);
+            addCodeFragment(methodSignature, annotationsStartPos, previousRealToken.endPos);
          }
          else if (ENUM.equals(classType))
          {
@@ -588,33 +561,10 @@ public class Parser
                   && currentRealKindEquals(EOF))
             {
                String enumSignature = org.sdmlib.codegen.Parser.ENUMVALUE + ":" + type;
-               symTab.put(enumSignature,
-                     new SymTabEntry()
-                           .withMemberName(type)
-                           .withKind(ENUMVALUE)
-                           .withType(enumSignature + ":" + className)
-                           .withStartPos(startPos)
-                           .withEndPos(previousRealToken.startPos)
-                           .withBodyStartPos(methodBodyStartPos)
-                           .withModifiers(modifiers)
-                           .withPreCommentStartPos(preCommentStartPos)
-                           .withPreCommentEndPos(preCommentEndPos)
-                           .withAnnotationsStartPos(annotationsStartPos)
-               );
-            } else {  String enumSignature = org.sdmlib.codegen.Parser.ENUMVALUE + ":" + type;
-               symTab.put(enumSignature,
-                     new SymTabEntry()
-                           .withMemberName(type)
-                           .withKind(ENUMVALUE)
-                           .withType(enumSignature + ":" + className)
-                           .withStartPos(startPos)
-                           .withEndPos(previousRealToken.startPos)
-                           .withBodyStartPos(methodBodyStartPos)
-                           .withModifiers(modifiers)
-                           .withPreCommentStartPos(preCommentStartPos)
-                           .withPreCommentEndPos(preCommentEndPos)
-                           .withAnnotationsStartPos(annotationsStartPos)
-               );
+            }
+            else
+            {
+               String enumSignature = org.sdmlib.codegen.Parser.ENUMVALUE + ":" + type;
 
                skipTo(';');
                skip(";");

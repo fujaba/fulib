@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class TestGenerator
 {
    @Test
-   public void testGenerator() throws Exception
+   public void testAttributeGenerator() throws Exception
    {
       String targetFolder = "tmp";
       String packageName = "org.fulib.test.studyright";
@@ -56,6 +56,40 @@ public class TestGenerator
 
    }
 
+   @Test
+   public void testAssociationGenerator() throws Exception
+   {
+      String targetFolder = "tmp";
+      String packageName = "org.fulib.test.studyright";
+
+      Tools.removeDirAndFiles(targetFolder);
+
+      ClassModel model = getClassModelWithAssociations(targetFolder, packageName);
+
+      createPreexistingUniFile(packageName, model);
+
+      String uniFileName = model.getPackageSrcFolder() + "/University.java";
+      Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
+
+      String outFolder = model.getMainJavaDir() + "/../out";
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      Assert.assertEquals("compiler return code: ", 0, returnCode);
+
+      Generator.generate(model);
+
+      Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
+
+      String studFileName = model.getPackageSrcFolder() + "/Student.java";
+      Assert.assertTrue("Student.java exists", Files.exists(Paths.get(uniFileName)));
+
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      Assert.assertEquals("compiler return code: ", 0, returnCode);
+
+      // runAttributeReadWriteTests(outFolder, model);
+
+   }
+
+
    private void createPreexistingUniFile(String packageName, ClassModel model) throws IOException
    {
       // create pre existing University class with extra elements
@@ -73,12 +107,26 @@ public class TestGenerator
    {
       ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
 
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name","String");
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
 
       ClassBuilder studi = mb.buildClass( "Student")
-            .buildAttribute("name","String","\"Karli\"")
-            .buildAttribute("matrNo","long","0");
+            .buildAttribute("name", mb.STRING,"\"Karli\"")
+            .buildAttribute("matrNo", mb.LONG,"0");
 
+      return mb.getClassModel();
+   }
+
+
+   private ClassModel getClassModelWithAssociations(String targetFolder, String packageName)
+   {
+      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
+
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+
+      ClassBuilder studi = mb.buildClass( "Student")
+            .buildAttribute("name", mb.STRING,"\"Karli\"");
+
+      // universitiy.buildAssociation("students", )
       return mb.getClassModel();
    }
 
@@ -180,6 +228,15 @@ public class TestGenerator
       setMatrNoReturn = setMatrNo.invoke(karli, 23);
       Assert.assertTrue("got property change", eventList.size() == 2);
 
+
+      // test toString()
+      Method toString = studClass.getMethod("toString");
+      Object txt = toString.invoke(karli);
+      Assert.assertEquals("toString", "Karli", txt);
+
+      toString = uniClass.getMethod("toString");
+      txt = toString.invoke(studyRight);
+      Assert.assertEquals("toString", "Hello", txt);
    }
 
 

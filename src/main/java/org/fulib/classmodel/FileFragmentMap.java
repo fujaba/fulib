@@ -171,6 +171,12 @@ public  class FileFragmentMap implements SendableEntity
 
       if (result != null)
       {
+         if (result.getText().contains("// no"))
+         {
+            // do not overwrite
+            return result;
+         }
+
          result.withText(newText.trim());
 
          return result;
