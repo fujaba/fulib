@@ -12,19 +12,18 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class TestGenerator
 {
    @Test
-   public void testGenerator() throws IOException
+   public void testGenerator() throws Exception
    {
       String targetFolder = "tmp";
       String packageName = "org.fulib.test.studyright";
@@ -43,7 +42,7 @@ public class TestGenerator
       Assert.assertEquals("compiler return code: ", 0, returnCode);
 
       Generator.generate(model);
-      
+
       Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
 
       String studFileName = model.getPackageSrcFolder() + "/Student.java";
@@ -52,7 +51,7 @@ public class TestGenerator
       returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       Assert.assertEquals("compiler return code: ", 0, returnCode);
 
-      runSelfTest(outFolder, model);
+      runAttributeReadWriteTests(outFolder, model);
 
    }
 
@@ -86,46 +85,66 @@ public class TestGenerator
       return model;
    }
 
-   private void runSelfTest(String outFolder, ClassModel model)
+   private void runAttributeReadWriteTests(String outFolder, ClassModel model) throws Exception
    {
-      final StringBuilder buf = new StringBuilder();
+      final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
 
       // run self test
       File classesDir = new File(outFolder);
 
       // Load and instantiate compiled class.
       URLClassLoader classLoader;
-      try {
-         // Loading the class
-         classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
-         Class<?> cls;
+      // Loading the class
+      classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
 
-         cls = Class.forName(model.getPackageName() + ".University", true, classLoader);
+      Class<?> cls = Class.forName(model.getPackageName() + ".University", true, classLoader);
 
-         Object studyRight = cls.newInstance();
+      Object studyRight = cls.newInstance();
 
-         Method addPropertyChangeListener = cls.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
+      Method addPropertyChangeListener = cls.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
 
-         addPropertyChangeListener.invoke(studyRight, new PropertyChangeListener()
-         {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt)
-            {
-               buf.append(evt.toString());
-            }
-         });
-
-         Method setName = cls.getMethod("setName", String.class);
-
-         setName.invoke(studyRight, "StudyRight");
-
-         Assert.assertTrue("got property change", buf.length() > 0);
-
-      }
-      catch (Exception e)
+      addPropertyChangeListener.invoke(studyRight, new PropertyChangeListener()
       {
-         e.printStackTrace();
-      }
+         @Override
+         public void propertyChange(PropertyChangeEvent evt)
+         {
+            eventList.add(evt);
+         }
+      });
+
+      Method getName = cls.getMethod("getName");
+
+      Object name = getName.invoke(studyRight);
+      Assert.assertNull("no name yet", name);
+
+      Method setName = cls.getMethod("setName", String.class);
+
+      setName.invoke(studyRight, "StudyRight");
+      name = getName.invoke(studyRight);
+      Assert.assertEquals("name is now", "StudyRight", name);
+
+      Assert.assertTrue("got property change", eventList.size() > 0);
+
+      PropertyChangeEvent evt = eventList.get(0);
+      Assert.assertEquals("event property", "name", evt.getPropertyName());
+      Assert.assertEquals("event new value", "StudyRight", evt.getNewValue());
+
+      // set name with same value again --> no propertyChange
+      setName.invoke(studyRight, "StudyRight");
+      Assert.assertTrue("no property change", eventList.size() == 1);
+      name = getName.invoke(studyRight);
+      Assert.assertEquals("name is now", "StudyRight", name);
+
+      // change name
+      setName.invoke(studyRight, "StudyFuture");
+      name = getName.invoke(studyRight);
+      Assert.assertEquals("name is now", "StudyFuture", name);
+      Assert.assertTrue("got property change", eventList.size() == 2);
+      evt = eventList.get(1);
+      Assert.assertEquals("event property", "name", evt.getPropertyName());
+      Assert.assertEquals("event new value", "StudyFuture", evt.getNewValue());
+
+      
    }
 
    private void deleteFile(Clazz clazz)
