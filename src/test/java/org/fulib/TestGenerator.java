@@ -71,20 +71,17 @@ public class TestGenerator
 
    private ClassModel getClassModelUniStudWithAttributes(String targetFolder, String packageName)
    {
-      ClassModel model = new ClassModel()
-            .withPackageName(packageName)
-            .withSrcFolder(targetFolder + "/src");
+      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
 
-      Clazz uni = model.createClasses().withName("University");
-      uni.createAttributes().withName("name").withType("String");
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name","String");
 
-      Clazz studi = model.createClasses().withName("Student");
-      studi.createAttributes().withName("name").withType("String").withInitialization("\"Karli\"");
-      studi.createAttributes().withName("matrNo").withType("long").withInitialization("0");
+      ClassBuilder studi = mb.buildClass( "Student")
+            .buildAttribute("name","String","\"Karli\"")
+            .buildAttribute("matrNo","long","0");
 
-      deleteFile(studi);
-      return model;
+      return mb.getClassModel();
    }
+
 
    private void runAttributeReadWriteTests(String outFolder, ClassModel model) throws Exception
    {
@@ -147,37 +144,7 @@ public class TestGenerator
 
       
    }
-   
-   
-   
-   @Test
-   public void testGeneratorWithBuilder()
-   {
 
-      ClassModelBuilder mb = ClassModelBuilder.get("org.fulib.test.studyright","src/test/java");
-      
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name","String");
-      
-      ClassBuilder studi = mb.buildClass( "Student")
-         .buildAttribute("name","String","\"Karli\"")
-         .buildAttribute("matrNo","long","0");
-
-
-      deleteFile(studi.getClazz());
-
-      Generator.generate(mb.getClassModel());
-      
-      String uniFileName = mb.getClassModel().getPackageSrcFolder() + "/University.java";
-      Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
-
-      // Generator4CodeGenTests.generate(model);
-
-      int returnCode = Javac.compile(mb.getClassModel().getPackageSrcFolder() + "/*.java");
-      Assert.assertEquals("compiler return code: ", 0, returnCode);
-
-      // run self test
-
-   }
 
    private void deleteFile(Clazz clazz)
    {
