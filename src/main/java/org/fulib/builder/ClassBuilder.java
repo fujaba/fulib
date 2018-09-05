@@ -1,5 +1,6 @@
 package org.fulib.builder;
 
+import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
@@ -43,7 +44,6 @@ public class ClassBuilder
 
 
    /**
-    * @param clazz
     * @param name
     * @param type
     * @return this class builder, for fluent style
@@ -71,5 +71,26 @@ public class ClassBuilder
       attribute.setInitialization(initialValue);
 
       return this;
+   }
+
+   /**
+    *
+    * @param otherClass
+    * @param myRoleName
+    * @param myCardinality
+    * @param otherRoleName
+    * @param otherCardinality
+    */
+   public void buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality)
+   {
+      AssocRole myRole = this.getClazz().createRoles()
+            .withName(myRoleName)
+            .withCardinality(myCardinality);
+
+      AssocRole otherRole = otherClass.getClazz().createRoles()
+            .withName(otherRoleName)
+            .withCardinality(otherCardinality);
+
+      myRole.setOther(otherRole);
    }
 }

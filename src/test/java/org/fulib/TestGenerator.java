@@ -126,8 +126,9 @@ public class TestGenerator
       ClassBuilder studi = mb.buildClass( "Student")
             .buildAttribute("name", mb.STRING,"\"Karli\"");
 
-      // universitiy.buildAssociation("students", )
-      return mb.getClassModel();
+      universitiy.buildAssociation(studi, "students", mb.MANY, "uni", mb.ONE);
+
+   return mb.getClassModel();
    }
 
 

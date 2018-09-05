@@ -10,6 +10,8 @@ public class ClassModelBuilder
    public static final String FLOAT = "float";
    public static final String DOUBLE = "double";
    public static final String BOOLEAN = "boolean";
+   public static final int ONE = 1;
+   public static final int MANY = 42;
 
    private ClassModel classModel;
 
