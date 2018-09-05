@@ -27,6 +27,6 @@ condition(name, type, useEquals) ::=
 <%
 <if(useEquals)>(value == null && this.<name> != null) || ! value.equals(this.<name>)
 <else>
-value == this.<name>
+value != this.<name>
 <endif>
 %>

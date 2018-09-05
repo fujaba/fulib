@@ -34,7 +34,7 @@ public class Student
 
    public Student setMatrNo(long value)
    {
-      if (value == this.matrNo)
+      if (value != this.matrNo)
       {
          long oldValue = this.matrNo;
          this.matrNo = value;

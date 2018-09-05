@@ -95,29 +95,32 @@ public class TestGenerator
       // Loading the class
       classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
 
-      Class<?> cls = Class.forName(model.getPackageName() + ".University", true, classLoader);
+      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
 
-      Object studyRight = cls.newInstance();
+      Object studyRight = uniClass.newInstance();
 
-      Method addPropertyChangeListener = cls.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
+      Method addPropertyChangeListener = uniClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
 
-      addPropertyChangeListener.invoke(studyRight, new PropertyChangeListener()
+      PropertyChangeListener listener = new PropertyChangeListener()
       {
          @Override
          public void propertyChange(PropertyChangeEvent evt)
          {
             eventList.add(evt);
          }
-      });
+      };
 
-      Method getName = cls.getMethod("getName");
+      addPropertyChangeListener.invoke(studyRight, listener);
+
+      Method getName = uniClass.getMethod("getName");
 
       Object name = getName.invoke(studyRight);
       Assert.assertNull("no name yet", name);
 
-      Method setName = cls.getMethod("setName", String.class);
+      Method setName = uniClass.getMethod("setName", String.class);
 
-      setName.invoke(studyRight, "StudyRight");
+      Object setNameReturn = setName.invoke(studyRight, "StudyRight");
+      Assert.assertEquals("setName returned this", studyRight, setNameReturn);
       name = getName.invoke(studyRight);
       Assert.assertEquals("name is now", "StudyRight", name);
 
@@ -142,7 +145,41 @@ public class TestGenerator
       Assert.assertEquals("event property", "name", evt.getPropertyName());
       Assert.assertEquals("event new value", "StudyFuture", evt.getNewValue());
 
-      
+      // testing int attr
+      eventList.clear();
+
+      Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
+
+      Object karli = studClass.newInstance();
+
+      Method setMatrNo = studClass.getMethod("setMatrNo", long.class);
+      Method getMatrNo = studClass.getMethod("getMatrNo");
+      addPropertyChangeListener = studClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
+      addPropertyChangeListener.invoke(karli, listener);
+
+      Object matrNo = getMatrNo.invoke(karli);
+      Assert.assertEquals("matrno", 0l, matrNo);
+
+      Object setMatrNoReturn = setMatrNo.invoke(karli, 42);
+
+      Assert.assertEquals("set method returned this", karli, setMatrNoReturn);
+
+      matrNo = getMatrNo.invoke(karli);
+
+      Assert.assertEquals("matrno", 42l, matrNo);
+      Assert.assertTrue("got property change", eventList.size() == 1);
+      evt = eventList.get(0);
+      Assert.assertEquals("event property", "matrNo", evt.getPropertyName());
+      Assert.assertEquals("event new value", 42L, evt.getNewValue());
+
+      setMatrNoReturn = setMatrNo.invoke(karli, 42);
+
+      Assert.assertEquals("set method returned this", karli, setMatrNoReturn);
+      Assert.assertTrue("no property change", eventList.size() == 1);
+
+      setMatrNoReturn = setMatrNo.invoke(karli, 23);
+      Assert.assertTrue("got property change", eventList.size() == 2);
+
    }
 
 
