@@ -1,11 +1,13 @@
 package org.fulib;
 
 import org.fulib.builder.ClassModelBuilder;
+import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.Clazz;
 import org.fulib.classmodel.FileFragmentMap;
 import org.stringtemplate.v4.*;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 public class Generator4ClassFile
@@ -22,7 +24,7 @@ public class Generator4ClassFile
 
       generateAttributes(clazz, fragmentMap);
 
-      // doGenerate code for association
+      generateAssociations(clazz, fragmentMap);
 
       generatePropertyChangeSupport(clazz, fragmentMap);
 
@@ -101,8 +103,95 @@ public class Generator4ClassFile
       attrTemplate.add("useEquals", attr.getType().equals("String"));
       String result = attrTemplate.render();
 
-      fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() +")", result, 2);
+      fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() +")", result, 3);
 
+   }
+
+
+   private void generateAssociations(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      fragmentMap.add(Parser.IMPORT + ":java.util.ArrayList", "import java.util.ArrayList;", 1);
+
+      String result;
+      ST st;
+      STGroup group;
+      for (AssocRole role : clazz.getRoles())
+      {
+         group = new STGroupFile("templates/associations.stg");
+         group.registerRenderer(String.class, new StringRenderer());
+         String roleType = role.getOther().getClazz().getName();
+
+         // provide empty_set in this class
+         if (role.getCardinality() != ClassModelBuilder.ONE)
+         {
+            roleType = String.format(role.getRoleType(), role.getOther().getClazz().getName());
+
+            st = group.getInstanceOf("emptySetDecl");
+            st.add("roleName", role.getName());
+            st.add("roleType", roleType);
+            result = st.render();
+
+            fragmentMap.add(Parser.ATTRIBUTE+":EMPTY_SET", result, 3);
+         }
+
+
+         st = group.getInstanceOf("roleAttrDecl");
+         st.add("roleName", role.getName());
+         st.add("roleType", roleType);
+         result = st.render();
+
+         fragmentMap.add(Parser.ATTRIBUTE+":"+role.getName(), result, 2);
+
+
+         st = group.getInstanceOf("getMethod");
+
+         st.add("roleName", role.getName());
+         st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+         st.add("otherClassName", role.getOther().getClazz().getName());
+         st.add("roleType", roleType);
+         result = st.render();
+
+         fragmentMap.add(Parser.METHOD+":get"+StrUtil.cap(role.getName()), result, 2);
+
+
+         st = group.getInstanceOf("setMethod");
+         st.add("roleName", role.getName());
+         st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+         st.add("myClassName", clazz.getName());
+         st.add("otherClassName", role.getOther().getClazz().getName());
+         st.add("otherRoleName", role.getOther().getName());
+         st.add("otherToMany", role.getOther().getCardinality() != ClassModelBuilder.ONE);
+         st.add("roleType", roleType);
+         result = st.render();
+
+         String signature = "set";
+         String paramType = role.getOther().getClazz().getName();
+         if (role.getCardinality() != ClassModelBuilder.ONE)
+         {
+            signature = "with";
+            paramType = "Object...";
+         }
+
+         signature += StrUtil.cap(role.getName()) + "(" + paramType + ")";
+
+         fragmentMap.add(Parser.METHOD+signature, result, 3);
+
+
+         if (role.getCardinality() != ClassModelBuilder.ONE)
+         {
+            st = group.getInstanceOf("withoutMethod");
+            st.add("roleName", role.getName());
+            st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+            st.add("myClassName", clazz.getName());
+            st.add("otherClassName", role.getOther().getClazz().getName());
+            st.add("otherRoleName", role.getOther().getName());
+            st.add("otherToMany", role.getOther().getCardinality() != ClassModelBuilder.ONE);
+            st.add("roleType", roleType);
+            result = st.render();
+
+            fragmentMap.add(Parser.METHOD+":without"+StrUtil.cap(role.getName()), result, 3);
+         }
+      }
    }
 
 

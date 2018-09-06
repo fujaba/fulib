@@ -28,7 +28,8 @@ public class GenerateClassModel
 
       Clazz assocRole = model.createClazz("AssocRole")
             .withAttribute("name", DataType.STRING)
-            .withAttribute("cardinality", DataType.INT);
+            .withAttribute("cardinality", DataType.INT)
+            .withAttribute("roleType", DataType.STRING);
 
       classModel.withBidirectional(fuClass, "classes", Cardinality.MANY, "model", Cardinality.ONE);
 

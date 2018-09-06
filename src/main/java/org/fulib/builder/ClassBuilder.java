@@ -81,15 +81,33 @@ public class ClassBuilder
     * @param otherRoleName
     * @param otherCardinality
     */
-   public void buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality)
+   public void buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality, String... roleTypes)
    {
       AssocRole myRole = this.getClazz().createRoles()
             .withName(myRoleName)
             .withCardinality(myCardinality);
 
+      if (roleTypes != null && roleTypes.length > 0)
+      {
+         myRole.setRoleType(roleTypes[0]);
+      }
+      else
+      {
+         myRole.setRoleType(ClassModelBuilder.ARRAY_LIST_T_);
+      }
+
       AssocRole otherRole = otherClass.getClazz().createRoles()
             .withName(otherRoleName)
             .withCardinality(otherCardinality);
+
+      if (roleTypes != null && roleTypes.length > 1)
+      {
+         otherRole.setRoleType(roleTypes[1]);
+      }
+      else
+      {
+         otherRole.setRoleType(ClassModelBuilder.ARRAY_LIST_T_);
+      }
 
       myRole.setOther(otherRole);
    }

@@ -429,4 +429,87 @@ public class AssocRoleSet extends SimpleSet<AssocRole>
    {
       return new AssocRolePO(this.toArray(new AssocRole[this.size()]));
    }
+
+   /**
+    * Loop through the current set of AssocRole objects and collect a list of the roleType attribute values. 
+    * 
+    * @return List of String objects reachable via roleType attribute
+    */
+   public ObjectSet getRoleType()
+   {
+      ObjectSet result = new ObjectSet();
+      
+      for (AssocRole obj : this)
+      {
+         result.add(obj.getRoleType());
+      }
+      
+      return result;
+   }
+
+
+   /**
+    * Loop through the current set of AssocRole objects and collect those AssocRole objects where the roleType attribute matches the parameter value. 
+    * 
+    * @param value Search value
+    * 
+    * @return Subset of AssocRole objects that match the parameter
+    */
+   public AssocRoleSet createRoleTypeCondition(String value)
+   {
+      AssocRoleSet result = new AssocRoleSet();
+      
+      for (AssocRole obj : this)
+      {
+         if (value.equals(obj.getRoleType()))
+         {
+            result.add(obj);
+         }
+      }
+      
+      return result;
+   }
+
+
+   /**
+    * Loop through the current set of AssocRole objects and collect those AssocRole objects where the roleType attribute is between lower and upper. 
+    * 
+    * @param lower Lower bound 
+    * @param upper Upper bound 
+    * 
+    * @return Subset of AssocRole objects that match the parameter
+    */
+   public AssocRoleSet createRoleTypeCondition(String lower, String upper)
+   {
+      AssocRoleSet result = new AssocRoleSet();
+      
+      for (AssocRole obj : this)
+      {
+         if (lower.compareTo(obj.getRoleType()) <= 0 && obj.getRoleType().compareTo(upper) <= 0)
+         {
+            result.add(obj);
+         }
+      }
+      
+      return result;
+   }
+
+
+   /**
+    * Loop through the current set of AssocRole objects and assign value to the roleType attribute of each of it. 
+    * 
+    * @param value New attribute value
+    * 
+    * @return Current set of AssocRole objects now with new attribute values.
+    */
+   public AssocRoleSet withRoleType(String value)
+   {
+      for (AssocRole obj : this)
+      {
+         obj.setRoleType(value);
+      }
+      
+      return this;
+   }
+
 }

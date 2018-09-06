@@ -5,6 +5,10 @@ import org.fulib.builder.ClassModelBuilder;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.junit.Assert;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.beans.HasPropertyWithValue.*;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
 import org.junit.Test;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupDir;
@@ -19,6 +23,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 public class TestGenerator
@@ -85,7 +90,7 @@ public class TestGenerator
       returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       Assert.assertEquals("compiler return code: ", 0, returnCode);
 
-      // runAttributeReadWriteTests(outFolder, model);
+      runAssociationReadWriteTests(outFolder, model);
 
    }
 
@@ -163,32 +168,27 @@ public class TestGenerator
 
       Method getName = uniClass.getMethod("getName");
 
-      Object name = getName.invoke(studyRight);
-      Assert.assertNull("no name yet", name);
+      Object name;
+      Assert.assertThat(studyRight, hasProperty("name", nullValue()));
 
       Method setName = uniClass.getMethod("setName", String.class);
 
       Object setNameReturn = setName.invoke(studyRight, "StudyRight");
       Assert.assertEquals("setName returned this", studyRight, setNameReturn);
-      name = getName.invoke(studyRight);
-      Assert.assertEquals("name is now", "StudyRight", name);
-
       Assert.assertTrue("got property change", eventList.size() > 0);
 
       PropertyChangeEvent evt = eventList.get(0);
-      Assert.assertEquals("event property", "name", evt.getPropertyName());
+      Assert.assertThat(evt.getPropertyName(), equalTo("name"));
       Assert.assertEquals("event new value", "StudyRight", evt.getNewValue());
 
       // set name with same value again --> no propertyChange
       setName.invoke(studyRight, "StudyRight");
       Assert.assertTrue("no property change", eventList.size() == 1);
-      name = getName.invoke(studyRight);
-      Assert.assertEquals("name is now", "StudyRight", name);
+      Assert.assertThat(studyRight, hasProperty("name", equalTo("StudyRight")));
 
       // change name
       setName.invoke(studyRight, "StudyFuture");
-      name = getName.invoke(studyRight);
-      Assert.assertEquals("name is now", "StudyFuture", name);
+      Assert.assertThat(studyRight, hasProperty("name", equalTo("StudyFuture")));
       Assert.assertTrue("got property change", eventList.size() == 2);
       evt = eventList.get(1);
       Assert.assertEquals("event property", "name", evt.getPropertyName());
@@ -206,16 +206,13 @@ public class TestGenerator
       addPropertyChangeListener = studClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
       addPropertyChangeListener.invoke(karli, listener);
 
-      Object matrNo = getMatrNo.invoke(karli);
-      Assert.assertEquals("matrno", 0l, matrNo);
+      Object matrNo;
+      Assert.assertThat(karli, hasProperty("matrNo", equalTo(0L)));
 
       Object setMatrNoReturn = setMatrNo.invoke(karli, 42);
 
       Assert.assertEquals("set method returned this", karli, setMatrNoReturn);
-
-      matrNo = getMatrNo.invoke(karli);
-
-      Assert.assertEquals("matrno", 42l, matrNo);
+      Assert.assertThat(karli, hasProperty("matrNo", equalTo(42L)));
       Assert.assertTrue("got property change", eventList.size() == 1);
       evt = eventList.get(0);
       Assert.assertEquals("event property", "matrNo", evt.getPropertyName());
@@ -229,7 +226,6 @@ public class TestGenerator
       setMatrNoReturn = setMatrNo.invoke(karli, 23);
       Assert.assertTrue("got property change", eventList.size() == 2);
 
-
       // test toString()
       Method toString = studClass.getMethod("toString");
       Object txt = toString.invoke(karli);
@@ -238,6 +234,93 @@ public class TestGenerator
       toString = uniClass.getMethod("toString");
       txt = toString.invoke(studyRight);
       Assert.assertEquals("toString", "Hello", txt);
+   }
+
+
+   public void runAssociationReadWriteTests(String outFolder, ClassModel model) throws Exception
+   {
+      final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
+      PropertyChangeListener listener = new PropertyChangeListener()
+      {
+         @Override
+         public void propertyChange(PropertyChangeEvent evt)
+         {
+            eventList.add(evt);
+         }
+      };
+
+      // run self test
+      File classesDir = new File(outFolder);
+
+      // Load and instantiate compiled class.
+      URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
+
+      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
+      Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
+
+      Object studyRight = uniClass.newInstance();
+      Object studyFuture = uniClass.newInstance();
+      Method setName = uniClass.getMethod("setName", String.class);
+      Method addPropertyChangeListener = uniClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
+      setName.invoke(studyRight, "Study Right");
+      setName.invoke(studyFuture, "Study Future");
+      addPropertyChangeListener.invoke(studyRight, listener);
+      addPropertyChangeListener.invoke(studyFuture, listener);
+
+      Object karli = studClass.newInstance();
+      Object lee = studClass.newInstance();
+      setName = studClass.getMethod("setName", String.class);
+      addPropertyChangeListener = studClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
+      setName.invoke(karli, "Karli");
+      setName.invoke(lee, "Lee");
+      addPropertyChangeListener.invoke(karli, listener);
+      addPropertyChangeListener.invoke(lee, listener);
+
+      // ok, create a link
+      Assert.assertThat(studyRight, hasProperty("students", is(empty())));
+
+      Assert.assertThat(karli, hasProperty("uni", nullValue()));
+
+      Method withStudents = uniClass.getMethod("withStudents", Object[].class);
+      Object withResult = withStudents.invoke(studyRight, new Object[]{new Object[]{karli}});
+      Assert.assertThat(withResult, is(equalTo(studyRight)));
+      Assert.assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
+      Assert.assertThat(karli, hasProperty("uni", equalTo(studyRight)));
+
+      Method setUni = studClass.getMethod("setUni", uniClass);
+      Object setUniResult = setUni.invoke(karli, studyFuture);
+      Assert.assertThat(setUniResult, is(equalTo(karli)));
+      Assert.assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
+      Assert.assertThat(studyRight, hasProperty("students", is(empty())));
+      Assert.assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli)));
+
+      setUni.invoke(karli, new Object[]{null} );
+      Assert.assertThat(karli, hasProperty("uni", nullValue()));
+      Assert.assertThat(studyFuture, hasProperty("students", is(empty())));
+
+      withStudents.invoke(studyRight, new Object[]{new Object[]{karli, lee}});
+      Assert.assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli, lee)));
+      Assert.assertThat(karli, hasProperty("uni", equalTo(studyRight)));
+      Assert.assertThat(lee, hasProperty("uni", equalTo(studyRight)));
+
+      withStudents.invoke(studyFuture, new Object[]{new Object[]{karli, lee, studyRight}});
+      Assert.assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli, lee)));
+      Assert.assertThat(studyFuture, hasProperty("students", not(containsInAnyOrder(studyRight))));
+      Assert.assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
+      Assert.assertThat(lee, hasProperty("uni", equalTo(studyFuture)));
+
+      Method withoutStudents = uniClass.getMethod("withoutStudents", Object[].class);
+      withoutStudents.invoke(studyFuture, new Object[]{new Object[]{karli, lee, studyRight}});
+      Assert.assertThat(studyFuture, hasProperty("students", is(empty())));
+      Assert.assertThat(karli, hasProperty("uni", nullValue()));
+      Assert.assertThat(lee, hasProperty("uni", nullValue()));
+
+      withStudents.invoke(studyRight, new Object[]{new Object[]{karli, lee}});
+      withStudents.invoke(studyFuture, new Object[]{new Object[]{lee}});
+      Assert.assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
+      Assert.assertThat(studyFuture, hasProperty("students", containsInAnyOrder(lee)));
+      Assert.assertThat(karli, hasProperty("uni", equalTo(studyRight)));
+      Assert.assertThat(lee, hasProperty("uni", equalTo(studyFuture)));
    }
 
 

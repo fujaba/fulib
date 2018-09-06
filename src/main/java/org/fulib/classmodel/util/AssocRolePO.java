@@ -243,4 +243,65 @@ public class AssocRolePO extends PatternObject<AssocRolePO, AssocRole>
       return null;
    }
 
+   public AssocRolePO createRoleTypeCondition(String value)
+   {
+      new AttributeConstraint()
+      .withAttrName(AssocRole.PROPERTY_ROLETYPE)
+      .withTgtValue(value)
+      .withSrc(this)
+      .withModifier(this.getPattern().getModifier())
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public AssocRolePO createRoleTypeCondition(String lower, String upper)
+   {
+      new AttributeConstraint()
+      .withAttrName(AssocRole.PROPERTY_ROLETYPE)
+      .withTgtValue(lower)
+      .withUpperTgtValue(upper)
+      .withSrc(this)
+      .withModifier(this.getPattern().getModifier())
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public AssocRolePO createRoleTypeAssignment(String value)
+   {
+      new AttributeConstraint()
+      .withAttrName(AssocRole.PROPERTY_ROLETYPE)
+      .withTgtValue(value)
+      .withSrc(this)
+      .withModifier(Pattern.CREATE)
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public String getRoleType()
+   {
+      if (this.getPattern().getHasMatch())
+      {
+         return ((AssocRole) getCurrentMatch()).getRoleType();
+      }
+      return null;
+   }
+   
+   public AssocRolePO withRoleType(String value)
+   {
+      if (this.getPattern().getHasMatch())
+      {
+         ((AssocRole) getCurrentMatch()).setRoleType(value);
+      }
+      return this;
+   }
+   
 }

@@ -2,6 +2,8 @@ package org.fulib.builder;
 
 import org.fulib.classmodel.ClassModel;
 
+import java.util.ArrayList;
+
 public class ClassModelBuilder
 {
    public static final String STRING = "String";
@@ -12,9 +14,9 @@ public class ClassModelBuilder
    public static final String BOOLEAN = "boolean";
    public static final int ONE = 1;
    public static final int MANY = 42;
+   public static final String ARRAY_LIST_T_ = "java.util.ArrayList<%s>";
 
    private ClassModel classModel;
-
 
    /**
     * @param packagename

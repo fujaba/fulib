@@ -24,6 +24,7 @@ package org.fulib.classmodel;
 import de.uniks.networkparser.interfaces.SendableEntity;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import de.uniks.networkparser.EntityUtil;
@@ -141,6 +142,7 @@ public  class ClassModel implements SendableEntity
     */
    
    public static final String PROPERTY_CLASSES = "classes";
+   public static final ArrayList<ClassModel> EMPTY_SET = new ArrayList<>();
 
    private ClazzSet classes = null;
    

@@ -123,6 +123,7 @@ public  class AssocRole implements SendableEntity
       
       result.append(" ").append(this.getCardinality());
       result.append(" ").append(this.getName());
+      result.append(" ").append(this.getRoleType());
       return result.substring(1);
    }
 
@@ -277,5 +278,33 @@ public  class AssocRole implements SendableEntity
       AssocRole value = new AssocRole();
       withOther(value);
       return value;
+   } 
+
+   
+   //==========================================================================
+   
+   public static final String PROPERTY_ROLETYPE = "roleType";
+   
+   private String roleType;
+
+   public String getRoleType()
+   {
+      return this.roleType;
+   }
+   
+   public void setRoleType(String value)
+   {
+      if ( ! EntityUtil.stringEquals(this.roleType, value)) {
+      
+         String oldValue = this.roleType;
+         this.roleType = value;
+         this.firePropertyChange(PROPERTY_ROLETYPE, oldValue, value);
+      }
+   }
+   
+   public AssocRole withRoleType(String value)
+   {
+      setRoleType(value);
+      return this;
    } 
 }

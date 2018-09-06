@@ -38,6 +38,7 @@ public class AssocRoleCreator implements AggregatedEntityCreator
       AssocRole.PROPERTY_NAME,
       AssocRole.PROPERTY_CLAZZ,
       AssocRole.PROPERTY_OTHER,
+      AssocRole.PROPERTY_ROLETYPE,
    };
    
    private final String[] upProperties = new String[]
@@ -103,6 +104,11 @@ public class AssocRoleCreator implements AggregatedEntityCreator
       {
          return ((AssocRole) target).getOther();
       }
+
+      if (AssocRole.PROPERTY_ROLETYPE.equalsIgnoreCase(attribute))
+      {
+         return ((AssocRole) target).getRoleType();
+      }
       
       return null;
    }
@@ -110,6 +116,12 @@ public class AssocRoleCreator implements AggregatedEntityCreator
    @Override
    public boolean setValue(Object target, String attrName, Object value, String type)
    {
+      if (AssocRole.PROPERTY_ROLETYPE.equalsIgnoreCase(attrName))
+      {
+         ((AssocRole) target).setRoleType((String) value);
+         return true;
+      }
+
       if (AssocRole.PROPERTY_NAME.equalsIgnoreCase(attrName))
       {
          ((AssocRole) target).setName((String) value);
