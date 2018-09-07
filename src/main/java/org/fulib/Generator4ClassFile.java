@@ -171,7 +171,7 @@ public class Generator4ClassFile
 
          signature += StrUtil.cap(role.getName()) + "(" + paramType + ")";
 
-         fragmentMap.add(Parser.METHOD+signature, result, 3);
+         fragmentMap.add(Parser.METHOD + ":" + signature, result, 3);
 
 
          if (role.getCardinality() != ClassModelBuilder.ONE)
