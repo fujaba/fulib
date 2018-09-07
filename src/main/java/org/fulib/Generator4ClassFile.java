@@ -109,8 +109,6 @@ public class Generator4ClassFile
 
    private void generateAssociations(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      fragmentMap.add(Parser.IMPORT + ":java.util.ArrayList", "import java.util.ArrayList;", 1);
-
       String result;
       ST st;
       STGroup group;
@@ -150,7 +148,7 @@ public class Generator4ClassFile
          st.add("roleType", roleType);
          result = st.render();
 
-         fragmentMap.add(Parser.METHOD+":get"+StrUtil.cap(role.getName()), result, 2);
+         fragmentMap.add(Parser.METHOD+":get"+StrUtil.cap(role.getName())+"()", result, 2);
 
 
          st = group.getInstanceOf("setMethod");
@@ -188,7 +186,7 @@ public class Generator4ClassFile
             st.add("roleType", roleType);
             result = st.render();
 
-            fragmentMap.add(Parser.METHOD+":without"+StrUtil.cap(role.getName()), result, 3);
+            fragmentMap.add(Parser.METHOD+":without"+StrUtil.cap(role.getName())+"()", result, 3);
          }
       }
    }
