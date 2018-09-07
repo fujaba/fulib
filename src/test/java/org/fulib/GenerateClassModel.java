@@ -3,6 +3,8 @@ package org.fulib;
 import de.uniks.networkparser.graph.Cardinality;
 import de.uniks.networkparser.graph.Clazz;
 import de.uniks.networkparser.graph.DataType;
+import org.fulib.builder.ClassBuilder;
+import org.fulib.builder.ClassModelBuilder;
 import org.junit.Test;
 import org.sdmlib.models.classes.ClassModel;
 
@@ -11,41 +13,42 @@ public class GenerateClassModel
    @Test
    public void testGenerateModel()
    {
-      ClassModel model = new ClassModel("org.fulib.classmodel");
+      ClassModelBuilder mb = ClassModelBuilder.get("org.fulib.classmodel", "src/main/java");
 
-      Clazz classModel = model.createClazz("ClassModel")
-            .withAttribute("packageName", DataType.STRING)
-            .withAttribute("mainJavaDir", DataType.STRING)
-            .withAttribute("defaultRoleType", DataType.STRING);
+      ClassBuilder classModel = mb.buildClass("ClassModel")
+            .buildAttribute("packageName", mb.STRING)
+            .buildAttribute("mainJavaDir", mb.STRING)
+            .buildAttribute("defaultRoleType", mb.STRING);
 
-      Clazz fuClass = model.createClazz("Clazz")
-            .withAttribute("name", DataType.STRING);
+      ClassBuilder fuClass = mb.buildClass("Clazz")
+            .buildAttribute("name", mb.STRING);
 
-      Clazz attribute = model.createClazz("Attribute")
-            .withAttribute("name", DataType.STRING)
-            .withAttribute("type", DataType.STRING)
-            .withAttribute("initialization", DataType.STRING);
+      ClassBuilder attribute = mb.buildClass("Attribute")
+            .buildAttribute("name", mb.STRING)
+            .buildAttribute("type", mb.STRING)
+            .buildAttribute("initialization", mb.STRING);
 
-      Clazz assocRole = model.createClazz("AssocRole")
-            .withAttribute("name", DataType.STRING)
-            .withAttribute("cardinality", DataType.INT)
-            .withAttribute("roleType", DataType.STRING);
+      ClassBuilder assocRole = mb.buildClass("AssocRole")
+            .buildAttribute("name", mb.STRING)
+            .buildAttribute("cardinality", mb.INT)
+            .buildAttribute("roleType", mb.STRING);
 
-      classModel.withBidirectional(fuClass, "classes", Cardinality.MANY, "model", Cardinality.ONE);
+      classModel.buildAssociation(fuClass, "classes", mb.MANY, "model", mb.ONE);
 
-      fuClass.withBidirectional(attribute, "attributes", Cardinality.MANY, "clazz", Cardinality.ONE);
+      fuClass.buildAssociation(attribute, "attributes", mb.MANY, "clazz", mb.ONE);
 
-      fuClass.withBidirectional(assocRole, "roles", Cardinality.MANY, "clazz", Cardinality.ONE);
+      fuClass.buildAssociation(assocRole, "roles", mb.MANY, "clazz", mb.ONE);
 
-      assocRole.withBidirectional(assocRole, "other", Cardinality.ONE, "other", Cardinality.ONE);
+      assocRole.buildAssociation(assocRole, "other", mb.ONE, "other", mb.ONE);
 
-      Clazz fileFragmentMap = model.createClazz("FileFragmentMap")
-            .withAttribute("fileName", DataType.STRING);
+      ClassBuilder fileFragmentMap = mb.buildClass("FileFragmentMap")
+            .buildAttribute("fileName", mb.STRING);
 
-      Clazz codeFragment = model.createClazz("CodeFragment")
-            .withAttribute("key", DataType.STRING)
-            .withAttribute("text", DataType.STRING);
+      ClassBuilder codeFragment = mb.buildClass("CodeFragment")
+            .buildAttribute("key", mb.STRING)
+            .buildAttribute("text", mb.STRING);
 
-      model.generate();
+      Generator.generate(mb.getClassModel());
+
    }
 }
