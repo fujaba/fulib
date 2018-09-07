@@ -1,9 +1,7 @@
 package org.fulib.classmodel;
 
 import java.util.ArrayList;
-
 import java.beans.PropertyChangeSupport;
-
 import java.beans.PropertyChangeListener;
 
 public class ClassModel
@@ -107,6 +105,7 @@ public class ClassModel
                firePropertyChange("classes", null, item);
             }
          }
+         else throw new IllegalArgumentException();
       }
       return this;
    }

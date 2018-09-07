@@ -14,4 +14,10 @@ public class StrUtil
    {
       return word1 == null ? word2 == null : word1.equals(word2);
    }
+
+   public static String downFirstChar(String oldTxt)
+   {
+      Objects.requireNonNull(oldTxt);
+      return oldTxt.substring(0,1).toLowerCase() + oldTxt.substring(1);
+   }
 }

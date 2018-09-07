@@ -98,6 +98,7 @@ public class Clazz
                firePropertyChange("attributes", null, item);
             }
          }
+         else throw new IllegalArgumentException();
       }
       return this;
    }
@@ -172,6 +173,7 @@ public class Clazz
                firePropertyChange("roles", null, item);
             }
          }
+         else throw new IllegalArgumentException();
       }
       return this;
    }

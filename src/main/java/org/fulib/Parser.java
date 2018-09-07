@@ -2,6 +2,7 @@ package org.fulib;
 
 import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
+import org.fulib.util.Token;
 
 import java.io.IOException;
 import java.nio.file.Files;

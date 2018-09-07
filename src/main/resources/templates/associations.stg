@@ -59,6 +59,7 @@ setMethod(roleName,toMany,myClassName,otherClassName,otherRoleName,otherToMany,r
                firePropertyChange("<roleName>", null, item);
             }
          }
+         else throw new IllegalArgumentException();
       }
       return this;
    }

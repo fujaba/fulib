@@ -1,5 +1,7 @@
-package org.fulib;
+package org.fulib.util;
 
+import org.fulib.Parser;
+import org.fulib.StrUtil;
 import org.fulib.builder.ClassModelBuilder;
 import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
