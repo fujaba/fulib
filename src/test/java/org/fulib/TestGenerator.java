@@ -5,6 +5,7 @@ import org.fulib.builder.ClassModelBuilder;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.junit.Assert;
+import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.beans.HasPropertyWithValue.*;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -23,11 +24,11 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 
 
 public class TestGenerator
 {
+
    @Test
    public void testAttributeGenerator() throws Exception
    {
@@ -132,6 +133,11 @@ public class TestGenerator
             .buildAttribute("name", mb.STRING,"\"Karli\"");
 
       universitiy.buildAssociation(studi, "students", mb.MANY, "uni", mb.ONE);
+
+      ClassBuilder room = mb.buildClass("Room")
+            .buildAttribute("no", mb.STRING);
+
+      universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE, mb.JAVA_UTIL_LINKED_HASH_SET_T, mb.JAVA_UTIL_LINKED_HASH_SET_T);
 
       return mb.getClassModel();
    }
@@ -257,6 +263,7 @@ public class TestGenerator
 
       Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
       Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
+      Class<?> roomClass = Class.forName(model.getPackageName() + ".Room", true, classLoader);
 
       Object studyRight = uniClass.newInstance();
       Object studyFuture = uniClass.newInstance();
@@ -277,50 +284,69 @@ public class TestGenerator
       addPropertyChangeListener.invoke(lee, listener);
 
       // ok, create a link
-      Assert.assertThat(studyRight, hasProperty("students", is(empty())));
+      assertThat(studyRight, hasProperty("students", is(empty())));
 
-      Assert.assertThat(karli, hasProperty("uni", nullValue()));
+      assertThat(karli, hasProperty("uni", nullValue()));
 
       Method withStudents = uniClass.getMethod("withStudents", Object[].class);
       Object withResult = withStudents.invoke(studyRight, new Object[]{new Object[]{karli}});
-      Assert.assertThat(withResult, is(equalTo(studyRight)));
-      Assert.assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
-      Assert.assertThat(karli, hasProperty("uni", equalTo(studyRight)));
+      assertThat(withResult, is(equalTo(studyRight)));
+      assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
+      assertThat(karli, hasProperty("uni", equalTo(studyRight)));
 
       Method setUni = studClass.getMethod("setUni", uniClass);
       Object setUniResult = setUni.invoke(karli, studyFuture);
-      Assert.assertThat(setUniResult, is(equalTo(karli)));
-      Assert.assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
-      Assert.assertThat(studyRight, hasProperty("students", is(empty())));
-      Assert.assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli)));
+      assertThat(setUniResult, is(equalTo(karli)));
+      assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
+      assertThat(studyRight, hasProperty("students", is(empty())));
+      assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli)));
 
       setUni.invoke(karli, new Object[]{null} );
-      Assert.assertThat(karli, hasProperty("uni", nullValue()));
-      Assert.assertThat(studyFuture, hasProperty("students", is(empty())));
+      assertThat(karli, hasProperty("uni", nullValue()));
+      assertThat(studyFuture, hasProperty("students", is(empty())));
 
       withStudents.invoke(studyRight, new Object[]{new Object[]{karli, lee}});
-      Assert.assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli, lee)));
-      Assert.assertThat(karli, hasProperty("uni", equalTo(studyRight)));
-      Assert.assertThat(lee, hasProperty("uni", equalTo(studyRight)));
+      assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli, lee)));
+      assertThat(karli, hasProperty("uni", equalTo(studyRight)));
+      assertThat(lee, hasProperty("uni", equalTo(studyRight)));
 
       withStudents.invoke(studyFuture, new Object[]{new Object[]{karli, lee, studyRight}});
-      Assert.assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli, lee)));
-      Assert.assertThat(studyFuture, hasProperty("students", not(containsInAnyOrder(studyRight))));
-      Assert.assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
-      Assert.assertThat(lee, hasProperty("uni", equalTo(studyFuture)));
+      assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli, lee)));
+      assertThat(studyFuture, hasProperty("students", not(containsInAnyOrder(studyRight))));
+      assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
+      assertThat(lee, hasProperty("uni", equalTo(studyFuture)));
 
       Method withoutStudents = uniClass.getMethod("withoutStudents", Object[].class);
       withoutStudents.invoke(studyFuture, new Object[]{new Object[]{karli, lee, studyRight}});
-      Assert.assertThat(studyFuture, hasProperty("students", is(empty())));
-      Assert.assertThat(karli, hasProperty("uni", nullValue()));
-      Assert.assertThat(lee, hasProperty("uni", nullValue()));
+      assertThat(studyFuture, hasProperty("students", is(empty())));
+      assertThat(karli, hasProperty("uni", nullValue()));
+      assertThat(lee, hasProperty("uni", nullValue()));
 
       withStudents.invoke(studyRight, new Object[]{new Object[]{karli, lee}});
       withStudents.invoke(studyFuture, new Object[]{new Object[]{lee}});
-      Assert.assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
-      Assert.assertThat(studyFuture, hasProperty("students", containsInAnyOrder(lee)));
-      Assert.assertThat(karli, hasProperty("uni", equalTo(studyRight)));
-      Assert.assertThat(lee, hasProperty("uni", equalTo(studyFuture)));
+      assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
+      assertThat(studyFuture, hasProperty("students", containsInAnyOrder(lee)));
+      assertThat(karli, hasProperty("uni", equalTo(studyRight)));
+      assertThat(lee, hasProperty("uni", equalTo(studyFuture)));
+
+      // test LinkedHashSet role
+      Object wa1337 = roomClass.newInstance();
+      Object wa1342 = roomClass.newInstance();
+
+      Method withRooms = uniClass.getMethod("withRooms", Object[].class);
+      Method setUni4Room = roomClass.getMethod("setUni", uniClass);
+
+      Object withRoomsResult = withRooms.invoke(studyRight, new Object[]{new Object[]{wa1337, wa1342}});
+      assertThat(withRoomsResult, equalTo(studyRight));
+      assertThat(studyRight, hasProperty("rooms", containsInAnyOrder(wa1337, wa1342)));
+      assertThat(wa1337, hasProperty("uni", equalTo(studyRight)));
+      assertThat(wa1342, hasProperty("uni", equalTo(studyRight)));
+
+      withRooms.invoke(studyFuture, new Object[]{new Object[]{wa1342}});
+      assertThat(studyRight, hasProperty("rooms", not(containsInAnyOrder(wa1342))));
+      assertThat(studyFuture, hasProperty("rooms", containsInAnyOrder(wa1342)));
+      assertThat(wa1342, hasProperty("uni", equalTo(studyFuture)));
+
    }
 
 

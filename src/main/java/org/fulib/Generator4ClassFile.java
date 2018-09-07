@@ -131,7 +131,7 @@ public class Generator4ClassFile
             st.add("roleType", roleType);
             result = st.render();
 
-            fragmentMap.add(Parser.ATTRIBUTE+":EMPTY_SET", result, 3);
+            fragmentMap.add(Parser.ATTRIBUTE+":EMPTY_"+role.getName(), result, 3);
          }
 
 

@@ -15,6 +15,7 @@ public class ClassModelBuilder
    public static final int ONE = 1;
    public static final int MANY = 42;
    public static final String ARRAY_LIST_T_ = "java.util.ArrayList<%s>";
+   public static final String JAVA_UTIL_LINKED_HASH_SET_T = "java.util.LinkedHashSet<%s>";
 
    private ClassModel classModel;
 
