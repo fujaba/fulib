@@ -59,8 +59,8 @@ public class TestGenerator
       Assert.assertEquals("compiler return code: ", 0, returnCode);
 
       runAttributeReadWriteTests(outFolder, model);
-
    }
+
 
    @Test
    public void testAssociationGenerator() throws Exception
