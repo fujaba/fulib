@@ -1,20 +1,14 @@
 package org.fulib;
 
-import de.uniks.networkparser.list.SimpleKeyValueList;
 import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
-import org.sdmlib.CGUtil;
-import org.sdmlib.StrUtil;
-import org.sdmlib.codegen.LocalVarTableEntry;
-import org.sdmlib.codegen.StatementEntry;
-import org.sdmlib.codegen.SymTabEntry;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 
 public class Parser
 {
@@ -927,11 +921,6 @@ public class Parser
    private int lastReturnStart;
 
    private LinkedHashMap<String, Integer> methodBodyQualifiedNames = new LinkedHashMap<String, Integer>();
-
-   private HashMap<StatementEntry, Integer> returnStatements = new HashMap<>();
-
-
-
 
    private void nextRealToken()
    {
