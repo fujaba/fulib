@@ -8,7 +8,6 @@ import org.sdmlib.StrUtil;
 import org.sdmlib.codegen.LocalVarTableEntry;
 import org.sdmlib.codegen.StatementEntry;
 import org.sdmlib.codegen.SymTabEntry;
-import org.sdmlib.codegen.Token;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,15 +97,6 @@ public class Parser
 
    private StatementEntry currentStatement = null;
 
-   public StatementEntry getCurrentStatement()
-   {
-      return currentStatement;
-   }
-
-   public StatementEntry getStatementList()
-   {
-      return currentParentStatement;
-   }
 
    public LinkedHashMap<String, LocalVarTableEntry> getLocalVarTable()
    {
@@ -119,16 +109,6 @@ public class Parser
    }
 
    private boolean verbose = false;
-
-   public void setVerbose(boolean verbose)
-   {
-      this.verbose = verbose;
-   }
-
-   public boolean isVerbose()
-   {
-      return verbose;
-   }
 
    private int endPos;
 
@@ -151,6 +131,8 @@ public class Parser
 
    public FileFragmentMap  doParse(String fileName)
    {
+      this.setFileName(fileName);
+
       loadFile(fileName);
 
       if (fileBody != null)
@@ -994,10 +976,6 @@ public class Parser
    private String className;
    private String classType;
 
-   public String getClassType()
-   {
-      return classType;
-   }
 
    public int lastIfStart;
    public int lastIfEnd;
@@ -1008,20 +986,8 @@ public class Parser
 
    private HashMap<StatementEntry, Integer> returnStatements = new HashMap<>();
 
-   public LinkedHashMap<String, Integer> getMethodBodyQualifiedNamesMap()
-   {
-      return methodBodyQualifiedNames;
-   }
 
-   public Set<String> getMethodBodyQualifiedNames()
-   {
-      return methodBodyQualifiedNames.keySet();
-   }
 
-   public int getLastReturnStart()
-   {
-      return lastReturnStart;
-   }
 
    private void nextRealToken()
    {
@@ -1321,93 +1287,8 @@ public class Parser
       }
    }
 
-   public int methodBodyIndexOf(String searchString, int searchStartPos)
-   {
-      indexOfResult = -1;
-      lastIfStart = -1;
-      lastIfEnd = -1;
-
-      // initialize parser to start reading at pos
-      init(searchStartPos, fileBody.length());
-
-      this.searchString = searchString;
-
-      try
-      {
-         parseBlockDetails();
-         checkSearchStringFound(METHOD_END, previousRealToken.startPos);
-      }
-      catch (SearchStringFoundException e)
-      {
-         // found it, return indexOfResult
-      }
-      catch (Exception e)
-      {
-         // problem with parsing. Return not found
-         e.printStackTrace();
-      }
-
-      return indexOfResult;
-   }
-
-   public int methodCallIndexOf(String searchString, int searchStartPos, int searchEndPos)
-   {
-      indexOfResult = -1;
-      lastIfStart = -1;
-      lastIfEnd = -1;
-
-      // initialize parser to start reading at pos
-      init(searchStartPos, searchEndPos);
-
-      this.searchString = searchString;
-
-      try
-      {
-         parseBlockDetails();
-         checkSearchStringFound(METHOD_END, previousRealToken.startPos);
-      }
-      catch (SearchStringFoundException e)
-      {
-         // found it, return indexOfResult
-      }
-      catch (Exception e)
-      {
-         // problem with parsing. Return not found
-         e.printStackTrace();
-      }
-
-      return indexOfResult;
-   }
 
 
-   public int indexOfInMethodBody(String searchString, int searchStartPos, int searchEndPos)
-   {
-      indexOfResult = -1;
-      lastIfStart = -1;
-      lastIfEnd = -1;
-
-      // initialize parser to start reading at pos
-      init(searchStartPos, searchEndPos);
-
-      this.searchString = searchString;
-
-      try
-      {
-         parseInnerBlockDetails();
-         checkSearchStringFound(METHOD_END, previousRealToken.startPos);
-      }
-      catch (SearchStringFoundException e)
-      {
-         // found it, return indexOfResult
-      }
-      catch (Exception e)
-      {
-         // problem with parsing. Return not found
-         e.printStackTrace();
-      }
-
-      return indexOfResult;
-   }
 
    private void parseBlockDetails()
    {
@@ -1885,7 +1766,7 @@ public class Parser
    {
       if (currentStatement != null)
       {
-         currentStatement.withToken(currentRealToken);
+// TODO         currentStatement.withToken(currentRealToken);
       }
       nextRealToken();
    }
@@ -1912,211 +1793,7 @@ public class Parser
       this.fileName = fileName;
    }
 
-   public Parser withFileName(String fileName)
-   {
-      setFileName(fileName);
-      return this;
-   }
 
-   public boolean loadFile()
-   {
-      File file = new File(fileName);
-      if (file.exists())
-      {
-         this.withFileBody(CGUtil.readFile(file));
-         return true;
-      }
-      return false;
-   }
-
-   public void parseMethodBody(SymTabEntry symTabEntry)
-   {
-      if (symTabEntry.getMemberName().startsWith(METHOD + ":"))
-         indexOfInMethodBody(METHOD_END, symTabEntry.getBodyStartPos() + 1, symTabEntry.getEndPos() - 1);
-   }
-
-
-   public ArrayList<SymTabEntry> getSymTabEntriesFor(String signature)
-   {
-      ArrayList<SymTabEntry> entries = new ArrayList<SymTabEntry>();
-      Set<String> keySet = symTab.keySet();
-      for (String key : keySet)
-      {
-         if (key.contains(signature))
-            entries.add(symTab.get(key));
-      }
-      return entries;
-   }
-
-
-   public SymTabEntry getSymTabEntry(String signature)
-   {
-      return symTab.get(signature);
-   }
-
-   public SymTabEntry getMethodEntryWithLineNumber(String signature, long callMethodLineNumber)
-   {
-      ArrayList<SymTabEntry> symTabEntries = getSymTabEntriesFor(signature);
-      for (SymTabEntry symTabEntry : symTabEntries)
-      {
-         long lineIndexOfStart = getLineIndexOf(symTabEntry.getStartPos());
-         long lineIndexOfEnd = getLineIndexOf(symTabEntry.getEndPos());
-         if (lineIndexOfStart <= callMethodLineNumber && lineIndexOfEnd >= callMethodLineNumber)
-         {
-            return symTabEntry;
-         }
-      }
-      return null;
-   }
-
-   public String getSignatureFor(SymTabEntry symTabEntry)
-   {
-      Set<String> keySet = symTab.keySet();
-      for (String key : keySet)
-      {
-         if (symTab.get(key) == symTabEntry)
-            return key;
-      }
-      return "";
-   }
-
-   public void replace(int start, int end, String text)
-   {
-      this.fileBody.replace(start, end, text);
-      this.fileBodyHasChanged = true;
-   }
-
-   public Parser withFileChanged(boolean value)
-   {
-      this.fileBodyHasChanged = value;
-      return this;
-   }
-
-
-   public StringBuilder getText()
-   {
-      return fileBody;
-   }
-
-   public StringBuilder replaceAll(String text, Object... args)
-   {
-      return replaceAll(-1, text, args);
-   }
-
-   public StringBuilder replaceAll(StringBuilder text, Object... args)
-   {
-      return replaceAll(-1, text, args);
-   }
-
-   public StringBuilder replaceAll(int insertPos, String text, Object... args)
-   {
-      return replaceAll(insertPos, new StringBuilder(text), args);
-   }
-
-   public StringBuilder replaceAll(int insertPos, StringBuilder text, Object... args)
-   {
-      replace(text, args);
-
-      if (this.fileBody == null)
-      {
-         this.fileBody = text;
-      }
-      else
-      {
-         if (insertPos == -1)
-         {
-            insertPos = indexOf(org.sdmlib.codegen.Parser.CLASS_END);
-         }
-         if (insertPos >= 0)
-         {
-            this.fileBody.insert(insertPos, text.toString());
-         }
-         else
-         {
-            System.out.println("ERROR WHILE PARSING");
-         }
-      }
-
-      this.fileBodyHasChanged = true;
-
-      return text;
-   }
-
-   public StringBuilder replace(String text, Object... args)
-   {
-      return replace(new StringBuilder(text), args);
-   }
-
-   public StringBuilder replace(StringBuilder text, Object... args)
-   {
-      if ((args == null) || (args.length < 1))
-      {
-         return text;
-      }
-
-      int pos = -1 - args[0].toString().length();
-      String placeholder;
-      // args are pairs of placeholder, replacement
-
-      // in the first run, replace placeholders by <$<placeholders>$> to mark
-      // them uniquely
-      for (int i = 0; i < args.length; i += 2)
-      {
-         placeholder = args[i].toString();
-         pos = -1 - placeholder.length();
-
-         pos = text.indexOf(placeholder, pos + placeholder.length());
-
-         while (pos >= 0)
-         {
-            text.replace(pos, pos + placeholder.length(), "<$<" + placeholder + ">$>");
-            pos = text.indexOf(placeholder, pos + placeholder.length() + 6);
-         }
-      }
-
-      // in the second run, replace <$<placeholders>$> by replacement
-      for (int i = 0; i < args.length; i += 2)
-      {
-         placeholder = "<$<" + args[i] + ">$>";
-         pos = -1 - placeholder.length();
-
-         pos = text.indexOf(placeholder, pos + placeholder.length());
-
-         while (pos >= 0)
-         {
-            text.replace(pos, pos + placeholder.length(), args[i + 1].toString());
-            pos = text.indexOf(placeholder, pos + args[i + 1].toString().length());
-         }
-      }
-      return text;
-   }
-
-   public LocalVarTableEntry getLocalVarEntriesFor(String name)
-   {
-      for (String key : localVarTable.keySet())
-      {
-         if (name.equals(key))
-         {
-            LocalVarTableEntry tableEntry = localVarTable.get(key);
-            if ("Clazz".equals(tableEntry.getType()))
-            {
-
-               return tableEntry;
-            }
-         }
-      }
-      return null;
-   }
-
-   public StringBuilder getFileBody()
-   {
-      return fileBody;
-   }
-
-   public String getClassModifier()
-   {
-      return classModifier;
-   }
 
    public String getLineForPos(int currentInsertPos)
    {
