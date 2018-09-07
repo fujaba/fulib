@@ -2,8 +2,6 @@ package org.fulib.builder;
 
 import org.fulib.classmodel.ClassModel;
 
-import java.util.ArrayList;
-
 public class ClassModelBuilder
 {
    public static final String STRING = "String";
@@ -14,8 +12,8 @@ public class ClassModelBuilder
    public static final String BOOLEAN = "boolean";
    public static final int ONE = 1;
    public static final int MANY = 42;
-   public static final String ARRAY_LIST_T_ = "java.util.ArrayList<%s>";
-   public static final String JAVA_UTIL_LINKED_HASH_SET_T = "java.util.LinkedHashSet<%s>";
+   public static final String COLLECTION_ARRAY_LIST = "java.util.ArrayList<%s>";
+   public static final String COLLECTION_LINKED_HASH_SET = "java.util.LinkedHashSet<%s>";
 
    private ClassModel classModel;
 
@@ -41,7 +39,7 @@ public class ClassModelBuilder
       ClassModel classModel = new ClassModel();
       classModel.setPackageName(packagename);
       classModel.setMainJavaDir(sourceFolder);
-      classModel.setDefaultRoleType(ARRAY_LIST_T_);
+      classModel.setDefaultRoleType(COLLECTION_ARRAY_LIST);
 
       classModelBuilder.setClassModel(classModel);
       return classModelBuilder;
@@ -62,7 +60,13 @@ public class ClassModelBuilder
       return classModel;
    }
 
-
+   /**
+    * set container class to be used for to-many associations,
+    * default is ClassModelBuilder.COLLECTION_ARRAY_LIST
+    * alternative is e.g.: ClassModelBuilder.
+    * @param defaultRoleType
+    * @return
+    */
    public ClassModelBuilder setDefaultRoleType(String defaultRoleType)
    {
       this.classModel.setDefaultRoleType(defaultRoleType);

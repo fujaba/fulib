@@ -137,7 +137,11 @@ public class TestGenerator
       ClassBuilder room = mb.buildClass("Room")
             .buildAttribute("no", mb.STRING);
 
-      universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE, mb.JAVA_UTIL_LINKED_HASH_SET_T, mb.JAVA_UTIL_LINKED_HASH_SET_T);
+      universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE, mb.COLLECTION_LINKED_HASH_SET, mb.COLLECTION_LINKED_HASH_SET);
+
+      studi.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
+
+      studi.buildAssociation(room, "in", mb.MANY, "students", mb.MANY);
 
       return mb.getClassModel();
    }
@@ -347,6 +351,34 @@ public class TestGenerator
       assertThat(studyFuture, hasProperty("rooms", containsInAnyOrder(wa1342)));
       assertThat(wa1342, hasProperty("uni", equalTo(studyFuture)));
 
+      // test 1 to 1
+      Method setCondo = studClass.getMethod("setCondo", roomClass);
+      Object setCondoResult = setCondo.invoke(karli, wa1337);
+      assertThat(setCondoResult, equalTo(karli));
+      assertThat(karli, hasProperty("condo", equalTo(wa1337)));
+      assertThat(wa1337, hasProperty("owner", equalTo(karli)));
+
+      setCondo.invoke(lee, wa1337);
+      assertThat(karli, hasProperty("condo", nullValue()));
+      assertThat(lee, hasProperty("condo", equalTo(wa1337)));
+      assertThat(wa1337, hasProperty("owner", equalTo(lee)));
+
+      // test n to m
+      Method withIn = studClass.getMethod("withIn", Object[].class);
+      Method withStudents4Room = roomClass.getMethod("withStudents", Object[].class);
+
+      Object withInResult = withIn.invoke(karli, new Object[]{new Object[]{wa1337, wa1342}});
+      withIn.invoke(lee, new Object[]{new Object[]{wa1337, wa1342}});
+      assertThat(withInResult, equalTo(karli));
+      assertThat(karli, hasProperty("in", containsInAnyOrder(wa1337, wa1342)));
+      assertThat(lee, hasProperty("in", containsInAnyOrder(wa1337, wa1342)));
+      assertThat(wa1337, hasProperty("students", containsInAnyOrder(karli, lee)));
+      assertThat(wa1342, hasProperty("students", containsInAnyOrder(karli, lee)));
+
+      Method withoutStudents4Room = roomClass.getMethod("withoutStudents", Object[].class);
+      withoutStudents4Room.invoke(wa1337, new Object[]{new Object[]{lee}});
+      assertThat(wa1337, hasProperty("students", not(containsInAnyOrder(lee))));
+      assertThat(lee, hasProperty("in", not(containsInAnyOrder(wa1337))));
    }
 
 
