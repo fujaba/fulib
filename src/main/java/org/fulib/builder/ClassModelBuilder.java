@@ -1,6 +1,6 @@
 package org.fulib.builder;
 
-import org.fulib.classmodel.ClassModel;
+import org.fulib.classmodelbysdmlib.ClassModel;
 
 public class ClassModelBuilder
 {

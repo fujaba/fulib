@@ -1,10 +1,8 @@
 package org.fulib;
 
-import de.uniks.networkparser.EntityUtil;
 import de.uniks.networkparser.list.SimpleKeyValueList;
-import org.fulib.classmodel.Clazz;
-import org.fulib.classmodel.CodeFragment;
-import org.fulib.classmodel.FileFragmentMap;
+import org.fulib.classmodelbysdmlib.CodeFragment;
+import org.fulib.classmodelbysdmlib.FileFragmentMap;
 import org.sdmlib.CGUtil;
 import org.sdmlib.StrUtil;
 import org.sdmlib.codegen.LocalVarTableEntry;

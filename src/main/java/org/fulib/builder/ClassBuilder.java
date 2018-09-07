@@ -1,9 +1,9 @@
 package org.fulib.builder;
 
-import org.fulib.classmodel.AssocRole;
-import org.fulib.classmodel.Attribute;
-import org.fulib.classmodel.ClassModel;
-import org.fulib.classmodel.Clazz;
+import org.fulib.classmodelbysdmlib.AssocRole;
+import org.fulib.classmodelbysdmlib.Attribute;
+import org.fulib.classmodelbysdmlib.ClassModel;
+import org.fulib.classmodelbysdmlib.Clazz;
 
 public class ClassBuilder
 {

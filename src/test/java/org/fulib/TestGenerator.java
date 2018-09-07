@@ -2,8 +2,8 @@ package org.fulib;
 
 import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
-import org.fulib.classmodel.ClassModel;
-import org.fulib.classmodel.Clazz;
+import org.fulib.classmodelbysdmlib.ClassModel;
+import org.fulib.classmodelbysdmlib.Clazz;
 import org.junit.Assert;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.*;

@@ -1,12 +1,7 @@
 package org.fulib;
 
-import org.fulib.classmodel.Attribute;
-import org.fulib.classmodel.ClassModel;
-import org.fulib.classmodel.Clazz;
-import org.fulib.classmodel.FileFragmentMap;
-import org.stringtemplate.v4.*;
-
-import java.util.logging.Logger;
+import org.fulib.classmodelbysdmlib.ClassModel;
+import org.fulib.classmodelbysdmlib.Clazz;
 
 public class Generator
 {
