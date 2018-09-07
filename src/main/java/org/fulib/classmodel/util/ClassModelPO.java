@@ -266,4 +266,65 @@ public class ClassModelPO extends PatternObject<ClassModelPO, ClassModel>
       return null;
    }
 
+   public ClassModelPO createDefaultRoleTypeCondition(String value)
+   {
+      new AttributeConstraint()
+      .withAttrName(ClassModel.PROPERTY_DEFAULTROLETYPE)
+      .withTgtValue(value)
+      .withSrc(this)
+      .withModifier(this.getPattern().getModifier())
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public ClassModelPO createDefaultRoleTypeCondition(String lower, String upper)
+   {
+      new AttributeConstraint()
+      .withAttrName(ClassModel.PROPERTY_DEFAULTROLETYPE)
+      .withTgtValue(lower)
+      .withUpperTgtValue(upper)
+      .withSrc(this)
+      .withModifier(this.getPattern().getModifier())
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public ClassModelPO createDefaultRoleTypeAssignment(String value)
+   {
+      new AttributeConstraint()
+      .withAttrName(ClassModel.PROPERTY_DEFAULTROLETYPE)
+      .withTgtValue(value)
+      .withSrc(this)
+      .withModifier(Pattern.CREATE)
+      .withPattern(this.getPattern());
+      
+      super.filterAttr();
+      
+      return this;
+   }
+   
+   public String getDefaultRoleType()
+   {
+      if (this.getPattern().getHasMatch())
+      {
+         return ((ClassModel) getCurrentMatch()).getDefaultRoleType();
+      }
+      return null;
+   }
+   
+   public ClassModelPO withDefaultRoleType(String value)
+   {
+      if (this.getPattern().getHasMatch())
+      {
+         ((ClassModel) getCurrentMatch()).setDefaultRoleType(value);
+      }
+      return this;
+   }
+   
 }

@@ -40,6 +40,7 @@ public class ClassModelBuilder
       ClassModel classModel = new ClassModel();
       classModel.setPackageName(packagename);
       classModel.setMainJavaDir(sourceFolder);
+      classModel.setDefaultRoleType(ARRAY_LIST_T_);
 
       classModelBuilder.setClassModel(classModel);
       return classModelBuilder;
@@ -58,6 +59,13 @@ public class ClassModelBuilder
    public ClassModel getClassModel()
    {
       return classModel;
+   }
+
+
+   public ClassModelBuilder setDefaultRoleType(String defaultRoleType)
+   {
+      this.classModel.setDefaultRoleType(defaultRoleType);
+      return this;
    }
 
 

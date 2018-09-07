@@ -133,7 +133,7 @@ public class TestGenerator
 
       universitiy.buildAssociation(studi, "students", mb.MANY, "uni", mb.ONE);
 
-   return mb.getClassModel();
+      return mb.getClassModel();
    }
 
 

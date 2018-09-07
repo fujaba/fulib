@@ -432,4 +432,87 @@ public class ClassModelSet extends SimpleSet<ClassModel>
    {
       return new ClassModelPO(this.toArray(new ClassModel[this.size()]));
    }
+
+   /**
+    * Loop through the current set of ClassModel objects and collect a list of the defaultRoleType attribute values. 
+    * 
+    * @return List of String objects reachable via defaultRoleType attribute
+    */
+   public ObjectSet getDefaultRoleType()
+   {
+      ObjectSet result = new ObjectSet();
+      
+      for (ClassModel obj : this)
+      {
+         result.add(obj.getDefaultRoleType());
+      }
+      
+      return result;
+   }
+
+
+   /**
+    * Loop through the current set of ClassModel objects and collect those ClassModel objects where the defaultRoleType attribute matches the parameter value. 
+    * 
+    * @param value Search value
+    * 
+    * @return Subset of ClassModel objects that match the parameter
+    */
+   public ClassModelSet createDefaultRoleTypeCondition(String value)
+   {
+      ClassModelSet result = new ClassModelSet();
+      
+      for (ClassModel obj : this)
+      {
+         if (value.equals(obj.getDefaultRoleType()))
+         {
+            result.add(obj);
+         }
+      }
+      
+      return result;
+   }
+
+
+   /**
+    * Loop through the current set of ClassModel objects and collect those ClassModel objects where the defaultRoleType attribute is between lower and upper. 
+    * 
+    * @param lower Lower bound 
+    * @param upper Upper bound 
+    * 
+    * @return Subset of ClassModel objects that match the parameter
+    */
+   public ClassModelSet createDefaultRoleTypeCondition(String lower, String upper)
+   {
+      ClassModelSet result = new ClassModelSet();
+      
+      for (ClassModel obj : this)
+      {
+         if (lower.compareTo(obj.getDefaultRoleType()) <= 0 && obj.getDefaultRoleType().compareTo(upper) <= 0)
+         {
+            result.add(obj);
+         }
+      }
+      
+      return result;
+   }
+
+
+   /**
+    * Loop through the current set of ClassModel objects and assign value to the defaultRoleType attribute of each of it. 
+    * 
+    * @param value New attribute value
+    * 
+    * @return Current set of ClassModel objects now with new attribute values.
+    */
+   public ClassModelSet withDefaultRoleType(String value)
+   {
+      for (ClassModel obj : this)
+      {
+         obj.setDefaultRoleType(value);
+      }
+      
+      return this;
+   }
+
 }

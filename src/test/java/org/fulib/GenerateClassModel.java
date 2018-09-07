@@ -16,7 +16,7 @@ public class GenerateClassModel
       Clazz classModel = model.createClazz("ClassModel")
             .withAttribute("packageName", DataType.STRING)
             .withAttribute("mainJavaDir", DataType.STRING)
-            .withAttribute("testJavaDir", DataType.STRING);
+            .withAttribute("defaultRoleType", DataType.STRING);
 
       Clazz fuClass = model.createClazz("Clazz")
             .withAttribute("name", DataType.STRING);

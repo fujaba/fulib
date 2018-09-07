@@ -128,6 +128,7 @@ public  class ClassModel implements SendableEntity
       result.append(" ").append(getMainJavaDir());
       result.append(" ").append(this.getMainJavaDir());
       result.append(" ").append(this.getTestJavaDir());
+      result.append(" ").append(this.getDefaultRoleType());
       return result.substring(1);
    }
 
@@ -280,6 +281,34 @@ public  class ClassModel implements SendableEntity
    public ClassModel withMainJavaDir(String value)
    {
       setMainJavaDir(value);
+      return this;
+   } 
+
+   
+   //==========================================================================
+   
+   public static final String PROPERTY_DEFAULTROLETYPE = "defaultRoleType";
+   
+   private String defaultRoleType;
+
+   public String getDefaultRoleType()
+   {
+      return this.defaultRoleType;
+   }
+   
+   public void setDefaultRoleType(String value)
+   {
+      if ( ! EntityUtil.stringEquals(this.defaultRoleType, value)) {
+      
+         String oldValue = this.defaultRoleType;
+         this.defaultRoleType = value;
+         this.firePropertyChange(PROPERTY_DEFAULTROLETYPE, oldValue, value);
+      }
+   }
+   
+   public ClassModel withDefaultRoleType(String value)
+   {
+      setDefaultRoleType(value);
       return this;
    } 
 }

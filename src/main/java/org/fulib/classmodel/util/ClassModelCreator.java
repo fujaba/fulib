@@ -37,6 +37,7 @@ public class ClassModelCreator implements AggregatedEntityCreator
       ClassModel.PROPERTY_CLASSES,
       ClassModel.PROPERTY_MAINJAVADIR,
       ClassModel.PROPERTY_TESTJAVADIR,
+      ClassModel.PROPERTY_DEFAULTROLETYPE,
    };
    
    private final String[] upProperties = new String[]
@@ -102,6 +103,11 @@ public class ClassModelCreator implements AggregatedEntityCreator
       {
          return ((ClassModel) target).getTestJavaDir();
       }
+
+      if (ClassModel.PROPERTY_DEFAULTROLETYPE.equalsIgnoreCase(attribute))
+      {
+         return ((ClassModel) target).getDefaultRoleType();
+      }
       
       return null;
    }
@@ -109,6 +115,12 @@ public class ClassModelCreator implements AggregatedEntityCreator
    @Override
    public boolean setValue(Object target, String attrName, Object value, String type)
    {
+      if (ClassModel.PROPERTY_DEFAULTROLETYPE.equalsIgnoreCase(attrName))
+      {
+         ((ClassModel) target).setDefaultRoleType((String) value);
+         return true;
+      }
+
       if (ClassModel.PROPERTY_TESTJAVADIR.equalsIgnoreCase(attrName))
       {
          ((ClassModel) target).setTestJavaDir((String) value);

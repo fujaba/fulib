@@ -93,7 +93,7 @@ public class ClassBuilder
       }
       else
       {
-         myRole.setRoleType(ClassModelBuilder.ARRAY_LIST_T_);
+         myRole.setRoleType(this.clazz.getModel().getDefaultRoleType());
       }
 
       AssocRole otherRole = otherClass.getClazz().createRoles()
@@ -106,7 +106,7 @@ public class ClassBuilder
       }
       else
       {
-         otherRole.setRoleType(ClassModelBuilder.ARRAY_LIST_T_);
+         otherRole.setRoleType(this.clazz.getModel().getDefaultRoleType());
       }
 
       myRole.setOther(otherRole);
