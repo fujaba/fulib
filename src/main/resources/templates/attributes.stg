@@ -25,7 +25,7 @@ attrSet(class, name, type, useEquals) ::=
 
 condition(name, type, useEquals) ::=
 <%
-<if(useEquals)>(value == null && this.<name> != null) || ! value.equals(this.<name>)
+<if(useEquals)>value == null ? this.<name> != null : ! value.equals(this.<name>)
 <else>
 value != this.<name>
 <endif>

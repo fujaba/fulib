@@ -18,7 +18,7 @@ public class Attribute
 
    public Attribute setName(String value)
    {
-      if ((value == null && this.name != null) || ! value.equals(this.name))
+      if (value == null ? this.name != null : ! value.equals(this.name))
       {
          String oldValue = this.name;
          this.name = value;
@@ -37,7 +37,7 @@ public class Attribute
 
    public Attribute setType(String value)
    {
-      if ((value == null && this.type != null) || ! value.equals(this.type))
+      if (value == null ? this.type != null : ! value.equals(this.type))
       {
          String oldValue = this.type;
          this.type = value;
@@ -56,7 +56,7 @@ public class Attribute
 
    public Attribute setInitialization(String value)
    {
-      if ((value == null && this.initialization != null) || ! value.equals(this.initialization))
+      if (value == null ? this.initialization != null : ! value.equals(this.initialization))
       {
          String oldValue = this.initialization;
          this.initialization = value;

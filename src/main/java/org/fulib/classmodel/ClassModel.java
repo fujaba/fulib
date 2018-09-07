@@ -18,7 +18,7 @@ public class ClassModel
 
    public ClassModel setPackageName(String value)
    {
-      if ((value == null && this.packageName != null) || ! value.equals(this.packageName))
+      if (value == null ? this.packageName != null : ! value.equals(this.packageName))
       {
          String oldValue = this.packageName;
          this.packageName = value;
@@ -37,7 +37,7 @@ public class ClassModel
 
    public ClassModel setMainJavaDir(String value)
    {
-      if ((value == null && this.mainJavaDir != null) || ! value.equals(this.mainJavaDir))
+      if (value == null ? this.mainJavaDir != null : ! value.equals(this.mainJavaDir))
       {
          String oldValue = this.mainJavaDir;
          this.mainJavaDir = value;
@@ -56,7 +56,7 @@ public class ClassModel
 
    public ClassModel setDefaultRoleType(String value)
    {
-      if ((value == null && this.defaultRoleType != null) || ! value.equals(this.defaultRoleType))
+      if (value == null ? this.defaultRoleType != null : ! value.equals(this.defaultRoleType))
       {
          String oldValue = this.defaultRoleType;
          this.defaultRoleType = value;

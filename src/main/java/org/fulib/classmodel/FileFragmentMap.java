@@ -25,7 +25,7 @@ public class FileFragmentMap
 
    public FileFragmentMap setFileName(String value)
    {
-      if ((value == null && this.fileName != null) || ! value.equals(this.fileName))
+      if (value == null ? this.fileName != null : ! value.equals(this.fileName))
       {
          String oldValue = this.fileName;
          this.fileName = value;

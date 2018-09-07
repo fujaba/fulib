@@ -18,7 +18,7 @@ public class Clazz
 
    public Clazz setName(String value)
    {
-      if ((value == null && this.name != null) || ! value.equals(this.name))
+      if (value == null ? this.name != null : ! value.equals(this.name))
       {
          String oldValue = this.name;
          this.name = value;

@@ -18,7 +18,7 @@ public class CodeFragment
 
    public CodeFragment setKey(String value)
    {
-      if ((value == null && this.key != null) || ! value.equals(this.key))
+      if (value == null ? this.key != null : ! value.equals(this.key))
       {
          String oldValue = this.key;
          this.key = value;
@@ -37,7 +37,7 @@ public class CodeFragment
 
    public CodeFragment setText(String value)
    {
-      if ((value == null && this.text != null) || ! value.equals(this.text))
+      if (value == null ? this.text != null : ! value.equals(this.text))
       {
          String oldValue = this.text;
          this.text = value;

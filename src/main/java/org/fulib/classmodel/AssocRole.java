@@ -18,7 +18,7 @@ public class AssocRole
 
    public AssocRole setName(String value)
    {
-      if ((value == null && this.name != null) || ! value.equals(this.name))
+      if (value == null ? this.name != null : ! value.equals(this.name))
       {
          String oldValue = this.name;
          this.name = value;
@@ -56,7 +56,7 @@ public class AssocRole
 
    public AssocRole setRoleType(String value)
    {
-      if ((value == null && this.roleType != null) || ! value.equals(this.roleType))
+      if (value == null ? this.roleType != null : ! value.equals(this.roleType))
       {
          String oldValue = this.roleType;
          this.roleType = value;
