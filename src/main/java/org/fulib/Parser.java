@@ -407,7 +407,7 @@ public class Parser
          methodBodyStartPos = currentRealToken.startPos;
          parseBlock();
 
-         String constructorSignature = org.sdmlib.codegen.Parser.CONSTRUCTOR + ":" + className + params;
+         String constructorSignature = CONSTRUCTOR + ":" + className + params;
 
       }
       else
@@ -470,7 +470,7 @@ public class Parser
                skip(';');
             }
 
-            String methodSignature = org.sdmlib.codegen.Parser.METHOD + ":" + memberName + params;
+            String methodSignature = Parser.METHOD + ":" + memberName + params;
             addCodeFragment(methodSignature, annotationsStartPos, previousRealToken.endPos);
          }
          else if (ENUM.equals(classType))
@@ -478,11 +478,11 @@ public class Parser
             if (",".equalsIgnoreCase(memberName) || ";".equalsIgnoreCase(memberName) || !";".equals(type)
                   && currentRealKindEquals(EOF))
             {
-               String enumSignature = org.sdmlib.codegen.Parser.ENUMVALUE + ":" + type;
+               String enumSignature = ENUMVALUE + ":" + type;
             }
             else
             {
-               String enumSignature = org.sdmlib.codegen.Parser.ENUMVALUE + ":" + type;
+               String enumSignature = ENUMVALUE + ":" + type;
 
                skipTo(';');
                skip(";");

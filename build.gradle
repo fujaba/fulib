@@ -14,8 +14,6 @@ repositories {
 }
 
 dependencies {
-    compile 'org.sdmlib:SDMLib:2.+'
-
     compile 'org.antlr:ST4:4.0.8'
 
     testCompile 'org.hamcrest:hamcrest-library:1.3'

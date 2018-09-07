@@ -1,12 +1,8 @@
 package org.fulib;
 
-import de.uniks.networkparser.graph.Cardinality;
-import de.uniks.networkparser.graph.Clazz;
-import de.uniks.networkparser.graph.DataType;
 import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
 import org.junit.Test;
-import org.sdmlib.models.classes.ClassModel;
 
 public class GenerateClassModel
 {
