@@ -203,7 +203,10 @@ public class ClassModel
    {
       StringBuilder result = new StringBuilder();
 
-      result.append(" ").append(this.getPackageName());result.append(" ").append(this.getMainJavaDir());result.append(" ").append(this.getDefaultRoleType());
+      result.append(" ").append(this.getPackageName());
+      result.append(" ").append(this.getMainJavaDir());
+      result.append(" ").append(this.getDefaultRoleType());
+
 
       return result.substring(1);
    }

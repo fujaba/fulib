@@ -150,7 +150,10 @@ public class Attribute
    {
       StringBuilder result = new StringBuilder();
 
-      result.append(" ").append(this.getName());result.append(" ").append(this.getType());result.append(" ").append(this.getInitialization());
+      result.append(" ").append(this.getName());
+      result.append(" ").append(this.getType());
+      result.append(" ").append(this.getInitialization());
+
 
       return result.substring(1);
    }

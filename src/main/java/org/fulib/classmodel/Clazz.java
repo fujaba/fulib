@@ -262,6 +262,7 @@ public class Clazz
 
       result.append(" ").append(this.getName());
 
+
       return result.substring(1);
    }
 

@@ -14,4 +14,5 @@ toString(names) ::= <<
 
 attrLine(name) ::= <<
 result.append(" ").append(this.get<name; format="cap">());
+
 >>

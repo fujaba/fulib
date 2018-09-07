@@ -102,7 +102,9 @@ public class CodeFragment
    {
       StringBuilder result = new StringBuilder();
 
-      result.append(" ").append(this.getKey());result.append(" ").append(this.getText());
+      result.append(" ").append(this.getKey());
+      result.append(" ").append(this.getText());
+
 
       return result.substring(1);
    }

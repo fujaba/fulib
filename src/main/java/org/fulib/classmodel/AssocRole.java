@@ -178,7 +178,9 @@ public AssocRole setOther(AssocRole value)
    {
       StringBuilder result = new StringBuilder();
 
-      result.append(" ").append(this.getName());result.append(" ").append(this.getRoleType());
+      result.append(" ").append(this.getName());
+      result.append(" ").append(this.getRoleType());
+
 
       return result.substring(1);
    }
