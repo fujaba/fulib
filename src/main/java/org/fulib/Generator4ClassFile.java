@@ -186,7 +186,7 @@ public class Generator4ClassFile
             st.add("roleType", roleType);
             result = st.render();
 
-            fragmentMap.add(Parser.METHOD+":without"+StrUtil.cap(role.getName())+"()", result, 3);
+            fragmentMap.add(Parser.METHOD+":without"+StrUtil.cap(role.getName()) + "(Object...)", result, 3);
          }
       }
    }
