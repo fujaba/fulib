@@ -140,6 +140,14 @@ public class ClassModel
    }
 
 
+   public String getPackageSrcFolder()
+   {
+      return this.getMainJavaDir() + "/" + this.getPackageName().replaceAll("\\.", "/");
+   }
+
+
+
+   //=======================================================================================================
    protected PropertyChangeSupport listeners = null;
 
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)

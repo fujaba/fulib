@@ -1,10 +1,10 @@
 package org.fulib;
 
 import org.fulib.builder.ClassModelBuilder;
-import org.fulib.classmodelbysdmlib.AssocRole;
-import org.fulib.classmodelbysdmlib.Attribute;
-import org.fulib.classmodelbysdmlib.Clazz;
-import org.fulib.classmodelbysdmlib.FileFragmentMap;
+import org.fulib.classmodel.AssocRole;
+import org.fulib.classmodel.Attribute;
+import org.fulib.classmodel.Clazz;
+import org.fulib.classmodel.FileFragmentMap;
 import org.stringtemplate.v4.*;
 
 import java.util.ArrayList;

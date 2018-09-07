@@ -1,8 +1,8 @@
 package org.fulib;
 
 import de.uniks.networkparser.list.SimpleKeyValueList;
-import org.fulib.classmodelbysdmlib.CodeFragment;
-import org.fulib.classmodelbysdmlib.FileFragmentMap;
+import org.fulib.classmodel.CodeFragment;
+import org.fulib.classmodel.FileFragmentMap;
 import org.sdmlib.CGUtil;
 import org.sdmlib.StrUtil;
 import org.sdmlib.codegen.LocalVarTableEntry;
@@ -876,14 +876,14 @@ public class Parser
          endPos = startPos - 1;
       }
       // add gap fragement
-      CodeFragment gap = new CodeFragment().withKey("gap:").withText(fileBody.substring(lastFragmentEndPos + 1, startPos));
+      CodeFragment gap = new CodeFragment().setKey("gap:").setText(fileBody.substring(lastFragmentEndPos + 1, startPos));
 
       fragmentMap.add(gap);
 
       // add code fragment
       CodeFragment codeFragment = new CodeFragment()
-            .withKey(key)
-            .withText(fileBody.substring(startPos, endPos+1));
+            .setKey(key)
+            .setText(fileBody.substring(startPos, endPos+1));
 
       fragmentMap.add(codeFragment);
 

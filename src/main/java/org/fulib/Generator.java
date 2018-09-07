@@ -1,7 +1,7 @@
 package org.fulib;
 
-import org.fulib.classmodelbysdmlib.ClassModel;
-import org.fulib.classmodelbysdmlib.Clazz;
+import org.fulib.classmodel.ClassModel;
+import org.fulib.classmodel.Clazz;
 
 public class Generator
 {

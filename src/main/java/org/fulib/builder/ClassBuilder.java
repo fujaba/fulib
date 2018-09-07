@@ -1,9 +1,9 @@
 package org.fulib.builder;
 
-import org.fulib.classmodelbysdmlib.AssocRole;
-import org.fulib.classmodelbysdmlib.Attribute;
-import org.fulib.classmodelbysdmlib.ClassModel;
-import org.fulib.classmodelbysdmlib.Clazz;
+import org.fulib.classmodel.AssocRole;
+import org.fulib.classmodel.Attribute;
+import org.fulib.classmodel.ClassModel;
+import org.fulib.classmodel.Clazz;
 
 public class ClassBuilder
 {
@@ -83,9 +83,10 @@ public class ClassBuilder
     */
    public void buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality, String... roleTypes)
    {
-      AssocRole myRole = this.getClazz().createRoles()
-            .withName(myRoleName)
-            .withCardinality(myCardinality);
+      AssocRole myRole = new AssocRole()
+            .setClazz(this.getClazz())
+            .setName(myRoleName)
+            .setCardinality(myCardinality);
 
       if (roleTypes != null && roleTypes.length > 0)
       {
@@ -96,9 +97,10 @@ public class ClassBuilder
          myRole.setRoleType(this.clazz.getModel().getDefaultRoleType());
       }
 
-      AssocRole otherRole = otherClass.getClazz().createRoles()
-            .withName(otherRoleName)
-            .withCardinality(otherCardinality);
+      AssocRole otherRole = new AssocRole()
+            .setClazz(otherClass.getClazz())
+            .setName(otherRoleName)
+            .setCardinality(otherCardinality);
 
       if (roleTypes != null && roleTypes.length > 1)
       {
