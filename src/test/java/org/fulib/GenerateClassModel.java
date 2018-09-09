@@ -23,12 +23,14 @@ public class GenerateClassModel
       ClassBuilder attribute = mb.buildClass("Attribute")
             .buildAttribute("name", mb.STRING)
             .buildAttribute("type", mb.STRING)
-            .buildAttribute("initialization", mb.STRING);
+            .buildAttribute("initialization", mb.STRING)
+            .buildAttribute("modified", mb.BOOLEAN, "false");
 
       ClassBuilder assocRole = mb.buildClass("AssocRole")
             .buildAttribute("name", mb.STRING)
             .buildAttribute("cardinality", mb.INT)
-            .buildAttribute("roleType", mb.STRING);
+            .buildAttribute("roleType", mb.STRING)
+            .buildAttribute("modified", mb.BOOLEAN, "false");
 
       classModel.buildAssociation(fuClass, "classes", mb.MANY, "model", mb.ONE);
 

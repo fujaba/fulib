@@ -24,6 +24,10 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 
 public class TestGenerator
@@ -100,6 +104,7 @@ public class TestGenerator
    {
       Tools.removeDirAndFiles("tmp");
 
+
       // first simple model
       ClassModelBuilder mb = ClassModelBuilder.get("org.evolve", "tmp/src");
       ClassBuilder uni = mb.buildClass("University")
@@ -108,16 +113,52 @@ public class TestGenerator
             .buildAttribute("matNo", mb.STRING)
             .buildAttribute("startYear", mb.INT);
       uni.buildAssociation(stud, "students", mb.MANY, "uni", mb.ONE);
+      ClassBuilder room = mb.buildClass("Room")
+            .buildAttribute("roomNo", mb.STRING);
 
       ClassModel firstModel = mb.getClassModel();
+
+      createPreexistingUniFile("org.evolve", firstModel);
+
       Generator.generate(firstModel);
+
       int compileResult = Tools.javac("tmp/out", firstModel.getPackageSrcFolder());
       assertThat(compileResult, equalTo(0));
       assertThat(Files.exists(Paths.get(firstModel.getPackageSrcFolder() + "/University.java")), is(true));
 
       // rename an attribute
-      stud.getClazz().getAttributes().get(1).setType(mb.STRING);
+      uni.getClazz().setName("Institute");
+      room.getClazz().setName("LectureHall");
+      stud.getClazz().getAttribute("matNo").setName("studentId");
+      stud.getClazz().getAttribute("startYear").setType(mb.STRING);
+
+      // prepare logger
+      Logger logger = Logger.getLogger(Generator.class.getName());
+      final ArrayList<LogRecord> logRecordList = new ArrayList<>();
+      Handler handler = new Handler()
+      {
+         @Override
+         public void publish(LogRecord record)
+         {
+            logRecordList.add(record);
+         }
+
+         @Override
+         public void flush()
+         {
+         }
+
+         @Override
+         public void close() throws SecurityException
+         {
+         }
+      };
+      logger.addHandler(handler);
+      logger.setLevel(Level.INFO);
+
       Generator.generate(firstModel);
+      assertThat(logRecordList.size(), not(equalTo(0)));
+
       compileResult = Tools.javac("tmp/out", firstModel.getPackageSrcFolder());
       assertThat(compileResult, equalTo(0));
 
@@ -127,6 +168,7 @@ public class TestGenerator
       // rename an association
 
    }
+
 
 
    private void createPreexistingUniFile(String packageName, ClassModel model) throws IOException

@@ -1,12 +1,14 @@
 package org.fulib.classmodel;
 
 import org.fulib.Parser;
+import org.fulib.StrUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
@@ -135,6 +137,12 @@ public class FileFragmentMap
 
    public CodeFragment add(String key, String newText, int newLines)
    {
+      return add(key, newText, newLines, false);
+   }
+
+   public CodeFragment add(String key, String newText, int newLines, boolean removeFragment)
+   {
+
       CodeFragment result = codeMap.get(key);
 
       if (result != null)
@@ -142,6 +150,19 @@ public class FileFragmentMap
          if (result.getText().contains("// no"))
          {
             // do not overwrite
+            return result;
+         }
+
+         if (removeFragment)
+         {
+            codeMap.remove(key);
+            int pos = fragmentList.indexOf(result);
+            fragmentList.remove(pos);
+            CodeFragment gap = fragmentList.get(pos - 1);
+            if (StrUtil.stringEquals(gap.getKey(), Parser.GAP))
+            {
+               fragmentList.remove(pos - 1);
+            }
             return result;
          }
 
@@ -235,4 +256,23 @@ public class FileFragmentMap
       }
    }
 
+   public boolean classBodyIsEmpty(FileFragmentMap fragmentMap)
+   {
+      CodeFragment startFragment = codeMap.get(Parser.CLASS);
+      CodeFragment endFragment = codeMap.get(Parser.CLASS_END);
+
+      if (startFragment == null || endFragment == null) return true;
+      int endPos = fragmentList.indexOf(endFragment);
+
+      for (int i = fragmentList.indexOf(startFragment) + 1; i < endPos; i++)
+      {
+         CodeFragment fragment = fragmentList.get(i);
+         if ( ! StrUtil.stringEquals(fragment.getKey(), Parser.GAP))
+         {
+            return false;
+         }
+      }
+
+      return true;
+   }
 }

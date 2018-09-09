@@ -1,5 +1,6 @@
 package org.fulib.util;
 
+import org.fulib.Generator;
 import org.fulib.Parser;
 import org.fulib.StrUtil;
 import org.fulib.builder.ClassModelBuilder;
@@ -9,7 +10,12 @@ import org.fulib.classmodel.Clazz;
 import org.fulib.classmodel.FileFragmentMap;
 import org.stringtemplate.v4.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class Generator4ClassFile
 {
@@ -33,9 +39,25 @@ public class Generator4ClassFile
 
       fragmentMap.add(Parser.CLASS_END, "}", 1);
 
-      fragmentMap.writeFile();
+      if (clazz.getModified() == true && fragmentMap.classBodyIsEmpty(fragmentMap))
+      {
+         Path path = Paths.get(classFileName);
+         try
+         {
+            Files.deleteIfExists(path);
+            Logger.getLogger(Generator.class.getName())
+                  .info("\n   deleting empty file " + classFileName);
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
+         }
+      }
+      else
+      {
+         fragmentMap.writeFile();
+      }
    }
-
 
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
@@ -76,7 +98,7 @@ public class Generator4ClassFile
       attrTemplate.add("value", attr.getInitialization());
       String result = attrTemplate.render();
 
-      fragmentMap.add(Parser.ATTRIBUTE + ":" + attr.getName(), result, 2);
+      fragmentMap.add(Parser.ATTRIBUTE + ":" + attr.getName(), result, 2, attr.getModified());
    }
 
 
@@ -89,7 +111,7 @@ public class Generator4ClassFile
       attrTemplate.add("name", attr.getName());
       String result = attrTemplate.render();
 
-      fragmentMap.add(Parser.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2);
+      fragmentMap.add(Parser.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
    }
 
 
@@ -104,7 +126,7 @@ public class Generator4ClassFile
       attrTemplate.add("useEquals", attr.getType().equals("String"));
       String result = attrTemplate.render();
 
-      fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() +")", result, 3);
+      fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() +")", result, 3, attr.getModified());
 
    }
 
@@ -130,7 +152,7 @@ public class Generator4ClassFile
             st.add("roleType", roleType);
             result = st.render();
 
-            fragmentMap.add(Parser.ATTRIBUTE+":EMPTY_"+role.getName(), result, 3);
+            fragmentMap.add(Parser.ATTRIBUTE+":EMPTY_"+role.getName(), result, 3, role.getModified());
          }
 
 
@@ -139,7 +161,7 @@ public class Generator4ClassFile
          st.add("roleType", roleType);
          result = st.render();
 
-         fragmentMap.add(Parser.ATTRIBUTE+":"+role.getName(), result, 2);
+         fragmentMap.add(Parser.ATTRIBUTE+":"+role.getName(), result, 2, role.getModified());
 
 
          st = group.getInstanceOf("getMethod");
@@ -150,7 +172,7 @@ public class Generator4ClassFile
          st.add("roleType", roleType);
          result = st.render();
 
-         fragmentMap.add(Parser.METHOD+":get"+StrUtil.cap(role.getName())+"()", result, 2);
+         fragmentMap.add(Parser.METHOD+":get"+StrUtil.cap(role.getName())+"()", result, 2, role.getModified());
 
 
          st = group.getInstanceOf("setMethod");
@@ -173,7 +195,7 @@ public class Generator4ClassFile
 
          signature += StrUtil.cap(role.getName()) + "(" + paramType + ")";
 
-         fragmentMap.add(Parser.METHOD + ":" + signature, result, 3);
+         fragmentMap.add(Parser.METHOD + ":" + signature, result, 3, role.getModified());
 
 
          if (role.getCardinality() != ClassModelBuilder.ONE)
@@ -188,7 +210,7 @@ public class Generator4ClassFile
             st.add("roleType", roleType);
             result = st.render();
 
-            fragmentMap.add(Parser.METHOD+":without"+StrUtil.cap(role.getName()) + "(Object...)", result, 3);
+            fragmentMap.add(Parser.METHOD+":without"+StrUtil.cap(role.getName()) + "(Object...)", result, 3, role.getModified());
          }
       }
    }
@@ -203,38 +225,44 @@ public class Generator4ClassFile
       group.registerRenderer(String.class, new StringRenderer());
 
       String result = "   protected PropertyChangeSupport listeners = null;";
-      fragmentMap.add(Parser.ATTRIBUTE + ":listeners", result, 2);
+      fragmentMap.add(Parser.ATTRIBUTE + ":listeners", result, 2, clazz.getModified());
 
       ST st = group.getInstanceOf("firePropertyChange");
       result = st.render();
-      fragmentMap.add(Parser.METHOD + ":firePropertyChange(String,Object,Object)", result, 2);
+      fragmentMap.add(Parser.METHOD + ":firePropertyChange(String,Object,Object)", result, 2, clazz.getModified());
 
       st = group.getInstanceOf("addPropertyChangeListener1");
       result = st.render();
-      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(PropertyChangeListener)", result, 2);
+      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(PropertyChangeListener)", result, 2, clazz.getModified());
 
       st = group.getInstanceOf("addPropertyChangeListener2");
       result = st.render();
-      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", result, 2);
+      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", result, 2, clazz.getModified());
 
       st = group.getInstanceOf("removePropertyChangeListener1");
       result = st.render();
-      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(PropertyChangeListener)", result, 2);
+      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(PropertyChangeListener)", result, 2, clazz.getModified());
 
       st = group.getInstanceOf("removePropertyChangeListener2");
       result = st.render();
-      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(String,PropertyChangeListener)", result, 2);
+      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(String,PropertyChangeListener)", result, 2, clazz.getModified());
    }
 
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
    {
       ArrayList<String> nameList = new ArrayList<>();
+      boolean modified = false;
       for (Attribute attr : clazz.getAttributes())
       {
          if (attr.getType().equals(ClassModelBuilder.STRING))
          {
             nameList.add(attr.getName());
+         }
+
+         if (attr.getModified() == true)
+         {
+            modified = true;
          }
       }
 
@@ -248,6 +276,6 @@ public class Generator4ClassFile
          result = st.render();
       }
 
-      fragmentMap.add(Parser.METHOD+":toString()", result, 2);
+      fragmentMap.add(Parser.METHOD+":toString()", result, 2, modified);
    }
 }

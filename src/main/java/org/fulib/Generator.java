@@ -1,5 +1,7 @@
 package org.fulib;
 
+import org.fulib.classmodel.AssocRole;
+import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.fulib.util.Generator4ClassFile;
@@ -14,6 +16,14 @@ import java.util.logging.Logger;
 
 public class Generator
 {
+
+   private static Logger logger;
+
+   static {
+      logger = Logger.getLogger(Generator.class.getName());
+      logger.setLevel(Level.SEVERE);
+   }
+
    public static void generate(ClassModel model)
    {
       new Generator()
@@ -71,7 +81,7 @@ public class Generator
       }
       catch (IOException e)
       {
-         Logger.getGlobal().log(Level.SEVERE, "could not load " + fileName, e);
+         Logger.getGlobal().log(Level.SEVERE, "\n   could not load " + fileName, e);
       }
 
       return null;
@@ -103,7 +113,7 @@ public class Generator
 
       for (Clazz oldClazz : oldModel.getClasses())
       {
-         Clazz newClazz = findClazz(newModel, oldClazz.getName());
+         Clazz newClazz = newModel.getClazz(oldClazz.getName());
 
          markModifiedElementsInOldClazz(oldClazz, newClazz);
       }
@@ -111,21 +121,54 @@ public class Generator
 
    private void markModifiedElementsInOldClazz(Clazz oldClazz, Clazz newClazz)
    {
+      logger = Logger.getLogger(Generator.class.getName());
       if (newClazz == null)
       {
-
+         oldClazz.markAsModified();
+         logger.info("\n   markedAsModified: class " + oldClazz.getName());
       }
-   }
 
-   private Clazz findClazz(ClassModel model, String name)
-   {
-      for (Clazz clazz : model.getClasses())
+      for (Attribute oldAttr : oldClazz.getAttributes())
       {
-         if (StrUtil.stringEquals(clazz.getName(), name))
+         boolean modified = newClazz == null;
+
+         if ( ! modified)
          {
-            return clazz;
+            Attribute newAttr = newClazz.getAttribute(oldAttr.getName());
+
+            modified = newAttr == null
+                  || ! StrUtil.stringEquals(oldAttr.getType(), newAttr.getType());
+         }
+
+         if (modified)
+         {
+            oldAttr.markAsModified();
+            logger.info("\n   markedAsModified: attribute " + oldAttr.getName());
          }
       }
-      return null;
+
+      for (AssocRole oldRole : oldClazz.getRoles())
+      {
+         boolean modified = newClazz == null;
+
+         if ( ! modified)
+         {
+            AssocRole newRole = newClazz.getRole(oldRole.getName());
+
+            modified = newRole == null
+                  || oldRole.getCardinality() != newRole.getCardinality();
+         }
+
+         if (modified)
+         {
+            oldRole.markAsModified();
+            logger.info("\n   markedAsModified: role " + oldRole.getName());
+            if (oldRole.getOther() != null)
+            {
+               oldRole.getOther().markAsModified();
+               logger.info("\n   markedAsModified: role " + oldRole.getOther().getName());
+            }
+         }
+      }
    }
 }

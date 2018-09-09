@@ -159,4 +159,28 @@ public class Attribute
    }
 
 
+   private boolean modified = false;
+
+   public boolean getModified()
+   {
+      return modified;
+   }
+
+   public Attribute setModified(boolean value)
+   {
+      if (value != this.modified)
+      {
+         boolean oldValue = this.modified;
+         this.modified = value;
+         firePropertyChange("modified", oldValue, value);
+      }
+      return this;
+   }
+
+   public Attribute markAsModified()
+   {
+      return setModified(true);
+   }
+
+
 }

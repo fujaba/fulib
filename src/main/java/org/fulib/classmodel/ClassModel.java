@@ -1,5 +1,7 @@
 package org.fulib.classmodel;
 
+import org.fulib.StrUtil;
+
 import java.util.ArrayList;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
@@ -78,6 +80,21 @@ public class ClassModel
 
       return this.classes;
    }
+
+
+   public Clazz getClazz(String name)
+   {
+      for (Clazz clazz : this.getClasses())
+      {
+         if (StrUtil.stringEquals(clazz.getName(), name))
+         {
+            return clazz;
+         }
+      }
+      return null;
+   }
+
+
 
    public ClassModel withClasses(Object... value)
    {

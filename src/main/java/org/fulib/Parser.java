@@ -56,6 +56,8 @@ public class Parser
 
    public static final String EXTENDS = "extends";
 
+   public static final String GAP = "gap:";
+
    public static char NEW_LINE = '\n';
 
    private StringBuilder fileBody = null;
@@ -321,7 +323,7 @@ public class Parser
          addCodeFragment(CLASS_END, currentRealToken.startPos, currentRealToken.endPos);
       }
 
-      addCodeFragment("gap:", currentRealToken.endPos+1, fileBody.length()-1);
+      addCodeFragment(GAP, currentRealToken.endPos+1, fileBody.length()-1);
 
    }
 
@@ -797,7 +799,7 @@ public class Parser
          endPos = startPos - 1;
       }
       // add gap fragement
-      CodeFragment gap = new CodeFragment().setKey("gap:").setText(fileBody.substring(lastFragmentEndPos + 1, startPos));
+      CodeFragment gap = new CodeFragment().setKey(GAP).setText(fileBody.substring(lastFragmentEndPos + 1, startPos));
 
       fragmentMap.add(gap);
 

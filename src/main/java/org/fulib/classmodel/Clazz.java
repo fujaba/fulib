@@ -1,5 +1,7 @@
 package org.fulib.classmodel;
 
+import org.fulib.StrUtil;
+
 import java.util.ArrayList;
 
 import java.beans.PropertyChangeSupport;
@@ -71,6 +73,20 @@ public class Clazz
 
       return this.attributes;
    }
+
+   public Attribute getAttribute(String name)
+   {
+      for (Attribute attr : this.getAttributes())
+      {
+         if (StrUtil.stringEquals(attr.getName(), name))
+         {
+            return attr;
+         }
+      }
+      return null;
+   }
+
+
 
    public Clazz withAttributes(Object... value)
    {
@@ -146,6 +162,20 @@ public class Clazz
 
       return this.roles;
    }
+
+   public AssocRole getRole(String name)
+   {
+      for (AssocRole role : this.getRoles())
+      {
+         if (StrUtil.stringEquals(role.getName(), name))
+         {
+            return role;
+         }
+      }
+      return null;
+   }
+
+
 
    public Clazz withRoles(Object... value)
    {
@@ -268,5 +298,28 @@ public class Clazz
       return result.substring(1);
    }
 
+
+   private boolean modified = false;
+
+   public boolean getModified()
+   {
+      return modified;
+   }
+
+   public Clazz setModified(boolean value)
+   {
+      if (value != this.modified)
+      {
+         boolean oldValue = this.modified;
+         this.modified = value;
+         firePropertyChange("modified", oldValue, value);
+      }
+      return this;
+   }
+
+   public Clazz markAsModified()
+   {
+      return this.setModified(true);
+   }
 
 }

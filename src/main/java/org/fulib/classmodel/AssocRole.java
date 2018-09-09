@@ -186,4 +186,27 @@ public AssocRole setOther(AssocRole value)
    }
 
 
+   private boolean modified = false;
+
+   public boolean getModified()
+   {
+      return modified;
+   }
+
+   public AssocRole setModified(boolean value)
+   {
+      if (value != this.modified)
+      {
+         boolean oldValue = this.modified;
+         this.modified = value;
+         firePropertyChange("modified", oldValue, value);
+      }
+      return this;
+   }
+
+   public AssocRole markAsModified()
+   {
+      return this.setModified(true);
+   }
+
 }
