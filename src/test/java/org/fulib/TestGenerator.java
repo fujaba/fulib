@@ -95,6 +95,39 @@ public class TestGenerator
 
    }
 
+   @Test
+   public void testModelEvolution() throws IOException
+   {
+      Tools.removeDirAndFiles("tmp");
+
+      // first simple model
+      ClassModelBuilder mb = ClassModelBuilder.get("org.evolve", "tmp/src");
+      ClassBuilder uni = mb.buildClass("University")
+            .buildAttribute("uniName", mb.STRING);
+      ClassBuilder stud = mb.buildClass("Student")
+            .buildAttribute("matNo", mb.STRING)
+            .buildAttribute("startYear", mb.INT);
+      uni.buildAssociation(stud, "students", mb.MANY, "uni", mb.ONE);
+
+      ClassModel firstModel = mb.getClassModel();
+      Generator.generate(firstModel);
+      int compileResult = Tools.javac("tmp/out", firstModel.getPackageSrcFolder());
+      assertThat(compileResult, equalTo(0));
+      assertThat(Files.exists(Paths.get(firstModel.getPackageSrcFolder() + "/University.java")), is(true));
+
+      // rename an attribute
+      stud.getClazz().getAttributes().get(1).setType(mb.STRING);
+      Generator.generate(firstModel);
+      compileResult = Tools.javac("tmp/out", firstModel.getPackageSrcFolder());
+      assertThat(compileResult, equalTo(0));
+
+      // rename a class
+      uni.getClazz().setName("Institute");
+
+      // rename an association
+
+   }
+
 
    private void createPreexistingUniFile(String packageName, ClassModel model) throws IOException
    {
@@ -314,7 +347,15 @@ public class TestGenerator
       assertThat(karli, hasProperty("uni", equalTo(studyRight)));
       assertThat(lee, hasProperty("uni", equalTo(studyRight)));
 
-      withStudents.invoke(studyFuture, new Object[]{new Object[]{karli, lee, studyRight}});
+      try
+      {
+         withStudents.invoke(studyFuture, new Object[]{new Object[]{karli, lee, studyRight}});
+         Assert.fail();
+      }
+      catch (Exception e)
+      {
+         // cool
+      }
       assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli, lee)));
       assertThat(studyFuture, hasProperty("students", not(containsInAnyOrder(studyRight))));
       assertThat(karli, hasProperty("uni", equalTo(studyFuture)));

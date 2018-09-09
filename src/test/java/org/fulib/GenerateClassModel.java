@@ -17,7 +17,8 @@ public class GenerateClassModel
             .buildAttribute("defaultRoleType", mb.STRING);
 
       ClassBuilder fuClass = mb.buildClass("Clazz")
-            .buildAttribute("name", mb.STRING);
+            .buildAttribute("name", mb.STRING)
+            .buildAttribute("modified", mb.BOOLEAN, "false");
 
       ClassBuilder attribute = mb.buildClass("Attribute")
             .buildAttribute("name", mb.STRING)
