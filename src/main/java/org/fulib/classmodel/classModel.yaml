@@ -2,8 +2,8 @@
   classes: 	c2 	c3 	c4 	c5 	c6 	c7 	
   packageName: 	org.fulib.classmodel
   mainJavaDir: 	"src/main/java"
-  defaultRoleType: 	"java.util.ArrayList<%s>"
   packageSrcFolder: 	"src/main/java/org/fulib/classmodel"
+  defaultRoleType: 	"java.util.ArrayList<%s>"
 
 - c2: 	Clazz
   name: 	ClassModel
@@ -66,9 +66,9 @@
 - a11: 	AssocRole
   name: 	classes
   clazz: 	c2
-  modified: 	false
   roleType: 	"java.util.ArrayList<%s>"
   other: 	a14
+  modified: 	false
   cardinality: 	42
 
 - a12: 	Attribute
@@ -81,31 +81,31 @@
   name: 	modified
   type: 	boolean
   clazz: 	c3
-  modified: 	false
   initialization: 	false
+  modified: 	false
 
 - a14: 	AssocRole
   name: 	model
   clazz: 	c3
-  modified: 	false
   roleType: 	"java.util.ArrayList<%s>"
   other: 	a11
+  modified: 	false
   cardinality: 	1
 
 - a15: 	AssocRole
   name: 	attributes
   clazz: 	c3
-  modified: 	false
   roleType: 	"java.util.ArrayList<%s>"
   other: 	a21
+  modified: 	false
   cardinality: 	42
 
 - a16: 	AssocRole
   name: 	roles
   clazz: 	c3
-  modified: 	false
   roleType: 	"java.util.ArrayList<%s>"
   other: 	a26
+  modified: 	false
   cardinality: 	42
 
 - a17: 	Attribute
@@ -130,15 +130,15 @@
   name: 	modified
   type: 	boolean
   clazz: 	c4
-  modified: 	false
   initialization: 	false
+  modified: 	false
 
 - a21: 	AssocRole
   name: 	clazz
   clazz: 	c4
-  modified: 	false
   roleType: 	"java.util.ArrayList<%s>"
   other: 	a15
+  modified: 	false
   cardinality: 	1
 
 - a22: 	Attribute
@@ -163,31 +163,31 @@
   name: 	modified
   type: 	boolean
   clazz: 	c5
-  modified: 	false
   initialization: 	false
+  modified: 	false
 
 - a26: 	AssocRole
   name: 	clazz
   clazz: 	c5
-  modified: 	false
   roleType: 	"java.util.ArrayList<%s>"
   other: 	a16
+  modified: 	false
   cardinality: 	1
 
 - a27: 	AssocRole
   name: 	other
   clazz: 	c5
-  modified: 	false
   roleType: 	"java.util.ArrayList<%s>"
   other: 	a28
+  modified: 	false
   cardinality: 	1
 
 - a28: 	AssocRole
   name: 	other
   clazz: 	c5
-  modified: 	false
   roleType: 	"java.util.ArrayList<%s>"
   other: 	a27
+  modified: 	false
   cardinality: 	1
 
 - a29: 	Attribute
