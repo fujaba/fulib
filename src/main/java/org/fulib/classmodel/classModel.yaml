@@ -1,49 +1,49 @@
 - c1: 	ClassModel
   classes: 	c2 	c3 	c4 	c5 	c6 	c7 	
   packageName: 	org.fulib.classmodel
-  mainJavaDir: 	"src/main/java"
   defaultRoleType: 	"java.util.ArrayList<%s>"
   packageSrcFolder: 	"src/main/java/org/fulib/classmodel"
+  mainJavaDir: 	"src/main/java"
 
 - c2: 	Clazz
   name: 	ClassModel
   attributes: 	a8 	a9 	a10 	
-  model: 	c1
-  roles: 	a11 	
   modified: 	false
+  roles: 	a11 	
+  model: 	c1
 
 - c3: 	Clazz
   name: 	Clazz
   attributes: 	a12 	a13 	
-  model: 	c1
-  roles: 	a14 	a15 	a16 	
   modified: 	false
+  roles: 	a14 	a15 	a16 	
+  model: 	c1
 
 - c4: 	Clazz
   name: 	Attribute
   attributes: 	a17 	a18 	a19 	a20 	
-  model: 	c1
-  roles: 	a21 	
   modified: 	false
+  roles: 	a21 	
+  model: 	c1
 
 - c5: 	Clazz
   name: 	AssocRole
   attributes: 	a22 	a23 	a24 	a25 	
-  model: 	c1
-  roles: 	a26 	a27 	a28 	
   modified: 	false
+  roles: 	a26 	a27 	a28 	
+  model: 	c1
 
 - c6: 	Clazz
   name: 	FileFragmentMap
   attributes: 	a29 	
-  model: 	c1
   modified: 	false
+  model: 	c1
 
 - c7: 	Clazz
   name: 	CodeFragment
   attributes: 	a30 	a31 	
-  model: 	c1
   modified: 	false
+  model: 	c1
 
 - a8: 	Attribute
   name: 	packageName
@@ -67,9 +67,9 @@
   name: 	classes
   modified: 	false
   clazz: 	c2
-  roleType: 	"java.util.ArrayList<%s>"
   other: 	a14
   cardinality: 	42
+  roleType: 	"java.util.ArrayList<%s>"
 
 - a12: 	Attribute
   name: 	name
@@ -81,32 +81,32 @@
   name: 	modified
   type: 	boolean
   modified: 	false
-  clazz: 	c3
   initialization: 	false
+  clazz: 	c3
 
 - a14: 	AssocRole
   name: 	model
   modified: 	false
   clazz: 	c3
-  roleType: 	"java.util.ArrayList<%s>"
   other: 	a11
   cardinality: 	1
+  roleType: 	"java.util.ArrayList<%s>"
 
 - a15: 	AssocRole
   name: 	attributes
   modified: 	false
   clazz: 	c3
-  roleType: 	"java.util.ArrayList<%s>"
   other: 	a21
   cardinality: 	42
+  roleType: 	"java.util.ArrayList<%s>"
 
 - a16: 	AssocRole
   name: 	roles
   modified: 	false
   clazz: 	c3
-  roleType: 	"java.util.ArrayList<%s>"
   other: 	a26
   cardinality: 	42
+  roleType: 	"java.util.ArrayList<%s>"
 
 - a17: 	Attribute
   name: 	name
@@ -130,16 +130,16 @@
   name: 	modified
   type: 	boolean
   modified: 	false
-  clazz: 	c4
   initialization: 	false
+  clazz: 	c4
 
 - a21: 	AssocRole
   name: 	clazz
   modified: 	false
   clazz: 	c4
-  roleType: 	"java.util.ArrayList<%s>"
   other: 	a15
   cardinality: 	1
+  roleType: 	"java.util.ArrayList<%s>"
 
 - a22: 	Attribute
   name: 	name
@@ -163,32 +163,32 @@
   name: 	modified
   type: 	boolean
   modified: 	false
-  clazz: 	c5
   initialization: 	false
+  clazz: 	c5
 
 - a26: 	AssocRole
   name: 	clazz
   modified: 	false
   clazz: 	c5
-  roleType: 	"java.util.ArrayList<%s>"
   other: 	a16
   cardinality: 	1
+  roleType: 	"java.util.ArrayList<%s>"
 
 - a27: 	AssocRole
   name: 	other
   modified: 	false
   clazz: 	c5
-  roleType: 	"java.util.ArrayList<%s>"
   other: 	a28
   cardinality: 	1
+  roleType: 	"java.util.ArrayList<%s>"
 
 - a28: 	AssocRole
   name: 	other
   modified: 	false
   clazz: 	c5
-  roleType: 	"java.util.ArrayList<%s>"
   other: 	a27
   cardinality: 	1
+  roleType: 	"java.util.ArrayList<%s>"
 
 - a29: 	Attribute
   name: 	fileName

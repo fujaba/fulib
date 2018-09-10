@@ -156,7 +156,6 @@ public class YamlIdMap
    private static final String REMOVE = "remove";
    private static final String REMOVE_YOU = "removeYou";
    private ArrayList<String> packageNames;
-   private StringTokenizer tokenizer;
    private String yaml;
    private String userId = null;
    private boolean decodingPropertyChange;
@@ -542,9 +541,9 @@ public class YamlIdMap
 
       StringBuilder buf = new StringBuilder();
 
-      for (int i = 0; i < split.length; i++)
+      for (String str : split)
       {
-         buf.append(split[i]).append(" ");
+         buf.append(str).append(" ");
       }
 
       return buf.toString();
@@ -608,12 +607,10 @@ public class YamlIdMap
          {
             // usual
             parseUsualObjectAttrs();
-            continue;
          }
          else
          {
             parseObjectTableAttrs();
-            continue;
          }
       }
 

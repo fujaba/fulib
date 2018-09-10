@@ -173,18 +173,6 @@ public AssocRole setOther(AssocRole value)
       return true;
    }
 
-   @Override
-   public String toString()
-   {
-      StringBuilder result = new StringBuilder();
-
-      result.append(" ").append(this.getName());
-      result.append(" ").append(this.getRoleType());
-
-
-      return result.substring(1);
-   }
-
 
    private boolean modified = false;
 
@@ -207,6 +195,19 @@ public AssocRole setOther(AssocRole value)
    public AssocRole markAsModified()
    {
       return this.setModified(true);
+   }
+
+
+   @Override
+   public String toString()
+   {
+      StringBuilder result = new StringBuilder();
+
+      result.append(" ").append(this.getName());
+      result.append(" ").append(this.getRoleType());
+
+
+      return result.substring(1);
    }
 
 }

@@ -5,6 +5,9 @@ import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 
+import java.lang.reflect.TypeVariable;
+import java.util.Collection;
+
 public class ClassBuilder
 {
 
@@ -81,16 +84,18 @@ public class ClassBuilder
     * @param otherRoleName
     * @param otherCardinality
     */
-   public void buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality, String... roleTypes)
+   public void buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality, Class... collectionClasses)
    {
       AssocRole myRole = new AssocRole()
             .setClazz(this.getClazz())
             .setName(myRoleName)
             .setCardinality(myCardinality);
 
-      if (roleTypes != null && roleTypes.length > 0)
+      if (collectionClasses != null && collectionClasses.length > 0)
       {
-         myRole.setRoleType(roleTypes[0]);
+         String roleType = deriveRoleType(collectionClasses[0]);
+
+         myRole.setRoleType(roleType);
       }
       else
       {
@@ -102,9 +107,10 @@ public class ClassBuilder
             .setName(otherRoleName)
             .setCardinality(otherCardinality);
 
-      if (roleTypes != null && roleTypes.length > 1)
+      if (collectionClasses != null && collectionClasses.length > 1)
       {
-         otherRole.setRoleType(roleTypes[1]);
+         String roleType = deriveRoleType(collectionClasses[1]);
+         otherRole.setRoleType(roleType);
       }
       else
       {
@@ -112,5 +118,22 @@ public class ClassBuilder
       }
 
       myRole.setOther(otherRole);
+   }
+
+   private String deriveRoleType(Class collectionClass1)
+   {
+      Class collectionClass = collectionClass1;
+      if ( ! Collection.class.isAssignableFrom(collectionClass))
+      {
+         throw new IllegalArgumentException("class is no collection");
+      }
+
+      String roleType = collectionClass.getName();
+      TypeVariable[] typeParameters = collectionClass.getTypeParameters();
+      if (typeParameters.length == 1)
+      {
+         roleType += "<%s>";
+      }
+      return roleType;
    }
 }

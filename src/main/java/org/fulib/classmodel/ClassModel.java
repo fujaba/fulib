@@ -5,6 +5,7 @@ import org.fulib.StrUtil;
 import java.util.ArrayList;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
 
 public class ClassModel
 {
@@ -226,6 +227,5 @@ public class ClassModel
 
       return result.substring(1);
    }
-
 
 }

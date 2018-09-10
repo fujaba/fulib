@@ -2,6 +2,10 @@ package org.fulib.builder;
 
 import org.fulib.classmodel.ClassModel;
 
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class ClassModelBuilder
 {
    public static final String STRING = "String";
@@ -36,10 +40,10 @@ public class ClassModelBuilder
    {
       ClassModelBuilder classModelBuilder = new ClassModelBuilder();
 
-      ClassModel classModel = new ClassModel();
-      classModel.setPackageName(packagename);
-      classModel.setMainJavaDir(sourceFolder);
-      classModel.setDefaultRoleType(COLLECTION_ARRAY_LIST);
+      ClassModel classModel = new ClassModel()
+            .setPackageName(packagename)
+            .setMainJavaDir(sourceFolder)
+            .setDefaultRoleType(COLLECTION_ARRAY_LIST);
 
       classModelBuilder.setClassModel(classModel);
       return classModelBuilder;
@@ -67,8 +71,19 @@ public class ClassModelBuilder
     * @param defaultRoleType
     * @return
     */
-   public ClassModelBuilder setDefaultRoleType(String defaultRoleType)
+   public ClassModelBuilder setDefaultCollectionClass(Class collectionClass)
    {
+      if ( ! Collection.class.isAssignableFrom(collectionClass))
+      {
+         throw new IllegalArgumentException("class is no collection");
+      }
+
+      String defaultRoleType = collectionClass.getName();
+      TypeVariable[] typeParameters = collectionClass.getTypeParameters();
+      if (typeParameters.length == 1)
+      {
+         defaultRoleType += "<%s>";
+      }
       this.classModel.setDefaultRoleType(defaultRoleType);
       return this;
    }
@@ -84,5 +99,6 @@ public class ClassModelBuilder
       ClassBuilder classBuilder = new ClassBuilder(this.classModel, className);
       return classBuilder;
    }
+
 
 }

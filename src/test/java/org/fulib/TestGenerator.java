@@ -24,6 +24,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -212,7 +213,7 @@ public class TestGenerator
       ClassBuilder room = mb.buildClass("Room")
             .buildAttribute("no", mb.STRING);
 
-      universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE, mb.COLLECTION_LINKED_HASH_SET, mb.COLLECTION_LINKED_HASH_SET);
+      universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE, LinkedHashSet.class, LinkedHashSet.class);
 
       studi.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
 
