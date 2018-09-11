@@ -197,7 +197,7 @@ public class Generator4ClassFile {
         fragmentMap.add(Parser.IMPORT + ":java.beans.PropertyChangeSupport", "import java.beans.PropertyChangeSupport;", 1);
         fragmentMap.add(Parser.IMPORT + ":java.beans.PropertyChangeListener", "import java.beans.PropertyChangeListener;", 1);
 
-        STGroup group = new STGroupDir("templates");
+        STGroup group = new STGroupFile("templates/propertyChangeSupport.stg");
         group.registerRenderer(String.class, new StringRenderer());
 
         String result = "   protected PropertyChangeSupport listeners = null;";

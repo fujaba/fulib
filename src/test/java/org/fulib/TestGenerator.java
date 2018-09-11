@@ -154,6 +154,7 @@ public class TestGenerator
          {
          }
       };
+      logger.setUseParentHandlers(false);
       logger.addHandler(handler);
       logger.setLevel(Level.INFO);
 
