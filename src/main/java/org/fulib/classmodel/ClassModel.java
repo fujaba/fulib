@@ -7,6 +7,9 @@ import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
+/**
+ * <img src='doc-files/classDiagram.png' width='663'/>
+ */
 public class ClassModel
 {
 
