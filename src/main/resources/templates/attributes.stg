@@ -1,4 +1,7 @@
 
+attrDecl(type, name, value) ::= <<   private <type> <name><init(value)>;>>
+
+init(v) ::= "<if(v)> = <v><endif>"
 
 attrGet(name, type) ::= <<
    public <type> get<name; format="cap">()

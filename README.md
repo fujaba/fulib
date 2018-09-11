@@ -1,4 +1,3 @@
-# fulib
-Fujaba library or SDMLib 2.0
+# fulib - Fujaba library [![Build Status](https://travis-ci.org/fujaba/fulib.svg?branch=master)](https://travis-ci.org/fujaba/fulib)
 
-Fulib is a library that generates Java code *F*rom an *U*ML class model.
+Fulib is a Java-code generating library.

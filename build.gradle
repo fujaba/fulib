@@ -1,3 +1,14 @@
+// add the build script
+buildscript {
+  repositories {
+    maven {
+      url 'https://plugins.gradle.org/m2/'
+    }
+  }
+  dependencies {
+    classpath 'net.researchgate:gradle-release:2.6.0'
+  }
+}
 
 plugins {
     id 'java'
@@ -26,3 +37,8 @@ buildScan {
   licenseAgreementUrl = 'https://gradle.com/terms-of-service'
   licenseAgree = 'yes'
 }
+
+
+
+//declare the release plugin
+apply plugin: 'net.researchgate.release'
