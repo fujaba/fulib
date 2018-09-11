@@ -70,7 +70,8 @@ public class ClassModel
    }
 
 
-   public static final java.util.ArrayList<Clazz> EMPTY_classes = new java.util.ArrayList<Clazz>();
+   public static final java.util.ArrayList<Clazz> EMPTY_classes = new java.util.ArrayList<Clazz>()
+   { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withClasses(obj)"); }};
 
 
    private java.util.ArrayList<Clazz> classes = null;

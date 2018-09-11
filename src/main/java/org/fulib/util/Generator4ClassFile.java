@@ -128,6 +128,7 @@ public class Generator4ClassFile {
 
                 st = group.getInstanceOf("emptySetDecl");
                 st.add("roleName", role.getName());
+                st.add("otherClassName", role.getOther().getClazz().getName());
                 st.add("roleType", roleType);
                 result = st.render();
 

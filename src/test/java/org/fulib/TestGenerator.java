@@ -24,6 +24,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -348,6 +349,7 @@ public class TestGenerator
 
       Object studyRight = uniClass.newInstance();
       Object studyFuture = uniClass.newInstance();
+
       Method setName = uniClass.getMethod("setName", String.class);
       Method addPropertyChangeListener = uniClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
       setName.invoke(studyRight, "Study Right");
@@ -357,6 +359,7 @@ public class TestGenerator
 
       Object karli = studClass.newInstance();
       Object lee = studClass.newInstance();
+
       setName = studClass.getMethod("setName", String.class);
       addPropertyChangeListener = studClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
       setName.invoke(karli, "Karli");
@@ -364,9 +367,21 @@ public class TestGenerator
       addPropertyChangeListener.invoke(karli, listener);
       addPropertyChangeListener.invoke(lee, listener);
 
+      // do not add to students directly
+      Method getStudents = uniClass.getMethod("getStudents");
+      Collection studentSet = (Collection) getStudents.invoke(studyRight);
+      try
+      {
+         studentSet.add(karli);
+         Assert.fail("should not be possible to add an object to a role set directly");
+      }
+      catch (Exception e)
+      {
+         assertThat(e, instanceOf(UnsupportedOperationException.class));
+      }
+
       // ok, create a link
       assertThat(studyRight, hasProperty("students", is(empty())));
-
       assertThat(karli, hasProperty("uni", nullValue()));
 
       Method withStudents = uniClass.getMethod("withStudents", Object[].class);

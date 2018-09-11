@@ -1,8 +1,9 @@
 
 
-emptySetDecl(roleName,roleType) ::=
+emptySetDecl(roleName,otherClassName,roleType) ::=
 <<
-   public static final <roleType> EMPTY_<roleName> = new <roleType>();
+   public static final <roleType> EMPTY_<roleName> = new <roleType>()
+   { @Override public boolean add(<otherClassName> value){ throw new UnsupportedOperationException("No direct add! Use xy.with<cap(roleName)>(obj)"); }};
 >>
 
 
