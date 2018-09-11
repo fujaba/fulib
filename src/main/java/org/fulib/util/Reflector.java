@@ -3,6 +3,7 @@ package org.fulib.util;
 import org.fulib.StrUtil;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 
 public class Reflector
@@ -73,6 +74,8 @@ public class Reflector
          }
 
          properties = fieldNames.toArray(new String[]{});
+
+         Arrays.sort(properties);
 
          return properties;
       }

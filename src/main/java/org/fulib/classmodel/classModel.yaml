@@ -1,210 +1,210 @@
 - c1: 	ClassModel
   classes: 	c2 	c3 	c4 	c5 	c6 	c7 	
-  packageName: 	org.fulib.classmodel
   defaultRoleType: 	"java.util.ArrayList<%s>"
-  packageSrcFolder: 	"src/main/java/org/fulib/classmodel"
   mainJavaDir: 	"src/main/java"
+  packageName: 	org.fulib.classmodel
+  packageSrcFolder: 	"src/main/java/org/fulib/classmodel"
 
 - c2: 	Clazz
-  name: 	ClassModel
   attributes: 	a8 	a9 	a10 	
-  modified: 	false
-  roles: 	a11 	
   model: 	c1
+  modified: 	false
+  name: 	ClassModel
+  roles: 	a11 	
 
 - c3: 	Clazz
-  name: 	Clazz
   attributes: 	a12 	a13 	
-  modified: 	false
-  roles: 	a14 	a15 	a16 	
   model: 	c1
+  modified: 	false
+  name: 	Clazz
+  roles: 	a14 	a15 	a16 	
 
 - c4: 	Clazz
-  name: 	Attribute
   attributes: 	a17 	a18 	a19 	a20 	
-  modified: 	false
-  roles: 	a21 	
   model: 	c1
+  modified: 	false
+  name: 	Attribute
+  roles: 	a21 	
 
 - c5: 	Clazz
-  name: 	AssocRole
   attributes: 	a22 	a23 	a24 	a25 	
-  modified: 	false
-  roles: 	a26 	a27 	a28 	
   model: 	c1
+  modified: 	false
+  name: 	AssocRole
+  roles: 	a26 	a27 	a28 	
 
 - c6: 	Clazz
-  name: 	FileFragmentMap
   attributes: 	a29 	
-  modified: 	false
   model: 	c1
+  modified: 	false
+  name: 	FileFragmentMap
 
 - c7: 	Clazz
-  name: 	CodeFragment
   attributes: 	a30 	a31 	
-  modified: 	false
   model: 	c1
+  modified: 	false
+  name: 	CodeFragment
 
 - a8: 	Attribute
+  clazz: 	c2
+  modified: 	false
   name: 	packageName
   type: 	String
-  modified: 	false
-  clazz: 	c2
 
 - a9: 	Attribute
+  clazz: 	c2
+  modified: 	false
   name: 	mainJavaDir
   type: 	String
-  modified: 	false
-  clazz: 	c2
 
 - a10: 	Attribute
+  clazz: 	c2
+  modified: 	false
   name: 	defaultRoleType
   type: 	String
-  modified: 	false
-  clazz: 	c2
 
 - a11: 	AssocRole
-  name: 	classes
-  modified: 	false
-  clazz: 	c2
-  other: 	a14
   cardinality: 	42
+  clazz: 	c2
+  modified: 	false
+  name: 	classes
+  other: 	a14
   roleType: 	"java.util.ArrayList<%s>"
 
 - a12: 	Attribute
+  clazz: 	c3
+  modified: 	false
   name: 	name
   type: 	String
-  modified: 	false
-  clazz: 	c3
 
 - a13: 	Attribute
+  clazz: 	c3
+  initialization: 	false
+  modified: 	false
   name: 	modified
   type: 	boolean
-  modified: 	false
-  initialization: 	false
-  clazz: 	c3
 
 - a14: 	AssocRole
-  name: 	model
-  modified: 	false
-  clazz: 	c3
-  other: 	a11
   cardinality: 	1
+  clazz: 	c3
+  modified: 	false
+  name: 	model
+  other: 	a11
   roleType: 	"java.util.ArrayList<%s>"
 
 - a15: 	AssocRole
-  name: 	attributes
-  modified: 	false
-  clazz: 	c3
-  other: 	a21
   cardinality: 	42
+  clazz: 	c3
+  modified: 	false
+  name: 	attributes
+  other: 	a21
   roleType: 	"java.util.ArrayList<%s>"
 
 - a16: 	AssocRole
-  name: 	roles
-  modified: 	false
-  clazz: 	c3
-  other: 	a26
   cardinality: 	42
+  clazz: 	c3
+  modified: 	false
+  name: 	roles
+  other: 	a26
   roleType: 	"java.util.ArrayList<%s>"
 
 - a17: 	Attribute
+  clazz: 	c4
+  modified: 	false
   name: 	name
   type: 	String
-  modified: 	false
-  clazz: 	c4
 
 - a18: 	Attribute
+  clazz: 	c4
+  modified: 	false
   name: 	type
   type: 	String
-  modified: 	false
-  clazz: 	c4
 
 - a19: 	Attribute
+  clazz: 	c4
+  modified: 	false
   name: 	initialization
   type: 	String
-  modified: 	false
-  clazz: 	c4
 
 - a20: 	Attribute
+  clazz: 	c4
+  initialization: 	false
+  modified: 	false
   name: 	modified
   type: 	boolean
-  modified: 	false
-  initialization: 	false
-  clazz: 	c4
 
 - a21: 	AssocRole
-  name: 	clazz
-  modified: 	false
-  clazz: 	c4
-  other: 	a15
   cardinality: 	1
+  clazz: 	c4
+  modified: 	false
+  name: 	clazz
+  other: 	a15
   roleType: 	"java.util.ArrayList<%s>"
 
 - a22: 	Attribute
+  clazz: 	c5
+  modified: 	false
   name: 	name
   type: 	String
-  modified: 	false
-  clazz: 	c5
 
 - a23: 	Attribute
+  clazz: 	c5
+  modified: 	false
   name: 	cardinality
   type: 	int
-  modified: 	false
-  clazz: 	c5
 
 - a24: 	Attribute
+  clazz: 	c5
+  modified: 	false
   name: 	roleType
   type: 	String
-  modified: 	false
-  clazz: 	c5
 
 - a25: 	Attribute
+  clazz: 	c5
+  initialization: 	false
+  modified: 	false
   name: 	modified
   type: 	boolean
-  modified: 	false
-  initialization: 	false
-  clazz: 	c5
 
 - a26: 	AssocRole
-  name: 	clazz
-  modified: 	false
-  clazz: 	c5
-  other: 	a16
   cardinality: 	1
+  clazz: 	c5
+  modified: 	false
+  name: 	clazz
+  other: 	a16
   roleType: 	"java.util.ArrayList<%s>"
 
 - a27: 	AssocRole
-  name: 	other
-  modified: 	false
-  clazz: 	c5
-  other: 	a28
   cardinality: 	1
+  clazz: 	c5
+  modified: 	false
+  name: 	other
+  other: 	a28
   roleType: 	"java.util.ArrayList<%s>"
 
 - a28: 	AssocRole
-  name: 	other
-  modified: 	false
-  clazz: 	c5
-  other: 	a27
   cardinality: 	1
+  clazz: 	c5
+  modified: 	false
+  name: 	other
+  other: 	a27
   roleType: 	"java.util.ArrayList<%s>"
 
 - a29: 	Attribute
+  clazz: 	c6
+  modified: 	false
   name: 	fileName
   type: 	String
-  modified: 	false
-  clazz: 	c6
 
 - a30: 	Attribute
+  clazz: 	c7
+  modified: 	false
   name: 	key
   type: 	String
-  modified: 	false
-  clazz: 	c7
 
 - a31: 	Attribute
+  clazz: 	c7
+  modified: 	false
   name: 	text
   type: 	String
-  modified: 	false
-  clazz: 	c7
 
