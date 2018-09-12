@@ -18,12 +18,12 @@ plugins {
     id 'java'
     id 'com.gradle.build-scan' version '1.16'
 }
-apply from: 'gradle/mavencentral.gradle'
-
 //declare the release plugin
 apply plugin: 'net.researchgate.release'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply from: 'gradle/mavencentral.gradle'
+
 
 group 'sekassel'
 version '1.0'

@@ -14,7 +14,7 @@ task sourcesJar(type: Jar) {
 
 // hook all the artifacts under artifacts task
 artifacts {
-  archives javadocJar, sourcesJar
+  archives sourcesJar
 }
 
 // Signing task
