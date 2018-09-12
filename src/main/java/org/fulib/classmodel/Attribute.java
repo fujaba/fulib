@@ -9,7 +9,7 @@ import java.beans.PropertyChangeListener;
 /**
  * <img src='doc-files/classDiagram.png' width='663'/>
  */
-public class Attribute
+public class Attribute 
 {
 
    private String name;

@@ -153,4 +153,10 @@ public class ClassBuilder
       }
       return roleType;
    }
+
+   public ClassBuilder setSuperClass(ClassBuilder superClass)
+   {
+      this.clazz.setSuperClass(superClass.getClazz());
+      return this;
+   }
 }

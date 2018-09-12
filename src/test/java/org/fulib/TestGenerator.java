@@ -103,6 +103,36 @@ public class TestGenerator
 
    }
 
+
+   @Test
+   public void testExtendsGenerator() throws Exception
+   {
+      String targetFolder = "tmp";
+      String packageName = "org.fulib.test.studyright";
+
+      Tools.removeDirAndFiles(targetFolder);
+
+      ClassModel model = getClassModelWithExtends(targetFolder, packageName);
+
+      createPreexistingUniFile(packageName, model);
+
+
+      Generator.generate(model);
+
+      String uniFileName = model.getPackageSrcFolder() + "/University.java";
+      Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
+
+      String studFileName = model.getPackageSrcFolder() + "/Student.java";
+      Assert.assertTrue("Student.java exists", Files.exists(Paths.get(uniFileName)));
+
+      String outFolder = model.getMainJavaDir() + "/../out";
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      Assert.assertEquals("compiler return code: ", 0, returnCode);
+
+      runExtendsReadWriteTests(outFolder, model);
+
+   }
+
    @Test
    public void testValidIdentifiers()
    {
@@ -333,6 +363,34 @@ public class TestGenerator
       studi.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
 
       studi.buildAssociation(room, "in", mb.MANY, "students", mb.MANY);
+
+      return mb.getClassModel();
+   }
+
+
+   private ClassModel getClassModelWithExtends(String targetFolder, String packageName)
+   {
+      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
+
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+
+      ClassBuilder studi = mb.buildClass( "Student")
+            .buildAttribute("name", mb.STRING,"\"Karli\"");
+
+      universitiy.buildAssociation(studi, "students", mb.MANY, "uni", mb.ONE);
+
+      ClassBuilder room = mb.buildClass("Room")
+            .buildAttribute("no", mb.STRING);
+
+      universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE, LinkedHashSet.class, LinkedHashSet.class);
+
+      studi.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
+
+      studi.buildAssociation(room, "in", mb.MANY, "students", mb.MANY);
+
+      ClassBuilder ta = mb.buildClass("TeachingAssistent")
+            .setSuperClass(studi)
+            .buildAttribute("level", mb.STRING);
 
       return mb.getClassModel();
    }
@@ -592,6 +650,56 @@ public class TestGenerator
       withoutStudents4Room.invoke(wa1337, new Object[]{new Object[]{lee}});
       assertThat(wa1337, hasProperty("students", not(containsInAnyOrder(lee))));
       assertThat(lee, hasProperty("in", not(containsInAnyOrder(wa1337))));
+   }
+
+
+   public void runExtendsReadWriteTests(String outFolder, ClassModel model) throws Exception
+   {
+      // run self test
+      File classesDir = new File(outFolder);
+
+      // Load and instantiate compiled class.
+      URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
+
+      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
+      Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
+      Class<?> taClass = Class.forName(model.getPackageName() + ".TeachingAssistent", true, classLoader);
+      Class<?> roomClass = Class.forName(model.getPackageName() + ".Room", true, classLoader);
+
+      Object studyRight = uniClass.newInstance();
+      Object studyFuture = uniClass.newInstance();
+
+      Method setName = uniClass.getMethod("setName", String.class);
+      setName.invoke(studyRight, "Study Right");
+      setName.invoke(studyRight, "Study Future");
+
+      Object karli = taClass.newInstance();
+
+      setName = taClass.getMethod("setName", String.class);
+      setName.invoke(karli, "Karli");
+
+
+      // ok, create a link
+      assertThat(karli, hasProperty("uni", nullValue()));
+
+      Method withStudents = uniClass.getMethod("withStudents", Object[].class);
+      Object withResult = withStudents.invoke(studyRight, new Object[]{new Object[]{karli}});
+      assertThat(withResult, is(equalTo(studyRight)));
+      assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
+      assertThat(karli, hasProperty("uni", equalTo(studyRight)));
+
+      Method setUni = taClass.getMethod("setUni", uniClass);
+      Object setUniResult = setUni.invoke(karli, studyFuture);
+      assertThat(setUniResult, is(equalTo(karli)));
+      assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
+      assertThat(studyRight, hasProperty("students", is(empty())));
+      assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli)));
+
+
+      Method setLevel = taClass.getMethod("setLevel", String.class);
+      setLevel.invoke(karli, "master");
+      assertThat(karli, hasProperty("level", equalTo("master")));
+
    }
 
 

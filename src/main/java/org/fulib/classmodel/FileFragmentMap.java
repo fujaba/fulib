@@ -15,7 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.util.LinkedHashMap;
 
 
-public class FileFragmentMap
+public class FileFragmentMap 
 {
 
    private String fileName;

@@ -10,7 +10,7 @@ import java.util.Collections;
 /**
  * <img src='doc-files/classDiagram.png' width='663'/>
  */
-public class ClassModel
+public class ClassModel 
 {
 
    private String packageName;

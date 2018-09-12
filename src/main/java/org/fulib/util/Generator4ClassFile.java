@@ -58,13 +58,18 @@ public class Generator4ClassFile {
 
 
     private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap) {
-        String result = String.format("public class %s\n{", clazz.getName());
+        STGroup stg = new STGroupFile("templates/classDecl.stg");
+        ST st = stg.getInstanceOf("classDecl");
+        st.add("name", clazz.getName());
+        st.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() : null);
+        String result = st.render();
         fragmentMap.add(Parser.CLASS, result, 2);
     }
 
 
     private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap) {
-        for (Attribute attr : clazz.getAttributes()) {
+        for (Attribute attr : clazz.getAttributes())
+        {
             generateAttributeDeclaration(fragmentMap, attr);
 
             generateGetMethod(fragmentMap, attr);
