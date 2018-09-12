@@ -327,4 +327,111 @@ public class Clazz
       return this.setModified(true);
    }
 
+
+
+   public static final java.util.ArrayList<Clazz> EMPTY_subClasses = new java.util.ArrayList<Clazz>()
+   { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withSubClasses(obj)"); }};
+
+
+   private java.util.ArrayList<Clazz> subClasses = null;
+
+   public java.util.ArrayList<Clazz> getSubClasses()
+   {
+      if (this.subClasses == null)
+      {
+         return EMPTY_subClasses;
+      }
+
+      return this.subClasses;
+   }
+
+   public Clazz withSubClasses(Object... value)
+   {
+      if(value==null) return this;
+      for (Object item : value)
+      {
+         if (item == null) continue;
+         if (item instanceof java.util.Collection)
+         {
+            for (Object i : (java.util.Collection) item)
+            {
+               this.withSubClasses(i);
+            }
+         }
+         else if (item instanceof Clazz)
+         {
+            if (this.subClasses == null)
+            {
+               this.subClasses = new java.util.ArrayList<Clazz>();
+            }
+            if ( ! this.subClasses.contains(item))
+            {
+               this.subClasses.add((Clazz)item);
+               ((Clazz)item).setSuperClass(this);
+               firePropertyChange("subClasses", null, item);
+            }
+         }
+         else throw new IllegalArgumentException();
+      }
+      return this;
+   }
+
+
+
+   public Clazz withoutSubClasses(Object... value)
+   {
+      if (this.subClasses == null || value==null) return this;
+      for (Object item : value)
+      {
+         if (item == null) continue;
+         if (item instanceof java.util.Collection)
+         {
+            for (Object i : (java.util.Collection) item)
+            {
+               this.withoutSubClasses(i);
+            }
+         }
+         else if (item instanceof Clazz)
+         {
+            if (this.subClasses.contains(item))
+            {
+               this.subClasses.remove((Clazz)item);
+               ((Clazz)item).setSuperClass(null);
+               firePropertyChange("subClasses", item, null);
+            }
+         }
+      }
+      return this;
+   }
+
+
+   private Clazz superClass = null;
+
+   public Clazz getSuperClass()
+   {
+      return this.superClass;
+   }
+
+   public Clazz setSuperClass(Clazz value)
+   {
+      if (this.superClass != value)
+      {
+         Clazz oldValue = this.superClass;
+         if (this.superClass != null)
+         {
+            this.superClass = null;
+            oldValue.withoutSubClasses(this);
+         }
+         this.superClass = value;
+         if (value != null)
+         {
+            value.withSubClasses(this);
+         }
+         firePropertyChange("superClass", oldValue, value);
+      }
+      return this;
+   }
+
+
+
 }

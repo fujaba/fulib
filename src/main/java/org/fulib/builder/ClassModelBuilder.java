@@ -38,6 +38,8 @@ public class ClassModelBuilder
     */
    public static ClassModelBuilder get(String packagename, String sourceFolder)
    {
+      checkValidJavaId(packagename);
+
       ClassModelBuilder classModelBuilder = new ClassModelBuilder();
 
       ClassModel classModel = new ClassModel()
@@ -47,6 +49,45 @@ public class ClassModelBuilder
 
       classModelBuilder.setClassModel(classModel);
       return classModelBuilder;
+   }
+
+   static void checkValidJavaId(String myRoleName)
+   {
+      IllegalArgumentException illegalArgumentException = new IllegalArgumentException("" + myRoleName + " is not an valid java identifier");
+
+      if (myRoleName == null) throw illegalArgumentException;
+
+      if (myRoleName.endsWith(".") || myRoleName.startsWith(".")) throw illegalArgumentException;
+
+      if (myRoleName.indexOf('.') >= 0)
+      {
+         for (String s : myRoleName.split("\\."))
+         {
+            checkValidJavaId(s);
+         }
+         return;
+      }
+
+      if ( ! myRoleName.matches("[a-zA-Z_]\\w*")) throw illegalArgumentException;
+
+      String javaKeyWords = " abstract assert boolean break " +
+            "byte case catch char " +
+            "class const continue default " +
+            "do double else enum " +
+            "extends final finally float " +
+            "for goto if implements " +
+            "import instanceof int interface " +
+            "long native new package " +
+            "private protected public return " +
+            "short static strictfp super " +
+            "switch synchronized this throw " +
+            "throws transient try void " +
+            "volatile while  true  false " +
+            "null ";
+
+      if (javaKeyWords.indexOf(" " + myRoleName + " ") >= 0 ) throw illegalArgumentException;
+
+      // hm, myRoleName seems valid
    }
 
 
@@ -68,7 +109,7 @@ public class ClassModelBuilder
     * set container class to be used for to-many associations,
     * default is ClassModelBuilder.COLLECTION_ARRAY_LIST
     * alternative is e.g.: ClassModelBuilder.
-    * @param defaultRoleType
+    * @param collectionClass
     * @return
     */
    public ClassModelBuilder setDefaultCollectionClass(Class collectionClass)

@@ -10,6 +10,8 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.beans.HasPropertyWithValue.*;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupDir;
@@ -99,6 +101,117 @@ public class TestGenerator
 
       runAssociationReadWriteTests(outFolder, model);
 
+   }
+
+   @Test
+   public void testValidIdentifiers()
+   {
+      try
+      {
+         ClassModelBuilder.get("org.extends.tools");
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+      try
+      {
+         ClassModelBuilder.get("org.fulib.");
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+      try
+      {
+         ClassModelBuilder.get(".org.fulib");
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+      try
+      {
+         ClassModelBuilder.get("org fulib");
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+      try
+      {
+         ClassModelBuilder.get("org$fulib");
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+      ClassModelBuilder fF3 = ClassModelBuilder.get("__fF3");
+
+      try
+      {
+         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         mb.buildClass(null);
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+      try
+      {
+         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         mb.buildClass("");
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+      try
+      {
+         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassBuilder c1 = mb.buildClass("C1");
+         c1.buildAttribute("42", mb.STRING);
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+      try
+      {
+         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassBuilder c1 = mb.buildClass("C1");
+         c1.buildAttribute("a42", mb.STRING);
+         c1.buildAttribute("a42", mb.STRING);
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+      try
+      {
+         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassBuilder c1 = mb.buildClass("C1");
+         ClassBuilder c2 = mb.buildClass("C1");
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+
+      try
+      {
+         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassBuilder c1 = mb.buildClass("C1");
+         ClassBuilder c2 = mb.buildClass("C2");
+         c1.buildAttribute("a42", mb.STRING);
+         c1.buildAssociation(c2, "a42", mb.MANY, "b", mb.MANY);
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+      try
+      {
+         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassBuilder c1 = mb.buildClass("C1");
+         c1.buildAssociation(c1, "x", mb.MANY, "x", mb.ONE);
+         fail();
+      }
+      catch (IllegalArgumentException e) {  }
+
+
+      ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+      ClassBuilder c1 = mb.buildClass("C1");
+      c1.buildAssociation(c1, "x", mb.MANY, "x", mb.MANY);
    }
 
    @Test

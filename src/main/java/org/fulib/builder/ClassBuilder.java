@@ -21,6 +21,9 @@ public class ClassBuilder
     */
    public ClassBuilder(ClassModel classModel, String className)
    {
+      ClassModelBuilder.checkValidJavaId(className);
+      if (classModel.getClazz(className) != null) throw new IllegalArgumentException("duplicate class name" + className);
+
       Clazz clazz = new Clazz();
       clazz.setModel(classModel);
       clazz.setName(className);
@@ -67,6 +70,11 @@ public class ClassBuilder
     */
    public ClassBuilder buildAttribute(String name, String type, String initialValue)
    {
+      ClassModelBuilder.checkValidJavaId(name);
+      if (clazz.getAttribute(name) != null
+      || clazz.getRole(name) != null)
+         throw new IllegalArgumentException("duplicate attribute / role name");
+
       Attribute attribute = new Attribute();
       attribute.setClazz(this.clazz);
       attribute.setName(name);
@@ -86,6 +94,15 @@ public class ClassBuilder
     */
    public void buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality, Class... collectionClasses)
    {
+      ClassModelBuilder.checkValidJavaId(myRoleName);
+      ClassModelBuilder.checkValidJavaId(otherRoleName);
+      if (clazz.getAttribute(myRoleName) != null
+            || clazz.getRole(myRoleName) != null)
+         throw new IllegalArgumentException("duplicate attribute / role name");
+      if (myRoleName.equals(otherRoleName) && myCardinality != otherCardinality)
+         throw new IllegalArgumentException("duplicate attribute / role name");
+
+
       AssocRole myRole = new AssocRole()
             .setClazz(this.getClazz())
             .setName(myRoleName)

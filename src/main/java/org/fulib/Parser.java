@@ -813,14 +813,6 @@ public class Parser
       lastFragmentEndPos = endPos;
    }
 
-   private void checkSearchStringFound(String foundElem, int startPos)
-   {
-      if (StrUtil.stringEquals(searchString, foundElem))
-      {
-         indexOfResult = startPos;
-         throw new Parser.SearchStringFoundException();
-      }
-   }
 
    private String parseQualifiedName()
    {
@@ -828,7 +820,6 @@ public class Parser
       int startPos = currentRealToken.startPos;
       int endPos = currentRealToken.endPos;
 
-      checkSearchStringFound(NAME_TOKEN + ":" + currentRealWord(), currentToken.startPos);
       nextRealToken();
 
       while (currentRealKindEquals('.') && !(lookAheadRealToken.kind == '.') && !currentRealKindEquals(EOF))
@@ -837,7 +828,6 @@ public class Parser
 
          // read next name
          endPos = currentRealToken.endPos;
-         checkSearchStringFound(NAME_TOKEN + ":" + currentRealWord(), currentToken.startPos);
          nextRealToken();
       }
 

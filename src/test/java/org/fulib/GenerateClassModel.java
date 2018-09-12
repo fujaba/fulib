@@ -38,6 +38,8 @@ public class GenerateClassModel
 
       fuClass.buildAssociation(assocRole, "roles", mb.MANY, "clazz", mb.ONE);
 
+      fuClass.buildAssociation(fuClass, "superClass", mb.ONE, "subClasses", mb.MANY);
+
       assocRole.buildAssociation(assocRole, "other", mb.ONE, "other", mb.ONE);
 
       ClassBuilder fileFragmentMap = mb.buildClass("FileFragmentMap")
