@@ -44,4 +44,3 @@ buildScan {
   licenseAgreementUrl = 'https://gradle.com/terms-of-service'
   licenseAgree = 'yes'
 }
-
