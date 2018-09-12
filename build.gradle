@@ -1,3 +1,7 @@
+
+
+
+
 // add the build script
 buildscript {
   repositories {
@@ -14,6 +18,12 @@ plugins {
     id 'java'
     id 'com.gradle.build-scan' version '1.16'
 }
+apply from: 'gradle/mavencentral.gradle'
+
+//declare the release plugin
+apply plugin: 'net.researchgate.release'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 group 'sekassel'
 version '1.0'
@@ -38,7 +48,3 @@ buildScan {
   licenseAgree = 'yes'
 }
 
-
-
-//declare the release plugin
-apply plugin: 'net.researchgate.release'
