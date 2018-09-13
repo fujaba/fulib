@@ -103,41 +103,6 @@ public class TestGenerator
 
    }
 
-
-   @Test
-   public void test4FulibReadme() throws Exception
-   {
-      // start_code_fragment: test4FulibReadme
-      ClassModelBuilder mb = ClassModelBuilder.get("org.fulib.groupaccount", "src/main/java");
-      ClassBuilder university = mb.buildClass("University").buildAttribute("name", mb.STRING);
-      ClassBuilder student = mb.buildClass("Student").buildAttribute("studentId", mb.STRING);
-      university.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
-
-      ClassModel model = mb.getClassModel();
-      // end_code_fragment:
-
-      model.setMainJavaDir("tmp/src");
-      Tools.removeDirAndFiles("tmp");
-
-      // start_code_fragment: test4FulibReadme.generate
-      Generator.generate(model);
-      // end_code_fragment:
-
-      String uniFileName = model.getPackageSrcFolder() + "/University.java";
-      Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
-
-      String studFileName = model.getPackageSrcFolder() + "/Student.java";
-      Assert.assertTrue("Student.java exists", Files.exists(Paths.get(uniFileName)));
-
-      String outFolder = model.getMainJavaDir() + "/../out";
-      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-      Assert.assertEquals("compiler return code: ", 0, returnCode);
-
-      runExtendsReadWriteTests(outFolder, model);
-
-   }
-
-
    @Test
    public void testExtendsGenerator() throws Exception
    {
