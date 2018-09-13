@@ -105,6 +105,40 @@ public class TestGenerator
 
 
    @Test
+   public void test4FulibReadme() throws Exception
+   {
+      // start_code_fragment: test4FulibReadme
+      ClassModelBuilder mb = ClassModelBuilder.get("org.fulib.groupaccount", "src/main/java");
+      ClassBuilder university = mb.buildClass("University").buildAttribute("name", mb.STRING);
+      ClassBuilder student = mb.buildClass("Student").buildAttribute("studentId", mb.STRING);
+      university.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
+
+      ClassModel model = mb.getClassModel();
+      // end_code_fragment:
+
+      model.setMainJavaDir("tmp/src");
+      Tools.removeDirAndFiles("tmp");
+
+      // start_code_fragment: test4FulibReadme.generate
+      Generator.generate(model);
+      // end_code_fragment:
+
+      String uniFileName = model.getPackageSrcFolder() + "/University.java";
+      Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
+
+      String studFileName = model.getPackageSrcFolder() + "/Student.java";
+      Assert.assertTrue("Student.java exists", Files.exists(Paths.get(uniFileName)));
+
+      String outFolder = model.getMainJavaDir() + "/../out";
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      Assert.assertEquals("compiler return code: ", 0, returnCode);
+
+      runExtendsReadWriteTests(outFolder, model);
+
+   }
+
+
+   @Test
    public void testExtendsGenerator() throws Exception
    {
       String targetFolder = "tmp";
@@ -370,29 +404,37 @@ public class TestGenerator
 
    private ClassModel getClassModelWithExtends(String targetFolder, String packageName)
    {
+      // start_code_fragment: ClassModelBuilder
       ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+      // end_code_fragment:
 
-      ClassBuilder studi = mb.buildClass( "Student")
+      // start_code_fragment: ClassBuilder.buildAttribute_init
+      ClassBuilder student = mb.buildClass( "Student")
             .buildAttribute("name", mb.STRING,"\"Karli\"");
+      // end_code_fragment:
 
-      universitiy.buildAssociation(studi, "students", mb.MANY, "uni", mb.ONE);
+      // start_code_fragment: ClassBuilder.buildAssociation
+      universitiy.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
+      // end_code_fragment:
 
       ClassBuilder room = mb.buildClass("Room")
             .buildAttribute("no", mb.STRING);
 
       universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE, LinkedHashSet.class, LinkedHashSet.class);
 
-      studi.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
+      student.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
 
-      studi.buildAssociation(room, "in", mb.MANY, "students", mb.MANY);
+      student.buildAssociation(room, "in", mb.MANY, "students", mb.MANY);
 
       ClassBuilder ta = mb.buildClass("TeachingAssistent")
-            .setSuperClass(studi)
+            .setSuperClass(student)
             .buildAttribute("level", mb.STRING);
 
-      return mb.getClassModel();
+      ClassModel model = mb.getClassModel();
+
+      return model;
    }
 
 

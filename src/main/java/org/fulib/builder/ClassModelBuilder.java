@@ -6,6 +6,19 @@ import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * ClassModelbuilder is used to create fulib class models that are input for
+ * fulib code generation {@link org.fulib.Generator}.<br>
+ * Typical usage:
+ * <pre>
+ * <!-- insert_code_fragment: ClassModelBuilder -->
+      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
+
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+      * <!-- end_code_fragment:  -->
+ * </pre>
+ *
+ */
 public class ClassModelBuilder
 {
    public static final String STRING = "String";

@@ -8,6 +8,19 @@ import org.fulib.classmodel.Clazz;
 import java.lang.reflect.TypeVariable;
 import java.util.Collection;
 
+/**
+ * ClassModelbuilder is used to create fulib class models that are input for
+ * fulib code generation {@link org.fulib.Generator}.<br>
+ * Typical usage:
+ * <pre>
+ * <!-- insert_code_fragment: ClassModelBuilder -->
+      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
+
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+ * <!-- end_code_fragment:  -->
+ * </pre>
+ *
+ */
 public class ClassBuilder
 {
 
@@ -50,6 +63,17 @@ public class ClassBuilder
 
 
    /**
+    * ClassModelbuilder is used to create fulib class models that are input for
+    * fulib code generation {@link org.fulib.Generator}.<br>
+    * Typical usage:
+    * <pre>
+    * <!-- insert_code_fragment: ClassModelBuilder -->
+      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
+
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+    * <!-- end_code_fragment:  -->
+    * </pre>
+    *
     * @param name
     * @param type
     * @return this class builder, for fluent style
@@ -63,6 +87,12 @@ public class ClassBuilder
 
 
    /**
+    * <pre>
+    * <!-- insert_code_fragment: ClassBuilder.buildAttribute_init -->
+      ClassBuilder student = mb.buildClass( "Student")
+            .buildAttribute("name", mb.STRING,"\"Karli\"");
+    * <!-- end_code_fragment:  -->
+    * </pre>
     * @param name
     * @param type
     * @param initialValue
@@ -85,7 +115,11 @@ public class ClassBuilder
    }
 
    /**
-    *
+    * <pre>
+    * <!-- insert_code_fragment: ClassBuilder.buildAssociation -->
+      universitiy.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
+    * <!-- end_code_fragment:  -->
+    * </pre>
     * @param otherClass
     * @param myRoleName
     * @param myCardinality
