@@ -14,6 +14,16 @@ import java.nio.file.StandardOpenOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+/**
+ * The fulib Generator generates Java code from a class model
+ * <pre>
+ * <!-- insert_code_fragment: Fulib.createGenerator-->
+      ClassModel model = mb.getClassModel();
+      Fulib.createGenerator().generate(model);
+ * <!-- end_code_fragment:  -->
+ * </pre>
+ */
 public class Generator
 {
 
@@ -24,13 +34,17 @@ public class Generator
       logger.setLevel(Level.SEVERE);
    }
 
-   public static void generate(ClassModel model)
-   {
-      new Generator()
-            .doGenerate(model);
-   }
-
-   public void doGenerate(ClassModel model)
+   /**
+    * The fulib Generator generates Java code from a class model
+    * <pre>
+    * <!-- insert_code_fragment: Fulib.createGenerator-->
+      ClassModel model = mb.getClassModel();
+      Fulib.createGenerator().generate(model);
+    * <!-- end_code_fragment:  -->
+    * </pre>
+    * @param model providing classes to generate Java implementations for
+    */
+   public void generate(ClassModel model)
    {
       ClassModel oldModel = loadOldClassModel(model.getPackageSrcFolder());
 

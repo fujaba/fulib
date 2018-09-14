@@ -1,5 +1,6 @@
 package org.fulib.builder;
 
+import org.fulib.Fulib;
 import org.fulib.classmodel.ClassModel;
 
 import java.lang.reflect.TypeVariable;
@@ -8,11 +9,11 @@ import java.util.Collection;
 
 /**
  * ClassModelbuilder is used to create fulib class models that are input for
- * fulib code generation {@link org.fulib.Generator}.<br>
+ * fulib code generation {@link Fulib#createGenerator()}.<br>
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
+      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName);
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
       * <!-- end_code_fragment:  -->
@@ -35,34 +36,50 @@ public class ClassModelBuilder
    private ClassModel classModel;
 
    /**
+    * ClassModelbuilder is used to create fulib class models that are input for
+    * fulib code generation {@link Fulib#createGenerator()}.<br>
+    * Typical usage:
+    * <pre>
+    * <!-- insert_code_fragment: ClassModelBuilder -->
+    ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName);
+
+    ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+    * <!-- end_code_fragment:  -->
+    * </pre>
     * @param packagename
-    * @return a class model builder for the given package name and with the default source folder "src/main/java"
     */
-   public static ClassModelBuilder get(String packagename)
+   public ClassModelBuilder(String packagename)
    {
-      return get(packagename, "src/main/java");
+      this(packagename, "src/main/java");
    }
 
 
    /**
+    * ClassModelbuilder is used to create fulib class models that are input for
+    * fulib code generation {@link Fulib#createGenerator()}.<br>
+    * Typical usage:
+    * <pre>
+    * <!-- insert_code_fragment: ClassModelBuilder -->
+    ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName);
+
+    ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+    * <!-- end_code_fragment:  -->
+    * </pre>
     * @param packagename
     * @param sourceFolder
-    * @return a class model builder for the given package name and source folder 
     */
-   public static ClassModelBuilder get(String packagename, String sourceFolder)
+   public ClassModelBuilder(String packagename, String sourceFolder)
    {
       checkValidJavaId(packagename);
-
-      ClassModelBuilder classModelBuilder = new ClassModelBuilder();
 
       ClassModel classModel = new ClassModel()
             .setPackageName(packagename)
             .setMainJavaDir(sourceFolder)
             .setDefaultRoleType(COLLECTION_ARRAY_LIST);
 
-      classModelBuilder.setClassModel(classModel);
-      return classModelBuilder;
+      this.setClassModel(classModel);
    }
+
 
    static void checkValidJavaId(String myRoleName)
    {
@@ -145,10 +162,17 @@ public class ClassModelBuilder
 
    /**
     * Builds and returns a class builder for the given classname and connects it to the model
+    * <pre>
+    * <!-- insert_code_fragment: ClassModelBuilder.twoParams -->
+    ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName, "src/main/java");
+
+    ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+    * <!-- end_code_fragment:  -->
+    * </pre>
     * @param className
     * @return new class builder
     */
-   public ClassBuilder buildClass( String className)
+   public ClassBuilder buildClass(String className)
    {
       ClassBuilder classBuilder = new ClassBuilder(this.classModel, className);
       return classBuilder;

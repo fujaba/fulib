@@ -56,7 +56,7 @@ public class TestGenerator
       int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       Assert.assertEquals("compiler return code: ", 0, returnCode);
 
-      Generator.generate(model);
+      Fulib.createGenerator().generate(model);
 
       Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
 
@@ -89,7 +89,7 @@ public class TestGenerator
       int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       Assert.assertEquals("compiler return code: ", 0, returnCode);
 
-      Generator.generate(model);
+      Fulib.createGenerator().generate(model);
 
       Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
 
@@ -116,7 +116,7 @@ public class TestGenerator
       createPreexistingUniFile(packageName, model);
 
 
-      Generator.generate(model);
+      Fulib.createGenerator().generate(model);
 
       String uniFileName = model.getPackageSrcFolder() + "/University.java";
       Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
@@ -137,44 +137,44 @@ public class TestGenerator
    {
       try
       {
-         ClassModelBuilder.get("org.extends.tools");
+         Fulib.createClassModelBuilder("org.extends.tools");
          fail();
       }
       catch (IllegalArgumentException e) {  }
 
       try
       {
-         ClassModelBuilder.get("org.fulib.");
+         Fulib.createClassModelBuilder("org.fulib.");
          fail();
       }
       catch (IllegalArgumentException e) {  }
 
       try
       {
-         ClassModelBuilder.get(".org.fulib");
+         Fulib.createClassModelBuilder(".org.fulib");
          fail();
       }
       catch (IllegalArgumentException e) {  }
 
       try
       {
-         ClassModelBuilder.get("org fulib");
+         Fulib.createClassModelBuilder("org fulib");
          fail();
       }
       catch (IllegalArgumentException e) {  }
 
       try
       {
-         ClassModelBuilder.get("org$fulib");
+         Fulib.createClassModelBuilder("org$fulib");
          fail();
       }
       catch (IllegalArgumentException e) {  }
 
-      ClassModelBuilder fF3 = ClassModelBuilder.get("__fF3");
+      ClassModelBuilder fF3 = Fulib.createClassModelBuilder("__fF3");
 
       try
       {
-         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib");
          mb.buildClass(null);
          fail();
       }
@@ -182,7 +182,7 @@ public class TestGenerator
 
       try
       {
-         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib");
          mb.buildClass("");
          fail();
       }
@@ -190,7 +190,7 @@ public class TestGenerator
 
       try
       {
-         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib");
          ClassBuilder c1 = mb.buildClass("C1");
          c1.buildAttribute("42", mb.STRING);
          fail();
@@ -199,7 +199,7 @@ public class TestGenerator
 
       try
       {
-         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib");
          ClassBuilder c1 = mb.buildClass("C1");
          c1.buildAttribute("a42", mb.STRING);
          c1.buildAttribute("a42", mb.STRING);
@@ -209,7 +209,7 @@ public class TestGenerator
 
       try
       {
-         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib");
          ClassBuilder c1 = mb.buildClass("C1");
          ClassBuilder c2 = mb.buildClass("C1");
          fail();
@@ -219,7 +219,7 @@ public class TestGenerator
 
       try
       {
-         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib");
          ClassBuilder c1 = mb.buildClass("C1");
          ClassBuilder c2 = mb.buildClass("C2");
          c1.buildAttribute("a42", mb.STRING);
@@ -230,7 +230,7 @@ public class TestGenerator
 
       try
       {
-         ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+         ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib");
          ClassBuilder c1 = mb.buildClass("C1");
          c1.buildAssociation(c1, "x", mb.MANY, "x", mb.ONE);
          fail();
@@ -238,7 +238,7 @@ public class TestGenerator
       catch (IllegalArgumentException e) {  }
 
 
-      ClassModelBuilder mb = ClassModelBuilder.get("org.fulib");
+      ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib");
       ClassBuilder c1 = mb.buildClass("C1");
       c1.buildAssociation(c1, "x", mb.MANY, "x", mb.MANY);
    }
@@ -250,7 +250,7 @@ public class TestGenerator
 
 
       // first simple model
-      ClassModelBuilder mb = ClassModelBuilder.get("org.evolve", "tmp/src");
+      ClassModelBuilder mb = Fulib.createClassModelBuilder("org.evolve", "tmp/src");
       ClassBuilder uni = mb.buildClass("University")
             .buildAttribute("uniName", mb.STRING);
       ClassBuilder stud = mb.buildClass("Student")
@@ -264,7 +264,7 @@ public class TestGenerator
 
       createPreexistingUniFile("org.evolve", firstModel);
 
-      Generator.generate(firstModel);
+      Fulib.createGenerator().generate(firstModel);
 
       int compileResult = Tools.javac("tmp/out", firstModel.getPackageSrcFolder());
       assertThat(compileResult, equalTo(0));
@@ -301,7 +301,7 @@ public class TestGenerator
       logger.addHandler(handler);
       logger.setLevel(Level.INFO);
 
-      Generator.generate(firstModel);
+      Fulib.createGenerator().generate(firstModel);
       assertThat(logRecordList.size(), not(equalTo(0)));
 
       compileResult = Tools.javac("tmp/out", firstModel.getPackageSrcFolder());
@@ -331,7 +331,7 @@ public class TestGenerator
 
    private ClassModel getClassModelUniStudWithAttributes(String targetFolder, String packageName)
    {
-      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
+      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName, targetFolder + "/src");
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
 
@@ -345,9 +345,13 @@ public class TestGenerator
 
    private ClassModel getClassModelWithAssociations(String targetFolder, String packageName)
    {
-      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
+      // start_code_fragment: ClassModelBuilder.twoParams
+      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName, "src/main/java");
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+      // end_code_fragment:
+
+      mb.getClassModel().setMainJavaDir(targetFolder + "/src");
 
       ClassBuilder studi = mb.buildClass( "Student")
             .buildAttribute("name", mb.STRING,"\"Karli\"");
@@ -370,10 +374,12 @@ public class TestGenerator
    private ClassModel getClassModelWithExtends(String targetFolder, String packageName)
    {
       // start_code_fragment: ClassModelBuilder
-      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
+      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName);
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
       // end_code_fragment:
+
+      mb.getClassModel().setMainJavaDir(targetFolder + "/src");
 
       // start_code_fragment: ClassBuilder.buildAttribute_init
       ClassBuilder student = mb.buildClass( "Student")

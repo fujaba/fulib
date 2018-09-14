@@ -43,7 +43,7 @@ public class TestYamlIdMap
    public void testYamlIdMap()
    {
       // create example data
-      ClassModelBuilder mb = ClassModelBuilder.get("org.fulib.studyright", "tmp/src");
+      ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib.studyright", "tmp/src");
 
       ClassBuilder university = mb.buildClass("University")
             .buildAttribute("uniName", mb.STRING);

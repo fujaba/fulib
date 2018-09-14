@@ -2,6 +2,7 @@ package org.fulib;
 
 import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
+import org.fulib.classmodel.ClassModel;
 import org.junit.Test;
 
 public class GenerateClassModel
@@ -9,7 +10,7 @@ public class GenerateClassModel
    @Test
    public void testGenerateModel()
    {
-      ClassModelBuilder mb = ClassModelBuilder.get("org.fulib.classmodel", "src/main/java");
+      ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib.classmodel", "src/main/java");
 
       ClassBuilder classModel = mb.buildClass("ClassModel")
             .buildAttribute("packageName", mb.STRING)
@@ -49,7 +50,12 @@ public class GenerateClassModel
             .buildAttribute("key", mb.STRING)
             .buildAttribute("text", mb.STRING);
 
-      Generator.generate(mb.getClassModel());
+
+      // start_code_fragment: Fulib.createGenerator
+      ClassModel model = mb.getClassModel();
+      Fulib.createGenerator().generate(model);
+      // end_code_fragment:
+
 
    }
 }

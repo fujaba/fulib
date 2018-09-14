@@ -1,5 +1,6 @@
 package org.fulib.builder;
 
+import org.fulib.Fulib;
 import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
@@ -10,11 +11,11 @@ import java.util.Collection;
 
 /**
  * ClassModelbuilder is used to create fulib class models that are input for
- * fulib code generation {@link org.fulib.Generator}.<br>
+ * fulib code generation {@link Fulib#createGenerator()}.<br>
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
+      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName);
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
  * <!-- end_code_fragment:  -->
@@ -64,11 +65,11 @@ public class ClassBuilder
 
    /**
     * ClassModelbuilder is used to create fulib class models that are input for
-    * fulib code generation {@link org.fulib.Generator}.<br>
+    * fulib code generation {@link Fulib#createGenerator()}.<br>
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = ClassModelBuilder.get(packageName,targetFolder + "/src");
+      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName);
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
