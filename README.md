@@ -5,7 +5,7 @@ Fulib is a Java-code generating library.
 First you write code that builds up your class model:
 
 <!-- insert_code_fragment: test4FulibReadme.classmodel -->
-      ClassModelBuilder mb = ClassModelBuilder.get("de.uniks.studyright");
+      ClassModelBuilder mb = Fulib.createClassModelBuilder("de.uniks.studyright");
       ClassBuilder uni = mb.buildClass("University")
             .buildAttribute("name", mb.STRING);
       ClassBuilder student = mb.buildClass("Student")
@@ -25,7 +25,7 @@ Rendered as a class diagram this model looks like:
 From the class model you may generate Java code that implements the modeled classes:
 
 <!-- insert_code_fragment: test4FulibReadme.generate -->
-      Generator.generate(model);
+      Fulib.createGenerator().generate(model);
 <!-- end_code_fragment: -->
 
 Once your IDE has compiled the generated code you may use it:
