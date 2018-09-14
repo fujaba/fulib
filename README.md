@@ -28,7 +28,7 @@ From the class model you may generate Java code that implements the modeled clas
       Fulib.createGenerator().generate(model);
 <!-- end_code_fragment: -->
 
-Once your IDE has compiled the generated code you may use it:
+Once your IDE has compiled the generated code, you may use it like:
 
 <!-- insert_code_fragment: StudyRightUserStories.testSimpleObjectModel -->
       University studyRight = new University();
@@ -40,3 +40,21 @@ Once your IDE has compiled the generated code you may use it:
       Student   bob = new Student().setName("Bob")  .setStudentId("B2323");
       studyRight.withStudis(alice, bob);
 <!-- end_code_fragment: -->
+
+### Gradle
+
+<pre>
+<!-- insert_code_fragment: gradle.repositories -->
+repositories {
+    mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+<!-- end_code_fragment: -->
+</pre>
+
+<pre>
+<!-- insert_code_fragment: gradle.dependencies -->
+dependencies {
+    testCompile 'org.fulib:fulib:1.0.+'
+<!-- end_code_fragment: -->
+</pre>

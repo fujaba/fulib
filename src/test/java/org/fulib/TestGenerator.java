@@ -14,7 +14,9 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupDir;
+import org.stringtemplate.v4.STGroupFile;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -243,6 +245,7 @@ public class TestGenerator
       c1.buildAssociation(c1, "x", mb.MANY, "x", mb.MANY);
    }
 
+
    @Test
    public void testModelEvolution() throws IOException
    {
@@ -315,11 +318,45 @@ public class TestGenerator
    }
 
 
+   @Test
+   public void testCustomTemplates() throws IOException
+   {
+      Tools.removeDirAndFiles("tmp");
+
+      ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib.studyright", "tmp/src");
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+      ClassBuilder studi = mb.buildClass( "Student")
+            .buildAttribute("name", mb.STRING,"\"Karli\"")
+            .buildAttribute("matrNo", mb.LONG,"0");
+
+      ClassModel model = mb.getClassModel();
+
+      // generate normal
+      Fulib.createGenerator()
+            .generate(model);
+
+      byte[] bytes = Files.readAllBytes(Paths.get(model.getPackageSrcFolder() + "/Student.java"));
+      String content = new String(bytes);
+      assertThat(content, not(containsString("/* custom attribute comment */")));
+
+      // generate custom
+      // start_code_fragment: testCustomTemplates
+      Fulib.createGenerator()
+            .setCustomTemplatesFile("templates/custom.stg")
+            .generate(model);
+      // end_code_fragment:
+
+      bytes = Files.readAllBytes(Paths.get(model.getPackageSrcFolder() + "/Student.java"));
+      content = new String(bytes);
+      assertThat(content, containsString("/* custom attribute comment */"));
+
+   }
+
 
    private void createPreexistingUniFile(String packageName, ClassModel model) throws IOException
    {
       // create pre existing University class with extra elements
-      STGroupDir group = new STGroupDir("templates");
+      STGroup group = new STGroupFile("templates/university.stg");
       ST uniTemplate = group.getInstanceOf("university");
       uniTemplate.add("packageName", packageName);
       String uniText = uniTemplate.render();

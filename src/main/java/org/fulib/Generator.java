@@ -34,6 +34,8 @@ public class Generator
       logger.setLevel(Level.SEVERE);
    }
 
+   private String customTemplateFile = null;
+
    /**
     * The fulib Generator generates Java code from a class model
     * <pre>
@@ -68,7 +70,9 @@ public class Generator
       // loop through all classes
       for (Clazz clazz : model.getClasses())
       {
-         new Generator4ClassFile().doGenerate(clazz);
+         new Generator4ClassFile()
+               .setCustomTemplatesFile(this.getCustomTemplateFile())
+               .generate(clazz);
       }
    }
 
@@ -184,5 +188,29 @@ public class Generator
             }
          }
       }
+   }
+
+   public String getCustomTemplateFile()
+   {
+      return customTemplateFile;
+   }
+
+   /**
+    * You may overwrite code generation templates within some custom template file. <br>
+    * Provide your templates for code generation as in:
+    * <pre>
+    * <!-- insert_code_fragment: testCustomTemplates -->
+      Fulib.createGenerator()
+            .setCustomTemplatesFile("templates/custom.stg")
+            .generate(model);
+    * <!-- end_code_fragment: testCustomTemplates -->
+    * </pre>
+    * @param customFileName
+    * @return
+    */
+   public Generator setCustomTemplatesFile(String customFileName)
+   {
+      this.customTemplateFile = customFileName;
+      return this;
    }
 }
