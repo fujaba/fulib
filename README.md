@@ -30,7 +30,13 @@ From the class model you may generate Java code that implements the modeled clas
 
 Once your IDE has compiled the generated code you may use it:
 
-      University studyRight = new University().setName("Study Right");
-      Student alice = new Student().setStudentId("a424242");
-      Student   bob = new Student().setStudentId("b232323");
-      studyRight.withStudents(alice, bob);
+<!-- insert_code_fragment: StudyRightUserStories.testSimpleObjectModel -->
+      University studyRight = new University();
+
+      Room wa1337 = new Room().setRoomNo("WA1337");
+      studyRight.withLectureHalls(wa1337);
+
+      Student alice = new Student().setName("Alice").setStudentId("A4242");
+      Student   bob = new Student().setName("Bob")  .setStudentId("B2323");
+      studyRight.withStudis(alice, bob);
+<!-- end_code_fragment: -->
