@@ -12,7 +12,7 @@ public class Fulib
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
@@ -32,7 +32,7 @@ public class Fulib
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder.twoParams -->
-      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName, "src/main/java");
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java");
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
@@ -52,7 +52,7 @@ public class Fulib
     * <pre>
     * <!-- insert_code_fragment: Fulib.createGenerator-->
       ClassModel model = mb.getClassModel();
-      Fulib.createGenerator().generate(model);
+      Fulib.generator().generate(model);
     * <!-- end_code_fragment:  -->
     * </pre>
     * @return

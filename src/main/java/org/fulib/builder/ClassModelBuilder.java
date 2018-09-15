@@ -12,7 +12,7 @@ import java.util.Collection;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
       * <!-- end_code_fragment:  -->
@@ -40,7 +40,7 @@ public class ClassModelBuilder
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
@@ -59,7 +59,7 @@ public class ClassModelBuilder
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
@@ -163,7 +163,7 @@ public class ClassModelBuilder
     * Builds and returns a class builder for the given classname and connects it to the model
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder.twoParams -->
-      ClassModelBuilder mb = Fulib.createClassModelBuilder(packageName, "src/main/java");
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java");
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
