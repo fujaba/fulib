@@ -11,7 +11,7 @@ import java.util.Collection;
 
 /**
  * ClassModelbuilder is used to create fulib class models that are input for
- * fulib code generation {@link Fulib#createGenerator()}.<br>
+ * fulib code generation {@link Fulib#generator()}.<br>
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
@@ -65,7 +65,7 @@ public class ClassBuilder
 
    /**
     * ClassModelbuilder is used to create fulib class models that are input for
-    * fulib code generation {@link Fulib#createGenerator()}.<br>
+    * fulib code generation {@link Fulib#generator()}.<br>
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->

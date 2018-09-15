@@ -10,7 +10,7 @@ public class GenerateClassModel
    @Test
    public void testGenerateModel()
    {
-      ClassModelBuilder mb = Fulib.createClassModelBuilder("org.fulib.classmodel", "src/main/java");
+      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.classmodel", "src/main/java");
 
       ClassBuilder classModel = mb.buildClass("ClassModel")
             .buildAttribute("packageName", mb.STRING)
@@ -53,7 +53,7 @@ public class GenerateClassModel
 
       // start_code_fragment: Fulib.createGenerator
       ClassModel model = mb.getClassModel();
-      Fulib.createGenerator().generate(model);
+      Fulib.generator().generate(model);
       // end_code_fragment:
 
 
