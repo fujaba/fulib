@@ -25,7 +25,7 @@ Rendered as a class diagram this model looks like:
 From the class model you may generate Java code that implements the modeled classes:
 
 <!-- insert_code_fragment: test4FulibReadme.generate -->
-      Fulib.generator().generate(model);
+      // Fulib.generator().generate(model);
 <!-- end_code_fragment: -->
 
 Once your IDE has compiled the generated code, you may use it like:
@@ -34,11 +34,11 @@ Once your IDE has compiled the generated code, you may use it like:
       University studyRight = new University();
 
       Room wa1337 = new Room().setRoomNo("WA1337");
-      studyRight.withLectureHalls(wa1337);
+      studyRight.withRooms(wa1337);
 
       Student alice = new Student().setName("Alice").setStudentId("A4242");
       Student   bob = new Student().setName("Bob")  .setStudentId("B2323");
-      studyRight.withStudis(alice, bob);
+      studyRight.withStudents(alice, bob);
 <!-- end_code_fragment: -->
 
 ### Gradle

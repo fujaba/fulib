@@ -699,6 +699,11 @@ public class TestGenerator
       withoutStudents4Room.invoke(wa1337, new Object[]{new Object[]{lee}});
       assertThat(wa1337, hasProperty("students", not(containsInAnyOrder(lee))));
       assertThat(lee, hasProperty("in", not(containsInAnyOrder(wa1337))));
+
+      Method removeYou = uniClass.getMethod("removeYou");
+      removeYou.invoke(studyRight);
+      assertThat(karli, hasProperty("uni", nullValue()));
+      assertThat(wa1337, hasProperty("uni", nullValue()));
    }
 
 

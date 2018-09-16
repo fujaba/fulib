@@ -1,0 +1,28 @@
+
+removeYou(toOneNames, toManyNames) ::=
+<<
+   public void removeYou()
+   {
+      <toOneNames : {name | <toOneLine(name)>}>
+      <toManyNames : {name | <toManyLine(name)>}>
+   }
+>>
+
+toOneLine(name) ::=
+<<
+this.set<cap(name)>(null);
+
+>>
+
+toManyLine(name) ::=
+<<
+this.without<cap(name)>(this.get<cap(name)>().clone());
+
+>>
+
+
+cap(n) ::=
+<%
+<n; format="cap">
+%>
+

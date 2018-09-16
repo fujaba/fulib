@@ -38,6 +38,8 @@ public class Generator4ClassFile {
 
         generateToString(clazz, fragmentMap);
 
+        generateRemoveYou(clazz, fragmentMap);
+
         fragmentMap.add(Parser.CLASS_END, "}", 1);
 
         if (clazz.getModified() == true && fragmentMap.classBodyIsEmpty(fragmentMap)) {
@@ -242,6 +244,35 @@ public class Generator4ClassFile {
 
         fragmentMap.add(Parser.METHOD + ":toString()", result, 2, modified);
     }
+
+
+   private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      ArrayList<String> toOneList = new ArrayList<>();
+      ArrayList<String> toManyList = new ArrayList<>();
+      boolean modified = clazz.getModified();
+      for (AssocRole role : clazz.getRoles())
+      {
+         if (role.getCardinality() == ClassModelBuilder.ONE)
+         {
+            toOneList.add(role.getName());
+         }
+         else
+         {
+            toManyList.add(role.getName());
+         }
+      }
+
+      String result = "";
+      STGroup group = createSTGroup("templates/removeYou.stg");
+      ST st = group.getInstanceOf("removeYou");
+      st.add("toOneNames", toOneList.toArray(new String[0]));
+      st.add("toManyNames", toManyList.toArray(new String[0]));
+      result = st.render();
+
+      fragmentMap.add(Parser.METHOD + ":removeYou()", result, 2, modified);
+   }
+
 
 
    public String getCustomTemplatesFile()
