@@ -62,4 +62,20 @@ public class Fulib
       return new Generator();
    }
 
+   /**
+    * The fulib TablesGenerator generates Table classes from a class model.
+    * Table classes are used for relational model queries.
+    * <pre>
+    * <!-- insert_code_fragment: Fulib.tablesGenerator-->
+    ClassModel model = mb.getClassModel();
+    Fulib.tablesGenerator().generate(model);
+    * <!-- end_code_fragment:  -->
+    * </pre>
+    * @return
+    */
+   public static TablesGenerator tablesGenerator()
+   {
+      return new TablesGenerator();
+   }
+
 }

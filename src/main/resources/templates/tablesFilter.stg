@@ -1,0 +1,42 @@
+
+filter(className) ::=
+<<
+   public <className>Table filter(Predicate\< <className> > predicate)
+   {
+      ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();
+      this.table.clear();
+      for (ArrayList\<Object> row : oldTable)
+      {
+         <className> start = (<className>) row.get(columnMap.get(this.getColumnName()));
+         if (predicate.test(start))
+         {
+            this.table.add(row);
+         }
+      }
+      return this;
+   }
+>>
+
+
+
+filterRow(className) ::=
+<<
+   public <className>Table filterRow(Predicate\<LinkedHashMap\<String,Object> > predicate)
+   {
+      ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();
+      this.table.clear();
+      for (ArrayList\<Object> row : oldTable)
+      {
+         LinkedHashMap\<String,Object> map = new LinkedHashMap\< >();
+         for (String key : columnMap.keySet())
+         {
+            map.put(key, row.get(columnMap.get(key)));
+         }
+         if (predicate.test(map))
+         {
+            this.table.add(row);
+         }
+      }
+      return this;
+   }
+>>

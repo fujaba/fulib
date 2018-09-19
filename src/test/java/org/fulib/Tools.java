@@ -39,6 +39,8 @@ public class Tools
 
       args.add("-d");
       args.add(outFolder);
+      args.add("-classpath");
+      args.add(outFolder);
 
       JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 

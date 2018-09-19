@@ -134,6 +134,31 @@ public class TestGenerator
    }
 
    @Test
+   public void testTables() throws IOException
+   {
+      String targetFolder = "tmp";
+      String packageName = "org.fulib.tables.studyright";
+
+      Tools.removeDirAndFiles(targetFolder);
+
+      ClassModel model = getClassModelWithAssociations(targetFolder, packageName);
+
+      Fulib.generator().generate(model);
+
+      Fulib.tablesGenerator().generate(model);
+
+      String uniFileName = model.getPackageSrcFolder() + "/tables/UniversityTable.java";
+      Assert.assertTrue("UniversityTable.java exists", Files.exists(Paths.get(uniFileName)));
+
+      String outFolder = model.getMainJavaDir() + "/../out";
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      Assert.assertEquals("compiler return code: ", 0, returnCode);
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder()+"/tables");
+      Assert.assertEquals("compiler return code: ", 0, returnCode);
+   }
+
+
+   @Test
    public void testValidIdentifiers()
    {
       try

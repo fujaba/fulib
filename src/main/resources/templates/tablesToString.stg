@@ -1,0 +1,23 @@
+
+toString() ::= <<
+   public String toString()
+   {
+      StringBuilder buf = new StringBuilder();
+      for (String key : columnMap.keySet())
+      {
+         buf.append(key).append(" \t");
+      }
+      buf.append("\n");
+      for (ArrayList\<Object> row : table)
+      {
+         for (Object cell : row)
+         {
+            buf.append(cell).append(" \t");
+         }
+         buf.append("\n");
+      }
+      buf.append("\n");
+      return buf.toString();
+   }
+>>
+

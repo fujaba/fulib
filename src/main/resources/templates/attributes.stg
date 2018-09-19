@@ -26,6 +26,17 @@ attrSet(class, name, type, useEquals) ::=
 >>
 
 
+simpleAttrSet(class, name, type) ::=
+<<
+   public <class> set<name; format="cap">(<type> value)
+   {
+      this.<name> = value;
+      return this;
+   }
+>>
+
+
+
 condition(name, type, useEquals) ::=
 <%
 <if(useEquals)>value == null ? this.<name> != null : ! value.equals(this.<name>)

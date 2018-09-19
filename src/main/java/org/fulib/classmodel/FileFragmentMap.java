@@ -172,6 +172,7 @@ public class FileFragmentMap
       }
 
       result = new CodeFragment().setKey(key).setText(newText);
+      codeMap.put(key, result);
       CodeFragment gap = getNewLineGapFragment(newLines);
 
       if (key.startsWith(Parser.ATTRIBUTE) || key.startsWith(Parser.METHOD))

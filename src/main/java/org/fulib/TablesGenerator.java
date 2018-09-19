@@ -5,6 +5,7 @@ import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.fulib.util.Generator4ClassFile;
+import org.fulib.util.Generator4TableClassFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,35 +17,36 @@ import java.util.logging.Logger;
 
 
 /**
- * The fulib Generator generates Java code from a class model
+ * The fulib TablesGenerator generates Table classes from a class model.
+ * Table classes are used for relational model queries.
  * <pre>
- * <!-- insert_code_fragment: Fulib.createGenerator-->
+ * <!-- insert_code_fragment: Fulib.tablesGenerator-->
       ClassModel model = mb.getClassModel();
-      Fulib.generator().generate(model);
+      Fulib.tablesGenerator().generate(model);
  * <!-- end_code_fragment:  -->
  * </pre>
  */
-public class Generator
+public class TablesGenerator
 {
 
    private static Logger logger;
 
    static {
-      logger = Logger.getLogger(Generator.class.getName());
+      logger = Logger.getLogger(TablesGenerator.class.getName());
       logger.setLevel(Level.SEVERE);
    }
 
    private String customTemplateFile = null;
 
    /**
-    * The fulib Generator generates Java code from a class model
+    * The fulib TablesGenerator generates Table classes from a class model.
+    * Table classes are used for relational model queries.
     * <pre>
-    * <!-- insert_code_fragment: Fulib.createGenerator-->
-      ClassModel model = mb.getClassModel();
-      Fulib.generator().generate(model);
+    * <!-- insert_code_fragment: Fulib.tablesGenerator-->
+    ClassModel model = mb.getClassModel();
+    Fulib.tablesGenerator().generate(model);
     * <!-- end_code_fragment:  -->
     * </pre>
-    * @param model providing classes to generate Java implementations for
     */
    public void generate(ClassModel model)
    {
@@ -52,7 +54,7 @@ public class Generator
 
       if (oldModel != null)
       {
-         markModifiedElementsInOldModel(oldModel, model);
+         Fulib.generator().markModifiedElementsInOldModel(oldModel, model);
 
          // remove code of modfiedElements
          generateClasses(oldModel);
@@ -70,7 +72,7 @@ public class Generator
       // loop through all classes
       for (Clazz clazz : model.getClasses())
       {
-         new Generator4ClassFile()
+         new Generator4TableClassFile()
                .setCustomTemplatesFile(this.getCustomTemplateFile())
                .generate(clazz);
       }
@@ -80,7 +82,7 @@ public class Generator
    private ClassModel loadOldClassModel(String modelFolder)
    {
       // store new model
-      String fileName = modelFolder + "/classModel.yaml";
+      String fileName = modelFolder + "/tablesClassModel.yaml";
       try
       {
          Path path = Paths.get(fileName);
@@ -114,7 +116,7 @@ public class Generator
       try
       {
          String modelFolder = model.getPackageSrcFolder();
-         String fileName = modelFolder + "/classModel.yaml";
+         String fileName = modelFolder + "/tablesClassModel.yaml";
          Files.createDirectories(Paths.get(modelFolder));
          Files.write(Paths.get(fileName), yamlString.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
       }
@@ -125,70 +127,6 @@ public class Generator
    }
 
 
-   public void markModifiedElementsInOldModel(ClassModel oldModel, ClassModel newModel)
-   {
-      //  check for changed package name or target folder?
-
-      for (Clazz oldClazz : oldModel.getClasses())
-      {
-         Clazz newClazz = newModel.getClazz(oldClazz.getName());
-
-         markModifiedElementsInOldClazz(oldClazz, newClazz);
-      }
-   }
-
-   private void markModifiedElementsInOldClazz(Clazz oldClazz, Clazz newClazz)
-   {
-      logger = Logger.getLogger(Generator.class.getName());
-      if (newClazz == null)
-      {
-         oldClazz.markAsModified();
-         logger.info("\n   markedAsModified: class " + oldClazz.getName());
-      }
-
-      for (Attribute oldAttr : oldClazz.getAttributes())
-      {
-         boolean modified = newClazz == null;
-
-         if ( ! modified)
-         {
-            Attribute newAttr = newClazz.getAttribute(oldAttr.getName());
-
-            modified = newAttr == null
-                  || ! StrUtil.stringEquals(oldAttr.getType(), newAttr.getType());
-         }
-
-         if (modified)
-         {
-            oldAttr.markAsModified();
-            logger.info("\n   markedAsModified: attribute " + oldAttr.getName());
-         }
-      }
-
-      for (AssocRole oldRole : oldClazz.getRoles())
-      {
-         boolean modified = newClazz == null;
-
-         if ( ! modified)
-         {
-            AssocRole newRole = newClazz.getRole(oldRole.getName());
-
-            modified = newRole == null
-                  || oldRole.getCardinality() != newRole.getCardinality();
-         }
-
-         if (modified)
-         {
-            oldRole.markAsModified();
-            logger.info("\n   markedAsModified: role " + oldRole.getName());
-            if (oldRole.getOther() != null)
-            {
-               oldRole.getOther().markAsModified();
-               logger.info("\n   markedAsModified: role " + oldRole.getOther().getName());
-            }
-         }
-      }
-   }
 
    public String getCustomTemplateFile()
    {
@@ -208,7 +146,7 @@ public class Generator
     * @param customFileName
     * @return
     */
-   public Generator setCustomTemplatesFile(String customFileName)
+   public TablesGenerator setCustomTemplatesFile(String customFileName)
    {
       this.customTemplateFile = customFileName;
       return this;
