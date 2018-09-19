@@ -21,7 +21,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -37,6 +41,10 @@ import java.util.logging.Logger;
 
 public class TestGenerator
 {
+
+   private Class<?> uniClass;
+   private URLClassLoader classLoader;
+   private Object studyRight;
 
    @Test
    public void testAttributeGenerator() throws Exception
@@ -816,13 +824,31 @@ public class TestGenerator
 
    public void runTableTests(String outFolder, ClassModel model) throws Exception
    {
+      getTableExampleObjects(outFolder, model);
+
+
+      // simple table
+      Class<?> uniTableClass = Class.forName(model.getPackageName() + ".tables.UniversityTable", true, classLoader);
+
+      Object uniArray = Array.newInstance(uniClass, 1);
+      Array.set(uniArray, 0, studyRight);
+
+      Constructor<?> declaredConstructors = uniTableClass.getDeclaredConstructors()[0];
+
+      Object uniTable = declaredConstructors.newInstance(uniArray);
+
+      assertThat(uniTable, notNullValue());
+   }
+
+   private void getTableExampleObjects(String outFolder, ClassModel model) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException
+   {
       // create example objects
       File classesDir = new File(outFolder);
 
       // Load and instantiate compiled class.
-      URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
+      classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
 
-      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
+      uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
       Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
       Class<?> roomClass = Class.forName(model.getPackageName() + ".Room", true, classLoader);
       Class<?> assignClass = Class.forName(model.getPackageName() + ".Assignment", true, classLoader);
@@ -841,7 +867,7 @@ public class TestGenerator
       Method studWithDone = studClass.getMethod("withDone", Object[].class);
 
 
-      Object studyRight = uniClass.newInstance();
+      studyRight = uniClass.newInstance();
       uniSetName.invoke(studyRight, "Study Right");
 
       Object mathRoom = roomClass.newInstance();
@@ -890,21 +916,15 @@ public class TestGenerator
       studStudentId.invoke(bob, "m2323");
       studSetName.invoke(bob, "Bobby"  );
       studSetUni.invoke(bob, studyRight);
-      studSetIn.invoke(bob, artsRoom);;
+      studSetIn.invoke(bob, artsRoom);
+      ;
 
       Object carli = studClass.newInstance();
       studStudentId.invoke(carli, "m2323");
       studSetName.invoke(carli, "Carli");
       studSetUni.invoke(carli, studyRight);
       studSetIn.invoke(carli, mathRoom);
-
-
-      // simple table
-
-
    }
-
-
 
 
    private void deleteFile(Clazz clazz)
