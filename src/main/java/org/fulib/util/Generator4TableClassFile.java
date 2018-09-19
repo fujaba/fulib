@@ -34,6 +34,8 @@ public class Generator4TableClassFile
 
       generateClassDecl(clazz, fragmentMap);
 
+      generateConstructor(clazz, fragmentMap);
+
       generateStandardAttributes(clazz, fragmentMap);
 
       // generateAttributes(clazz, fragmentMap);
@@ -73,6 +75,16 @@ public class Generator4TableClassFile
       st.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() + "Table" : null);
       String result = st.render();
       fragmentMap.add(Parser.CLASS, result, 2);
+   }
+
+
+
+   private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap) {
+      STGroup group = createSTGroup("templates/tableConstructor.stg");
+      ST st = group.getInstanceOf("constructor");
+      st.add("className", clazz.getName());
+      String result = st.render();
+      fragmentMap.add(Parser.METHOD + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)", result, 2);
    }
 
 

@@ -134,14 +134,41 @@ public class TestGenerator
    }
 
    @Test
-   public void testTables() throws IOException
+   public void testTables() throws Exception
    {
       String targetFolder = "tmp";
       String packageName = "org.fulib.tables.studyright";
 
       Tools.removeDirAndFiles(targetFolder);
 
-      ClassModel model = getClassModelWithAssociations(targetFolder, packageName);
+      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
+
+      ClassBuilder uni = mb.buildClass("University")
+            .buildAttribute("name", mb.STRING);
+
+      ClassBuilder student = mb.buildClass("Student")
+            .buildAttribute("name", mb.STRING)
+            .buildAttribute("studentId", mb.STRING)
+            .buildAttribute("credits", mb.INT);
+
+      student.buildAssociation(student, "friends", mb.MANY, "friends", mb.MANY);
+      uni.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
+
+      ClassBuilder room = mb.buildClass("Room")
+            .buildAttribute("roomNo", mb.STRING)
+            .buildAttribute("topic", mb.STRING);
+
+      uni.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE);
+      student.buildAssociation(room, "in", mb.ONE, "students", mb.MANY);
+
+      ClassBuilder assignment = mb.buildClass("Assignment")
+            .buildAttribute("topic", mb.STRING)
+            .buildAttribute("points", mb.INT);
+
+      room.buildAssociation(assignment, "assignments", mb.MANY, "room", mb.ONE);
+      student.buildAssociation(assignment, "done", mb.MANY, "students", mb.MANY);
+
+      ClassModel model = mb.getClassModel();
 
       Fulib.generator().generate(model);
 
@@ -155,6 +182,8 @@ public class TestGenerator
       Assert.assertEquals("compiler return code: ", 0, returnCode);
       returnCode = Tools.javac(outFolder, model.getPackageSrcFolder()+"/tables");
       Assert.assertEquals("compiler return code: ", 0, returnCode);
+
+      runTableTests(outFolder, model);
    }
 
 
@@ -427,6 +456,9 @@ public class TestGenerator
       studi.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
 
       studi.buildAssociation(room, "in", mb.MANY, "students", mb.MANY);
+
+      ClassBuilder assignment = mb.buildClass("Assignment").buildAttribute("topic", mb.STRING);
+      studi.buildAssociation(assignment, "done", mb.MANY, "students", mb.MANY);
 
       return mb.getClassModel();
    }
@@ -780,6 +812,99 @@ public class TestGenerator
       assertThat(karli, hasProperty("level", equalTo("master")));
 
    }
+
+
+   public void runTableTests(String outFolder, ClassModel model) throws Exception
+   {
+      // create example objects
+      File classesDir = new File(outFolder);
+
+      // Load and instantiate compiled class.
+      URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
+
+      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
+      Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
+      Class<?> roomClass = Class.forName(model.getPackageName() + ".Room", true, classLoader);
+      Class<?> assignClass = Class.forName(model.getPackageName() + ".Assignment", true, classLoader);
+
+      Method uniSetName = uniClass.getMethod("setName", String.class);
+      Method roomSetRoomNo = roomClass.getMethod("setRoomNo", String.class);
+      Method roomSetTopic = roomClass.getMethod("setTopic", String.class);
+      Method roomSetUni = roomClass.getMethod("setUni", uniClass);
+      Method assignmentSetTopic = assignClass.getMethod("setTopic", String.class);
+      Method assignmentSetPoints = assignClass.getMethod("setPoints", int.class);
+      Method assignmentSetRoom = assignClass.getMethod("setRoom", roomClass);
+      Method studStudentId = studClass.getMethod("setStudentId", String.class);
+      Method studSetName = studClass.getMethod("setName", String.class);
+      Method studSetUni = studClass.getMethod("setUni", uniClass);
+      Method studSetIn = studClass.getMethod("setIn", roomClass);
+      Method studWithDone = studClass.getMethod("withDone", Object[].class);
+
+
+      Object studyRight = uniClass.newInstance();
+      uniSetName.invoke(studyRight, "Study Right");
+
+      Object mathRoom = roomClass.newInstance();
+      roomSetRoomNo.invoke(mathRoom, "wa1337");
+      roomSetTopic.invoke(mathRoom, "Math");
+      roomSetUni.invoke(mathRoom, studyRight);
+
+      Object artsRoom = roomClass.newInstance();
+      roomSetRoomNo.invoke( artsRoom, "wa1338");
+      roomSetTopic.invoke( artsRoom,"Arts");
+      roomSetUni.invoke(artsRoom, studyRight);
+
+      Object sportsRoom = roomClass.newInstance();
+      roomSetRoomNo.invoke(sportsRoom, "wa1339");
+      roomSetTopic.invoke(sportsRoom, "Football");
+      roomSetUni.invoke(sportsRoom, studyRight);
+
+      Object integrals = assignClass.newInstance();
+      assignmentSetTopic.invoke(integrals, "integrals");
+      assignmentSetPoints.invoke(integrals, 42);
+      assignmentSetRoom.invoke(integrals, mathRoom);
+
+      Object matrix = assignClass.newInstance();
+      assignmentSetTopic.invoke(matrix, "matrices");
+      assignmentSetPoints.invoke(matrix, 23);
+      assignmentSetRoom.invoke(matrix, mathRoom);
+
+      Object drawings = assignClass.newInstance();
+      assignmentSetTopic.invoke(drawings, "drawings");
+      assignmentSetPoints.invoke(drawings, 12);
+      assignmentSetRoom.invoke(drawings, artsRoom);
+
+      Object sculptures = assignClass.newInstance();
+      assignmentSetTopic.invoke(sculptures, "sculptures");
+      assignmentSetPoints.invoke(sculptures, 12);
+      assignmentSetRoom.invoke(sculptures, artsRoom);
+
+      Object alice = studClass.newInstance();
+      studStudentId.invoke(alice, "m4242");
+      studSetName.invoke(alice, "Alice");
+      studSetUni.invoke(alice, studyRight);
+      studSetIn.invoke(alice, artsRoom);
+      studWithDone.invoke(alice, new Object[]{new Object[]{integrals}});
+
+      Object bob   = studClass.newInstance();
+      studStudentId.invoke(bob, "m2323");
+      studSetName.invoke(bob, "Bobby"  );
+      studSetUni.invoke(bob, studyRight);
+      studSetIn.invoke(bob, artsRoom);;
+
+      Object carli = studClass.newInstance();
+      studStudentId.invoke(carli, "m2323");
+      studSetName.invoke(carli, "Carli");
+      studSetUni.invoke(carli, studyRight);
+      studSetIn.invoke(carli, mathRoom);
+
+
+      // simple table
+
+
+   }
+
+
 
 
    private void deleteFile(Clazz clazz)
