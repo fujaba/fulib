@@ -38,11 +38,13 @@ public class Generator4TableClassFile
 
       generateStandardAttributes(clazz, fragmentMap);
 
-      // generateAttributes(clazz, fragmentMap);
+      generateAttributes(clazz, fragmentMap);
 
       generateAssociations(clazz, fragmentMap);
 
       generateFilter(clazz, fragmentMap);
+
+      generateToSet(clazz, fragmentMap);
 
       generateToString(clazz, fragmentMap);
 
@@ -144,37 +146,19 @@ public class Generator4TableClassFile
 
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap) {
-      STGroup group = createSTGroup("templates/attributes.stg");
+      STGroup group = createSTGroup("templates/tablesAttributes.stg");
       ST attrTemplate;
       String result;
 
       for (Attribute attr : clazz.getAttributes())
       {
-         attrTemplate = group.getInstanceOf("attrDecl");
-         attrTemplate.add("type", attr.getType());
-         attrTemplate.add("name", attr.getName());
-         attrTemplate.add("value", attr.getInitialization());
+         attrTemplate = group.getInstanceOf("expandMethod");
+         attrTemplate.add("roleName", attr.getName());
+         attrTemplate.add("typeName", attr.getType());
+         attrTemplate.add("className", clazz.getName());
          result = attrTemplate.render();
 
-         fragmentMap.add(Parser.ATTRIBUTE + ":" + attr.getName(), result, 2, attr.getModified());
-
-
-         attrTemplate = group.getInstanceOf("attrGet");
-         attrTemplate.add("type", attr.getType());
-         attrTemplate.add("name", attr.getName());
-         result = attrTemplate.render();
-
-         fragmentMap.add(Parser.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
-
-
-         attrTemplate = group.getInstanceOf("attrSet");
-         attrTemplate.add("class", attr.getClazz().getName());
-         attrTemplate.add("type", attr.getType());
-         attrTemplate.add("name", attr.getName());
-         attrTemplate.add("useEquals", attr.getType().equals("String"));
-         result = attrTemplate.render();
-
-         fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3, attr.getModified());
+         fragmentMap.add(Parser.METHOD + ":expand" + StrUtil.cap(attr.getName()), result, 2, attr.getModified());
       }
    }
 
@@ -193,14 +177,14 @@ public class Generator4TableClassFile
          String roleType = role.getOther().getClazz().getName();
 
          // getMethod(roleName,toMany,className,otherClassName) ::=
-         st = group.getInstanceOf("getMethod");
+         st = group.getInstanceOf("expandMethod");
          st.add("roleName", role.getName());
          st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
          st.add("className", clazz.getName());
          st.add("otherClassName", role.getOther().getClazz().getName());
          result = st.render();
 
-         fragmentMap.add(Parser.METHOD + ":get" + StrUtil.cap(role.getName()) + "(String...)", result, 2, role.getModified());
+         fragmentMap.add(Parser.METHOD + ":expand" + StrUtil.cap(role.getName()) + "(String...)", result, 2, role.getModified());
 
          fullClassName = clazz.getModel().getPackageName() + "." + role.getOther().getClazz().getName();
          fragmentMap.add(Parser.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
@@ -229,6 +213,21 @@ public class Generator4TableClassFile
       fragmentMap.add(Parser.METHOD + ":filterRow()", result, 2, clazz.getModified());
    }
 
+
+   private void generateToSet(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      fragmentMap.add(Parser.IMPORT + ":java.util.LinkedHashSet", "import java.util.LinkedHashSet;", 1);
+
+      String result = "";
+      STGroup group = createSTGroup("templates/tablesToSet.stg");
+      ST st = group.getInstanceOf("toSet");
+      st.add("className", clazz.getName());
+      result = st.render();
+
+      fragmentMap.add(Parser.METHOD + ":toSet()", result, 2, clazz.getModified());
+   }
+
+
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap) {
       String result = "";
       STGroup group = createSTGroup("templates/tablesToString.stg");
@@ -251,7 +250,7 @@ public class Generator4TableClassFile
       return this;
    }
 
-   private STGroup createSTGroup(String origFileName)
+   public STGroup createSTGroup(String origFileName)
    {
       STGroup group;
       try

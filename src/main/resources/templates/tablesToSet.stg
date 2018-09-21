@@ -1,0 +1,15 @@
+
+toSet(className) ::=
+<<
+   public LinkedHashSet\< <className> > toSet()
+   {
+      LinkedHashSet\< <className> > result = new LinkedHashSet\<>();
+      for (ArrayList row : this.table)
+      {
+         <className> value = (<className>) row.get(columnMap.get(columnName));
+         result.add(value);
+      }
+      return result;
+   }
+>>
+

@@ -1,7 +1,7 @@
 
-getMethod(roleName,toMany,className,otherClassName) ::=
+expandMethod(roleName,toMany,className,otherClassName) ::=
 <<
-   public <otherClassName>Table get<cap(roleName)>(String... rowName)
+   public <otherClassName>Table expand<cap(roleName)>(String... rowName)
    {
       <otherClassName>Table result = new <otherClassName>Table();
       result.setColumnMap(this.columnMap);
@@ -32,6 +32,31 @@ getMethod(roleName,toMany,className,otherClassName) ::=
       <endif>
       }
       return result;
+   }
+>>
+
+
+
+hasMethod(roleName,toMany,className,otherClassName) ::=
+<<
+   public <className>Table has<cap(roleName)>(<otherClassName>Table rowName)
+   {
+      ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();
+      this.table.clear();
+      for (ArrayList\<Object> row : oldTable)
+      {
+         <className> start = (<className>) row.get(columnMap.get(this.getColumnName()));
+         <otherClassName> other = (<otherClassName>) row.get(columnMap.get(rowName.getColumnName()));
+      <if(toMany)>
+         if (start.getDone().contains(other))
+      <else>
+         if (start.getDone() == other)
+      <endif>
+         {
+            this.table.add(row);
+         }
+      }
+      return this;
    }
 >>
 

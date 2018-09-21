@@ -6,6 +6,8 @@ import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.fulib.util.Generator4ClassFile;
 import org.fulib.util.Generator4TableClassFile;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -76,8 +78,47 @@ public class TablesGenerator
                .setCustomTemplatesFile(this.getCustomTemplateFile())
                .generate(clazz);
       }
+
+      // generate primitive tables
+      Generator4TableClassFile generator4TableClassFile = new Generator4TableClassFile()
+            .setCustomTemplatesFile(this.getCustomTemplateFile());
+
+      generatePrimitivTable(model, generator4TableClassFile, "int", "Integer");
+      generatePrimitivTable(model, generator4TableClassFile, "long", "Long");
+      generatePrimitivTable(model, generator4TableClassFile, "double", "Double");
+      generatePrimitivTable(model, generator4TableClassFile, "float", "Float");
+
+      STGroup group = generator4TableClassFile.createSTGroup("templates/StringTable.stg");
+      ST st = group.getInstanceOf("StringTable");
+      st.add("packageName", model.getPackageName() + ".tables");
+      String result = st.render();
+      writeFile(model.getPackageSrcFolder() + "/tables/StringTable.java", result);
    }
 
+   private void generatePrimitivTable(ClassModel model, Generator4TableClassFile generator4TableClassFile, String primitivType, String objectType)
+   {
+      STGroup group = generator4TableClassFile.createSTGroup("templates/intTable.stg");
+      ST st = group.getInstanceOf("intTable");
+      st.add("packageName", model.getPackageName() + ".tables");
+      st.add("primitiveType", primitivType);
+      st.add("objectType", objectType);
+      String result = st.render();
+      writeFile(model.getPackageSrcFolder() + "/tables/" + primitivType + "Table.java", result);
+   }
+
+   public void writeFile(String fileName, String content)
+   {
+      try
+      {
+         Path path = Paths.get(fileName);
+         Files.createDirectories(path.getParent());
+         Files.write(path, content.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+   }
 
    private ClassModel loadOldClassModel(String modelFolder)
    {
