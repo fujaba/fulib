@@ -42,6 +42,8 @@ public class Generator4TableClassFile
 
       generateAssociations(clazz, fragmentMap);
 
+      generateSelectColumns(clazz, fragmentMap);
+
       generateFilter(clazz, fragmentMap);
 
       generateToSet(clazz, fragmentMap);
@@ -174,23 +176,52 @@ public class Generator4TableClassFile
       ST st;
       for (AssocRole role : clazz.getRoles())
       {
-         String roleType = role.getOther().getClazz().getName();
+         String otherClassName = role.getOther().getClazz().getName();
 
          // getMethod(roleName,toMany,className,otherClassName) ::=
          st = group.getInstanceOf("expandMethod");
          st.add("roleName", role.getName());
          st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
          st.add("className", clazz.getName());
-         st.add("otherClassName", role.getOther().getClazz().getName());
+         st.add("otherClassName", otherClassName);
          result = st.render();
-
          fragmentMap.add(Parser.METHOD + ":expand" + StrUtil.cap(role.getName()) + "(String...)", result, 2, role.getModified());
 
-         fullClassName = clazz.getModel().getPackageName() + "." + role.getOther().getClazz().getName();
+         // hasMethod(roleName,toMany,className,otherClassName) ::=
+         st = group.getInstanceOf("hasMethod");
+         st.add("roleName", role.getName());
+         st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+         st.add("className", clazz.getName());
+         st.add("otherClassName", otherClassName);
+         result = st.render();
+         fragmentMap.add(Parser.METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)", result, 2, role.getModified());
+
+         fullClassName = clazz.getModel().getPackageName() + "." + otherClassName;
          fragmentMap.add(Parser.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
       }
    }
 
+
+
+   private void generateSelectColumns(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      fragmentMap.add(Parser.IMPORT + ":java.util.Arrays", "import java.util.Arrays;", 1);
+
+      String result;
+      STGroup group = createSTGroup("templates/tablesSelectColumns.stg");
+      ST st = group.getInstanceOf("selectColumns");
+      st.add("className", clazz.getName());
+      result = st.render();
+
+      fragmentMap.add(Parser.METHOD + ":selectColumns(String...)", result, 2, clazz.getModified());
+
+
+      st = group.getInstanceOf("dropColumns");
+      st.add("className", clazz.getName());
+      result = st.render();
+
+      fragmentMap.add(Parser.METHOD + ":dropColumns(String...)", result, 2, clazz.getModified());
+   }
 
 
    private void generateFilter(Clazz clazz, FileFragmentMap fragmentMap)

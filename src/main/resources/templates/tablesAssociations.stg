@@ -48,9 +48,9 @@ hasMethod(roleName,toMany,className,otherClassName) ::=
          <className> start = (<className>) row.get(columnMap.get(this.getColumnName()));
          <otherClassName> other = (<otherClassName>) row.get(columnMap.get(rowName.getColumnName()));
       <if(toMany)>
-         if (start.getDone().contains(other))
+         if (start.get<cap(roleName)>().contains(other))
       <else>
-         if (start.getDone() == other)
+         if (start.get<cap(roleName)>() == other)
       <endif>
          {
             this.table.add(row);

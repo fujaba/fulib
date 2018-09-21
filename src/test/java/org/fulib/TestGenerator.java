@@ -45,6 +45,7 @@ public class TestGenerator
    private URLClassLoader classLoader;
    private Object studyRight;
    private Class<?> assignClass;
+   private Class<?> studClass;
 
    @Test
    public void testAttributeGenerator() throws Exception
@@ -829,19 +830,26 @@ public class TestGenerator
       // simple table
       Class<?> uniTableClass = Class.forName(model.getPackageName() + ".tables.UniversityTable", true, classLoader);
       Class<?> roomsTableClass = Class.forName(model.getPackageName() + ".tables.RoomTable", true, classLoader);
+      Class<?> studentsTableClass = Class.forName(model.getPackageName() + ".tables.StudentTable", true, classLoader);
       Class<?> assignmentsTableClass = Class.forName(model.getPackageName() + ".tables.AssignmentTable", true, classLoader);
       Class<?> intTableClass = Class.forName(model.getPackageName() + ".tables.intTable", true, classLoader);
 
       Constructor<?> declaredConstructors = uniTableClass.getDeclaredConstructors()[0];
       Method uniExpandRooms = uniTableClass.getMethod("expandRooms", String[].class);
+      Method uniExpandStudents = uniTableClass.getMethod("expandStudents", String[].class);
       Method roomsExpandAssignments = roomsTableClass.getMethod("expandAssignments", String[].class);
       Method roomsExpandStudents = roomsTableClass.getMethod("expandStudents", String[].class);
+      Method studentTablehasDone = studentsTableClass.getMethod("hasDone", assignmentsTableClass);
+      Method studentTableSelectColumns = studentsTableClass.getMethod("selectColumns", String[].class);
+      Method studentTableDropColumns = studentsTableClass.getMethod("dropColumns", String[].class);
       Method assignmentsToSet = assignmentsTableClass.getMethod("toSet");
       Method assignmentsExpandPoints = assignmentsTableClass.getMethod("expandPoints", String[].class);
       Method assignmentsFilter = assignmentsTableClass.getMethod("filter", Predicate.class);
+      Method assignmentsFilterRow = assignmentsTableClass.getMethod("filterRow", Predicate.class);
       Method intTableToList = intTableClass.getMethod("toList");
       Method intTableSum = intTableClass.getMethod("sum");
       final Method assignmentGetPoints = assignClass.getMethod("getPoints");
+      final Method studentGetDone = studClass.getMethod("getDone");
 
       Object uniArray = Array.newInstance(uniClass, 1);
       Array.set(uniArray, 0, studyRight);
@@ -890,7 +898,67 @@ public class TestGenerator
       assertThat(assignmentsTable.toString(), not(containsString("integrals")));
       assertThat(assignmentsTable.toString(), containsString("sculptures"));
 
+      // filter row
+      uniTable = declaredConstructors.newInstance(uniArray);
+      studentsTable = uniExpandStudents.invoke(uniTable, new Object[]{new String[]{"Students"}});
+      roomsTable = uniExpandRooms.invoke(uniTable, new Object[]{new String[]{"Rooms"}});
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[]{new String[]{"Assignments"}});
 
+
+      Predicate<Object> rowPredicate = new Predicate<Object>(){
+         @Override
+         public boolean test(Object o)
+         {
+            try
+            {
+               LinkedHashMap<String,Object> row = (LinkedHashMap<String, Object>) o;
+               Object stud = row.get("Students");
+               Object assign = row.get("Assignments");
+               Collection doneSet = (Collection) studentGetDone.invoke(stud);
+               return ! doneSet.contains(assign);
+            }
+            catch (Exception e)
+            {
+               e.printStackTrace();
+            }
+            return false;
+         }
+      };
+
+      assignmentsFilterRow.invoke(assignmentsTable, rowPredicate);
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math \tmatrices"));
+
+
+      // has done
+      uniTable = declaredConstructors.newInstance(uniArray);
+      studentsTable = uniExpandStudents.invoke(uniTable, new Object[]{new String[]{"Students"}});
+      roomsTable = uniExpandRooms.invoke(uniTable, new Object[]{new String[]{"Rooms"}});
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[]{new String[]{"Assignments"}});
+
+      studentTablehasDone.invoke(studentsTable, assignmentsTable);
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math \tintegrals"));
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tmatrices")));
+
+      // select columns
+      uniTable = declaredConstructors.newInstance(uniArray);
+      studentsTable = uniExpandStudents.invoke(uniTable, new Object[]{new String[]{"Students"}});
+      roomsTable = uniExpandRooms.invoke(uniTable, new Object[]{new String[]{"Rooms"}});
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[]{new String[]{"Assignments"}});
+
+      studentTableSelectColumns.invoke(studentsTable, new Object[]{new String[]{"Students", "Rooms"}});
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math"));
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
+
+      // drop columns
+      uniTable = declaredConstructors.newInstance(uniArray);
+      studentsTable = uniExpandStudents.invoke(uniTable, new Object[]{new String[]{"Students"}});
+      roomsTable = uniExpandRooms.invoke(uniTable, new Object[]{new String[]{"Rooms"}});
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[]{new String[]{"Assignments"}});
+
+      studentTableDropColumns.invoke(studentsTable, new Object[]{new String[]{"Assignments"}});
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math"));
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
    }
 
    private void getTableExampleObjects(String outFolder, ClassModel model) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException
@@ -902,7 +970,7 @@ public class TestGenerator
       classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
 
       uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
-      Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
+      studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
       Class<?> roomClass = Class.forName(model.getPackageName() + ".Room", true, classLoader);
       assignClass = Class.forName(model.getPackageName() + ".Assignment", true, classLoader);
 
