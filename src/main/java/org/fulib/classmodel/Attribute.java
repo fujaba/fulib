@@ -186,4 +186,10 @@ public class Attribute
    }
 
 
+   public void removeYou()
+   {
+      this.setClazz(null);
+
+   }
+
 }

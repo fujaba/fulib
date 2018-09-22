@@ -213,4 +213,12 @@ public AssocRole setOther(AssocRole value)
       return result.substring(1);
    }
 
+   public void removeYou()
+   {
+      this.setClazz(null);
+      this.setOther(null);
+      this.setOther(null);
+
+   }
+
 }

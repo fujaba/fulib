@@ -232,4 +232,10 @@ public class ClassModel
       return result.substring(1);
    }
 
+   public void removeYou()
+   {
+      this.withoutClasses(this.getClasses().clone());
+
+   }
+
 }

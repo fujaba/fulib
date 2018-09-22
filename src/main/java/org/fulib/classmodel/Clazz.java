@@ -434,4 +434,15 @@ public class Clazz
 
 
 
+   public void removeYou()
+   {
+      this.setModel(null);
+      this.setSuperClass(null);
+
+      this.withoutAttributes(this.getAttributes().clone());
+      this.withoutRoles(this.getRoles().clone());
+      this.withoutSubClasses(this.getSubClasses().clone());
+
+   }
+
 }

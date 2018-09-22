@@ -989,71 +989,9 @@ public class YamlIdMap
    {
       Objects.requireNonNull(rootObjList);
 
-      LinkedList<Object> simpleList = new LinkedList<>();
-
-      for (Object obj : rootObjList)
-      {
-         simpleList.add(obj);
-      }
-
       StringBuilder buf = new StringBuilder();
 
-      // collect objects
-      while ( ! simpleList.isEmpty())
-      {
-         Object obj = simpleList.get(0);
-         simpleList.remove(0);
-
-         if (obj instanceof PropertyChangeEvent)
-         {
-            encodePropertyChange(buf, obj);
-
-            return buf.toString();
-         }
-
-         // already known?
-         String key = idObjMap.get(obj);
-
-         if (key == null)
-         {
-            // add to map
-            key = addToObjIdMap(obj);
-
-            String className = obj.getClass().getSimpleName();
-
-            // find neighbors
-            Reflector reflector = getReflector(className);
-
-            for (String prop : reflector.getProperties())
-            {
-               Object value = reflector.getValue(obj, prop);
-
-               if (value == null)
-               {
-                  continue;
-               }
-
-               Class valueClass = value.getClass();
-
-               if (value instanceof Collection)
-               {
-                  for (Object valueObj : (Collection) value)
-                  {
-                     simpleList.add(valueObj);
-                  }
-               }
-               else if (  valueClass.getName().startsWith("java.lang.") || valueClass == String.class)
-               {
-                  continue;
-               }
-               else
-               {
-                  simpleList.add(value);
-               }
-            }
-         }
-
-      } // collect objects
+      collectObjects(rootObjList);
 
       for ( Entry<String, Object> entry : objIdMap.entrySet())
       {
@@ -1125,6 +1063,68 @@ public class YamlIdMap
       }
 
       return buf.toString();
+   }
+
+   public LinkedList<Object> collectObjects(Object[] rootObjList)
+   {
+      LinkedList<Object> simpleList = new LinkedList<>();
+
+      for (Object obj : rootObjList)
+      {
+         simpleList.add(obj);
+      }
+
+
+      // collect objects
+      while ( ! simpleList.isEmpty())
+      {
+         Object obj = simpleList.get(0);
+         simpleList.remove(0);
+
+         // already known?
+         String key = idObjMap.get(obj);
+
+         if (key == null)
+         {
+            // add to map
+            key = addToObjIdMap(obj);
+
+            String className = obj.getClass().getSimpleName();
+
+            // find neighbors
+            Reflector reflector = getReflector(className);
+
+            for (String prop : reflector.getProperties())
+            {
+               Object value = reflector.getValue(obj, prop);
+
+               if (value == null)
+               {
+                  continue;
+               }
+
+               Class valueClass = value.getClass();
+
+               if (value instanceof Collection)
+               {
+                  for (Object valueObj : (Collection) value)
+                  {
+                     simpleList.add(valueObj);
+                  }
+               }
+               else if (  valueClass.getName().startsWith("java.lang.") || valueClass == String.class)
+               {
+                  continue;
+               }
+               else
+               {
+                  simpleList.add(value);
+               }
+            }
+         }
+
+      } // collect objects
+      return simpleList;
    }
 
    private void encodePropertyChange(StringBuilder buf, Object obj)
