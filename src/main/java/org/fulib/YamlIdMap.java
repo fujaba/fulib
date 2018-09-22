@@ -1070,9 +1070,10 @@ public class YamlIdMap
       return buf.toString();
    }
 
-   public LinkedList<Object> collectObjects(Object[] rootObjList)
+   public LinkedHashSet<Object> collectObjects(Object[] rootObjList)
    {
       LinkedList<Object> simpleList = new LinkedList<>();
+      LinkedHashSet<Object> collectedObjects = new LinkedHashSet<>();
 
       for (Object obj : rootObjList)
       {
@@ -1085,6 +1086,7 @@ public class YamlIdMap
       {
          Object obj = simpleList.get(0);
          simpleList.remove(0);
+         collectedObjects.add(obj);
 
          // already known?
          String key = idObjMap.get(obj);
@@ -1129,7 +1131,7 @@ public class YamlIdMap
          }
 
       } // collect objects
-      return simpleList;
+      return collectedObjects;
    }
 
    private void encodePropertyChange(StringBuilder buf, Object obj)
