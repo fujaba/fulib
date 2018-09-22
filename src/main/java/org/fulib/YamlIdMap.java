@@ -169,11 +169,16 @@ public class YamlIdMap
    {
       return objIdMap;
    }
+
+   public LinkedHashMap<Object, String> getIdObjMap()
+   {
+      return idObjMap;
+   }
+
    public HashMap<String, String> getAttrTimeStamps()
    {
       return attrTimeStamps;
    }
-
 
 
 
