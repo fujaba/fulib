@@ -5,6 +5,7 @@ import org.fulib.util.ReflectorMap;
 
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -1070,7 +1071,25 @@ public class YamlIdMap
       return buf.toString();
    }
 
-   public LinkedHashSet<Object> collectObjects(Object[] rootObjList)
+   public YamlIdMap putNameObject(String name, Object object)
+   {
+
+      String oldKey = idObjMap.get(object);
+      if (oldKey != null)
+      {
+         objIdMap.remove(oldKey);
+         idObjMap.remove(object);
+      }
+
+      collectObjects(object);
+
+      objIdMap.put(name, object);
+      idObjMap.put(object, name);
+
+      return this;
+   }
+
+   public LinkedHashSet<Object> collectObjects(Object... rootObjList)
    {
       LinkedList<Object> simpleList = new LinkedList<>();
       LinkedHashSet<Object> collectedObjects = new LinkedHashSet<>();
@@ -1251,6 +1270,42 @@ public class YamlIdMap
       String className = obj.getClass().getSimpleName();
 
       String key = className.substring(0, 1).toLowerCase();
+
+      Class<?> clazz = obj.getClass();
+      try
+      {
+         Method getId = clazz.getMethod("getId");
+         Object id = getId.invoke(obj);
+         if (id != null)
+         {
+            key = id.toString().replaceAll("\\W+", "_");
+         }
+      }
+      catch (Exception e)
+      {
+         try
+         {
+            Method getId = clazz.getMethod("getName");
+            Object id = getId.invoke(obj);
+            if (id != null)
+            {
+               key = id.toString().replaceAll("\\s+", "_");
+            }
+         }
+         catch (Exception e2)
+         {
+            // go with old key
+         }
+      }
+
+      if (key.length() == 1)
+      {
+         key = key.substring(0, 1).toLowerCase();
+      }
+      else
+      {
+         key = key.substring(0, 1).toLowerCase() + key.substring(1);
+      }
 
       maxUsedIdNum++;
 
