@@ -36,10 +36,22 @@ Once your IDE has compiled the generated code, you may use it like:
       Room wa1337 = new Room().setRoomNo("WA1337");
       studyRight.withRooms(wa1337);
 
-      Student alice = new Student().setName("Alice").setStudentId("A4242");
-      Student   bob = new Student().setName("Bob")  .setStudentId("B2323");
+      Student alice = new Student().setName("Alice").setStudentId("A4242").setIn(wa1337);
+      Student   bob = new Student().setName("Bob")  .setStudentId("B2323").setIn(wa1337);
       studyRight.withStudents(alice, bob);
 <!-- end_code_fragment: -->
+
+This application code creates the object structure shown in the object diagram shown below.
+
+To create an object diagram from your object structure use:
+
+
+<!-- insert_code_fragment: StudyRightUserStories.FulibTools.objectDiagrams -->
+      FulibTools.objectDiagrams().dumpPng("../fulib/doc/images/studyRightObjects.png", studyRight);
+<!-- end_code_fragment: -->
+
+![simple object diagram](doc/images/studyRightObjects.png)
+
 
 ### Gradle
 
