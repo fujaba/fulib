@@ -44,6 +44,8 @@ public class Generator4TableClassFile
 
       generateSelectColumns(clazz, fragmentMap);
 
+      generateAddColumn(clazz, fragmentMap);
+
       generateFilter(clazz, fragmentMap);
 
       generateToSet(clazz, fragmentMap);
@@ -222,6 +224,19 @@ public class Generator4TableClassFile
 
       fragmentMap.add(Parser.METHOD + ":dropColumns(String...)", result, 2, clazz.getModified());
    }
+
+
+   private void generateAddColumn(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      String result;
+      STGroup group = createSTGroup("templates/tablesSelectColumns.stg");
+      ST st = group.getInstanceOf("addColumn");
+      st.add("className", clazz.getName());
+      result = st.render();
+
+      fragmentMap.add(Parser.METHOD + ":addColumn(String,java.util.function.Function<java.util.LinkedHashMap<String,Object>,Object>)", result, 2, clazz.getModified());
+   }
+
 
 
    private void generateFilter(Clazz clazz, FileFragmentMap fragmentMap)

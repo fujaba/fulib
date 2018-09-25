@@ -75,3 +75,23 @@ dropColumns(className) ::=
       return this;
    }
 >>
+
+
+addColumn(className) ::=
+<<
+   public void addColumn(String columnName, java.util.function.Function\<java.util.LinkedHashMap\<String,Object>,Object> function)
+   {
+      int newColumnNumber = this.table.size() > 0 ? this.table.get(0).size() : 0;
+      for (ArrayList\<Object> row : this.table)
+      {
+         java.util.LinkedHashMap\<String,Object> map = new java.util.LinkedHashMap\<>();
+         for (String key : columnMap.keySet())
+         {
+            map.put(key, row.get(columnMap.get(key)));
+         }
+         Object result = function.apply(map);
+         row.add(result);
+      }
+      this.columnMap.put(columnName, newColumnNumber);
+   }
+>>

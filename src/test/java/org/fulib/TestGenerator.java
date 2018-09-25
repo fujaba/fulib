@@ -31,6 +31,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -846,6 +847,7 @@ public class TestGenerator
       Method studentTablehasDone = studentsTableClass.getMethod("hasDone", assignmentsTableClass);
       Method studentTableSelectColumns = studentsTableClass.getMethod("selectColumns", String[].class);
       Method studentTableDropColumns = studentsTableClass.getMethod("dropColumns", String[].class);
+      Method studentTableAddColumn = studentsTableClass.getMethod("addColumn", String.class, Function.class);
       Method assignmentsToSet = assignmentsTableClass.getMethod("toSet");
       Method assignmentsExpandPoints = assignmentsTableClass.getMethod("expandPoints", String[].class);
       Method assignmentsFilter = assignmentsTableClass.getMethod("filter", Predicate.class);
@@ -963,7 +965,24 @@ public class TestGenerator
       studentTableDropColumns.invoke(studentsTable, new Object[]{new String[]{"Assignments"}});
       assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math"));
       assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
+
+      // add column
+      uniTable = declaredConstructors.newInstance(uniArray);
+      studentsTable = uniExpandStudents.invoke(uniTable, new Object[]{new String[]{"Students"}});
+      Function<LinkedHashMap<String,Object>,Object> function = new Function<LinkedHashMap<String, Object>, Object>()
+      {
+         @Override
+         public Object apply(LinkedHashMap<String, Object> row)
+         {
+            Object student = row.get("Students");
+            return 42;
+         }
+      };
+      studentTableAddColumn.invoke(studentsTable, "Credits", function);
+      assertThat(studentsTable.toString(), containsString("Credits"));
+      assertThat(studentsTable.toString(), containsString("42"));
    }
+
 
    private void getTableExampleObjects(String outFolder, ClassModel model) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException
    {
