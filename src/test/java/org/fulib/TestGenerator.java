@@ -461,7 +461,8 @@ public class TestGenerator
             .buildAttribute("no", mb.STRING);
 
       universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE)
-            .setSourceRoleCollection(LinkedHashSet.class);
+            .setSourceRoleCollection(LinkedHashSet.class)
+            .setAggregation();
 
       studi.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
 
@@ -772,6 +773,7 @@ public class TestGenerator
       removeYou.invoke(studyRight);
       assertThat(karli, hasProperty("uni", nullValue()));
       assertThat(wa1337, hasProperty("uni", nullValue()));
+      assertThat(wa1337, hasProperty("students", not(containsInAnyOrder(karli))));
    }
 
 

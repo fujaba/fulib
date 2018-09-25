@@ -64,6 +64,7 @@
   type: 	String
 
 - classes11: 	AssocRole
+  aggregation: 	false
   cardinality: 	42
   clazz: 	classModel2
   modified: 	false
@@ -85,6 +86,7 @@
   type: 	boolean
 
 - model14: 	AssocRole
+  aggregation: 	false
   cardinality: 	1
   clazz: 	clazz3
   modified: 	false
@@ -93,6 +95,7 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - attributes15: 	AssocRole
+  aggregation: 	false
   cardinality: 	42
   clazz: 	clazz3
   modified: 	false
@@ -101,6 +104,7 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - roles16: 	AssocRole
+  aggregation: 	false
   cardinality: 	42
   clazz: 	clazz3
   modified: 	false
@@ -109,6 +113,7 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - superClass17: 	AssocRole
+  aggregation: 	false
   cardinality: 	1
   clazz: 	clazz3
   modified: 	false
@@ -117,6 +122,7 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - subClasses18: 	AssocRole
+  aggregation: 	false
   cardinality: 	42
   clazz: 	clazz3
   modified: 	false
@@ -150,6 +156,7 @@
   type: 	boolean
 
 - clazz23: 	AssocRole
+  aggregation: 	false
   cardinality: 	1
   clazz: 	attribute4
   modified: 	false
@@ -190,6 +197,7 @@
   type: 	boolean
 
 - clazz29: 	AssocRole
+  aggregation: 	false
   cardinality: 	1
   clazz: 	assocRole5
   modified: 	false
@@ -198,6 +206,7 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - other30: 	AssocRole
+  aggregation: 	false
   cardinality: 	1
   clazz: 	assocRole5
   modified: 	false
@@ -206,6 +215,7 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - other31: 	AssocRole
+  aggregation: 	false
   cardinality: 	1
   clazz: 	assocRole5
   modified: 	false

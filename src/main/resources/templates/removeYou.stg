@@ -1,10 +1,12 @@
 
-removeYou(toOneNames, toManyNames) ::=
+removeYou(toOneNames, toManyNames, toOneAggregations, toManyAggregations, toManyTypes) ::=
 <<
    public void removeYou()
    {
       <toOneNames : {name | <toOneLine(name)>}>
+      <toOneAggregations : {name | <toOneAggregationLine(name)>}>
       <toManyNames : {name | <toManyLine(name)>}>
+      <toManyAggregations, toManyTypes : {name, type | <toManyAggregationLine(name, type)>}>
    }
 >>
 
@@ -14,12 +16,27 @@ this.set<cap(name)>(null);
 
 >>
 
+
+toOneAggregationLine(name) ::=
+<<
+this.get<cap(name)>().removeYou();
+
+>>
+
+
+
 toManyLine(name) ::=
 <<
 this.without<cap(name)>(this.get<cap(name)>().clone());
 
 >>
 
+
+toManyAggregationLine(name, type) ::=
+<<
+((java.util.Collection)this.get<cap(name)>().clone()).forEach(x -> ((<type>) x).removeYou());
+
+>>
 
 cap(n) ::=
 <%

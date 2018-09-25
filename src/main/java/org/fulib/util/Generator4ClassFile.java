@@ -250,16 +250,34 @@ public class Generator4ClassFile {
    {
       ArrayList<String> toOneList = new ArrayList<>();
       ArrayList<String> toManyList = new ArrayList<>();
+      ArrayList<String> toOneAggregationList = new ArrayList<>();
+      ArrayList<String> toManyAggregationList = new ArrayList<>();
+      ArrayList<String> toManyTypes = new ArrayList<>();
       boolean modified = clazz.getModified();
       for (AssocRole role : clazz.getRoles())
       {
          if (role.getCardinality() == ClassModelBuilder.ONE)
          {
-            toOneList.add(role.getName());
+            if (role.getAggregation() == true)
+            {
+               toOneAggregationList.add(role.getName());
+            }
+            else
+            {
+               toOneList.add(role.getName());
+            }
          }
          else
          {
-            toManyList.add(role.getName());
+            if (role.getAggregation() == true)
+            {
+               toManyAggregationList.add(role.getName());
+               toManyTypes.add(role.getOther().getClazz().getName());
+            }
+            else
+            {
+               toManyList.add(role.getName());
+            }
          }
       }
 
@@ -268,6 +286,9 @@ public class Generator4ClassFile {
       ST st = group.getInstanceOf("removeYou");
       st.add("toOneNames", toOneList.toArray(new String[0]));
       st.add("toManyNames", toManyList.toArray(new String[0]));
+      st.add("toOneAggregations", toOneAggregationList.toArray(new String[0]));
+      st.add("toManyAggregations", toManyAggregationList.toArray(new String[0]));
+      st.add("toManyTypes", toManyTypes.toArray(new String[0]));
       result = st.render();
 
       fragmentMap.add(Parser.METHOD + ":removeYou()", result, 2, modified);
