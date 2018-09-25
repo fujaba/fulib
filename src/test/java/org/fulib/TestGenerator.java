@@ -460,7 +460,8 @@ public class TestGenerator
       ClassBuilder room = mb.buildClass("Room")
             .buildAttribute("no", mb.STRING);
 
-      universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE, LinkedHashSet.class, LinkedHashSet.class);
+      universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE)
+            .setSourceRoleCollection(LinkedHashSet.class);
 
       studi.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
 
@@ -495,7 +496,8 @@ public class TestGenerator
       ClassBuilder room = mb.buildClass("Room")
             .buildAttribute("no", mb.STRING);
 
-      universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE, LinkedHashSet.class, LinkedHashSet.class);
+      universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE)
+            .setSourceRoleCollection(LinkedHashSet.class);
 
       student.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
 

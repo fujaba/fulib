@@ -127,7 +127,7 @@ public class ClassBuilder
     * @param otherRoleName
     * @param otherCardinality
     */
-   public void buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality, Class... collectionClasses)
+   public AssociationBuilder buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality)
    {
       ClassModelBuilder.checkValidJavaId(myRoleName);
       ClassModelBuilder.checkValidJavaId(otherRoleName);
@@ -141,52 +141,18 @@ public class ClassBuilder
       AssocRole myRole = new AssocRole()
             .setClazz(this.getClazz())
             .setName(myRoleName)
-            .setCardinality(myCardinality);
-
-      if (collectionClasses != null && collectionClasses.length > 0)
-      {
-         String roleType = deriveRoleType(collectionClasses[0]);
-
-         myRole.setRoleType(roleType);
-      }
-      else
-      {
-         myRole.setRoleType(this.clazz.getModel().getDefaultRoleType());
-      }
+            .setCardinality(myCardinality)
+            .setRoleType(this.clazz.getModel().getDefaultRoleType());
 
       AssocRole otherRole = new AssocRole()
             .setClazz(otherClass.getClazz())
             .setName(otherRoleName)
-            .setCardinality(otherCardinality);
-
-      if (collectionClasses != null && collectionClasses.length > 1)
-      {
-         String roleType = deriveRoleType(collectionClasses[1]);
-         otherRole.setRoleType(roleType);
-      }
-      else
-      {
-         otherRole.setRoleType(this.clazz.getModel().getDefaultRoleType());
-      }
+            .setCardinality(otherCardinality)
+            .setRoleType(this.clazz.getModel().getDefaultRoleType());
 
       myRole.setOther(otherRole);
-   }
 
-   private String deriveRoleType(Class collectionClass1)
-   {
-      Class collectionClass = collectionClass1;
-      if ( ! Collection.class.isAssignableFrom(collectionClass))
-      {
-         throw new IllegalArgumentException("class is no collection");
-      }
-
-      String roleType = collectionClass.getName();
-      TypeVariable[] typeParameters = collectionClass.getTypeParameters();
-      if (typeParameters.length == 1)
-      {
-         roleType += "<%s>";
-      }
-      return roleType;
+      return new AssociationBuilder(myRole);
    }
 
    public ClassBuilder setSuperClass(ClassBuilder superClass)
