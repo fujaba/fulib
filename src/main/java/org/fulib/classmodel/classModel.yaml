@@ -27,20 +27,20 @@
   roles: 	clazz23 	
 
 - assocRole5: 	Clazz
-  attributes: 	name24 	cardinality25 	roleType26 	modified27 	
+  attributes: 	name24 	cardinality25 	roleType26 	aggregation27 	modified28 	
   model: 	c1
   modified: 	false
   name: 	AssocRole
-  roles: 	clazz28 	other29 	other30 	
+  roles: 	clazz29 	other30 	other31 	
 
 - fileFragmentMap6: 	Clazz
-  attributes: 	fileName31 	
+  attributes: 	fileName32 	
   model: 	c1
   modified: 	false
   name: 	FileFragmentMap
 
 - codeFragment7: 	Clazz
-  attributes: 	key32 	text33 	
+  attributes: 	key33 	text34 	
   model: 	c1
   modified: 	false
   name: 	CodeFragment
@@ -105,7 +105,7 @@
   clazz: 	clazz3
   modified: 	false
   name: 	roles
-  other: 	clazz28
+  other: 	clazz29
   roleType: 	"java.util.ArrayList<%s>"
 
 - superClass17: 	AssocRole
@@ -175,14 +175,21 @@
   name: 	roleType
   type: 	String
 
-- modified27: 	Attribute
+- aggregation27: 	Attribute
+  clazz: 	assocRole5
+  initialization: 	false
+  modified: 	false
+  name: 	aggregation
+  type: 	boolean
+
+- modified28: 	Attribute
   clazz: 	assocRole5
   initialization: 	false
   modified: 	false
   name: 	modified
   type: 	boolean
 
-- clazz28: 	AssocRole
+- clazz29: 	AssocRole
   cardinality: 	1
   clazz: 	assocRole5
   modified: 	false
@@ -190,7 +197,15 @@
   other: 	roles16
   roleType: 	"java.util.ArrayList<%s>"
 
-- other29: 	AssocRole
+- other30: 	AssocRole
+  cardinality: 	1
+  clazz: 	assocRole5
+  modified: 	false
+  name: 	other
+  other: 	other31
+  roleType: 	"java.util.ArrayList<%s>"
+
+- other31: 	AssocRole
   cardinality: 	1
   clazz: 	assocRole5
   modified: 	false
@@ -198,27 +213,19 @@
   other: 	other30
   roleType: 	"java.util.ArrayList<%s>"
 
-- other30: 	AssocRole
-  cardinality: 	1
-  clazz: 	assocRole5
-  modified: 	false
-  name: 	other
-  other: 	other29
-  roleType: 	"java.util.ArrayList<%s>"
-
-- fileName31: 	Attribute
+- fileName32: 	Attribute
   clazz: 	fileFragmentMap6
   modified: 	false
   name: 	fileName
   type: 	String
 
-- key32: 	Attribute
+- key33: 	Attribute
   clazz: 	codeFragment7
   modified: 	false
   name: 	key
   type: 	String
 
-- text33: 	Attribute
+- text34: 	Attribute
   clazz: 	codeFragment7
   modified: 	false
   name: 	text

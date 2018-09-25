@@ -31,6 +31,7 @@ public class GenerateClassModel
             .buildAttribute("name", mb.STRING)
             .buildAttribute("cardinality", mb.INT)
             .buildAttribute("roleType", mb.STRING)
+            .buildAttribute("aggregation", mb.BOOLEAN, "false")
             .buildAttribute("modified", mb.BOOLEAN, "false");
 
       classModel.buildAssociation(fuClass, "classes", mb.MANY, "model", mb.ONE);

@@ -221,4 +221,23 @@ public AssocRole setOther(AssocRole value)
 
    }
 
+   private boolean aggregation = false;
+
+   public boolean getAggregation()
+   {
+      return aggregation;
+   }
+
+   public AssocRole setAggregation(boolean value)
+   {
+      if (value != this.aggregation)
+      {
+         boolean oldValue = this.aggregation;
+         this.aggregation = value;
+         firePropertyChange("aggregation", oldValue, value);
+      }
+      return this;
+   }
+
+
 }

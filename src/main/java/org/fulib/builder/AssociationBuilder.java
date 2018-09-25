@@ -40,6 +40,7 @@ public class AssociationBuilder
 
    public AssociationBuilder setAggregation()
    {
+      this.srcRole.setAggregation(true);
       return this;
    }
 
