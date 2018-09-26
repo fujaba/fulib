@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 import java.util.LinkedHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class FileFragmentMap 
@@ -168,7 +170,33 @@ public class FileFragmentMap
 
          // keep annotations and modifiers
          int newTextBracePos = newText.indexOf('{');
-         if (newTextBracePos >= 0)
+         if (key.equals(Parser.CLASS))
+         {
+            // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
+            Pattern pattern = Pattern.compile("class\\s+(\\w+)(\\.*)");
+            Matcher match = pattern.matcher(newText);
+            boolean b = match.find();
+            String className = match.group(1);
+            String extendsClause = match.group(2);
+
+            int resultClassNamePos = result.getText().indexOf("class " + className);
+            if (resultClassNamePos >= 0)
+            {
+               String prefix = result.getText().substring(0, resultClassNamePos);
+               String middle = "class " + className + " " + extendsClause;
+               String suffix = "\n{";
+
+               int implementsPos = result.getText().indexOf("implements");
+               if (implementsPos >= 0)
+               {
+                  suffix = result.getText().substring(implementsPos);
+               }
+
+               newText = prefix + middle + suffix;
+            }
+            System.out.println();
+         }
+         else if (newTextBracePos >= 0)
          {
             int resultBracePos = result.getText().indexOf('{');
             if (resultBracePos >= 0)
