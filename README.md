@@ -13,7 +13,8 @@ First you write code that builds up your class model:
       uni.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
       ClassBuilder room = mb.buildClass("Room")
             .buildAttribute("roomNo", mb.STRING);
-      uni.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE);
+      uni.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE)
+            .setAggregation();
 
       ClassModel model = mb.getClassModel();
 <!-- end_code_fragment: -->
