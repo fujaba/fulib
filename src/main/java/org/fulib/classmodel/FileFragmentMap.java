@@ -108,6 +108,10 @@ public class FileFragmentMap
    }
 
 
+   public CodeFragment getFragment(String key)
+   {
+      return codeMap.get(key);
+   }
 
 
    @Override // no fulib
@@ -178,7 +182,7 @@ public class FileFragmentMap
             boolean b = match.find();
             String className = match.group(1);
             String extendsClause = match.group(2);
-            extendsClause = extendsClause == null ? "" : extendsClause;
+            extendsClause = extendsClause == null ? "" : extendsClause + " ";
 
             int resultClassNamePos = result.getText().indexOf("class " + className);
             if (resultClassNamePos >= 0)
@@ -190,12 +194,11 @@ public class FileFragmentMap
                int implementsPos = result.getText().indexOf("implements");
                if (implementsPos >= 0)
                {
-                  suffix = result.getText().substring(implementsPos);
+                  suffix = " " + result.getText().substring(implementsPos);
                }
 
                newText = prefix + middle + suffix;
             }
-            System.out.println();
          }
          else if (newTextBracePos >= 0)
          {

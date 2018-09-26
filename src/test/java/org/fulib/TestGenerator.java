@@ -4,6 +4,8 @@ import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
+import org.fulib.classmodel.CodeFragment;
+import org.fulib.classmodel.FileFragmentMap;
 import org.junit.Assert;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
@@ -21,6 +23,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -126,8 +129,17 @@ public class TestGenerator
 
       createPreexistingUniFile(packageName, model);
 
-
       Fulib.generator().generate(model);
+
+      // add implements clause to TeachingAssistant
+      FileFragmentMap fragmentMap = Parser.parse(model.getPackageSrcFolder() + "/TeachingAssistent.java");
+      CodeFragment fragment = fragmentMap.getFragment(Parser.CLASS);
+      fragment.setText("@Deprecated \npublic class TeachingAssistent extends Student implements java.io.Serializable \n{");
+
+      fragmentMap.add(Parser.CLASS, "public class TeachingAssistent extends Student \n{", 1);
+      assertThat(fragment.getText(), containsString("@Deprecated"));
+      assertThat(fragment.getText(), containsString("implements java.io.Serializable"));
+      assertThat(fragment.getText(), containsString("{"));
 
       Fulib.generator().generate(model);
 
