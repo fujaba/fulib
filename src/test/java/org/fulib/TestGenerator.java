@@ -129,6 +129,8 @@ public class TestGenerator
 
       Fulib.generator().generate(model);
 
+      Fulib.generator().generate(model);
+
       String uniFileName = model.getPackageSrcFolder() + "/University.java";
       Assert.assertTrue("University.java exists", Files.exists(Paths.get(uniFileName)));
 

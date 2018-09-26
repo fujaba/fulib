@@ -6,7 +6,7 @@ import java.beans.PropertyChangeSupport;
 
 import java.beans.PropertyChangeListener;
 
-public class CodeFragment 
+public class CodeFragment  
 {
 
    private String key;

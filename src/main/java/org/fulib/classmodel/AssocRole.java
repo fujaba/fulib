@@ -9,7 +9,7 @@ import java.beans.PropertyChangeListener;
 /**
  * <img src='doc-files/classDiagram.png' width='663'/>
  */
-public class AssocRole 
+public class AssocRole  
 {
 
    private String name;

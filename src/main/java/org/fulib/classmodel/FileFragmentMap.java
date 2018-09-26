@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class FileFragmentMap 
+public class FileFragmentMap  
 {
 
    private String fileName;
@@ -173,18 +173,19 @@ public class FileFragmentMap
          if (key.equals(Parser.CLASS))
          {
             // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
-            Pattern pattern = Pattern.compile("class\\s+(\\w+)(\\.*)");
+            Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
             Matcher match = pattern.matcher(newText);
             boolean b = match.find();
             String className = match.group(1);
             String extendsClause = match.group(2);
+            extendsClause = extendsClause == null ? "" : extendsClause;
 
             int resultClassNamePos = result.getText().indexOf("class " + className);
             if (resultClassNamePos >= 0)
             {
                String prefix = result.getText().substring(0, resultClassNamePos);
                String middle = "class " + className + " " + extendsClause;
-               String suffix = "\n{";
+               String suffix = " \n{";
 
                int implementsPos = result.getText().indexOf("implements");
                if (implementsPos >= 0)
