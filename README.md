@@ -25,7 +25,7 @@ Rendered as a class diagram this model looks like:
 From the class model you may generate Java code that implements the modeled classes:
 
 <!-- insert_code_fragment: test4FulibReadme.generate -->
-      // Fulib.generator().generate(model);
+      Fulib.generator().generate(model);
 <!-- end_code_fragment: -->
 
 Once your IDE has compiled the generated code, you may use it like:

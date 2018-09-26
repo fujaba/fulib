@@ -90,7 +90,7 @@ public class Generator4TableClassFile
       ST st = group.getInstanceOf("constructor");
       st.add("className", clazz.getName());
       String result = st.render();
-      fragmentMap.add(Parser.METHOD + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)", result, 2);
+      fragmentMap.add(Parser.CONSTRUCTOR + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)", result, 2, clazz.getModified());
    }
 
 
@@ -162,7 +162,7 @@ public class Generator4TableClassFile
          attrTemplate.add("className", clazz.getName());
          result = attrTemplate.render();
 
-         fragmentMap.add(Parser.METHOD + ":expand" + StrUtil.cap(attr.getName()), result, 2, attr.getModified());
+         fragmentMap.add(Parser.METHOD + ":expand" + StrUtil.cap(attr.getName()) + "(String...)", result, 2, attr.getModified());
       }
    }
 
@@ -249,14 +249,14 @@ public class Generator4TableClassFile
       st.add("className", clazz.getName());
       result = st.render();
 
-      fragmentMap.add(Parser.METHOD + ":filter()", result, 2, clazz.getModified());
+      fragmentMap.add(Parser.METHOD + ":filter(Predicate< "+ clazz.getName() + " >)", result, 2, clazz.getModified());
 
 
       st = group.getInstanceOf("filterRow");
       st.add("className", clazz.getName());
       result = st.render();
 
-      fragmentMap.add(Parser.METHOD + ":filterRow()", result, 2, clazz.getModified());
+      fragmentMap.add(Parser.METHOD + ":filterRow(Predicate<LinkedHashMap<String,Object> >)", result, 2, clazz.getModified());
    }
 
 

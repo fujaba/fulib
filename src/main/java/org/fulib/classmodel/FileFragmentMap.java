@@ -166,6 +166,17 @@ public class FileFragmentMap
             return result;
          }
 
+         // keep annotations and modifiers
+         int newTextBracePos = newText.indexOf('{');
+         if (newTextBracePos >= 0)
+         {
+            int resultBracePos = result.getText().indexOf('{');
+            if (resultBracePos >= 0)
+            {
+               newText = result.getText().substring(0, resultBracePos) + newText.substring(newTextBracePos);
+            }
+         }
+
          result.setText(newText.trim());
 
          return result;

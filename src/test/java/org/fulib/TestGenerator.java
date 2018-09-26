@@ -184,6 +184,11 @@ public class TestGenerator
 
       Fulib.tablesGenerator().generate(model);
 
+      // generate again to test recognition of existing fragments
+      Fulib.generator().generate(model);
+
+      Fulib.tablesGenerator().generate(model);
+
       String uniFileName = model.getPackageSrcFolder() + "/tables/UniversityTable.java";
       Assert.assertTrue("UniversityTable.java exists", Files.exists(Paths.get(uniFileName)));
 

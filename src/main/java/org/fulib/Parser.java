@@ -411,7 +411,7 @@ public class Parser
          parseBlock();
 
          String constructorSignature = CONSTRUCTOR + ":" + className + params;
-
+         addCodeFragment(constructorSignature, annotationsStartPos, previousRealToken.endPos);
       }
       else
       {
