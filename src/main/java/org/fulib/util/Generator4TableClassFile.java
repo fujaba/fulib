@@ -249,7 +249,13 @@ public class Generator4TableClassFile
       st.add("className", clazz.getName());
       result = st.render();
 
-      fragmentMap.add(Parser.METHOD + ":filter(Predicate< "+ clazz.getName() + " >)", result, 2, clazz.getModified());
+      boolean modified = clazz.getModified();
+      if (clazz.getSuperClass() != null)
+      {
+         // do not generate filter method
+         modified = true;
+      }
+      fragmentMap.add(Parser.METHOD + ":filter(Predicate< "+ clazz.getName() + " >)", result, 2, modified);
 
 
       st = group.getInstanceOf("filterRow");
@@ -270,7 +276,14 @@ public class Generator4TableClassFile
       st.add("className", clazz.getName());
       result = st.render();
 
-      fragmentMap.add(Parser.METHOD + ":toSet()", result, 2, clazz.getModified());
+      boolean modified = clazz.getModified();
+      if (clazz.getSuperClass() != null)
+      {
+         // do not generate toSet method
+         modified = true;
+      }
+
+      fragmentMap.add(Parser.METHOD + ":toSet()", result, 2, modified);
    }
 
 

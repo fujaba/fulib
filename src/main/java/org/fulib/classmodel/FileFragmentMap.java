@@ -229,6 +229,8 @@ public class FileFragmentMap
       codeMap.put(key, result);
       CodeFragment gap = getNewLineGapFragment(newLines);
 
+      if (removeFragment) return result;
+
       if (key.startsWith(Parser.ATTRIBUTE) || key.startsWith(Parser.METHOD) || key.startsWith(Parser.CONSTRUCTOR))
       {
          add(result, Parser.CLASS_END);

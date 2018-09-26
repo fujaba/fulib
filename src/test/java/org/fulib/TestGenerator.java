@@ -178,6 +178,8 @@ public class TestGenerator
       student.buildAssociation(student, "friends", mb.MANY, "friends", mb.MANY);
       uni.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
 
+      ClassBuilder ta = mb.buildClass("Tutor").setSuperClass(student);
+
       ClassBuilder room = mb.buildClass("Room")
             .buildAttribute("roomNo", mb.STRING)
             .buildAttribute("topic", mb.STRING);
