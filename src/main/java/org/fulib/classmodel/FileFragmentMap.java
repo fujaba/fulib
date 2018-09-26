@@ -176,6 +176,17 @@ public class FileFragmentMap
                newText = result.getText().substring(0, resultBracePos) + newText.substring(newTextBracePos);
             }
          }
+         else if (key.startsWith(Parser.ATTRIBUTE))
+         {
+            // keep everything before private
+            int newTextPrivatePos = newText.indexOf("private");
+            int resultPrivatePos = result.getText().indexOf("private");
+            if (newTextPrivatePos >= 0 && resultPrivatePos >= 0)
+            {
+               newText = result.getText().substring(0, resultPrivatePos) + newText.substring(newTextPrivatePos);
+            }
+         }
+
 
          result.setText(newText.trim());
 
