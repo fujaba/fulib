@@ -149,7 +149,7 @@ public class FileFragmentMap
 
       if (result != null)
       {
-         if (result.getText().contains("// no"))
+         if (result.getText().indexOf("// no") >= 0)
          {
             // do not overwrite
             return result;
