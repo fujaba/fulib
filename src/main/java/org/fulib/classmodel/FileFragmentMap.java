@@ -174,7 +174,12 @@ public class FileFragmentMap
 
          // keep annotations and modifiers
          int newTextBracePos = newText.indexOf('{');
-         if (key.equals(Parser.CLASS))
+         if (newText.indexOf("@") >= 0)
+         {
+            // newtext contains annotations, thus it overrides annotations in the code
+            // do not modify newtext
+         }
+         else if (key.equals(Parser.CLASS))
          {
             // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
             Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
@@ -202,6 +207,7 @@ public class FileFragmentMap
          }
          else if (newTextBracePos >= 0)
          {
+            // keep annotations and modifiers and signature up to {
             int resultBracePos = result.getText().indexOf('{');
             if (resultBracePos >= 0)
             {
@@ -218,7 +224,6 @@ public class FileFragmentMap
                newText = result.getText().substring(0, resultPrivatePos) + newText.substring(newTextPrivatePos);
             }
          }
-
 
          result.setText(newText.trim());
 

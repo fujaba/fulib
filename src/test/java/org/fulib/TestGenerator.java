@@ -135,7 +135,7 @@ public class TestGenerator
       FileFragmentMap fragmentMap = Parser.parse(model.getPackageSrcFolder() + "/TeachingAssistent.java");
       CodeFragment fragment = fragmentMap.getFragment(Parser.CLASS);
       fragment.setText("@Deprecated \npublic class TeachingAssistent extends Student implements java.io.Serializable \n{");
-
+      fragmentMap.writeFile();
       fragmentMap.add(Parser.CLASS, "public class TeachingAssistent extends Student \n{", 1);
       assertThat(fragment.getText(), containsString("@Deprecated"));
       assertThat(fragment.getText(), containsString("implements java.io.Serializable"));
