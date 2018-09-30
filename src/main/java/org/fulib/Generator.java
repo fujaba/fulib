@@ -5,6 +5,7 @@ import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.fulib.util.Generator4ClassFile;
+import org.fulib.yaml.YamlIdMap;
 
 import java.io.IOException;
 import java.nio.file.Files;

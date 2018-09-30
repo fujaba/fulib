@@ -6,6 +6,7 @@ import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.fulib.util.Generator4ClassFile;
 import org.fulib.util.Generator4TableClassFile;
+import org.fulib.yaml.YamlIdMap;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 

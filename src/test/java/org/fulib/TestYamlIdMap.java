@@ -8,6 +8,8 @@ import org.fulib.builder.ClassModelBuilder;
 import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
+import org.fulib.yaml.YamlIdMap;
+import org.fulib.yaml.Yamler;
 import org.junit.Test;
 
 import java.util.LinkedHashMap;
