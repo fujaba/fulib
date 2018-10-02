@@ -240,4 +240,14 @@ public AssocRole setOther(AssocRole value)
    }
 
 
+   public static final String PROPERTY_name = "name";
+
+   public static final String PROPERTY_cardinality = "cardinality";
+
+   public static final String PROPERTY_roleType = "roleType";
+
+   public static final String PROPERTY_aggregation = "aggregation";
+
+   public static final String PROPERTY_modified = "modified";
+
 }

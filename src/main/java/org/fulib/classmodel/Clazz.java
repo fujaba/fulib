@@ -445,4 +445,8 @@ public class Clazz
 
    }
 
+   public static final String PROPERTY_name = "name";
+
+   public static final String PROPERTY_modified = "modified";
+
 }

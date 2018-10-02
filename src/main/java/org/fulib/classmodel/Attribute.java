@@ -192,4 +192,12 @@ public class Attribute
 
    }
 
+   public static final String PROPERTY_name = "name";
+
+   public static final String PROPERTY_type = "type";
+
+   public static final String PROPERTY_initialization = "initialization";
+
+   public static final String PROPERTY_modified = "modified";
+
 }

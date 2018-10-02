@@ -341,4 +341,6 @@ public class FileFragmentMap
    {
    }
 
+   public static final String PROPERTY_fileName = "fileName";
+
 }

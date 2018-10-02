@@ -238,4 +238,10 @@ public class ClassModel
 
    }
 
+   public static final String PROPERTY_packageName = "packageName";
+
+   public static final String PROPERTY_mainJavaDir = "mainJavaDir";
+
+   public static final String PROPERTY_defaultRoleType = "defaultRoleType";
+
 }

@@ -79,6 +79,12 @@ public class Generator4ClassFile {
 
         for (Attribute attr : clazz.getAttributes())
         {
+            attrTemplate = group.getInstanceOf("propertyDecl");
+            attrTemplate.add("name", attr.getName());
+            result = attrTemplate.render();
+            fragmentMap.add(Parser.ATTRIBUTE + ":PROPERTY_" + attr.getName(), result, 2, attr.getModified());
+
+
             attrTemplate = group.getInstanceOf("attrDecl");
             attrTemplate.add("type", attr.getType());
             attrTemplate.add("name", attr.getName());

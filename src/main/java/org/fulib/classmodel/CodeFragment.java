@@ -114,4 +114,8 @@ public class CodeFragment
    {
    }
 
+   public static final String PROPERTY_key = "key";
+
+   public static final String PROPERTY_text = "text";
+
 }
