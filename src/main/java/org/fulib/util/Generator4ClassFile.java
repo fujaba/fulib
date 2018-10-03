@@ -10,6 +10,7 @@ import org.fulib.classmodel.Clazz;
 import org.fulib.classmodel.FileFragmentMap;
 import org.stringtemplate.v4.*;
 
+import java.awt.color.CMMException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -73,12 +74,34 @@ public class Generator4ClassFile {
 
 
     private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap) {
-        STGroup group = createSTGroup("templates/attributes.stg");
+        STGroup group;
         ST attrTemplate;
         String result;
 
         for (Attribute attr : clazz.getAttributes())
         {
+            if (attr.getPropertyStyle().equals(ClassModelBuilder.JAVA_FX))
+            {
+               group = createSTGroup("templates/JavaFXattributes.stg");
+               fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
+            }
+            else
+            {
+               group = createSTGroup("templates/attributes.stg");
+            }
+
+            String attrType = attr.getType();
+            if (attr.getPropertyStyle().equals(ClassModelBuilder.JAVA_FX))
+            {
+               if (attrType.equals("int"))
+               {
+                  attrType = "Integer";
+               }
+               else
+               {
+                  attrType = StrUtil.cap(attrType);
+               }
+            }
             attrTemplate = group.getInstanceOf("propertyDecl");
             attrTemplate.add("name", attr.getName());
             result = attrTemplate.render();
@@ -86,13 +109,27 @@ public class Generator4ClassFile {
 
 
             attrTemplate = group.getInstanceOf("attrDecl");
-            attrTemplate.add("type", attr.getType());
+            attrTemplate.add("type", attrType);
             attrTemplate.add("name", attr.getName());
             attrTemplate.add("value", attr.getInitialization());
             result = attrTemplate.render();
 
             fragmentMap.add(Parser.ATTRIBUTE + ":" + attr.getName(), result, 2, attr.getModified());
 
+
+           if (attr.getPropertyStyle().equals(ClassModelBuilder.JAVA_FX))
+           {
+              attrTemplate = group.getInstanceOf("initMethod");
+              attrTemplate.add("name", attr.getName());
+              attrTemplate.add("type", attrType);
+              result = attrTemplate.render();
+
+              fragmentMap.add(Parser.METHOD + ":_init" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
+           }
+           else
+           {
+              fragmentMap.add(Parser.METHOD + ":_init" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
+           }
 
             attrTemplate = group.getInstanceOf("attrGet");
             attrTemplate.add("type", attr.getType());
@@ -110,6 +147,20 @@ public class Generator4ClassFile {
             result = attrTemplate.render();
 
             fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3, attr.getModified());
+
+            if (attr.getPropertyStyle().equals(ClassModelBuilder.JAVA_FX))
+            {
+               attrTemplate = group.getInstanceOf("propertyGet");
+               attrTemplate.add("name", attr.getName());
+               attrTemplate.add("type", attrType);
+               result = attrTemplate.render();
+
+               fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", result, 3, attr.getModified());
+            }
+            else
+            {
+               fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", "", 3, true);
+            }
         }
     }
 

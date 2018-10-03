@@ -1,0 +1,59 @@
+
+attrDecl(type, name, value) ::= <<   private <type>Property <name> = _init<cap(name)>();>>
+
+init(v) ::= "<if(v)> = <v><endif>"
+
+
+initMethod(type, name) ::=
+<<
+   private <type>Property _init<cap(name)>()
+   {
+      <type>Property result = new Simple<type>Property();
+      result.addListener((observable, oldValue, newValue) -> firePropertyChange("<name>", oldValue, newValue));
+      return result;
+   }
+>>
+
+propertyDecl(name) ::=
+<<   public static final String PROPERTY_<name> = "<name>";>>
+
+
+attrGet(name, type) ::= <<
+   public <type> get<cap(name)>()
+   {
+      return <name>.getValue();
+   }
+>>
+
+
+attrSet(class, name, type, useEquals) ::=
+<<
+   public <class> set<cap(name)>(<type> value)
+   {
+      this.<name>.setValue(value);
+      return this;
+   }
+>>
+
+propertyGet(type, name) ::=
+<<
+   public <type>Property <name>Property()
+   {
+      return <name>;
+   }
+>>
+
+
+condition(name, type, useEquals) ::=
+<%
+<if(useEquals)>value == null ? this.<name> != null : ! value.equals(this.<name>)
+<else>
+value != this.<name>
+<endif>
+%>
+
+
+cap(n) ::=
+<%
+<n; format="cap">
+%>

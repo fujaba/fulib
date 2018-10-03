@@ -41,6 +41,7 @@ public class ClassBuilder
       Clazz clazz = new Clazz();
       clazz.setModel(classModel);
       clazz.setName(className);
+      clazz.setPropertyStyle(classModel.getDefaultPropertyStyle());
       this.setClazz(clazz);
    }
 
@@ -110,6 +111,7 @@ public class ClassBuilder
       attribute.setClazz(this.clazz);
       attribute.setName(name);
       attribute.setType(type);
+      attribute.setPropertyStyle(clazz.getPropertyStyle());
       attribute.setInitialization(initialValue);
 
       return this;
@@ -142,12 +144,14 @@ public class ClassBuilder
             .setClazz(this.getClazz())
             .setName(myRoleName)
             .setCardinality(myCardinality)
+            .setPropertyStyle(clazz.getPropertyStyle())
             .setRoleType(this.clazz.getModel().getDefaultRoleType());
 
       AssocRole otherRole = new AssocRole()
             .setClazz(otherClass.getClazz())
             .setName(otherRoleName)
             .setCardinality(otherCardinality)
+            .setPropertyStyle(clazz.getPropertyStyle())
             .setRoleType(this.clazz.getModel().getDefaultRoleType());
 
       myRole.setOther(otherRole);
@@ -155,9 +159,18 @@ public class ClassBuilder
       return new AssociationBuilder(myRole);
    }
 
+
    public ClassBuilder setSuperClass(ClassBuilder superClass)
    {
       this.clazz.setSuperClass(superClass.getClazz());
       return this;
    }
+
+
+   public ClassBuilder setJavaFXPropertyStyle()
+   {
+      clazz.setPropertyStyle(ClassModelBuilder.JAVA_FX);
+      return this;
+   }
+
 }

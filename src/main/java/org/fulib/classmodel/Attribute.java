@@ -156,6 +156,7 @@ public class Attribute
       result.append(" ").append(this.getName());
       result.append(" ").append(this.getType());
       result.append(" ").append(this.getInitialization());
+      result.append(" ").append(this.getPropertyStyle());
 
 
       return result.substring(1);
@@ -199,5 +200,26 @@ public class Attribute
    public static final String PROPERTY_initialization = "initialization";
 
    public static final String PROPERTY_modified = "modified";
+
+   public static final String PROPERTY_propertyStyle = "propertyStyle";
+
+   private String propertyStyle;
+
+   public String getPropertyStyle()
+   {
+      return propertyStyle;
+   }
+
+   public Attribute setPropertyStyle(String value)
+   {
+      if (value == null ? this.propertyStyle != null : ! value.equals(this.propertyStyle))
+      {
+         String oldValue = this.propertyStyle;
+         this.propertyStyle = value;
+         firePropertyChange("propertyStyle", oldValue, value);
+      }
+      return this;
+   }
+
 
 }

@@ -227,6 +227,7 @@ public class ClassModel
       result.append(" ").append(this.getPackageName());
       result.append(" ").append(this.getMainJavaDir());
       result.append(" ").append(this.getDefaultRoleType());
+      result.append(" ").append(this.getDefaultPropertyStyle());
 
 
       return result.substring(1);
@@ -243,5 +244,26 @@ public class ClassModel
    public static final String PROPERTY_mainJavaDir = "mainJavaDir";
 
    public static final String PROPERTY_defaultRoleType = "defaultRoleType";
+
+   public static final String PROPERTY_defaultPropertyStyle = "defaultPropertyStyle";
+
+   private String defaultPropertyStyle = "POJO";
+
+   public String getDefaultPropertyStyle()
+   {
+      return defaultPropertyStyle;
+   }
+
+   public ClassModel setDefaultPropertyStyle(String value)
+   {
+      if (value == null ? this.defaultPropertyStyle != null : ! value.equals(this.defaultPropertyStyle))
+      {
+         String oldValue = this.defaultPropertyStyle;
+         this.defaultPropertyStyle = value;
+         firePropertyChange("defaultPropertyStyle", oldValue, value);
+      }
+      return this;
+   }
+
 
 }

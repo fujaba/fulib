@@ -72,6 +72,15 @@ public class AssociationBuilder
       return this;
    }
 
+
+   public AssociationBuilder setJavaFXPropertyStyle()
+   {
+      srcRole.setPropertyStyle(ClassModelBuilder.JAVA_FX);
+      srcRole.getOther().setPropertyStyle(ClassModelBuilder.JAVA_FX);
+      return this;
+   }
+
+
    private String deriveRoleType(Class collectionClass1)
    {
       Class collectionClass = collectionClass1;

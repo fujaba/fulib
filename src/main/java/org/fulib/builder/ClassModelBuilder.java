@@ -31,6 +31,7 @@ public class ClassModelBuilder
    public static final int MANY = 42;
    public static final String COLLECTION_ARRAY_LIST = "java.util.ArrayList<%s>";
    public static final String COLLECTION_LINKED_HASH_SET = "java.util.LinkedHashSet<%s>";
+   public static final String JAVA_FX = "JavaFX";
 
    private ClassModel classModel;
 
@@ -155,6 +156,13 @@ public class ClassModelBuilder
          defaultRoleType += "<%s>";
       }
       this.classModel.setDefaultRoleType(defaultRoleType);
+      return this;
+   }
+
+
+   public ClassModelBuilder setJavaFXPropertyStyle()
+   {
+      classModel.setDefaultPropertyStyle(JAVA_FX);
       return this;
    }
 

@@ -15,16 +15,19 @@ public class GenerateClassModel
       ClassBuilder classModel = mb.buildClass("ClassModel")
             .buildAttribute("packageName", mb.STRING)
             .buildAttribute("mainJavaDir", mb.STRING)
-            .buildAttribute("defaultRoleType", mb.STRING);
+            .buildAttribute("defaultRoleType", mb.STRING)
+            .buildAttribute("defaultPropertyStyle", mb.STRING, "\"POJO\"");
 
       ClassBuilder fuClass = mb.buildClass("Clazz")
             .buildAttribute("name", mb.STRING)
+            .buildAttribute("propertyStyle", mb.STRING)
             .buildAttribute("modified", mb.BOOLEAN, "false");
 
       ClassBuilder attribute = mb.buildClass("Attribute")
             .buildAttribute("name", mb.STRING)
             .buildAttribute("type", mb.STRING)
             .buildAttribute("initialization", mb.STRING)
+            .buildAttribute("propertyStyle", mb.STRING)
             .buildAttribute("modified", mb.BOOLEAN, "false");
 
       ClassBuilder assocRole = mb.buildClass("AssocRole")
@@ -32,6 +35,7 @@ public class GenerateClassModel
             .buildAttribute("cardinality", mb.INT)
             .buildAttribute("roleType", mb.STRING)
             .buildAttribute("aggregation", mb.BOOLEAN, "false")
+            .buildAttribute("propertyStyle", mb.STRING)
             .buildAttribute("modified", mb.BOOLEAN, "false");
 
       classModel.buildAssociation(fuClass, "classes", mb.MANY, "model", mb.ONE);

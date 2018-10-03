@@ -298,6 +298,7 @@ public class Clazz
       StringBuilder result = new StringBuilder();
 
       result.append(" ").append(this.getName());
+      result.append(" ").append(this.getPropertyStyle());
 
 
       return result.substring(1);
@@ -448,5 +449,26 @@ public class Clazz
    public static final String PROPERTY_name = "name";
 
    public static final String PROPERTY_modified = "modified";
+
+   public static final String PROPERTY_propertyStyle = "propertyStyle";
+
+   private String propertyStyle;
+
+   public String getPropertyStyle()
+   {
+      return propertyStyle;
+   }
+
+   public Clazz setPropertyStyle(String value)
+   {
+      if (value == null ? this.propertyStyle != null : ! value.equals(this.propertyStyle))
+      {
+         String oldValue = this.propertyStyle;
+         this.propertyStyle = value;
+         firePropertyChange("propertyStyle", oldValue, value);
+      }
+      return this;
+   }
+
 
 }

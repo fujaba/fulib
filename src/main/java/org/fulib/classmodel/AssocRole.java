@@ -208,6 +208,7 @@ public AssocRole setOther(AssocRole value)
 
       result.append(" ").append(this.getName());
       result.append(" ").append(this.getRoleType());
+      result.append(" ").append(this.getPropertyStyle());
 
 
       return result.substring(1);
@@ -249,5 +250,26 @@ public AssocRole setOther(AssocRole value)
    public static final String PROPERTY_aggregation = "aggregation";
 
    public static final String PROPERTY_modified = "modified";
+
+   public static final String PROPERTY_propertyStyle = "propertyStyle";
+
+   private String propertyStyle;
+
+   public String getPropertyStyle()
+   {
+      return propertyStyle;
+   }
+
+   public AssocRole setPropertyStyle(String value)
+   {
+      if (value == null ? this.propertyStyle != null : ! value.equals(this.propertyStyle))
+      {
+         String oldValue = this.propertyStyle;
+         this.propertyStyle = value;
+         firePropertyChange("propertyStyle", oldValue, value);
+      }
+      return this;
+   }
+
 
 }

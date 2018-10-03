@@ -156,7 +156,8 @@ public class Generator
             Attribute newAttr = newClazz.getAttribute(oldAttr.getName());
 
             modified = newAttr == null
-                  || ! StrUtil.stringEquals(oldAttr.getType(), newAttr.getType());
+                  || ! StrUtil.stringEquals(oldAttr.getType(), newAttr.getType())
+                  || ! StrUtil.stringEquals(oldAttr.getPropertyStyle(), newAttr.getPropertyStyle());
          }
 
          if (modified)
@@ -175,7 +176,8 @@ public class Generator
             AssocRole newRole = newClazz.getRole(oldRole.getName());
 
             modified = newRole == null
-                  || oldRole.getCardinality() != newRole.getCardinality();
+                  || oldRole.getCardinality() != newRole.getCardinality()
+                  || ! StrUtil.stringEquals(oldRole.getPropertyStyle(), oldRole.getPropertyStyle());
          }
 
          if (modified)
@@ -190,6 +192,7 @@ public class Generator
          }
       }
    }
+
 
    public String getCustomTemplateFile()
    {
