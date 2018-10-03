@@ -12,62 +12,6 @@ import java.beans.PropertyChangeListener;
 public class Attribute  
 {
 
-   private String name;
-
-   public String getName()
-   {
-      return name;
-   }
-
-   public Attribute setName(String value)
-   {
-      if (value == null ? this.name != null : ! value.equals(this.name))
-      {
-         String oldValue = this.name;
-         this.name = value;
-         firePropertyChange("name", oldValue, value);
-      }
-      return this;
-   }
-
-
-   private String type;
-
-   public String getType()
-   {
-      return type;
-   }
-
-   public Attribute setType(String value)
-   {
-      if (value == null ? this.type != null : ! value.equals(this.type))
-      {
-         String oldValue = this.type;
-         this.type = value;
-         firePropertyChange("type", oldValue, value);
-      }
-      return this;
-   }
-
-
-   private String initialization;
-
-   public String getInitialization()
-   {
-      return initialization;
-   }
-
-   public Attribute setInitialization(String value)
-   {
-      if (value == null ? this.initialization != null : ! value.equals(this.initialization))
-      {
-         String oldValue = this.initialization;
-         this.initialization = value;
-         firePropertyChange("initialization", oldValue, value);
-      }
-      return this;
-   }
-
 
    private Clazz clazz = null;
 
@@ -148,39 +92,6 @@ public class Attribute
       return true;
    }
 
-   @Override
-   public String toString()
-   {
-      StringBuilder result = new StringBuilder();
-
-      result.append(" ").append(this.getName());
-      result.append(" ").append(this.getType());
-      result.append(" ").append(this.getInitialization());
-      result.append(" ").append(this.getPropertyStyle());
-
-
-      return result.substring(1);
-   }
-
-
-   private boolean modified = false;
-
-   public boolean getModified()
-   {
-      return modified;
-   }
-
-   public Attribute setModified(boolean value)
-   {
-      if (value != this.modified)
-      {
-         boolean oldValue = this.modified;
-         this.modified = value;
-         firePropertyChange("modified", oldValue, value);
-      }
-      return this;
-   }
-
    public Attribute markAsModified()
    {
       return setModified(true);
@@ -193,13 +104,69 @@ public class Attribute
 
    }
 
+
    public static final String PROPERTY_name = "name";
+
+   private String name;
+
+   public String getName()
+   {
+      return name;
+   }
+
+   public Attribute setName(String value)
+   {
+      if (value == null ? this.name != null : ! value.equals(this.name))
+      {
+         String oldValue = this.name;
+         this.name = value;
+         firePropertyChange("name", oldValue, value);
+      }
+      return this;
+   }
+
 
    public static final String PROPERTY_type = "type";
 
+   private String type;
+
+   public String getType()
+   {
+      return type;
+   }
+
+   public Attribute setType(String value)
+   {
+      if (value == null ? this.type != null : ! value.equals(this.type))
+      {
+         String oldValue = this.type;
+         this.type = value;
+         firePropertyChange("type", oldValue, value);
+      }
+      return this;
+   }
+
+
    public static final String PROPERTY_initialization = "initialization";
 
-   public static final String PROPERTY_modified = "modified";
+   private String initialization;
+
+   public String getInitialization()
+   {
+      return initialization;
+   }
+
+   public Attribute setInitialization(String value)
+   {
+      if (value == null ? this.initialization != null : ! value.equals(this.initialization))
+      {
+         String oldValue = this.initialization;
+         this.initialization = value;
+         firePropertyChange("initialization", oldValue, value);
+      }
+      return this;
+   }
+
 
    public static final String PROPERTY_propertyStyle = "propertyStyle";
 
@@ -221,5 +188,40 @@ public class Attribute
       return this;
    }
 
+
+   public static final String PROPERTY_modified = "modified";
+
+   private boolean modified = false;
+
+   public boolean getModified()
+   {
+      return modified;
+   }
+
+   public Attribute setModified(boolean value)
+   {
+      if (value != this.modified)
+      {
+         boolean oldValue = this.modified;
+         this.modified = value;
+         firePropertyChange("modified", oldValue, value);
+      }
+      return this;
+   }
+
+
+   @Override
+   public String toString()
+   {
+      StringBuilder result = new StringBuilder();
+
+      result.append(" ").append(this.getName());
+      result.append(" ").append(this.getType());
+      result.append(" ").append(this.getInitialization());
+      result.append(" ").append(this.getPropertyStyle());
+
+
+      return result.substring(1);
+   }
 
 }

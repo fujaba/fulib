@@ -12,62 +12,6 @@ import java.beans.PropertyChangeListener;
 public class AssocRole  
 {
 
-   private String name;
-
-   public String getName()
-   {
-      return name;
-   }
-
-   public AssocRole setName(String value)
-   {
-      if (value == null ? this.name != null : ! value.equals(this.name))
-      {
-         String oldValue = this.name;
-         this.name = value;
-         firePropertyChange("name", oldValue, value);
-      }
-      return this;
-   }
-
-
-   private int cardinality;
-
-   public int getCardinality()
-   {
-      return cardinality;
-   }
-
-   public AssocRole setCardinality(int value)
-   {
-      if (value != this.cardinality)
-      {
-         int oldValue = this.cardinality;
-         this.cardinality = value;
-         firePropertyChange("cardinality", oldValue, value);
-      }
-      return this;
-   }
-
-
-   private String roleType;
-
-   public String getRoleType()
-   {
-      return roleType;
-   }
-
-   public AssocRole setRoleType(String value)
-   {
-      if (value == null ? this.roleType != null : ! value.equals(this.roleType))
-      {
-         String oldValue = this.roleType;
-         this.roleType = value;
-         firePropertyChange("roleType", oldValue, value);
-      }
-      return this;
-   }
-
 
    private Clazz clazz = null;
 
@@ -176,42 +120,9 @@ public AssocRole setOther(AssocRole value)
       return true;
    }
 
-
-   private boolean modified = false;
-
-   public boolean getModified()
-   {
-      return modified;
-   }
-
-   public AssocRole setModified(boolean value)
-   {
-      if (value != this.modified)
-      {
-         boolean oldValue = this.modified;
-         this.modified = value;
-         firePropertyChange("modified", oldValue, value);
-      }
-      return this;
-   }
-
    public AssocRole markAsModified()
    {
       return this.setModified(true);
-   }
-
-
-   @Override
-   public String toString()
-   {
-      StringBuilder result = new StringBuilder();
-
-      result.append(" ").append(this.getName());
-      result.append(" ").append(this.getRoleType());
-      result.append(" ").append(this.getPropertyStyle());
-
-
-      return result.substring(1);
    }
 
    public void removeYou()
@@ -221,6 +132,72 @@ public AssocRole setOther(AssocRole value)
       this.setOther(null);
 
    }
+
+
+   public static final String PROPERTY_name = "name";
+
+   private String name;
+
+   public String getName()
+   {
+      return name;
+   }
+
+   public AssocRole setName(String value)
+   {
+      if (value == null ? this.name != null : ! value.equals(this.name))
+      {
+         String oldValue = this.name;
+         this.name = value;
+         firePropertyChange("name", oldValue, value);
+      }
+      return this;
+   }
+
+
+   public static final String PROPERTY_cardinality = "cardinality";
+
+   private int cardinality;
+
+   public int getCardinality()
+   {
+      return cardinality;
+   }
+
+   public AssocRole setCardinality(int value)
+   {
+      if (value != this.cardinality)
+      {
+         int oldValue = this.cardinality;
+         this.cardinality = value;
+         firePropertyChange("cardinality", oldValue, value);
+      }
+      return this;
+   }
+
+
+   public static final String PROPERTY_roleType = "roleType";
+
+   private String roleType;
+
+   public String getRoleType()
+   {
+      return roleType;
+   }
+
+   public AssocRole setRoleType(String value)
+   {
+      if (value == null ? this.roleType != null : ! value.equals(this.roleType))
+      {
+         String oldValue = this.roleType;
+         this.roleType = value;
+         firePropertyChange("roleType", oldValue, value);
+      }
+      return this;
+   }
+
+
+   public static final String PROPERTY_aggregation = "aggregation";
 
    private boolean aggregation = false;
 
@@ -240,16 +217,6 @@ public AssocRole setOther(AssocRole value)
       return this;
    }
 
-
-   public static final String PROPERTY_name = "name";
-
-   public static final String PROPERTY_cardinality = "cardinality";
-
-   public static final String PROPERTY_roleType = "roleType";
-
-   public static final String PROPERTY_aggregation = "aggregation";
-
-   public static final String PROPERTY_modified = "modified";
 
    public static final String PROPERTY_propertyStyle = "propertyStyle";
 
@@ -271,5 +238,39 @@ public AssocRole setOther(AssocRole value)
       return this;
    }
 
+
+   public static final String PROPERTY_modified = "modified";
+
+   private boolean modified = false;
+
+   public boolean getModified()
+   {
+      return modified;
+   }
+
+   public AssocRole setModified(boolean value)
+   {
+      if (value != this.modified)
+      {
+         boolean oldValue = this.modified;
+         this.modified = value;
+         firePropertyChange("modified", oldValue, value);
+      }
+      return this;
+   }
+
+
+   @Override
+   public String toString()
+   {
+      StringBuilder result = new StringBuilder();
+
+      result.append(" ").append(this.getName());
+      result.append(" ").append(this.getRoleType());
+      result.append(" ").append(this.getPropertyStyle());
+
+
+      return result.substring(1);
+   }
 
 }

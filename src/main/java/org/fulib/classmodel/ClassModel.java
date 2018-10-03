@@ -13,62 +13,6 @@ import java.util.Collections;
 public class ClassModel  
 {
 
-   private String packageName;
-
-   public String getPackageName()
-   {
-      return packageName;
-   }
-
-   public ClassModel setPackageName(String value)
-   {
-      if (value == null ? this.packageName != null : ! value.equals(this.packageName))
-      {
-         String oldValue = this.packageName;
-         this.packageName = value;
-         firePropertyChange("packageName", oldValue, value);
-      }
-      return this;
-   }
-
-
-   private String mainJavaDir;
-
-   public String getMainJavaDir()
-   {
-      return mainJavaDir;
-   }
-
-   public ClassModel setMainJavaDir(String value)
-   {
-      if (value == null ? this.mainJavaDir != null : ! value.equals(this.mainJavaDir))
-      {
-         String oldValue = this.mainJavaDir;
-         this.mainJavaDir = value;
-         firePropertyChange("mainJavaDir", oldValue, value);
-      }
-      return this;
-   }
-
-
-   private String defaultRoleType;
-
-   public String getDefaultRoleType()
-   {
-      return defaultRoleType;
-   }
-
-   public ClassModel setDefaultRoleType(String value)
-   {
-      if (value == null ? this.defaultRoleType != null : ! value.equals(this.defaultRoleType))
-      {
-         String oldValue = this.defaultRoleType;
-         this.defaultRoleType = value;
-         firePropertyChange("defaultRoleType", oldValue, value);
-      }
-      return this;
-   }
-
 
    public static final java.util.ArrayList<Clazz> EMPTY_classes = new java.util.ArrayList<Clazz>()
    { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withClasses(obj)"); }};
@@ -219,31 +163,76 @@ public class ClassModel
       return true;
    }
 
-   @Override
-   public String toString()
-   {
-      StringBuilder result = new StringBuilder();
-
-      result.append(" ").append(this.getPackageName());
-      result.append(" ").append(this.getMainJavaDir());
-      result.append(" ").append(this.getDefaultRoleType());
-      result.append(" ").append(this.getDefaultPropertyStyle());
-
-
-      return result.substring(1);
-   }
-
    public void removeYou()
    {
       this.withoutClasses(this.getClasses().clone());
 
+
    }
+
 
    public static final String PROPERTY_packageName = "packageName";
 
+   private String packageName;
+
+   public String getPackageName()
+   {
+      return packageName;
+   }
+
+   public ClassModel setPackageName(String value)
+   {
+      if (value == null ? this.packageName != null : ! value.equals(this.packageName))
+      {
+         String oldValue = this.packageName;
+         this.packageName = value;
+         firePropertyChange("packageName", oldValue, value);
+      }
+      return this;
+   }
+
+
    public static final String PROPERTY_mainJavaDir = "mainJavaDir";
 
+   private String mainJavaDir;
+
+   public String getMainJavaDir()
+   {
+      return mainJavaDir;
+   }
+
+   public ClassModel setMainJavaDir(String value)
+   {
+      if (value == null ? this.mainJavaDir != null : ! value.equals(this.mainJavaDir))
+      {
+         String oldValue = this.mainJavaDir;
+         this.mainJavaDir = value;
+         firePropertyChange("mainJavaDir", oldValue, value);
+      }
+      return this;
+   }
+
+
    public static final String PROPERTY_defaultRoleType = "defaultRoleType";
+
+   private String defaultRoleType;
+
+   public String getDefaultRoleType()
+   {
+      return defaultRoleType;
+   }
+
+   public ClassModel setDefaultRoleType(String value)
+   {
+      if (value == null ? this.defaultRoleType != null : ! value.equals(this.defaultRoleType))
+      {
+         String oldValue = this.defaultRoleType;
+         this.defaultRoleType = value;
+         firePropertyChange("defaultRoleType", oldValue, value);
+      }
+      return this;
+   }
+
 
    public static final String PROPERTY_defaultPropertyStyle = "defaultPropertyStyle";
 
@@ -265,5 +254,19 @@ public class ClassModel
       return this;
    }
 
+
+   @Override
+   public String toString()
+   {
+      StringBuilder result = new StringBuilder();
+
+      result.append(" ").append(this.getPackageName());
+      result.append(" ").append(this.getMainJavaDir());
+      result.append(" ").append(this.getDefaultRoleType());
+      result.append(" ").append(this.getDefaultPropertyStyle());
+
+
+      return result.substring(1);
+   }
 
 }

@@ -20,24 +20,6 @@ import java.util.regex.Pattern;
 public class FileFragmentMap  
 {
 
-   private String fileName;
-
-   public String getFileName()
-   {
-      return fileName;
-   }
-
-   public FileFragmentMap setFileName(String value)
-   {
-      if (value == null ? this.fileName != null : ! value.equals(this.fileName))
-      {
-         String oldValue = this.fileName;
-         this.fileName = value;
-         firePropertyChange("fileName", oldValue, value);
-      }
-      return this;
-   }
-
 
    protected PropertyChangeSupport listeners = null;
 
@@ -343,5 +325,24 @@ public class FileFragmentMap
    }
 
    public static final String PROPERTY_fileName = "fileName";
+
+   private String fileName;
+
+   public String getFileName()
+   {
+      return fileName;
+   }
+
+   public FileFragmentMap setFileName(String value)
+   {
+      if (value == null ? this.fileName != null : ! value.equals(this.fileName))
+      {
+         String oldValue = this.fileName;
+         this.fileName = value;
+         firePropertyChange("fileName", oldValue, value);
+      }
+      return this;
+   }
+
 
 }

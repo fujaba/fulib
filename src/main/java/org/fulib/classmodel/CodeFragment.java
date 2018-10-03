@@ -9,43 +9,6 @@ import java.beans.PropertyChangeListener;
 public class CodeFragment  
 {
 
-   private String key;
-
-   public String getKey()
-   {
-      return key;
-   }
-
-   public CodeFragment setKey(String value)
-   {
-      if (value == null ? this.key != null : ! value.equals(this.key))
-      {
-         String oldValue = this.key;
-         this.key = value;
-         firePropertyChange("key", oldValue, value);
-      }
-      return this;
-   }
-
-
-   private String text;
-
-   public String getText()
-   {
-      return text;
-   }
-
-   public CodeFragment setText(String value)
-   {
-      if (value == null ? this.text != null : ! value.equals(this.text))
-      {
-         String oldValue = this.text;
-         this.text = value;
-         firePropertyChange("text", oldValue, value);
-      }
-      return this;
-   }
-
 
    protected PropertyChangeSupport listeners = null;
 
@@ -97,6 +60,53 @@ public class CodeFragment
       return true;
    }
 
+
+   public void removeYou()
+   {
+   }
+
+   public static final String PROPERTY_key = "key";
+
+   private String key;
+
+   public String getKey()
+   {
+      return key;
+   }
+
+   public CodeFragment setKey(String value)
+   {
+      if (value == null ? this.key != null : ! value.equals(this.key))
+      {
+         String oldValue = this.key;
+         this.key = value;
+         firePropertyChange("key", oldValue, value);
+      }
+      return this;
+   }
+
+
+   public static final String PROPERTY_text = "text";
+
+   private String text;
+
+   public String getText()
+   {
+      return text;
+   }
+
+   public CodeFragment setText(String value)
+   {
+      if (value == null ? this.text != null : ! value.equals(this.text))
+      {
+         String oldValue = this.text;
+         this.text = value;
+         firePropertyChange("text", oldValue, value);
+      }
+      return this;
+   }
+
+
    @Override
    public String toString()
    {
@@ -108,14 +118,5 @@ public class CodeFragment
 
       return result.substring(1);
    }
-
-
-   public void removeYou()
-   {
-   }
-
-   public static final String PROPERTY_key = "key";
-
-   public static final String PROPERTY_text = "text";
 
 }

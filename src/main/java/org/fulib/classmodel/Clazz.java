@@ -14,24 +14,6 @@ import java.beans.PropertyChangeListener;
 public class Clazz  
 {
 
-   private String name;
-
-   public String getName()
-   {
-      return name;
-   }
-
-   public Clazz setName(String value)
-   {
-      if (value == null ? this.name != null : ! value.equals(this.name))
-      {
-         String oldValue = this.name;
-         this.name = value;
-         firePropertyChange("name", oldValue, value);
-      }
-      return this;
-   }
-
 
    private ClassModel model = null;
 
@@ -292,37 +274,6 @@ public class Clazz
       return true;
    }
 
-   @Override
-   public String toString()
-   {
-      StringBuilder result = new StringBuilder();
-
-      result.append(" ").append(this.getName());
-      result.append(" ").append(this.getPropertyStyle());
-
-
-      return result.substring(1);
-   }
-
-
-   private boolean modified = false;
-
-   public boolean getModified()
-   {
-      return modified;
-   }
-
-   public Clazz setModified(boolean value)
-   {
-      if (value != this.modified)
-      {
-         boolean oldValue = this.modified;
-         this.modified = value;
-         firePropertyChange("modified", oldValue, value);
-      }
-      return this;
-   }
-
    public Clazz markAsModified()
    {
       return this.setModified(true);
@@ -441,14 +392,37 @@ public class Clazz
       this.setSuperClass(null);
 
       this.withoutAttributes(this.getAttributes().clone());
+
+
       this.withoutRoles(this.getRoles().clone());
+
+
       this.withoutSubClasses(this.getSubClasses().clone());
+
 
    }
 
+
    public static final String PROPERTY_name = "name";
 
-   public static final String PROPERTY_modified = "modified";
+   private String name;
+
+   public String getName()
+   {
+      return name;
+   }
+
+   public Clazz setName(String value)
+   {
+      if (value == null ? this.name != null : ! value.equals(this.name))
+      {
+         String oldValue = this.name;
+         this.name = value;
+         firePropertyChange("name", oldValue, value);
+      }
+      return this;
+   }
+
 
    public static final String PROPERTY_propertyStyle = "propertyStyle";
 
@@ -470,5 +444,38 @@ public class Clazz
       return this;
    }
 
+
+   public static final String PROPERTY_modified = "modified";
+
+   private boolean modified = false;
+
+   public boolean getModified()
+   {
+      return modified;
+   }
+
+   public Clazz setModified(boolean value)
+   {
+      if (value != this.modified)
+      {
+         boolean oldValue = this.modified;
+         this.modified = value;
+         firePropertyChange("modified", oldValue, value);
+      }
+      return this;
+   }
+
+
+   @Override
+   public String toString()
+   {
+      StringBuilder result = new StringBuilder();
+
+      result.append(" ").append(this.getName());
+      result.append(" ").append(this.getPropertyStyle());
+
+
+      return result.substring(1);
+   }
 
 }
