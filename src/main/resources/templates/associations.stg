@@ -7,7 +7,7 @@ emptySetDecl(roleName,otherClassName,roleType) ::=
 >>
 
 
-roleAttrDecl(roleName,roleType) ::=
+roleAttrDecl(roleName,roleType,toMany,otherClassName) ::=
 <<
    private <roleType> <roleName> = null;
 >>

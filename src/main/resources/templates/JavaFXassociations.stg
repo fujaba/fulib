@@ -1,87 +1,94 @@
 
 
-emptySetDecl(roleName,otherClassName,roleType) ::=
+roleAttrDecl(roleName,roleType,toMany,otherClassName) ::=
 <<
-   public static final <roleType> EMPTY_<roleName> = new <roleType>()
-   { @Override public boolean add(<otherClassName> value){ throw new UnsupportedOperationException("No direct add! Use xy.with<cap(roleName)>(obj)"); }};
+<if(toMany)>
+   private SimpleListProperty\< <otherClassName> > <roleName> = _init<cap(roleName)>();
+<else>
+   private ObjectProperty\< <otherClassName> > <roleName> = _init<cap(roleName)>();
+<endif>
 >>
 
 
-roleAttrDecl(roleName,roleType) ::=
+initMethod(roleName,toMany,myClassName,otherClassName,otherRoleName,otherToMany) ::=
 <<
-   private <roleType> <roleName> = null;
+<if(toMany)>
+   private SimpleListProperty\< <otherClassName> > _init<cap(roleName)>()
+   {
+      SimpleListProperty\< <otherClassName> > result = new SimpleListProperty(javafx.collections.FXCollections.observableArrayList());
+      result.addListener((javafx.collections.ListChangeListener\<? super <otherClassName> >) change -> {
+         while (change.next())
+         {
+            java.util.List\<? extends <otherClassName> > removed = change.getRemoved();
+            for (<otherClassName>  value : removed)
+            {
+               value.<withoutThis(otherToMany,otherRoleName)>;
+               firePropertyChange("<roleName>", value, null);
+            }
+            for (<otherClassName> value : change.getAddedSubList())
+            {
+               value.<prefix(otherToMany)><cap(otherRoleName)>(this);
+               firePropertyChange("<roleName>", null, value);
+            }
+         }
+      });
+      return result;
+   }
+<else>
+   private ObjectProperty\< <otherClassName> > _init<cap(roleName)>()
+   {
+      ObjectProperty\< <otherClassName> > result = new SimpleObjectProperty\<>();
+      result.addListener((observable, oldValue, newValue) ->
+      {
+         if (oldValue != null) oldValue.<withoutTypeThis(otherToMany,otherRoleName,myClassName)>;
+         if (newValue != null) newValue.<prefix(otherToMany)><cap(otherRoleName)>(<myClassName>.this);
+         firePropertyChange("<roleName>", oldValue, newValue);
+      });
+      return result;
+   }
+<endif>
 >>
 
 
 getMethod(roleName,toMany,otherClassName,roleType) ::=
 <<
-   public <roleType> get<cap(roleName)>()
+<if(toMany)>
+   public <property(toMany)>\< <otherClassName> > get<cap(roleName)>()
    {
-      <if(toMany)>
-      if (this.<roleName> == null)
-      {
-         return EMPTY_<roleName>;
-      }
-
-      return this.<roleName>;
-      <else>
-      return this.<roleName>;
-      <endif>
+      return <roleName>;
    }
+<else>
+   public <otherClassName> get<cap(roleName)>()
+   {
+      return <roleName>.getValue();
+   }
+<endif>
 >>
+
+property(toMany) ::=
+<%
+<if(toMany)>
+SimpleListProperty
+<else>
+ObjectProperty
+<endif>
+%>
 
 
 setMethod(roleName,toMany,myClassName,otherClassName,otherRoleName,otherToMany,roleType) ::=
 <<
 <if(toMany)>
-   public <myClassName> with<cap(roleName)>(Object... value)
+   public <myClassName> with<cap(roleName)>(<otherClassName> value)
    {
-      if(value==null) return this;
-      for (Object item : value)
-      {
-         if (item == null) continue;
-         if (item instanceof java.util.Collection)
-         {
-            for (Object i : (java.util.Collection) item)
-            {
-               this.with<cap(roleName)>(i);
-            }
-         }
-         else if (item instanceof <otherClassName>)
-         {
-            if (this.<roleName> == null)
-            {
-               this.<roleName> = new <roleType>();
-            }
-            if ( ! this.<roleName>.contains(item))
-            {
-               this.<roleName>.add((<otherClassName>)item);
-               ((<otherClassName>)item).<prefix(otherToMany)><cap(otherRoleName)>(this);
-               firePropertyChange("<roleName>", null, item);
-            }
-         }
-         else throw new IllegalArgumentException();
-      }
+      if (this.get<cap(roleName)>().contains(value)) return this;
+      this.get<cap(roleName)>().add(value);
       return this;
    }
 <else>
    public <myClassName> set<cap(roleName)>(<otherClassName> value)
    {
-      if (this.<roleName> != value)
-      {
-         <otherClassName> oldValue = this.<roleName>;
-         if (this.<roleName> != null)
-         {
-            this.<roleName> = null;
-            oldValue.<withoutThis(otherToMany,otherRoleName)>;
-         }
-         this.<roleName> = value;
-         if (value != null)
-         {
-            value.<prefix(otherToMany)><cap(otherRoleName)>(this);
-         }
-         firePropertyChange("<roleName>", oldValue, value);
-      }
+      if (value == this.<roleName>.getValue()) return this;
+      <roleName>.setValue(value);
       return this;
    }
 <endif>
@@ -90,32 +97,22 @@ setMethod(roleName,toMany,myClassName,otherClassName,otherRoleName,otherToMany,r
 
 withoutMethod(roleName,toMany,myClassName,otherClassName,otherRoleName,otherToMany,roleType) ::=
 <<
-   public <myClassName> without<cap(roleName)>(Object... value)
+   public <myClassName> without<cap(roleName)>(<otherClassName> value)
    {
-      if (this.<roleName> == null || value==null) return this;
-      for (Object item : value)
-      {
-         if (item == null) continue;
-         if (item instanceof java.util.Collection)
-         {
-            for (Object i : (java.util.Collection) item)
-            {
-               this.without<cap(roleName)>(i);
-            }
-         }
-         else if (item instanceof <otherClassName>)
-         {
-            if (this.<roleName>.contains(item))
-            {
-               this.<roleName>.remove((<otherClassName>)item);
-               ((<otherClassName>)item).<withoutThis(otherToMany,otherRoleName)>;
-               firePropertyChange("<roleName>", item, null);
-            }
-         }
-      }
+      this.get<cap(roleName)>().remove(value);
       return this;
    }
 >>
+
+
+withoutTypeThis(toMany,otherRoleName,myClassName) ::=
+<%
+<if(toMany)>
+   without<cap(otherRoleName)>(<myClassName>.this)
+<else>
+   set<cap(otherRoleName)>(null)
+<endif>
+%>
 
 
 withoutThis(toMany,otherRoleName) ::=

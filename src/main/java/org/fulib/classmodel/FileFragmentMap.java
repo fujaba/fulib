@@ -230,11 +230,12 @@ public class FileFragmentMap
          return result;
       }
 
+      if (removeFragment) return result;
+
       result = new CodeFragment().setKey(key).setText(newText);
       codeMap.put(key, result);
       CodeFragment gap = getNewLineGapFragment(newLines);
 
-      if (removeFragment) return result;
 
       if (key.startsWith(Parser.ATTRIBUTE) || key.startsWith(Parser.METHOD) || key.startsWith(Parser.CONSTRUCTOR))
       {
