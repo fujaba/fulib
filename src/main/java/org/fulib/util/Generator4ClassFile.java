@@ -176,6 +176,7 @@ public class Generator4ClassFile {
          if (ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle()))
          {
             group = createSTGroup("templates/JavaFXassociations.stg");
+            fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
          }
          else
          {
