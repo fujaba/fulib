@@ -155,7 +155,6 @@ public class FileFragmentMap
          }
 
          // keep annotations and modifiers
-         int newTextBracePos = newText.indexOf('{');
          if (newText.indexOf("@") >= 0)
          {
             // newtext contains annotations, thus it overrides annotations in the code
@@ -187,13 +186,14 @@ public class FileFragmentMap
                newText = prefix + middle + suffix;
             }
          }
-         else if (newTextBracePos >= 0)
+         else if (key.startsWith(Parser.ATTRIBUTE))
          {
-            // keep annotations and modifiers and signature up to {
-            int resultBracePos = result.getText().indexOf('{');
-            if (resultBracePos >= 0)
+            // keep everything before public
+            int newTextPublicPos = newText.indexOf("public");
+            int resultPublicPos = result.getText().indexOf("public");
+            if (newTextPublicPos >= 0 && resultPublicPos >= 0)
             {
-               newText = result.getText().substring(0, resultBracePos) + newText.substring(newTextBracePos);
+               newText = result.getText().substring(0, resultPublicPos) + newText.substring(newTextPublicPos);
             }
          }
          else if (key.startsWith(Parser.ATTRIBUTE))
