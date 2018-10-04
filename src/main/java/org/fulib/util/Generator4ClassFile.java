@@ -264,7 +264,19 @@ public class Generator4ClassFile {
          }
          if (ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle()))
          {
+            if (role.getCardinality() != ClassModelBuilder.ONE)
+            {
+               // remove withXY(Object...) method
+               String oldSignature = "with" + StrUtil.cap(role.getName()) + "(" + paramType + ")";
+               fragmentMap.add(Parser.METHOD + ":" + oldSignature, "", 3, true);
+            }
             paramType = role.getOther().getClazz().getName();
+         }
+         else
+         {
+            // remove withXY(OtherClass)
+            String oldSignature = "with" + StrUtil.cap(role.getName()) + "(" + role.getOther().getClazz().getName() + ")";
+            fragmentMap.add(Parser.METHOD + ":" + oldSignature, "", 3, true);
          }
 
          signature += StrUtil.cap(role.getName()) + "(" + paramType + ")";
