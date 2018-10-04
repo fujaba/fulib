@@ -226,12 +226,12 @@ public class Generator4ClassFile {
             st.add("otherToMany", role.getOther().getCardinality() != ClassModelBuilder.ONE);
             result = st.render();
 
-            fragmentMap.add(Parser.METHOD + ":_init" + StrUtil.cap(role.getName()), result, 2, role.getModified());
+            fragmentMap.add(Parser.METHOD + ":_init" + StrUtil.cap(role.getName()) + "()", result, 2, role.getModified());
          }
          else
          {
             // remove _init method
-            fragmentMap.add(Parser.METHOD + ":_init" + StrUtil.cap(role.getName()), "", 2, true);
+            fragmentMap.add(Parser.METHOD + ":_init" + StrUtil.cap(role.getName()) + "()", "", 2, true);
          }
 
 
@@ -285,6 +285,7 @@ public class Generator4ClassFile {
 
 
          if (role.getCardinality() != ClassModelBuilder.ONE) {
+
             st = group.getInstanceOf("withoutMethod");
             st.add("roleName", role.getName());
             st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
@@ -295,7 +296,12 @@ public class Generator4ClassFile {
             st.add("roleType", roleType);
             result = st.render();
 
-            fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(role.getName()) + "(Object...)", result, 3, role.getModified());
+            paramType = "Object...";
+            if (ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle()))
+            {
+               paramType = role.getOther().getClazz().getName();
+            }
+            fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(role.getName()) + "(" + paramType + ")", result, 3, role.getModified());
          }
       }
    }
