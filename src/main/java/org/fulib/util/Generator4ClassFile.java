@@ -303,6 +303,21 @@ public class Generator4ClassFile {
             }
             fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(role.getName()) + "(" + paramType + ")", result, 3, role.getModified());
          }
+
+         if (ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle())
+               && role.getCardinality() == ClassModelBuilder.ONE)
+         {
+            st = group.getInstanceOf("propertyMethod");
+            st.add("roleName", role.getName());
+            st.add("otherClassName", role.getOther().getClazz().getName());
+            result = st.render();
+
+            fragmentMap.add(Parser.METHOD + ":" + role.getName() + "Property()", result, 3, role.getModified());
+         }
+         else
+         {
+            fragmentMap.add(Parser.METHOD + ":" + role.getName() + "Property()", "", 3, true);
+         }
       }
    }
 

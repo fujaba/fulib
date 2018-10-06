@@ -65,6 +65,16 @@ getMethod(roleName,toMany,otherClassName,roleType) ::=
 <endif>
 >>
 
+
+propertyMethod(roleName,otherClassName) ::=
+<<
+   public ObjectProperty\< <otherClassName> > <roleName>Property()
+   {
+      return <roleName>;
+   }
+>>
+
+
 property(toMany) ::=
 <%
 <if(toMany)>
