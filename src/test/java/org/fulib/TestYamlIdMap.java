@@ -9,6 +9,7 @@ import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.fulib.yaml.YamlIdMap;
+import org.fulib.yaml.YamlObject;
 import org.fulib.yaml.Yamler;
 import org.junit.Test;
 
@@ -35,9 +36,9 @@ public class TestYamlIdMap
 
       YamlIdMap idMap = new YamlIdMap("");
 
-      map = (LinkedHashMap<String, String>) idMap.decode(yaml);
+      YamlObject yamlObj = (YamlObject) idMap.decode(yaml);
 
-      assertThat(map.get("joining"), equalTo("abu"));
+      assertThat(yamlObj.getMap().get("joining"), equalTo("abu"));
    }
 
 
