@@ -32,7 +32,8 @@ public class Fulib
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder.twoParams -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java");
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java")
+            .setJavaFXPropertyStyle();
 
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
