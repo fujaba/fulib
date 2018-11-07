@@ -12,6 +12,8 @@ roleAttrDecl(roleName,roleType,toMany,otherClassName) ::=
    private <roleType> <roleName> = null;
 >>
 
+propertyDecl(roleName) ::=
+<<   public static final String PROPERTY_<roleName> = "<roleName>";>>
 
 getMethod(roleName,toMany,otherClassName,roleType) ::=
 <<

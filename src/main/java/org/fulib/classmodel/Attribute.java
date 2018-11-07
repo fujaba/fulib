@@ -224,4 +224,6 @@ public class Attribute
       return result.substring(1);
    }
 
+   public static final String PROPERTY_clazz = "clazz";
+
 }

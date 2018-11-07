@@ -269,4 +269,6 @@ public class ClassModel
       return result.substring(1);
    }
 
+   public static final String PROPERTY_classes = "classes";
+
 }

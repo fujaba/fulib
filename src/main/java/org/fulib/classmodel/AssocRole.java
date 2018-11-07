@@ -273,4 +273,8 @@ public AssocRole setOther(AssocRole value)
       return result.substring(1);
    }
 
+   public static final String PROPERTY_clazz = "clazz";
+
+public static final String PROPERTY_other = "other";
+
 }
