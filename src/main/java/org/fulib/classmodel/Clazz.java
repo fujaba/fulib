@@ -478,4 +478,14 @@ public class Clazz
       return result.substring(1);
    }
 
+   public static final String PROPERTY_model = "model";
+
+   public static final String PROPERTY_attributes = "attributes";
+
+   public static final String PROPERTY_roles = "roles";
+
+   public static final String PROPERTY_superClass = "superClass";
+
+   public static final String PROPERTY_subClasses = "subClasses";
+
 }

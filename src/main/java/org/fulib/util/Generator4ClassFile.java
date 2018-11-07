@@ -201,6 +201,13 @@ public class Generator4ClassFile {
             fragmentMap.add(Parser.ATTRIBUTE + ":EMPTY_" + role.getName(), result, 3, role.getModified());
          }
 
+
+         st = group.getInstanceOf("propertyDecl");
+         st.add("roleName", role.getName());
+         result = st.render();
+         fragmentMap.add(Parser.ATTRIBUTE + ":PROPERTY_" + role.getName(), result, 2, role.getModified());
+         
+
          st = group.getInstanceOf("roleAttrDecl");
          st.add("roleName", role.getName());
          st.add("roleType", roleType);

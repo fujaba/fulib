@@ -9,6 +9,8 @@ roleAttrDecl(roleName,roleType,toMany,otherClassName) ::=
 <endif>
 >>
 
+propertyDecl(roleName) ::=
+<<   public static final String PROPERTY_<roleName> = "<roleName>";>>
 
 initMethod(roleName,toMany,myClassName,otherClassName,otherRoleName,otherToMany) ::=
 <<
