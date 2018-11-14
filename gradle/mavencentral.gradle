@@ -12,9 +12,11 @@ task sourcesJar(type: Jar) {
   from sourceSets.main.allSource
 }
 
+
 // hook all the artifacts under artifacts task
 artifacts {
   archives sourcesJar
+    archives javadocJar
 }
 
 // Signing task
