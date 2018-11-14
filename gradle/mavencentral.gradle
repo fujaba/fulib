@@ -2,8 +2,12 @@
 
 // Create a jar with javadoc
 task javadocJar(type: Jar) {
-  classifier = 'javadoc'
+  classifier = 'javadoc' 
   from javadoc
+}
+
+javadoc{
+    failOnError = false
 }
 
 // Create a jar with soruces
