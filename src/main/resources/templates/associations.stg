@@ -58,7 +58,9 @@ setMethod(roleName,toMany,myClassName,otherClassName,otherRoleName,otherToMany,r
             if ( ! this.<roleName>.contains(item))
             {
                this.<roleName>.add((<otherClassName>)item);
+<if(otherRoleName)>
                ((<otherClassName>)item).<prefix(otherToMany)><cap(otherRoleName)>(this);
+<endif>
                firePropertyChange("<roleName>", null, item);
             }
          }
@@ -72,16 +74,20 @@ setMethod(roleName,toMany,myClassName,otherClassName,otherRoleName,otherToMany,r
       if (this.<roleName> != value)
       {
          <otherClassName> oldValue = this.<roleName>;
+<if(otherRoleName)>
          if (this.<roleName> != null)
          {
             this.<roleName> = null;
             oldValue.<withoutThis(otherToMany,otherRoleName)>;
          }
+<endif>
          this.<roleName> = value;
+<if(otherRoleName)>
          if (value != null)
          {
             value.<prefix(otherToMany)><cap(otherRoleName)>(this);
          }
+<endif>
          firePropertyChange("<roleName>", oldValue, value);
       }
       return this;
@@ -110,7 +116,9 @@ withoutMethod(roleName,toMany,myClassName,otherClassName,otherRoleName,otherToMa
             if (this.<roleName>.contains(item))
             {
                this.<roleName>.remove((<otherClassName>)item);
+<if(otherRoleName)>
                ((<otherClassName>)item).<withoutThis(otherToMany,otherRoleName)>;
+<endif>
                firePropertyChange("<roleName>", item, null);
             }
          }

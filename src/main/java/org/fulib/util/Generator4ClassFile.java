@@ -173,6 +173,8 @@ public class Generator4ClassFile {
       ST st;
       for (AssocRole role : clazz.getRoles())
       {
+         if (role.getName() == null) continue; //=====================================
+
          if (ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle()))
          {
             group = createSTGroup("templates/JavaFXassociations.stg");
@@ -397,6 +399,8 @@ public class Generator4ClassFile {
 
       for (AssocRole role : clazz.getRoles())
       {
+         if (role.getName() == null) continue; //=============================
+
          if (role.getCardinality() == ClassModelBuilder.ONE)
          {
             if (role.getAggregation() == true)
