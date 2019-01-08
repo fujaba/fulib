@@ -55,6 +55,7 @@ Now, we generate the usual model implementation:
       Fulib.generator().generate(model);
 <!-- end_code_fragment: -->
 
+Once the generated code is compiled we may construct some objects:
 
 <!-- insert_code_fragment: StudyRightTables.objectModel -->
       // some objects
@@ -71,7 +72,7 @@ Now, we generate the usual model implementation:
       Assignment drawings = new Assignment().setTopic("drawings").setPoints(12).setRoom(artsRoom);
       Assignment sculptures = new Assignment().setTopic("sculptures").setPoints(12).setRoom(artsRoom);
 
-      Student alice = new Student().setStudentId("m4242").setName("Alice").setUni(studyRight).setIn(artsRoom).withDone(integrals);
+      Student alice = new Student().setStudentId("m4242").setName("Alice").setUni(studyRight).setIn(mathRoom).withDone(integrals);
       Student bob   = new Student().setStudentId("m2323").setName("Bobby"  ).setUni(studyRight).setIn(artsRoom).withFriends(alice);
       Student carli = new Student().setStudentId("m2323").setName("Carli").setUni(studyRight).setIn(mathRoom);
 <!-- end_code_fragment: -->
@@ -190,11 +191,11 @@ To further expand our table we might add students that are in rooms:
 <!-- insert_code_fragment: StudyRightTables.studentsTableResult -->
 University 	| Room 	| Assignment 	| Points 	| Student 	| 
  --- 	|  --- 	|  --- 	|  --- 	|  --- 	| 
+Study Right 	| wa1337 Math 	| integrals 	| 42.0 	| Alice m4242 	| 
 Study Right 	| wa1337 Math 	| integrals 	| 42.0 	| Carli m2323 	| 
+Study Right 	| wa1337 Math 	| matrices 	| 23.0 	| Alice m4242 	| 
 Study Right 	| wa1337 Math 	| matrices 	| 23.0 	| Carli m2323 	| 
-Study Right 	| wa1338 Arts 	| drawings 	| 12.0 	| Alice m4242 	| 
 Study Right 	| wa1338 Arts 	| drawings 	| 12.0 	| Bobby m2323 	| 
-Study Right 	| wa1338 Arts 	| sculptures 	| 12.0 	| Alice m4242 	| 
 Study Right 	| wa1338 Arts 	| sculptures 	| 12.0 	| Bobby m2323 	| 
 <!-- end_code_fragment: -->
 
@@ -205,16 +206,16 @@ In addition to the cross product we may select a subset of the
 table rows using a filter operation:
 
 <!-- insert_code_fragment: StudyRightTables.filterAssignmentsTable -->
-      assignmentsTable.filter( a -> a.getPoints() <= 20);
+      assignmentsTable.filter( a -> a.getPoints() <= 30);
       assertThat(students.getTable().size(), equalTo(4));
 <!-- end_code_fragment: -->
 
 <!-- insert_code_fragment: StudyRightTables.filterAssignmentsTableResult -->
 University 	| Room 	| Assignment 	| Points 	| Student 	| 
  --- 	|  --- 	|  --- 	|  --- 	|  --- 	| 
-Study Right 	| wa1338 Arts 	| drawings 	| 12.0 	| Alice m4242 	| 
+Study Right 	| wa1337 Math 	| matrices 	| 23.0 	| Alice m4242 	| 
+Study Right 	| wa1337 Math 	| matrices 	| 23.0 	| Carli m2323 	| 
 Study Right 	| wa1338 Arts 	| drawings 	| 12.0 	| Bobby m2323 	| 
-Study Right 	| wa1338 Arts 	| sculptures 	| 12.0 	| Alice m4242 	| 
 Study Right 	| wa1338 Arts 	| sculptures 	| 12.0 	| Bobby m2323 	| 
 <!-- end_code_fragment: -->
 
@@ -231,21 +232,16 @@ Alternatively we may filter by rows:
       {
          Student studi = (Student) row.get("Student");
          Assignment assignment = (Assignment) row.get("Assignment");
-         return ! studi.getDone().contains(assignment);
+         return studi.getDone().contains(assignment);
       });
 
-      assertThat(students.getTable().size(), equalTo(6));
+      assertThat(students.getTable().size(), equalTo(1));
 <!-- end_code_fragment: -->
 
 <!-- insert_code_fragment: StudyRightTables.filterRowTableResult -->
 University 	| B 	| Student 	| Assignment 	| 
  --- 	|  --- 	|  --- 	|  --- 	| 
-Study Right 	| wa1337 Math 	| Carli m2323 	| integrals 	| 
-Study Right 	| wa1337 Math 	| Carli m2323 	| matrices 	| 
-Study Right 	| wa1338 Arts 	| Alice m4242 	| drawings 	| 
-Study Right 	| wa1338 Arts 	| Alice m4242 	| sculptures 	| 
-Study Right 	| wa1338 Arts 	| Bobby m2323 	| drawings 	| 
-Study Right 	| wa1338 Arts 	| Bobby m2323 	| sculptures 	| 
+Study Right 	| wa1337 Math 	| Alice m4242 	| integrals 	| 
 <!-- end_code_fragment: -->
 
 Note, when we did the filter by assignment, our internal table had
@@ -253,3 +249,149 @@ been reduced to 4 rows. To have a full table for the filter by row
 operation, we had to reconstruct that full table. Note, on the reconstruction
 we did not provide a column name for the expandRooms call. Thus, the column
 got the name "B", the default name for the second column.
+
+Above row filter requires that the current student has done the
+current assignment. This filter condition may also be expressed by a
+hasDone operation:
+
+<!-- insert_code_fragment: StudyRightTables.filterHasDone -->
+      // filter row
+      uniTable = new UniversityTable(studyRight);
+      roomsTable = uniTable.expandRooms();
+      students = roomsTable.expandStudents("Student");
+      assignmentsTable = roomsTable.expandAssignments("Assignment");
+      students.hasDone(assignmentsTable);
+
+      assertThat(students.getTable().size(), equalTo(1));
+<!-- end_code_fragment: -->
+
+<!-- insert_code_fragment: StudyRightTables.filterHasDoneResult -->
+University 	| B 	| Student 	| Assignment 	| 
+ --- 	|  --- 	|  --- 	|  --- 	| 
+Study Right 	| wa1337 Math 	| Alice m4242 	| integrals 	| 
+<!-- end_code_fragment: -->
+
+
+Maybe its bad style, but the filter operations may also be used to modify
+the current model:
+
+<!-- insert_code_fragment: StudyRightTables.doCurrentAssignments -->
+      uniTable = new UniversityTable(studyRight);
+      roomsTable = uniTable.expandRooms();
+      students = roomsTable.expandStudents("Student");
+      assignmentsTable = roomsTable.expandAssignments("Assignment");
+
+      // do current assignments
+      students.filterRow( row ->
+      {
+         Student studi = (Student) row.get("Student");
+         Assignment assignment = (Assignment) row.get("Assignment");
+         studi.withDone(assignment);
+         return true;
+      });
+
+      FulibTools.objectDiagrams().dumpPng("../fulib/doc/images/studyRightObjectsMoreDone4Tables.png", studyRight);
+
+      assertThat(alice.getDone().size(), equalTo(2));
+      assertThat(integrals.getStudents().contains(alice), is(true));
+
+      // show size of done
+      uniTable.addColumn("noOfDone",  row ->
+      {
+         Student studi = (Student) row.get("Student");
+         return studi.getDone().size();
+      });
+
+      // show done
+      students.expandDone("Done");
+<!-- end_code_fragment: -->
+
+<!-- insert_code_fragment: StudyRightTables.doCurrentAssignmentsResult -->
+University 	| B 	| Student 	| Assignment 	| noOfDone 	| Done 	| 
+ --- 	|  --- 	|  --- 	|  --- 	|  --- 	|  --- 	| 
+Study Right 	| wa1337 Math 	| Alice m4242 	| integrals 	| 2 	| integrals 	| 
+Study Right 	| wa1337 Math 	| Alice m4242 	| integrals 	| 2 	| matrices 	| 
+Study Right 	| wa1337 Math 	| Alice m4242 	| matrices 	| 2 	| integrals 	| 
+Study Right 	| wa1337 Math 	| Alice m4242 	| matrices 	| 2 	| matrices 	| 
+Study Right 	| wa1337 Math 	| Carli m2323 	| integrals 	| 2 	| integrals 	| 
+Study Right 	| wa1337 Math 	| Carli m2323 	| integrals 	| 2 	| matrices 	| 
+Study Right 	| wa1337 Math 	| Carli m2323 	| matrices 	| 2 	| integrals 	| 
+Study Right 	| wa1337 Math 	| Carli m2323 	| matrices 	| 2 	| matrices 	| 
+Study Right 	| wa1338 Arts 	| Bobby m2323 	| drawings 	| 2 	| drawings 	| 
+Study Right 	| wa1338 Arts 	| Bobby m2323 	| drawings 	| 2 	| sculptures 	| 
+Study Right 	| wa1338 Arts 	| Bobby m2323 	| sculptures 	| 2 	| drawings 	| 
+Study Right 	| wa1338 Arts 	| Bobby m2323 	| sculptures 	| 2 	| sculptures 	| 
+<!-- end_code_fragment: -->
+
+![object diagram](images/studyRightObjectsMoreDone4Tables.png)
+
+As the current table contains some confusing cross products let
+us drop the Assignment column:
+
+<!-- insert_code_fragment: StudyRightTables.dropColumnsAssignment -->
+      uniTable.dropColumns("Assignment");
+<!-- end_code_fragment: -->
+
+<!-- insert_code_fragment: StudyRightTables.dropColumnsAssignmentResult -->
+University 	| B 	| Student 	| noOfDone 	| Done 	| 
+ --- 	|  --- 	|  --- 	|  --- 	|  --- 	| 
+Study Right 	| wa1337 Math 	| Alice m4242 	| 2 	| integrals 	| 
+Study Right 	| wa1337 Math 	| Alice m4242 	| 2 	| matrices 	| 
+Study Right 	| wa1337 Math 	| Carli m2323 	| 2 	| integrals 	| 
+Study Right 	| wa1337 Math 	| Carli m2323 	| 2 	| matrices 	| 
+Study Right 	| wa1338 Arts 	| Bobby m2323 	| 2 	| drawings 	| 
+Study Right 	| wa1338 Arts 	| Bobby m2323 	| 2 	| sculptures 	| 
+<!-- end_code_fragment: -->
+
+Alternatively, we may select the columns we are interested in:
+
+<!-- insert_code_fragment: StudyRightTables.selectColumns -->
+      students.selectColumns("Student", "Done");
+      assertThat(students.getTable().size(), equalTo(6));
+<!-- end_code_fragment: -->
+
+<!-- insert_code_fragment: StudyRightTables.selectColumnsResult -->
+Student 	| Done 	| 
+ --- 	|  --- 	| 
+Alice m4242 	| integrals 	| 
+Alice m4242 	| matrices 	| 
+Carli m2323 	| integrals 	| 
+Carli m2323 	| matrices 	| 
+Bobby m2323 	| drawings 	| 
+Bobby m2323 	| sculptures 	| 
+<!-- end_code_fragment: -->
+
+Note, you may use nested tables. This is handy if you
+want to update all elements of a certain column.
+
+<!-- insert_code_fragment: StudyRightTables.nestedTables -->
+      uniTable = new UniversityTable(studyRight);
+      students = uniTable.expandStudents("Students");
+      students.addColumn("Credits", row -> {
+         Student student = (Student) row.get("Students");
+         double pointSum = new StudentTable(student).expandDone().expandPoints().sum();
+         student.setCredits(pointSum);
+         return pointSum;
+      });
+      students.addColumn("Done", row -> {
+         Student student = (Student) row.get("Students");
+         String doneTopics = new StudentTable(student).expandDone().expandTopic().join(", ");
+         return doneTopics;
+      });
+<!-- end_code_fragment: -->
+
+Note, in the third last line operation expandTopic adds a column with
+the topic names of the corresponding assignments to the local table.
+On string columns one may call join in order to concatenate all
+strings.
+
+<!-- insert_code_fragment: StudyRightTables.nestedTablesResult -->
+University 	| Students 	| Credits 	| Done 	| 
+ --- 	|  --- 	|  --- 	|  --- 	| 
+Study Right 	| Alice m4242 	| 65.0 	| integrals, matrices 	| 
+Study Right 	| Bobby m2323 	| 24.0 	| drawings, sculptures 	| 
+Study Right 	| Carli m2323 	| 65.0 	| integrals, matrices 	| 
+<!-- end_code_fragment: -->
+
+![object diagram](images/studyRightObjectsCreditsAssigned4Tables.png)
+
