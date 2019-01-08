@@ -48,7 +48,7 @@ of the StudyRight University class model:
 
 Rendered as a class diagram the extended class model looks like:
 
-![simple class diagram](doc/images/FullClassDiagram.png)
+![simple class diagram](images/FullClassDiagram.png)
 
 Now, we generate the usual model implementation:
 <!-- insert_code_fragment: test4FulibReadme.generate -->
@@ -78,7 +78,7 @@ Now, we generate the usual model implementation:
 
 This results in:
 
-![object diagram](doc/images/studyRightObjects4Tables.png)
+![object diagram](images/studyRightObjects4Tables.png)
 
 Next, we generate table classes:
 
