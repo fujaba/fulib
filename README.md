@@ -6,15 +6,27 @@ First you write code that builds up your class model:
 
 <!-- insert_code_fragment: test4FulibReadme.classmodel -->
       ClassModelBuilder mb = Fulib.classModelBuilder("de.uniks.studyright");
-      ClassBuilder uni = mb.buildClass("University")
+
+      ClassBuilder university = mb.buildClass("University")
             .buildAttribute("name", mb.STRING);
+
       ClassBuilder student = mb.buildClass("Student")
-            .buildAttribute("matNo", mb.INT);
-      uni.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
+            .buildAttribute("name", mb.STRING)
+            .buildAttribute("studentId", mb.STRING)
+            .buildAttribute("credits", mb.DOUBLE)
+            .buildAttribute("motivation", mb.DOUBLE);
+
+      ;
+
       ClassBuilder room = mb.buildClass("Room")
-            .buildAttribute("roomNo", mb.STRING);
-      uni.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE)
-            .setAggregation();
+            .buildAttribute("roomNo", mb.STRING)
+            .buildAttribute("topic", mb.STRING)
+            .buildAttribute("credits", mb.DOUBLE);
+
+      university.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
+      university.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE);
+      room.buildAssociation(student, "students", mb.MANY, "in", mb.ONE);
+
 
       ClassModel model = mb.getClassModel();
 <!-- end_code_fragment: -->
@@ -32,13 +44,13 @@ From the class model you may generate Java code that implements the modeled clas
 Once your IDE has compiled the generated code, you may use it like:
 
 <!-- insert_code_fragment: StudyRightUserStories.testSimpleObjectModel -->
-      University studyRight = new University();
+      University studyRight = new University().setName("Study Right");
 
-      Room wa1337 = new Room().setRoomNo("WA1337");
-      studyRight.withRooms(wa1337);
-
-      Student alice = new Student().setName("Alice").setStudentId("A4242").setIn(wa1337);
-      Student   bob = new Student().setName("Bob")  .setStudentId("B2323").setIn(wa1337);
+      Room mathRoom = new Room().setTopic("math room");
+      studyRight.withRooms(mathRoom);
+      Room modelingRoom = new Room().setTopic("modeling room").setUni(studyRight);
+      Student alice = new Student().setName("Alice").setStudentId("A4242").setIn(mathRoom);
+      Student   bob = new Student().setName("Bob")  .setStudentId("B2323").setIn(mathRoom);
       studyRight.withStudents(alice, bob);
 <!-- end_code_fragment: -->
 
@@ -53,6 +65,7 @@ To create an object diagram from your object structure use:
 
 ![simple object diagram](doc/images/studyRightObjects.png)
 
+[Fulib Tables](doc/FulibTables.md)
 
 ### Gradle
 
