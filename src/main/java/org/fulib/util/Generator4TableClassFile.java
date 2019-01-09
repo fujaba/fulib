@@ -178,6 +178,8 @@ public class Generator4TableClassFile
       ST st;
       for (AssocRole role : clazz.getRoles())
       {
+         if (role.getName() == null) continue; //===================================
+
          String otherClassName = role.getOther().getClazz().getName();
 
          // getMethod(roleName,toMany,className,otherClassName) ::=
