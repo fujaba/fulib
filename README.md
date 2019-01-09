@@ -65,6 +65,9 @@ To create an object diagram from your object structure use:
 
 ![simple object diagram](doc/images/studyRightObjects.png)
 
+For more details on class models and code generation see: [Fulib Class Models](doc/FulibClassModels.md)
+
+Fulib also provides means for model queries and model transformations, see:
 [Fulib Tables](doc/FulibTables.md)
 
 ### Gradle
