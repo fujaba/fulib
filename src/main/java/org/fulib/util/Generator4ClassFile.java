@@ -8,9 +8,11 @@ import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.Clazz;
 import org.fulib.classmodel.FileFragmentMap;
-import org.stringtemplate.v4.*;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
+import org.stringtemplate.v4.StringRenderer;
 
-import java.awt.color.CMMException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -173,6 +175,10 @@ public class Generator4ClassFile {
       ST st;
       for (AssocRole role : clazz.getRoles())
       {
+         if (role.getName() == null) {
+            continue; //=====================================
+         }
+
          if (ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle()))
          {
             group = createSTGroup("templates/JavaFXassociations.stg");
@@ -397,6 +403,10 @@ public class Generator4ClassFile {
 
       for (AssocRole role : clazz.getRoles())
       {
+         if (role.getName() == null) {
+            continue; //=============================
+         }
+
          if (role.getCardinality() == ClassModelBuilder.ONE)
          {
             if (role.getAggregation() == true)

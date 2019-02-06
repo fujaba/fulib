@@ -6,9 +6,6 @@ import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 
-import java.lang.reflect.TypeVariable;
-import java.util.Collection;
-
 /**
  * ClassModelbuilder is used to create fulib class models that are input for
  * fulib code generation {@link Fulib#generator()}.<br>
@@ -132,10 +129,15 @@ public class ClassBuilder
    public AssociationBuilder buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality)
    {
       ClassModelBuilder.checkValidJavaId(myRoleName);
-      ClassModelBuilder.checkValidJavaId(otherRoleName);
+
+      if (otherRoleName != null) {
+         ClassModelBuilder.checkValidJavaId(otherRoleName);
+      }
+
       if (clazz.getAttribute(myRoleName) != null
             || clazz.getRole(myRoleName) != null)
          throw new IllegalArgumentException("duplicate attribute / role name");
+
       if (myRoleName.equals(otherRoleName) && myCardinality != otherCardinality)
          throw new IllegalArgumentException("duplicate attribute / role name");
 

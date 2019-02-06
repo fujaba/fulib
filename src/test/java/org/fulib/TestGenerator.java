@@ -2,6 +2,7 @@ package org.fulib;
 
 import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
+import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
@@ -43,11 +44,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TestGenerator {
 
-    Class<?> uniClass;
-    URLClassLoader classLoader;
-    Object studyRight;
-    Class<?> assignClass;
-    Class<?> studClass;
+    private Class<?> uniClass;
+    private URLClassLoader classLoader;
+    private Object studyRight;
+    private Class<?> assignClass;
+    private Class<?> studClass;
 
     @Test
     void testAttributeGenerator() throws Exception {
@@ -110,6 +111,65 @@ class TestGenerator {
 
         runAssociationReadWriteTests(outFolder, model);
 
+    }
+
+    @Test
+    void testUnidirectionalAssociations() throws Exception {
+        String targetFolder = "tmp";
+        String packageName = "org.fulib.test.studyright";
+
+        Tools.removeDirAndFiles(targetFolder);
+
+        ClassModelBuilder mb = Fulib.classModelBuilder(packageName, targetFolder);
+
+        ClassBuilder university = mb.buildClass("University");
+        ClassBuilder prof = mb.buildClass("Prof");
+
+        university.buildAssociation(prof, "head", ClassModelBuilder.ONE, null, 0);
+        university.buildAssociation(prof, "staff", ClassModelBuilder.MANY, null, 0);
+
+        ClassModel model = mb.getClassModel();
+        Fulib.generator().generate(model);
+
+        String outFolder = model.getMainJavaDir() + "/../out";
+        int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+        assertThat("compiler return code: ", returnCode, is(0));
+
+        ArrayList<AssocRole> clone = (ArrayList<AssocRole>) university.getClazz().getRoles().clone();
+        for (AssocRole r : clone) {
+            r.setClazz(null);
+        }
+        clone = (ArrayList<AssocRole>) prof.getClazz().getRoles().clone();
+        for (AssocRole r : clone) {
+            r.setClazz(null);
+        }
+
+
+        university.buildAssociation(prof, "head", ClassModelBuilder.ONE, "uni", ClassModelBuilder.ONE);
+        university.buildAssociation(prof, "staff", ClassModelBuilder.MANY, "employer", ClassModelBuilder.ONE);
+
+        Fulib.generator().generate(model);
+
+        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+        assertThat("compiler return code: ", returnCode, is(0));
+
+
+        clone = (ArrayList<AssocRole>) university.getClazz().getRoles().clone();
+        for (AssocRole r : clone) {
+            r.setClazz(null);
+        }
+        clone = (ArrayList<AssocRole>) prof.getClazz().getRoles().clone();
+        for (AssocRole r : clone) {
+            r.setClazz(null);
+        }
+
+        university.buildAssociation(prof, "head", ClassModelBuilder.ONE, null, 0);
+        university.buildAssociation(prof, "staff", ClassModelBuilder.MANY, null, 0);
+
+        Fulib.generator().generate(model);
+
+        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+        assertThat("compiler return code: ", returnCode, is(0));
     }
 
     @Test
