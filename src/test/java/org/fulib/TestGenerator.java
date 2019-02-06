@@ -252,8 +252,7 @@ class TestGenerator {
         assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c1, "x", ClassModelBuilder.MANY,
                 "x", ClassModelBuilder.ONE));
 
-        assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c1, "x", ClassModelBuilder.MANY,
-                "x", ClassModelBuilder.MANY));
+        c1.buildAssociation(c1, "x", ClassModelBuilder.MANY, "x", ClassModelBuilder.MANY);
     }
 
 
@@ -795,6 +794,7 @@ class TestGenerator {
 
         // filter row
         uniTable = declaredConstructors.newInstance(uniArray);
+        uniExpandStudents.invoke(uniTable, new Object[]{new String[]{"Students"}});
         roomsTable = uniExpandRooms.invoke(uniTable, new Object[]{new String[]{"Rooms"}});
         assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[]{new String[]{"Assignments"}});
 
