@@ -43,11 +43,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TestGenerator {
 
-    private Class<?> uniClass;
-    private URLClassLoader classLoader;
-    private Object studyRight;
-    private Class<?> assignClass;
-    private Class<?> studClass;
+    Class<?> uniClass;
+    URLClassLoader classLoader;
+    Object studyRight;
+    Class<?> assignClass;
+    Class<?> studClass;
 
     @Test
     void testAttributeGenerator() throws Exception {
@@ -79,7 +79,6 @@ class TestGenerator {
 
         runAttributeReadWriteTests(outFolder, model);
     }
-
 
     @Test
     void testAssociationGenerator() throws Exception {
@@ -210,7 +209,6 @@ class TestGenerator {
         runTableTests(outFolder, model);
     }
 
-
     @ParameterizedTest
     @ValueSource (strings = {
             "org.extends.tools",
@@ -254,7 +252,6 @@ class TestGenerator {
 
         c1.buildAssociation(c1, "x", ClassModelBuilder.MANY, "x", ClassModelBuilder.MANY);
     }
-
 
     @Test
     void testModelEvolution() throws IOException {
@@ -322,7 +319,6 @@ class TestGenerator {
 
     }
 
-
     @Test
     void testCustomTemplates() throws IOException {
         Tools.removeDirAndFiles("tmp");
@@ -354,7 +350,6 @@ class TestGenerator {
         assertThat(content, containsString("/* custom attribute comment */"));
     }
 
-
     private void createPreexistingUniFile(String packageName, ClassModel model) throws IOException {
         // create pre existing University class with extra elements
         STGroup group = new STGroupFile("templates/university.stg");
@@ -366,10 +361,7 @@ class TestGenerator {
         Files.write(Paths.get(model.getPackageSrcFolder() + "/University.java"), uniText.getBytes());
     }
 
-
-    private ClassModel getClassModelUniStudWithAttributes(String targetFolder, String packageName) {
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName, targetFolder + "/src");
-
+    final ClassModel getClassModelUniStudWithAttributes(ClassModelBuilder mb) {
         mb.buildClass("University").buildAttribute("name", ClassModelBuilder.STRING);
 
         mb.buildClass("Student")
@@ -379,11 +371,11 @@ class TestGenerator {
         return mb.getClassModel();
     }
 
+    ClassModel getClassModelUniStudWithAttributes(String targetFolder, String packageName) {
+        return getClassModelUniStudWithAttributes(Fulib.classModelBuilder(packageName, targetFolder + "/src"));
+    }
 
-    private ClassModel getClassModelWithAssociations(String targetFolder, String packageName) {
-        // start_code_fragment: ClassModelBuilder.twoParams
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java");
-
+    final ClassModel getClassModelWithAssociations(String targetFolder, ClassModelBuilder mb) {
         ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", ClassModelBuilder.STRING);
         // end_code_fragment:
 
@@ -411,6 +403,9 @@ class TestGenerator {
         return mb.getClassModel();
     }
 
+    ClassModel getClassModelWithAssociations(String targetFolder, String packageName) {
+        return getClassModelWithAssociations(targetFolder, Fulib.classModelBuilder(packageName, "src/main/java"));
+    }
 
     private ClassModel getClassModelWithExtends(String targetFolder, String packageName) {
         // start_code_fragment: ClassModelBuilder
@@ -446,7 +441,6 @@ class TestGenerator {
 
         return mb.getClassModel();
     }
-
 
     private void runAttributeReadWriteTests(String outFolder, ClassModel model) throws Exception {
         final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
@@ -534,7 +528,6 @@ class TestGenerator {
         txt = toString.invoke(studyRight);
         assertThat("toString", txt, is(equalTo("Hello")));
     }
-
 
     void runAssociationReadWriteTests(String outFolder, ClassModel model) throws Exception {
         final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
@@ -675,7 +668,6 @@ class TestGenerator {
         assertThat(wa1337, hasProperty("students", not(containsInAnyOrder(karli))));
     }
 
-
     void runExtendsReadWriteTests(String outFolder, ClassModel model) throws Exception {
         // run self test
         File classesDir = new File(outFolder);
@@ -721,7 +713,6 @@ class TestGenerator {
         assertThat(karli, hasProperty("level", equalTo("master")));
 
     }
-
 
     void runTableTests(String outFolder, ClassModel model) throws Exception {
         getTableExampleObjects(outFolder, model);
@@ -860,7 +851,6 @@ class TestGenerator {
         assertThat(studentsTable.toString(), containsString("Credits"));
         assertThat(studentsTable.toString(), containsString("42"));
     }
-
 
     private void getTableExampleObjects(String outFolder, ClassModel model)
             throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, InstantiationException,
