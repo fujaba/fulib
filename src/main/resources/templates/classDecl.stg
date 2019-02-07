@@ -1,7 +1,7 @@
 
-classDecl(name,superClass) ::=
+classDecl(name, visibility, superClass) ::=
 <<
-public class <name> <extendsClause(superClass)>
+<if (visibility)><visibility><else>public <endif>class <name> <extendsClause(superClass)>
 {
 >>
 

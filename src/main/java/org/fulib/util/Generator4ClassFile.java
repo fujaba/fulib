@@ -48,7 +48,7 @@ public class Generator4ClassFile extends FileGenerator {
 
         generatePackageDecl(clazz, fragmentMap);
         generateImportDecl(fragmentMap);
-        generateClassDecl("Test" + clazz.getName(), null, fragmentMap);
+        generateClassDecl("Test" + clazz.getName(), "", null, fragmentMap);
         generateAttributeTests(clazz, fragmentMap);
 //        generateAssociationTests(clazz, fragmentMap);
 //        generateToStringTests(clazz, fragmentMap);
@@ -71,17 +71,18 @@ public class Generator4ClassFile extends FileGenerator {
         fragmentMap.add(Parser.IMPORT, result, 2);
     }
 
-    private void generateClassDecl(String className, String superClass, FileFragmentMap fragmentMap) {
+    private void generateClassDecl(String className, String visibility, String superClass, FileFragmentMap fragmentMap) {
         STGroup group = createSTGroup("templates/classDecl.stg");
         ST st = group.getInstanceOf("classDecl");
         st.add("name", className);
+        st.add("visibility", visibility);
         st.add("superClass", superClass);
         String result = st.render();
         fragmentMap.add(Parser.CLASS, result, 2);
     }
 
     private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap) {
-        generateClassDecl(clazz.getName(), clazz.getSuperClass() != null ? clazz.getSuperClass().getName() : null, fragmentMap);
+        generateClassDecl(clazz.getName(), null, clazz.getSuperClass() != null ? clazz.getSuperClass().getName() : null, fragmentMap);
     }
 
     private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap) {
