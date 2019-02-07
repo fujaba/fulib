@@ -3,7 +3,7 @@ testMethodStringAttributes(className, attributeName) ::=
     @Test
     void testAttribute<cap(attributeName)>() {
 
-        AtomicReference<PropertyChangeEvent> event = new AtomicReference<>();
+        AtomicReference\<PropertyChangeEvent> event = new AtomicReference\<>();
 
         <className> object = new <className>();
         object.addPropertyChangeListener("<attributeName>", event::set);
@@ -15,7 +15,28 @@ testMethodStringAttributes(className, attributeName) ::=
         assertThat(event.get().getNewValue(), is(equalTo("randomString")));
         assertThat(object.get<cap(attributeName)>(), is(equalTo("randomString")));
 
-        assertThat(Assignment.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
+        assertThat(<className>.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
+    }
+>>
+
+testMethodBooleanAttributes(className, attributeName) ::=
+<<
+    @Test
+    void testAttribute<cap(attributeName)>() {
+
+        AtomicReference\<PropertyChangeEvent> event = new AtomicReference\<>();
+
+        <className> object = new <className>();
+        object.addPropertyChangeListener("<attributeName>", event::set);
+
+        assertThat(object.get<cap(attributeName)>(), is(false));
+        assertThat(object.set<cap(attributeName)>(true), is(sameInstance(object)));
+        assertThat(event, is(notNullValue()));
+        assertThat(event.get().getOldValue(), is(false));
+        assertThat(event.get().getNewValue(), is(true));
+        assertThat(object.get<cap(attributeName)>(), is(true));
+
+        assertThat(<className>.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
     }
 >>
 
@@ -24,7 +45,7 @@ testMethodNumberAttributes(className, attributeName, decimal) ::=
     @Test
     void testAttribute<cap(attributeName)>() {
 
-        AtomicReference<PropertyChangeEvent> event = new AtomicReference<>();
+        AtomicReference\<PropertyChangeEvent> event = new AtomicReference\<>();
 
         <className> object = new <className>();
         object.addPropertyChangeListener("<attributeName>", event::set);
@@ -36,7 +57,7 @@ testMethodNumberAttributes(className, attributeName, decimal) ::=
         assertThat(event.get().getNewValue(), is(42<if (decimal)>.<decimal><endif>));
         assertThat(object.get<cap(attributeName)>(), is(42<if (decimal)>.<decimal><endif>));
 
-        assertThat(Assignment.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
+        assertThat(<className>.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
     }
 >>
 

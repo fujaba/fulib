@@ -49,7 +49,7 @@ public class Generator4ClassFile extends FileGenerator {
         generatePackageDecl(clazz, fragmentMap);
         generateImportDecl(fragmentMap);
         generateClassDecl(clazz, fragmentMap);
-//        generateAttributeTests(clazz, fragmentMap);
+        generateAttributeTests(clazz, fragmentMap);
 //        generateAssociationTests(clazz, fragmentMap);
 //        generateToStringTests(clazz, fragmentMap);
 //        generateRemoveYouTests(clazz, fragmentMap);
@@ -154,6 +154,35 @@ public class Generator4ClassFile extends FileGenerator {
             } else {
                 fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", "", 3, true);
             }
+        }
+    }
+
+    private void generateAttributeTests(Clazz clazz, FileFragmentMap fragmentMap) {
+        STGroup group;
+        ST template;
+        String result;
+
+        for (Attribute attr : clazz.getAttributes()) {
+            group = createSTGroup("templates/testMethodsAttributes.stg");
+
+            if (attr.getType().equals("String")) {
+                template = group.getInstanceOf("testMethodStringAttributes");
+            } else if (attr.getType().equals("boolean")) {
+                template = group.getInstanceOf("testMethodBooleanAttributes");
+            } else {
+                template = group.getInstanceOf("testMethodNumberAttributes");
+            }
+
+            template.add("className", clazz.getName());
+            template.add("attributeName", attr.getName());
+
+            if (attr.getType().equals("double") || attr.getType().equals("float")) {
+                template.add("decimal", "0");
+            }
+
+            result = template.render();
+
+            fragmentMap.add(Parser.METHOD + ":testAttribute" + StrUtil.cap(attr.getName()) + "()", result, 2);
         }
     }
 
