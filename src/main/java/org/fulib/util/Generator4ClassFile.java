@@ -47,10 +47,10 @@ public class Generator4ClassFile extends FileGenerator {
         FileFragmentMap fragmentMap = new FileFragmentMap(testClassFileName);
 
         generatePackageDecl(clazz, fragmentMap);
+        generateImportDecl(fragmentMap);
         generateClassDecl(clazz, fragmentMap);
 //        generateAttributeTests(clazz, fragmentMap);
 //        generateAssociationTests(clazz, fragmentMap);
-//        generatePropertyChangeSupportTests(clazz, fragmentMap);
 //        generateToStringTests(clazz, fragmentMap);
 //        generateRemoveYouTests(clazz, fragmentMap);
 
@@ -62,6 +62,13 @@ public class Generator4ClassFile extends FileGenerator {
     private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap) {
         String result = String.format("package %s;", clazz.getModel().getPackageName());
         fragmentMap.add(Parser.PACKAGE, result, 2);
+    }
+
+    private void generateImportDecl(FileFragmentMap fragmentMap) {
+        STGroup group = createSTGroup("templates/testImports.stg");
+        ST st = group.getInstanceOf("testImports");
+        String result = st.render();
+        fragmentMap.add(Parser.IMPORT, result, 2);
     }
 
     private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap) {

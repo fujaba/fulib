@@ -3,15 +3,14 @@ package org.fulib.classmodel;
 import org.fulib.Parser;
 import org.fulib.StrUtil;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.sql.Struct;
 import java.util.ArrayList;
-import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeListener;
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -230,13 +229,9 @@ public class FileFragmentMap
 
       if (key.startsWith(Parser.IMPORT))
       {
-         CodeFragment oldFragment = codeMap.get(Parser.CLASS);
+         CodeFragment oldFragment = codeMap.get(Parser.PACKAGE);
          int pos = fragmentList.indexOf(oldFragment);
 
-         // go to the gap before this
-         pos--;
-
-         fragmentList.add(pos, gap);
          pos++;
          fragmentList.add(pos, gap);
          pos++;
