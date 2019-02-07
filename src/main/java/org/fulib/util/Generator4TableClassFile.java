@@ -1,6 +1,5 @@
 package org.fulib.util;
 
-import org.fulib.Generator;
 import org.fulib.Parser;
 import org.fulib.StrUtil;
 import org.fulib.builder.ClassModelBuilder;
@@ -10,21 +9,12 @@ import org.fulib.classmodel.Clazz;
 import org.fulib.classmodel.FileFragmentMap;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
-import org.stringtemplate.v4.StringRenderer;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
-public class Generator4TableClassFile
-{
+public class Generator4TableClassFile extends FileGenerator {
 
-   private String customTemplatesFile;
-
+   @Override
    public void generate(Clazz clazz) {
       String classFileName = clazz.getModel().getPackageSrcFolder() + "/tables/" + clazz.getName() + "Table.java";
       FileFragmentMap fragmentMap = Parser.parse(classFileName);
@@ -54,25 +44,13 @@ public class Generator4TableClassFile
 
       fragmentMap.add(Parser.CLASS_END, "}", 1);
 
-      if (clazz.getModified() == true && fragmentMap.classBodyIsEmpty(fragmentMap)) {
-         Path path = Paths.get(classFileName);
-         try {
-            Files.deleteIfExists(path);
-            Logger.getLogger(Generator.class.getName())
-                  .info("\n   deleting empty file " + classFileName);
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-      } else {
-         fragmentMap.writeFile();
-      }
+      writeClassOrDeleteIfEmpty(fragmentMap, clazz, classFileName);
    }
 
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap) {
       String result = String.format("package %s;", clazz.getModel().getPackageName() + ".tables");
       fragmentMap.add(Parser.PACKAGE, result, 2);
    }
-
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap) {
       STGroup group = createSTGroup("templates/classDecl.stg");
@@ -83,8 +61,6 @@ public class Generator4TableClassFile
       fragmentMap.add(Parser.CLASS, result, 2);
    }
 
-
-
    private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap) {
       STGroup group = createSTGroup("templates/tableConstructor.stg");
       ST st = group.getInstanceOf("constructor");
@@ -92,7 +68,6 @@ public class Generator4TableClassFile
       String result = st.render();
       fragmentMap.add(Parser.CONSTRUCTOR + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)", result, 2, clazz.getModified());
    }
-
 
    private void generateStandardAttributes(Clazz clazz, FileFragmentMap fragmentMap) {
       STGroup group = createSTGroup("templates/attributes.stg");
@@ -148,7 +123,6 @@ public class Generator4TableClassFile
       }
    }
 
-
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap) {
       STGroup group = createSTGroup("templates/tablesAttributes.stg");
       ST attrTemplate;
@@ -165,8 +139,6 @@ public class Generator4TableClassFile
          fragmentMap.add(Parser.METHOD + ":expand" + StrUtil.cap(attr.getName()) + "(String...)", result, 2, attr.getModified());
       }
    }
-
-
 
    private void generateAssociations(Clazz clazz, FileFragmentMap fragmentMap)
    {
@@ -207,8 +179,6 @@ public class Generator4TableClassFile
       }
    }
 
-
-
    private void generateSelectColumns(Clazz clazz, FileFragmentMap fragmentMap)
    {
       fragmentMap.add(Parser.IMPORT + ":java.util.Arrays", "import java.util.Arrays;", 1);
@@ -229,7 +199,6 @@ public class Generator4TableClassFile
       fragmentMap.add(Parser.METHOD + ":dropColumns(String...)", result, 2, clazz.getModified());
    }
 
-
    private void generateAddColumn(Clazz clazz, FileFragmentMap fragmentMap)
    {
       String result;
@@ -240,8 +209,6 @@ public class Generator4TableClassFile
 
       fragmentMap.add(Parser.METHOD + ":addColumn(String,java.util.function.Function<java.util.LinkedHashMap<String,Object>,Object>)", result, 2, clazz.getModified());
    }
-
-
 
    private void generateFilter(Clazz clazz, FileFragmentMap fragmentMap)
    {
@@ -269,7 +236,6 @@ public class Generator4TableClassFile
       fragmentMap.add(Parser.METHOD + ":filterRow(Predicate<LinkedHashMap<String,Object> >)", result, 2, clazz.getModified());
    }
 
-
    private void generateToSet(Clazz clazz, FileFragmentMap fragmentMap)
    {
       fragmentMap.add(Parser.IMPORT + ":java.util.LinkedHashSet", "import java.util.LinkedHashSet;", 1);
@@ -290,7 +256,6 @@ public class Generator4TableClassFile
       fragmentMap.add(Parser.METHOD + ":toSet()", result, 2, modified);
    }
 
-
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap) {
       String result = "";
       STGroup group = createSTGroup("templates/tablesToString.stg");
@@ -298,35 +263,5 @@ public class Generator4TableClassFile
       result = st.render();
 
       fragmentMap.add(Parser.METHOD + ":toString()", result, 2, clazz.getModified());
-   }
-
-
-
-   public String getCustomTemplatesFile()
-   {
-      return customTemplatesFile;
-   }
-
-   public Generator4TableClassFile setCustomTemplatesFile(String customTemplateFile)
-   {
-      this.customTemplatesFile = customTemplateFile;
-      return this;
-   }
-
-   public STGroup createSTGroup(String origFileName)
-   {
-      STGroup group;
-      try
-      {
-         group = new STGroupFile(this.customTemplatesFile);
-         STGroup origGroup = new STGroupFile(origFileName);
-         group.importTemplates(origGroup);
-      }
-      catch (Exception e)
-      {
-         group = new STGroupFile(origFileName);
-      }
-      group.registerRenderer(String.class, new StringRenderer());
-      return group;
    }
 }

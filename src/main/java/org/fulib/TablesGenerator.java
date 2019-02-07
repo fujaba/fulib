@@ -1,10 +1,7 @@
 package org.fulib;
 
-import org.fulib.classmodel.AssocRole;
-import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
-import org.fulib.util.Generator4ClassFile;
 import org.fulib.util.Generator4TableClassFile;
 import org.fulib.yaml.YamlIdMap;
 import org.stringtemplate.v4.ST;
@@ -81,7 +78,7 @@ public class TablesGenerator
       }
 
       // generate primitive tables
-      Generator4TableClassFile generator4TableClassFile = new Generator4TableClassFile()
+      Generator4TableClassFile generator4TableClassFile = (Generator4TableClassFile) new Generator4TableClassFile()
             .setCustomTemplatesFile(this.getCustomTemplateFile());
 
       generatePrimitivTable(model, generator4TableClassFile, "int", "Integer");
