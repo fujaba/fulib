@@ -1,9 +1,9 @@
-# Fulib Tables
+# Fulib Simple Tables
 
-Fulib Tables are the model query and transformation mechanisms
+Fulib Simple Tables are the model query and transformation mechanisms
 provided by Fulib.
 
-To demonstrate Fulib Tables we start with an extended version
+To demonstrate Fulib Simple Tables we start with an extended version
 of the StudyRight University class model:
 
 <!-- insert_code_fragment: test4FulibReadme.classmodel -->
