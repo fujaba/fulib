@@ -303,6 +303,9 @@ class TestGenerator {
         c1.buildAttribute("a42", mb.STRING);
         assertThrows(IllegalArgumentException.class, () -> c1.buildAttribute("a42", mb.STRING));
 
+        Function<String,Boolean> f;
+        c1.buildAttribute("myFunction", "java.util.function.Function<String,Boolean>");
+
         ClassBuilder c2 = mb.buildClass("C2");
         assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c2, "a42", mb.MANY,
                 "b", mb.MANY));
