@@ -20,19 +20,22 @@ import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInA
 class TestJavaFXGenerator extends TestGenerator {
 
     @Override
-    ClassModel getClassModelUniStudWithAttributes(String targetFolder, String packageName) {
+    ClassModel getClassModelUniStudWithAttributes(String targetFolder, String packageName)
+    {
         return getClassModelUniStudWithAttributes(Fulib.classModelBuilder(packageName, targetFolder + "/src")
                 .setJavaFXPropertyStyle());
     }
 
     @Override
-    ClassModel getClassModelWithAssociations(String targetFolder, String packageName) {
+    ClassModel getClassModelWithAssociations(String targetFolder, String packageName)
+    {
         return getClassModelWithAssociations(targetFolder, Fulib.classModelBuilder(packageName, "src/main/java")
                 .setJavaFXPropertyStyle());
     }
 
     @Override
-    void runAssociationReadWriteTests(String outFolder, ClassModel model) throws Exception {
+    void runAssociationReadWriteTests(String outFolder, ClassModel model) throws Exception
+    {
         final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
         PropertyChangeListener listener = eventList::add;
 

@@ -18,7 +18,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 class TestYamlIdMap {
 
     @Test
-    void testPlainYaml() {
+    void testPlainYaml()
+    {
         String yaml = "" +
                 "joining: abu \n" +
                 "lastChanges: 2018-03-17T14:48:00.000.abu 2018-03-17T14:38:00.000.bob 2018-03-17T14:18:00.000.xia";
@@ -42,7 +43,8 @@ class TestYamlIdMap {
 
 
     @Test
-    void testYamlIdMap() {
+    void testYamlIdMap()
+    {
         // create example data
         ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
 

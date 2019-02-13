@@ -125,8 +125,8 @@ class TestGenerator {
         ClassBuilder university = mb.buildClass("University");
         ClassBuilder prof = mb.buildClass("Prof");
 
-        university.buildAssociation(prof, "head", ClassModelBuilder.ONE, null, 0);
-        university.buildAssociation(prof, "staff", ClassModelBuilder.MANY, null, 0);
+        university.buildAssociation(prof, "head", mb.ONE, null, 0);
+        university.buildAssociation(prof, "staff", mb.MANY, null, 0);
 
         ClassModel model = mb.getClassModel();
         Fulib.generator().generate(model);
@@ -145,8 +145,8 @@ class TestGenerator {
         }
 
 
-        university.buildAssociation(prof, "head", ClassModelBuilder.ONE, "uni", ClassModelBuilder.ONE);
-        university.buildAssociation(prof, "staff", ClassModelBuilder.MANY, "employer", ClassModelBuilder.ONE);
+        university.buildAssociation(prof, "head", mb.ONE, "uni", mb.ONE);
+        university.buildAssociation(prof, "staff", mb.MANY, "employer", mb.ONE);
 
         Fulib.generator().generate(model);
 
@@ -163,8 +163,8 @@ class TestGenerator {
             r.setClazz(null);
         }
 
-        university.buildAssociation(prof, "head", ClassModelBuilder.ONE, null, 0);
-        university.buildAssociation(prof, "staff", ClassModelBuilder.MANY, null, 0);
+        university.buildAssociation(prof, "head", mb.ONE, null, 0);
+        university.buildAssociation(prof, "staff", mb.MANY, null, 0);
 
         Fulib.generator().generate(model);
 
@@ -220,31 +220,31 @@ class TestGenerator {
         ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
 
         ClassBuilder uni = mb.buildClass("University")
-                .buildAttribute("name", ClassModelBuilder.STRING);
+                .buildAttribute("name", mb.STRING);
 
         ClassBuilder student = mb.buildClass("Student")
-                .buildAttribute("name", ClassModelBuilder.STRING)
-                .buildAttribute("studentId", ClassModelBuilder.STRING)
-                .buildAttribute("credits", ClassModelBuilder.INT);
+                .buildAttribute("name", mb.STRING)
+                .buildAttribute("studentId", mb.STRING)
+                .buildAttribute("credits", mb.INT);
 
-        student.buildAssociation(student, "friends", ClassModelBuilder.MANY, "friends", ClassModelBuilder.MANY);
-        uni.buildAssociation(student, "students", ClassModelBuilder.MANY, "uni", ClassModelBuilder.ONE);
+        student.buildAssociation(student, "friends", mb.MANY, "friends", mb.MANY);
+        uni.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
 
         ClassBuilder ta = mb.buildClass("Tutor").setSuperClass(student);
 
         ClassBuilder room = mb.buildClass("Room")
-                .buildAttribute("roomNo", ClassModelBuilder.STRING)
-                .buildAttribute("topic", ClassModelBuilder.STRING);
+                .buildAttribute("roomNo", mb.STRING)
+                .buildAttribute("topic", mb.STRING);
 
-        uni.buildAssociation(room, "rooms", ClassModelBuilder.MANY, "uni", ClassModelBuilder.ONE);
-        student.buildAssociation(room, "in", ClassModelBuilder.ONE, "students", ClassModelBuilder.MANY);
+        uni.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE);
+        student.buildAssociation(room, "in", mb.ONE, "students", mb.MANY);
 
         ClassBuilder assignment = mb.buildClass("Assignment")
-                .buildAttribute("topic", ClassModelBuilder.STRING)
-                .buildAttribute("points", ClassModelBuilder.INT);
+                .buildAttribute("topic", mb.STRING)
+                .buildAttribute("points", mb.INT);
 
-        room.buildAssociation(assignment, "assignments", ClassModelBuilder.MANY, "room", ClassModelBuilder.ONE);
-        student.buildAssociation(assignment, "done", ClassModelBuilder.MANY, "students", ClassModelBuilder.MANY);
+        room.buildAssociation(assignment, "assignments", mb.MANY, "room", mb.ONE);
+        student.buildAssociation(assignment, "done", mb.MANY, "students", mb.MANY);
 
         ClassModel model = mb.getClassModel();
 
@@ -284,10 +284,10 @@ class TestGenerator {
     @Test
     void testValidClassNames() {
 
-        ClassModelBuilder classModelBuilder = Fulib.classModelBuilder("org.fulib");
+        ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib");
 
-        assertThrows(IllegalArgumentException.class, () -> classModelBuilder.buildClass(null));
-        assertThrows(IllegalArgumentException.class, () -> classModelBuilder.buildClass(""));
+        assertThrows(IllegalArgumentException.class, () -> mb.buildClass(null));
+        assertThrows(IllegalArgumentException.class, () -> mb.buildClass(""));
     }
 
     @Test
@@ -298,19 +298,19 @@ class TestGenerator {
 
         assertThrows(IllegalArgumentException.class, () -> mb.buildClass("C1"));
 
-        assertThrows(IllegalArgumentException.class, () -> c1.buildAttribute("42", ClassModelBuilder.STRING));
+        assertThrows(IllegalArgumentException.class, () -> c1.buildAttribute("42", mb.STRING));
 
-        c1.buildAttribute("a42", ClassModelBuilder.STRING);
-        assertThrows(IllegalArgumentException.class, () -> c1.buildAttribute("a42", ClassModelBuilder.STRING));
+        c1.buildAttribute("a42", mb.STRING);
+        assertThrows(IllegalArgumentException.class, () -> c1.buildAttribute("a42", mb.STRING));
 
         ClassBuilder c2 = mb.buildClass("C2");
-        assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c2, "a42", ClassModelBuilder.MANY,
-                "b", ClassModelBuilder.MANY));
+        assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c2, "a42", mb.MANY,
+                "b", mb.MANY));
 
-        assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c1, "x", ClassModelBuilder.MANY,
-                "x", ClassModelBuilder.ONE));
+        assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c1, "x", mb.MANY,
+                "x", mb.ONE));
 
-        c1.buildAssociation(c1, "x", ClassModelBuilder.MANY, "x", ClassModelBuilder.MANY);
+        c1.buildAssociation(c1, "x", mb.MANY, "x", mb.MANY);
     }
 
     @Test
@@ -321,13 +321,13 @@ class TestGenerator {
         // first simple model
         ClassModelBuilder mb = Fulib.classModelBuilder("org.evolve", "tmp/src");
         ClassBuilder uni = mb.buildClass("University")
-                .buildAttribute("uniName", ClassModelBuilder.STRING);
+                .buildAttribute("uniName", mb.STRING);
         ClassBuilder stud = mb.buildClass("Student")
-                .buildAttribute("matNo", ClassModelBuilder.STRING)
-                .buildAttribute("startYear", ClassModelBuilder.INT);
-        uni.buildAssociation(stud, "students", ClassModelBuilder.MANY, "uni", ClassModelBuilder.ONE);
+                .buildAttribute("matNo", mb.STRING)
+                .buildAttribute("startYear", mb.INT);
+        uni.buildAssociation(stud, "students", mb.MANY, "uni", mb.ONE);
         ClassBuilder room = mb.buildClass("Room")
-                .buildAttribute("roomNo", ClassModelBuilder.STRING);
+                .buildAttribute("roomNo", mb.STRING);
 
         ClassModel firstModel = mb.getClassModel();
 
@@ -343,7 +343,7 @@ class TestGenerator {
         uni.getClazz().setName("Institute");
         room.getClazz().setName("LectureHall");
         stud.getClazz().getAttribute("matNo").setName("studentId");
-        stud.getClazz().getAttribute("startYear").setType(ClassModelBuilder.STRING);
+        stud.getClazz().getAttribute("startYear").setType(mb.STRING);
 
         // prepare logger
         Logger logger = Logger.getLogger(Generator.class.getName());
@@ -384,10 +384,10 @@ class TestGenerator {
         Tools.removeDirAndFiles("tmp");
 
         ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
-        mb.buildClass("University").buildAttribute("name", ClassModelBuilder.STRING);
+        mb.buildClass("University").buildAttribute("name", mb.STRING);
         mb.buildClass("Student")
-                .buildAttribute("name", ClassModelBuilder.STRING, "\"Karli\"")
-                .buildAttribute("matrNo", ClassModelBuilder.LONG, "0");
+                .buildAttribute("name", mb.STRING, "\"Karli\"")
+                .buildAttribute("matrNo", mb.LONG, "0");
 
         ClassModel model = mb.getClassModel();
 
@@ -422,11 +422,11 @@ class TestGenerator {
     }
 
     final ClassModel getClassModelUniStudWithAttributes(ClassModelBuilder mb) {
-        mb.buildClass("University").buildAttribute("name", ClassModelBuilder.STRING);
+        mb.buildClass("University").buildAttribute("name", mb.STRING);
 
         mb.buildClass("Student")
-                .buildAttribute("name", ClassModelBuilder.STRING, "\"Karli\"")
-                .buildAttribute("matrNo", ClassModelBuilder.LONG, "0");
+                .buildAttribute("name", mb.STRING, "\"Karli\"")
+                .buildAttribute("matrNo", mb.LONG, "0");
 
         return mb.getClassModel();
     }
@@ -436,29 +436,29 @@ class TestGenerator {
     }
 
     final ClassModel getClassModelWithAssociations(String targetFolder, ClassModelBuilder mb) {
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", ClassModelBuilder.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
         // end_code_fragment:
 
         mb.getClassModel().setMainJavaDir(targetFolder + "/src");
 
         ClassBuilder studi = mb.buildClass("Student")
-                .buildAttribute("name", ClassModelBuilder.STRING, "\"Karli\"");
+                .buildAttribute("name", mb.STRING, "\"Karli\"");
 
-        universitiy.buildAssociation(studi, "students", ClassModelBuilder.MANY, "uni", ClassModelBuilder.ONE);
+        universitiy.buildAssociation(studi, "students", mb.MANY, "uni", mb.ONE);
 
         ClassBuilder room = mb.buildClass("Room")
-                .buildAttribute("no", ClassModelBuilder.STRING);
+                .buildAttribute("no", mb.STRING);
 
-        universitiy.buildAssociation(room, "rooms", ClassModelBuilder.MANY, "uni", ClassModelBuilder.ONE)
+        universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE)
                 .setSourceRoleCollection(LinkedHashSet.class)
                 .setAggregation();
 
-        studi.buildAssociation(room, "condo", ClassModelBuilder.ONE, "owner", ClassModelBuilder.ONE);
+        studi.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
 
-        studi.buildAssociation(room, "in", ClassModelBuilder.MANY, "students", ClassModelBuilder.MANY);
+        studi.buildAssociation(room, "in", mb.MANY, "students", mb.MANY);
 
-        ClassBuilder assignment = mb.buildClass("Assignment").buildAttribute("topic", ClassModelBuilder.STRING);
-        studi.buildAssociation(assignment, "done", ClassModelBuilder.MANY, "students", ClassModelBuilder.MANY);
+        ClassBuilder assignment = mb.buildClass("Assignment").buildAttribute("topic", mb.STRING);
+        studi.buildAssociation(assignment, "done", mb.MANY, "students", mb.MANY);
 
         return mb.getClassModel();
     }
@@ -471,33 +471,33 @@ class TestGenerator {
         // start_code_fragment: ClassModelBuilder
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", ClassModelBuilder.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
         // end_code_fragment:
 
         mb.getClassModel().setMainJavaDir(targetFolder + "/src");
 
         // start_code_fragment: ClassBuilder.buildAttribute_init
         ClassBuilder student = mb.buildClass("Student")
-                .buildAttribute("name", ClassModelBuilder.STRING, "\"Karli\"");
+                .buildAttribute("name", mb.STRING, "\"Karli\"");
         // end_code_fragment:
 
         // start_code_fragment: ClassBuilder.buildAssociation
-        universitiy.buildAssociation(student, "students", ClassModelBuilder.MANY, "uni", ClassModelBuilder.ONE);
+        universitiy.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
         // end_code_fragment:
 
         ClassBuilder room = mb.buildClass("Room")
-                .buildAttribute("no", ClassModelBuilder.STRING);
+                .buildAttribute("no", mb.STRING);
 
-        universitiy.buildAssociation(room, "rooms", ClassModelBuilder.MANY, "uni", ClassModelBuilder.ONE)
+        universitiy.buildAssociation(room, "rooms", mb.MANY, "uni", mb.ONE)
                 .setSourceRoleCollection(LinkedHashSet.class);
 
-        student.buildAssociation(room, "condo", ClassModelBuilder.ONE, "owner", ClassModelBuilder.ONE);
+        student.buildAssociation(room, "condo", mb.ONE, "owner", mb.ONE);
 
-        student.buildAssociation(room, "in", ClassModelBuilder.MANY, "students", ClassModelBuilder.MANY);
+        student.buildAssociation(room, "in", mb.MANY, "students", mb.MANY);
 
         ClassBuilder ta = mb.buildClass("TeachingAssistent")
                 .setSuperClass(student)
-                .buildAttribute("level", ClassModelBuilder.STRING);
+                .buildAttribute("level", mb.STRING);
 
         return mb.getClassModel();
     }
