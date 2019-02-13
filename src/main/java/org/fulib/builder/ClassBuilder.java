@@ -6,9 +6,6 @@ import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 
-import java.lang.reflect.TypeVariable;
-import java.util.Collection;
-
 /**
  * ClassModelbuilder is used to create fulib class models that are input for
  * fulib code generation {@link Fulib#generator()}.<br>
@@ -133,8 +130,7 @@ public class ClassBuilder
    {
       ClassModelBuilder.checkValidJavaId(myRoleName);
 
-      if (otherRoleName != null)
-      {
+      if (otherRoleName != null) {
          ClassModelBuilder.checkValidJavaId(otherRoleName);
       }
 

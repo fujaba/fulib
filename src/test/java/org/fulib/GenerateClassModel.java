@@ -3,57 +3,57 @@ package org.fulib;
 import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
 import org.fulib.classmodel.ClassModel;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class GenerateClassModel
+class GenerateClassModel
 {
    @Test
-   public void testGenerateModel()
+   void testGenerateModel()
    {
       ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.classmodel", "src/main/java");
 
       ClassBuilder classModel = mb.buildClass("ClassModel")
-            .buildAttribute("packageName", mb.STRING)
-            .buildAttribute("mainJavaDir", mb.STRING)
-            .buildAttribute("defaultRoleType", mb.STRING)
-            .buildAttribute("defaultPropertyStyle", mb.STRING, "\"POJO\"");
+              .buildAttribute("packageName", ClassModelBuilder.STRING)
+              .buildAttribute("mainJavaDir", ClassModelBuilder.STRING)
+              .buildAttribute("defaultRoleType", ClassModelBuilder.STRING)
+              .buildAttribute("defaultPropertyStyle", ClassModelBuilder.STRING, "\"POJO\"");
 
       ClassBuilder fuClass = mb.buildClass("Clazz")
-            .buildAttribute("name", mb.STRING)
-            .buildAttribute("propertyStyle", mb.STRING)
-            .buildAttribute("modified", mb.BOOLEAN, "false");
+              .buildAttribute("name", ClassModelBuilder.STRING)
+              .buildAttribute("propertyStyle", ClassModelBuilder.STRING)
+              .buildAttribute("modified", ClassModelBuilder.BOOLEAN, "false");
 
       ClassBuilder attribute = mb.buildClass("Attribute")
-            .buildAttribute("name", mb.STRING)
-            .buildAttribute("type", mb.STRING)
-            .buildAttribute("initialization", mb.STRING)
-            .buildAttribute("propertyStyle", mb.STRING)
-            .buildAttribute("modified", mb.BOOLEAN, "false");
+              .buildAttribute("name", ClassModelBuilder.STRING)
+              .buildAttribute("type", ClassModelBuilder.STRING)
+              .buildAttribute("initialization", ClassModelBuilder.STRING)
+              .buildAttribute("propertyStyle", ClassModelBuilder.STRING)
+              .buildAttribute("modified", ClassModelBuilder.BOOLEAN, "false");
 
       ClassBuilder assocRole = mb.buildClass("AssocRole")
-            .buildAttribute("name", mb.STRING)
-            .buildAttribute("cardinality", mb.INT)
-            .buildAttribute("roleType", mb.STRING)
-            .buildAttribute("aggregation", mb.BOOLEAN, "false")
-            .buildAttribute("propertyStyle", mb.STRING)
-            .buildAttribute("modified", mb.BOOLEAN, "false");
+              .buildAttribute("name", ClassModelBuilder.STRING)
+              .buildAttribute("cardinality", ClassModelBuilder.INT)
+              .buildAttribute("roleType", ClassModelBuilder.STRING)
+              .buildAttribute("aggregation", ClassModelBuilder.BOOLEAN, "false")
+              .buildAttribute("propertyStyle", ClassModelBuilder.STRING)
+              .buildAttribute("modified", ClassModelBuilder.BOOLEAN, "false");
 
-      classModel.buildAssociation(fuClass, "classes", mb.MANY, "model", mb.ONE);
+      classModel.buildAssociation(fuClass, "classes", ClassModelBuilder.MANY, "model", ClassModelBuilder.ONE);
 
-      fuClass.buildAssociation(attribute, "attributes", mb.MANY, "clazz", mb.ONE);
+      fuClass.buildAssociation(attribute, "attributes", ClassModelBuilder.MANY, "clazz", ClassModelBuilder.ONE);
 
-      fuClass.buildAssociation(assocRole, "roles", mb.MANY, "clazz", mb.ONE);
+      fuClass.buildAssociation(assocRole, "roles", ClassModelBuilder.MANY, "clazz", ClassModelBuilder.ONE);
 
-      fuClass.buildAssociation(fuClass, "superClass", mb.ONE, "subClasses", mb.MANY);
+      fuClass.buildAssociation(fuClass, "superClass", ClassModelBuilder.ONE, "subClasses", ClassModelBuilder.MANY);
 
-      assocRole.buildAssociation(assocRole, "other", mb.ONE, "other", mb.ONE);
+      assocRole.buildAssociation(assocRole, "other", ClassModelBuilder.ONE, "other", ClassModelBuilder.ONE);
 
-      ClassBuilder fileFragmentMap = mb.buildClass("FileFragmentMap")
-            .buildAttribute("fileName", mb.STRING);
+      mb.buildClass("FileFragmentMap")
+              .buildAttribute("fileName", ClassModelBuilder.STRING);
 
-      ClassBuilder codeFragment = mb.buildClass("CodeFragment")
-            .buildAttribute("key", mb.STRING)
-            .buildAttribute("text", mb.STRING);
+      mb.buildClass("CodeFragment")
+              .buildAttribute("key", ClassModelBuilder.STRING)
+              .buildAttribute("text", ClassModelBuilder.STRING);
 
 
       // start_code_fragment: Fulib.createGenerator

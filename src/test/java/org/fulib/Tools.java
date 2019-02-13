@@ -10,56 +10,48 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Tools
-{
-   public static int javac(String outFolder, String sourceFolder)
-   {
-      ArrayList<String> args = new ArrayList<>();
+class Tools {
 
-      try
-      {
-         Files.createDirectories(Paths.get(outFolder));
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
+    static int javac(String outFolder, String sourceFolder) {
+        ArrayList<String> args = new ArrayList<>();
 
-      File source = new File(sourceFolder);
+        try {
+            Files.createDirectories(Paths.get(outFolder));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-      for (File file : source.listFiles())
-      {
-         if (file.getName().endsWith(".java"))
-         {
-            args.add(sourceFolder + "/" + file.getName());
-         }
-      }
+        File source = new File(sourceFolder);
 
-      args.add("-d");
-      args.add(outFolder);
-      args.add("-classpath");
-      args.add(outFolder);
+        for (File file : Objects.requireNonNull(source.listFiles())) {
+            if (file.getName().endsWith(".java")) {
+                args.add(sourceFolder + "/" + file.getName());
+            }
+        }
 
-      JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        args.add("-d");
+        args.add(outFolder);
+        args.add("-classpath");
+        args.add(outFolder);
 
-      int result = compiler.run(null, System.out, System.err, args.toArray(new String[0]));
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
-      return result;
-   }
+        return compiler.run(null, System.out, System.err, args.toArray(new String[0]));
+    }
 
-   public static void removeDirAndFiles(String toBeDeletedDir) throws IOException
-   {
-      Path rootPath = Paths.get(toBeDeletedDir);
+    static void removeDirAndFiles(String toBeDeletedDir) throws IOException {
+        Path rootPath = Paths.get(toBeDeletedDir);
 
-      if ( ! Files.exists(rootPath))
-         return;
+        if (!Files.exists(rootPath)) {
+            return;
+        }
 
-      final List<Path> pathsToDelete = Files.walk(rootPath).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-      for(Path path : pathsToDelete) {
-         Files.deleteIfExists(path);
-      }
-   }
-
+        final List<Path> pathsToDelete = Files.walk(rootPath).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        for (Path path : pathsToDelete) {
+            Files.deleteIfExists(path);
+        }
+    }
 }
