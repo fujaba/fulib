@@ -1,0 +1,38 @@
+testRemoveYouBody(className, relatives) ::=
+<<
+    @Test
+    void testRemoveYou() {
+
+        <relatives : {relative | <initRelative(relative.className, relative.objectName)>}>
+        <className> object = new <className>()<relatives : {relative | <setting(relative.objectName, relative.sourceRoleName, relative.sourceManyCardinality)>}>;
+
+        object.removeYou();
+
+        <relatives : {relative | <assert("object", relative.sourceRoleName, relative.sourceManyCardinality)>}>
+
+        <relatives : {relative | <assert(relative.objectName, relative.targetRoleName, relative.targetManyCardinality)>}>
+    }
+>>
+
+initRelative(className, objectName) ::=
+<<
+<className> <objectName> = new <className>();
+
+>>
+
+setting(objectName, sourceRoleName, sourceManyCardinality) ::=
+<<
+
+                .<if(sourceManyCardinality)>with<else>set<endif><cap(sourceRoleName)>(<objectName>)
+>>
+
+assert(object, roleName, manyCardinality) ::=
+<<
+
+assertThat(<object>.get<cap(roleName)>(), is(<if(manyCardinality)>empty()<else>nullValue()<endif>));
+>>
+
+cap(n) ::=
+<%
+<n; format="cap">
+%>

@@ -12,7 +12,7 @@ testToStringBody(className, attributes, expected) ::=
 setting(attribute) ::=
 <<
 
-            .set<cap(attribute.key)>("<attribute.value>")
+                .set<cap(attribute.key)>("<attribute.value>")
 >>
 
 cap(n) ::=

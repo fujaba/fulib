@@ -53,7 +53,7 @@ public class Generator4ClassFile extends FileGenerator {
         generateAttributeTests(clazz, fragmentMap);
         generateAssociationTests(clazz, fragmentMap);
         generateToStringTests(clazz, fragmentMap);
-//        generateRemoveYouTests(clazz, fragmentMap);
+        generateRemoveYouTests(clazz, fragmentMap);
 
         fragmentMap.add(Parser.CLASS_END, "}", 1);
 
@@ -497,6 +497,39 @@ public class Generator4ClassFile extends FileGenerator {
         fragmentMap.add(Parser.METHOD + ":removeYou()", result, 2, modified);
     }
 
+    private void generateRemoveYouTests(Clazz clazz, FileFragmentMap fragmentMap) {
+
+        LinkedList<Relative> relatives = new LinkedList<>();
+
+        int i = 0;
+
+        for (AssocRole role : clazz.getRoles()) {
+
+            if (role.getName() == null) {
+                continue;
+            }
+
+            Relative relative = new Relative();
+            relative.objectName = "relative" + i++;
+            relative.className = role.getOther().getClazz().getName();
+            relative.sourceRoleName = role.getName();
+            relative.targetRoleName = role.getOther().getName();
+            relative.sourceManyCardinality = role.getCardinality() == ClassModelBuilder.ONE ? null : "true";
+            relative.targetManyCardinality = role.getOther().getCardinality() == ClassModelBuilder.ONE ? null : "true";
+
+            relatives.add(relative);
+        }
+
+        if (relatives.size() > 0) {
+
+            ST template = createSTGroup("templates/testRemoveYouMethod.stg").getInstanceOf("testRemoveYouBody");
+            template.add("className", clazz.getName());
+            template.add("relatives", relatives.toArray(new Relative[0]));
+
+            fragmentMap.add(Parser.METHOD + ":testRemoveYou()", template.render(), 2);
+        }
+    }
+
     private class Pair {
 
         public String key;
@@ -506,5 +539,15 @@ public class Generator4ClassFile extends FileGenerator {
             this.key = key;
             this.value = value;
         }
+    }
+
+    private class Relative {
+
+        public String objectName;
+        public String className;
+        public String sourceRoleName;
+        public String targetRoleName;
+        public String sourceManyCardinality;
+        public String targetManyCardinality;
     }
 }
