@@ -1,0 +1,21 @@
+testToStringBody(className, attributes, expected) ::=
+<<
+    @Test
+    void testToString() {
+
+        <className> object = new <className>()<attributes: {attribute | <setting(attribute)>}>;
+
+        assertThat(object.toString(), is(equalTo("<expected>")));
+    }
+>>
+
+setting(attribute) ::=
+<<
+
+            .set<cap(attribute.key)>("<attribute.value>")
+>>
+
+cap(n) ::=
+<%
+<n; format="cap">
+%>

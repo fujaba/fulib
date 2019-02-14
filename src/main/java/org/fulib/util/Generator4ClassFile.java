@@ -11,6 +11,8 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.StringJoiner;
 
 public class Generator4ClassFile extends FileGenerator {
 
@@ -50,7 +52,7 @@ public class Generator4ClassFile extends FileGenerator {
         generateClassDecl("Test" + clazz.getName(), "", null, fragmentMap);
         generateAttributeTests(clazz, fragmentMap);
         generateAssociationTests(clazz, fragmentMap);
-//        generateToStringTests(clazz, fragmentMap);
+        generateToStringTests(clazz, fragmentMap);
 //        generateRemoveYouTests(clazz, fragmentMap);
 
         fragmentMap.add(Parser.CLASS_END, "}", 1);
@@ -425,6 +427,31 @@ public class Generator4ClassFile extends FileGenerator {
         fragmentMap.add(Parser.METHOD + ":toString()", result, 2, modified);
     }
 
+    private void generateToStringTests(Clazz clazz, FileFragmentMap fragmentMap) {
+
+        StringJoiner expected = new StringJoiner(" ");
+        LinkedList<Pair> attributes = new LinkedList<>();
+
+        int i = 0;
+        for (Attribute attribute : clazz.getAttributes()) {
+            if (attribute.getType().equals(ClassModelBuilder.STRING)) {
+                attributes.add(new Pair(attribute.getName(), "randomString" + i++));
+            }
+        }
+
+        if (attributes.size() > 0) {
+
+            attributes.forEach(attribute -> expected.add(attribute.value));
+
+            ST template = createSTGroup("templates/testToStringMethod.stg").getInstanceOf("testToStringBody");
+            template.add("className", clazz.getName());
+            template.add("attributes", attributes.toArray(new Pair[0]));
+            template.add("expected", expected.toString());
+
+            fragmentMap.add(Parser.METHOD + ":testToString()", template.render(), 2);
+        }
+    }
+
     private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap) {
         ArrayList<String> toOneList = new ArrayList<>();
         ArrayList<String> toManyList = new ArrayList<>();
@@ -468,5 +495,16 @@ public class Generator4ClassFile extends FileGenerator {
         result = st.render();
 
         fragmentMap.add(Parser.METHOD + ":removeYou()", result, 2, modified);
+    }
+
+    private class Pair {
+
+        public String key;
+        public String value;
+
+        Pair(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
     }
 }

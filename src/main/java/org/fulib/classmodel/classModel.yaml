@@ -5,6 +5,8 @@
   mainJavaDir: 	"src/main/java"
   packageName: 	org.fulib.classmodel
   packageSrcFolder: 	"src/main/java/org/fulib/classmodel"
+  packageTestFolder:    "src/test/java/org/fulib/classmodel"
+  testJavaDir:    "src/test/java"
 
 - classModel2: 	Clazz
   attributes: 	packageName8 	mainJavaDir9 	defaultRoleType10 	defaultPropertyStyle11 	
