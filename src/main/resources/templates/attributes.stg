@@ -1,5 +1,6 @@
 
-attrDecl(type, name, value) ::= <<   private <type> <name><init(value)>;>>
+attrDecl(type, name, value) ::=
+<<   private <type> <name><init(value)>;>>
 
 
 init(v) ::= "<if(v)> = <v><endif>"
