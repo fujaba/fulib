@@ -2,6 +2,7 @@ testImports() ::=
 <<
 import org.junit.jupiter.api.Test;
 
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.util.concurrent.atomic.AtomicReference;
 

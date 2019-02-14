@@ -4,16 +4,39 @@ testAttributesBody(className, attributeName, defaultValue, testValue) ::=
 void testAttribute<cap(attributeName)>() {
 
     AtomicReference\<PropertyChangeEvent> event = new AtomicReference\<>();
+    PropertyChangeListener listener = event::set;
 
     <className> object = new <className>();
-    object.addPropertyChangeListener("<attributeName>", event::set);
+    object.addPropertyChangeListener("<attributeName>", listener);
 
-    assertThat(object.get<cap(attributeName)>(), is(<defaultValue>));
+    assertThat(object.get<cap(attributeName)>(), is(<catchNullDefault(defaultValue)>));
     assertThat(object.set<cap(attributeName)>(<testValue>), is(sameInstance(object)));
-    assertThat(event, is(notNullValue()));
-    assertThat(event.get().getOldValue(), is(<defaultValue>));
-    assertThat(event.get().getNewValue(), is(equalTo(<testValue>)));
     assertThat(object.get<cap(attributeName)>(), is(equalTo(<testValue>)));
+
+    assertThat(event.get(), is(notNullValue()));
+    assertThat(event.get().getPropertyName(), is(equalTo("<attributeName>")));
+    assertThat(event.get().getOldValue(), is(<catchNullDefault(defaultValue)>));
+    assertThat(event.get().getNewValue(), is(equalTo(<testValue>)));
+
+    event.set(null);
+    object.removePropertyChangeListener("<attributeName>", listener);
+    object.set<cap(attributeName)>(<catchNullValue(defaultValue)>);
+
+    assertThat(event.get(), is(nullValue()));
+
+    object.addPropertyChangeListener(listener);
+    object.set<cap(attributeName)>(<testValue>);
+
+    assertThat(event.get(), is(notNullValue()));
+    assertThat(event.get().getPropertyName(), is(equalTo("<attributeName>")));
+    assertThat(event.get().getOldValue(), is(<catchNullDefault(defaultValue)>));
+    assertThat(event.get().getNewValue(), is(equalTo(<testValue>)));
+
+    event.set(null);
+    object.removePropertyChangeListener(listener);
+    object.set<cap(attributeName)>(<catchNullValue(defaultValue)>);
+
+    assertThat(event.get(), is(nullValue()));
 
     assertThat(<className>.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
 }
@@ -21,7 +44,7 @@ void testAttribute<cap(attributeName)>() {
 
 testMethodStringAttributes(className, attributeName) ::=
 <<
-    <testAttributesBody(className, attributeName, "nullValue()", "\"randomString\"")>
+    <testAttributesBody(className, attributeName, null, "\"randomString\"")>
 >>
 
 testMethodBooleanAttributes(className, attributeName) ::=
@@ -42,4 +65,14 @@ testMethodDoubleAttributes(className, attributeName) ::=
 cap(n) ::=
 <%
 <n; format="cap">
+%>
+
+catchNullDefault(value) ::=
+<%
+<if(value)><value><else>nullValue()<endif>
+%>
+
+catchNullValue(value) ::=
+<%
+<if(value)><value><else>null<endif>
 %>
