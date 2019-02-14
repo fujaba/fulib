@@ -1,65 +1,65 @@
 testAttributesBody(className, attributeName, nullValue, defaultValue, testValue) ::=
 <<
-@Test
-void testAttribute<cap(attributeName)>() {
+    @Test
+    void testAttribute<cap(attributeName)>() {
 
-    AtomicReference\<PropertyChangeEvent> event = new AtomicReference\<>();
-    PropertyChangeListener listener = event::set;
+        AtomicReference\<PropertyChangeEvent> event = new AtomicReference\<>();
+        PropertyChangeListener listener = event::set;
 
-    <className> object = new <className>();
-    object.addPropertyChangeListener("<attributeName>", listener);
+        <className> object = new <className>();
+        object.addPropertyChangeListener("<attributeName>", listener);
 
-    assertThat(object.get<cap(attributeName)>(), is(<nullValue>));
-    assertThat(object.set<cap(attributeName)>(<testValue>), is(sameInstance(object)));
-    assertThat(object.get<cap(attributeName)>(), is(equalTo(<testValue>)));
+        assertThat(object.get<cap(attributeName)>(), is(<nullValue>));
+        assertThat(object.set<cap(attributeName)>(<testValue>), is(sameInstance(object)));
+        assertThat(object.get<cap(attributeName)>(), is(equalTo(<testValue>)));
 
-    assertThat(event.get(), is(notNullValue()));
-    assertThat(event.get().getPropertyName(), is(equalTo("<attributeName>")));
-    assertThat(event.get().getOldValue(), is(<nullValue>));
-    assertThat(event.get().getNewValue(), is(equalTo(<testValue>)));
+        assertThat(event.get(), is(notNullValue()));
+        assertThat(event.get().getPropertyName(), is(equalTo("<attributeName>")));
+        assertThat(event.get().getOldValue(), is(<nullValue>));
+        assertThat(event.get().getNewValue(), is(equalTo(<testValue>)));
 
-    event.set(null);
-    object.removePropertyChangeListener("<attributeName>", listener);
-    object.set<cap(attributeName)>(<defaultValue>);
+        event.set(null);
+        object.removePropertyChangeListener("<attributeName>", listener);
+        object.set<cap(attributeName)>(<defaultValue>);
 
-    assertThat(event.get(), is(nullValue()));
+        assertThat(event.get(), is(nullValue()));
 
-    object.addPropertyChangeListener(listener);
-    object.set<cap(attributeName)>(<testValue>);
+        object.addPropertyChangeListener(listener);
+        object.set<cap(attributeName)>(<testValue>);
 
-    assertThat(event.get(), is(notNullValue()));
-    assertThat(event.get().getPropertyName(), is(equalTo("<attributeName>")));
-    assertThat(event.get().getOldValue(), is(<nullValue>));
-    assertThat(event.get().getNewValue(), is(equalTo(<testValue>)));
+        assertThat(event.get(), is(notNullValue()));
+        assertThat(event.get().getPropertyName(), is(equalTo("<attributeName>")));
+        assertThat(event.get().getOldValue(), is(<nullValue>));
+        assertThat(event.get().getNewValue(), is(equalTo(<testValue>)));
 
-    event.set(null);
-    object.removePropertyChangeListener(listener);
-    object.set<cap(attributeName)>(<defaultValue>);
+        event.set(null);
+        object.removePropertyChangeListener(listener);
+        object.set<cap(attributeName)>(<defaultValue>);
 
-    assertThat(event.get(), is(nullValue()));
+        assertThat(event.get(), is(nullValue()));
 
-    assertThat(<className>.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
-}
+        assertThat(<className>.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
+    }
 >>
 
 testMethodStringAttributes(className, attributeName) ::=
 <<
-    <testAttributesBody(className, attributeName, "nullValue()", "null", "\"randomString\"")>
+<testAttributesBody(className, attributeName, "nullValue()", "null", "\"randomString\"")>
 >>
 
 testMethodBooleanAttributes(className, attributeName) ::=
 <<
-    <testAttributesBody(className, attributeName, "false", "false", "true")>
+<testAttributesBody(className, attributeName, "false", "false", "true")>
 >>
 
 testMethodIntegerAttributes(className, attributeName) ::=
 <<
-    <testAttributesBody(className, attributeName, "0", "0", "42")>
+<testAttributesBody(className, attributeName, "0", "0", "42")>
 >>
 
 testMethodDoubleAttributes(className, attributeName) ::=
 <<
-    <testAttributesBody(className, attributeName, "0.0", "0.0", "42.0")>
+<testAttributesBody(className, attributeName, "0.0", "0.0", "42.0")>
 >>
 
 cap(n) ::=
