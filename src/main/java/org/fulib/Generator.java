@@ -63,10 +63,10 @@ public class Generator {
 
     }
 
-    public void generateTests(String outputDir, ClassModel model) {
+    public void generateTests(ClassModel model) {
 
         for (Clazz clazz : model.getClasses()) {
-            new Generator4ClassFile().generateTest(outputDir, clazz.markAsModified());
+            new Generator4ClassFile().generateTest(clazz.markAsModified());
         }
     }
 

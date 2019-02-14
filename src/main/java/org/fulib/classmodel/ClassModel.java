@@ -2,10 +2,8 @@ package org.fulib.classmodel;
 
 import org.fulib.StrUtil;
 
-import java.util.ArrayList;
-import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
-import java.util.Collections;
+import java.beans.PropertyChangeSupport;
 
 /**
  * <img src='doc-files/classDiagram.png' width='663'/>
@@ -77,32 +75,7 @@ public class ClassModel
    }
 
 
-
-   public ClassModel withoutClasses(Object... value)
-   {
-      if (this.classes == null || value==null) return this;
-      for (Object item : value)
-      {
-         if (item == null) continue;
-         if (item instanceof java.util.Collection)
-         {
-            for (Object i : (java.util.Collection) item)
-            {
-               this.withoutClasses(i);
-            }
-         }
-         else if (item instanceof Clazz)
-         {
-            if (this.classes.contains(item))
-            {
-               this.classes.remove((Clazz)item);
-               ((Clazz)item).setModel(null);
-               firePropertyChange("classes", item, null);
-            }
-         }
-      }
-      return this;
-   }
+   public static final String PROPERTY_testJavaDir = "testJavaDir";
 
 
    public String getPackageSrcFolder()
@@ -110,7 +83,7 @@ public class ClassModel
       return this.getMainJavaDir() + "/" + this.getPackageName().replaceAll("\\.", "/");
    }
 
-
+   private String testJavaDir;
 
    //=======================================================================================================
    protected PropertyChangeSupport listeners = null;
@@ -212,6 +185,45 @@ public class ClassModel
       return this;
    }
 
+   public ClassModel withoutClasses(Object... value) {
+      if (this.classes == null || value == null) {
+         return this;
+      }
+      for (Object item : value) {
+         if (item == null) {
+            continue;
+         }
+         if (item instanceof java.util.Collection) {
+            for (Object i : (java.util.Collection) item) {
+               this.withoutClasses(i);
+            }
+         } else if (item instanceof Clazz) {
+            if (this.classes.contains(item)) {
+               this.classes.remove(item);
+               ((Clazz) item).setModel(null);
+               firePropertyChange("classes", item, null);
+            }
+         }
+      }
+      return this;
+   }
+
+   public String getPackageTestFolder() {
+      return this.getTestJavaDir() + "/" + this.getPackageName().replaceAll("\\.", "/");
+   }
+
+   public String getTestJavaDir() {
+      return testJavaDir;
+   }
+
+   public ClassModel setTestJavaDir(String value) {
+      if (value == null ? this.testJavaDir != null : !value.equals(this.testJavaDir)) {
+         String oldValue = this.testJavaDir;
+         this.testJavaDir = value;
+         firePropertyChange("testJavaDir", oldValue, value);
+      }
+      return this;
+   }
 
    public static final String PROPERTY_defaultRoleType = "defaultRoleType";
 
@@ -262,6 +274,7 @@ public class ClassModel
 
       result.append(" ").append(this.getPackageName());
       result.append(" ").append(this.getMainJavaDir());
+      result.append(" ").append(this.getTestJavaDir());
       result.append(" ").append(this.getDefaultRoleType());
       result.append(" ").append(this.getDefaultPropertyStyle());
 

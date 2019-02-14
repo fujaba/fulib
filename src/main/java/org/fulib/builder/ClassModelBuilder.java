@@ -47,7 +47,7 @@ public class ClassModelBuilder
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
-    * @param packagename
+    * @param packagename The package name to generate classes in
     */
    public ClassModelBuilder(String packagename)
    {
@@ -66,21 +66,42 @@ public class ClassModelBuilder
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
-    * @param packagename
-    * @param sourceFolder
+    * @param packagename The package name to generate classes in
+    * @param sourceFolder The source directory to generate classes in
     */
    public ClassModelBuilder(String packagename, String sourceFolder)
    {
-      checkValidJavaId(packagename);
-
-      ClassModel classModel = new ClassModel()
-            .setPackageName(packagename)
-            .setMainJavaDir(sourceFolder)
-            .setDefaultPropertyStyle(POJO)
-            .setDefaultRoleType(COLLECTION_ARRAY_LIST);
-
-      this.setClassModel(classModel);
+       this(packagename, sourceFolder, "src/test/java");
    }
+
+    /**
+     * ClassModelbuilder is used to create fulib class models that are input for
+     * fulib code generation {@link Fulib#generator()}.<br>
+     * Typical usage:
+     * <pre>
+     * <!-- insert_code_fragment: ClassModelBuilder -->
+     * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+     *
+     * ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+     * <!-- end_code_fragment:  -->
+     * </pre>
+     *
+     * @param packagename      The package name to generate classes in
+     * @param sourceFolder     The source directory to generate classes in
+     * @param testSourceFolder The source directory to generate test classes in
+     */
+    public ClassModelBuilder(String packagename, String sourceFolder, String testSourceFolder) {
+        checkValidJavaId(packagename);
+
+        ClassModel classModel = new ClassModel()
+                .setPackageName(packagename)
+                .setMainJavaDir(sourceFolder)
+                .setTestJavaDir(testSourceFolder)
+                .setDefaultPropertyStyle(POJO)
+                .setDefaultRoleType(COLLECTION_ARRAY_LIST);
+
+        this.setClassModel(classModel);
+    }
 
 
    static void checkValidJavaId(String myRoleName)

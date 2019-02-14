@@ -39,10 +39,9 @@ public class Generator4ClassFile extends FileGenerator {
         writeClassOrDeleteIfEmpty(fragmentMap, clazz, classFileName);
     }
 
-    public void generateTest(String outputDir, Clazz clazz) {
+    public void generateTest(Clazz clazz) {
 
-        String testClassFileName = outputDir + "/" + clazz.getModel().getPackageName()
-                .replaceAll("\\.", "/") + "/Test" + clazz.getName() + ".java";
+        String testClassFileName = clazz.getModel().getPackageTestFolder() + "/Test" + clazz.getName() + ".java";
 
         FileFragmentMap fragmentMap = new FileFragmentMap(testClassFileName);
 
