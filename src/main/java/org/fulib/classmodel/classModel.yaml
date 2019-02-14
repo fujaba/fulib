@@ -5,50 +5,50 @@
   mainJavaDir: 	"src/main/java"
   packageName: 	org.fulib.classmodel
   packageSrcFolder: 	"src/main/java/org/fulib/classmodel"
-  packageTestFolder:    "src/test/java/org/fulib/classmodel"
-  testJavaDir:    "src/test/java"
+  packageTestFolder: 	"src/test/java/org/fulib/classmodel"
+  testJavaDir: 	"src/test/java"
 
 - classModel2: 	Clazz
-  attributes: 	packageName8 	mainJavaDir9 	defaultRoleType10 	defaultPropertyStyle11 	
+  attributes: 	packageName8 	mainJavaDir9 	testJavaDir10 	defaultRoleType11 	defaultPropertyStyle12 	
   model: 	c1
   modified: 	false
   name: 	ClassModel
   propertyStyle: 	POJO
-  roles: 	classes12 	
+  roles: 	classes13 	
 
 - clazz3: 	Clazz
-  attributes: 	name13 	propertyStyle14 	modified15 	
+  attributes: 	name14 	propertyStyle15 	modified16 	
   model: 	c1
   modified: 	false
   name: 	Clazz
   propertyStyle: 	POJO
-  roles: 	model16 	attributes17 	roles18 	superClass19 	subClasses20 	
+  roles: 	model17 	attributes18 	roles19 	superClass20 	subClasses21 	
 
 - attribute4: 	Clazz
-  attributes: 	name21 	type22 	initialization23 	propertyStyle24 	modified25 	
+  attributes: 	name22 	type23 	initialization24 	propertyStyle25 	modified26 	
   model: 	c1
   modified: 	false
   name: 	Attribute
   propertyStyle: 	POJO
-  roles: 	clazz26 	
+  roles: 	clazz27 	
 
 - assocRole5: 	Clazz
-  attributes: 	name27 	cardinality28 	roleType29 	aggregation30 	propertyStyle31 	modified32 	
+  attributes: 	name28 	cardinality29 	roleType30 	aggregation31 	propertyStyle32 	modified33 	
   model: 	c1
   modified: 	false
   name: 	AssocRole
   propertyStyle: 	POJO
-  roles: 	clazz33 	other34 	other35 	
+  roles: 	clazz34 	other35 	other36 	
 
 - fileFragmentMap6: 	Clazz
-  attributes: 	fileName36 	
+  attributes: 	fileName37 	
   model: 	c1
   modified: 	false
   name: 	FileFragmentMap
   propertyStyle: 	POJO
 
 - codeFragment7: 	Clazz
-  attributes: 	key37 	text38 	
+  attributes: 	key38 	text39 	
   model: 	c1
   modified: 	false
   name: 	CodeFragment
@@ -68,14 +68,21 @@
   propertyStyle: 	POJO
   type: 	String
 
-- defaultRoleType10: 	Attribute
+- testJavaDir10: 	Attribute
+  clazz: 	classModel2
+  modified: 	false
+  name: 	testJavaDir
+  propertyStyle: 	POJO
+  type: 	String
+
+- defaultRoleType11: 	Attribute
   clazz: 	classModel2
   modified: 	false
   name: 	defaultRoleType
   propertyStyle: 	POJO
   type: 	String
 
-- defaultPropertyStyle11: 	Attribute
+- defaultPropertyStyle12: 	Attribute
   clazz: 	classModel2
   initialization: 	"\"POJO\""
   modified: 	false
@@ -83,31 +90,31 @@
   propertyStyle: 	POJO
   type: 	String
 
-- classes12: 	AssocRole
+- classes13: 	AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	classModel2
   modified: 	false
   name: 	classes
-  other: 	model16
+  other: 	model17
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
-- name13: 	Attribute
+- name14: 	Attribute
   clazz: 	clazz3
   modified: 	false
   name: 	name
   propertyStyle: 	POJO
   type: 	String
 
-- propertyStyle14: 	Attribute
+- propertyStyle15: 	Attribute
   clazz: 	clazz3
   modified: 	false
   name: 	propertyStyle
   propertyStyle: 	POJO
   type: 	String
 
-- modified15: 	Attribute
+- modified16: 	Attribute
   clazz: 	clazz3
   initialization: 	false
   modified: 	false
@@ -115,85 +122,85 @@
   propertyStyle: 	POJO
   type: 	boolean
 
-- model16: 	AssocRole
+- model17: 	AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	clazz3
   modified: 	false
   name: 	model
-  other: 	classes12
+  other: 	classes13
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
-- attributes17: 	AssocRole
+- attributes18: 	AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz3
   modified: 	false
   name: 	attributes
-  other: 	clazz26
+  other: 	clazz27
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
-- roles18: 	AssocRole
+- roles19: 	AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz3
   modified: 	false
   name: 	roles
-  other: 	clazz33
+  other: 	clazz34
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
-- superClass19: 	AssocRole
+- superClass20: 	AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	clazz3
   modified: 	false
   name: 	superClass
-  other: 	subClasses20
+  other: 	subClasses21
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
-- subClasses20: 	AssocRole
+- subClasses21: 	AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz3
   modified: 	false
   name: 	subClasses
-  other: 	superClass19
+  other: 	superClass20
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
-- name21: 	Attribute
+- name22: 	Attribute
   clazz: 	attribute4
   modified: 	false
   name: 	name
   propertyStyle: 	POJO
   type: 	String
 
-- type22: 	Attribute
+- type23: 	Attribute
   clazz: 	attribute4
   modified: 	false
   name: 	type
   propertyStyle: 	POJO
   type: 	String
 
-- initialization23: 	Attribute
+- initialization24: 	Attribute
   clazz: 	attribute4
   modified: 	false
   name: 	initialization
   propertyStyle: 	POJO
   type: 	String
 
-- propertyStyle24: 	Attribute
+- propertyStyle25: 	Attribute
   clazz: 	attribute4
   modified: 	false
   name: 	propertyStyle
   propertyStyle: 	POJO
   type: 	String
 
-- modified25: 	Attribute
+- modified26: 	Attribute
   clazz: 	attribute4
   initialization: 	false
   modified: 	false
@@ -201,38 +208,38 @@
   propertyStyle: 	POJO
   type: 	boolean
 
-- clazz26: 	AssocRole
+- clazz27: 	AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	attribute4
   modified: 	false
   name: 	clazz
-  other: 	attributes17
+  other: 	attributes18
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
-- name27: 	Attribute
+- name28: 	Attribute
   clazz: 	assocRole5
   modified: 	false
   name: 	name
   propertyStyle: 	POJO
   type: 	String
 
-- cardinality28: 	Attribute
+- cardinality29: 	Attribute
   clazz: 	assocRole5
   modified: 	false
   name: 	cardinality
   propertyStyle: 	POJO
   type: 	int
 
-- roleType29: 	Attribute
+- roleType30: 	Attribute
   clazz: 	assocRole5
   modified: 	false
   name: 	roleType
   propertyStyle: 	POJO
   type: 	String
 
-- aggregation30: 	Attribute
+- aggregation31: 	Attribute
   clazz: 	assocRole5
   initialization: 	false
   modified: 	false
@@ -240,14 +247,14 @@
   propertyStyle: 	POJO
   type: 	boolean
 
-- propertyStyle31: 	Attribute
+- propertyStyle32: 	Attribute
   clazz: 	assocRole5
   modified: 	false
   name: 	propertyStyle
   propertyStyle: 	POJO
   type: 	String
 
-- modified32: 	Attribute
+- modified33: 	Attribute
   clazz: 	assocRole5
   initialization: 	false
   modified: 	false
@@ -255,23 +262,13 @@
   propertyStyle: 	POJO
   type: 	boolean
 
-- clazz33: 	AssocRole
+- clazz34: 	AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	assocRole5
   modified: 	false
   name: 	clazz
-  other: 	roles18
-  propertyStyle: 	POJO
-  roleType: 	"java.util.ArrayList<%s>"
-
-- other34: 	AssocRole
-  aggregation: 	false
-  cardinality: 	1
-  clazz: 	assocRole5
-  modified: 	false
-  name: 	other
-  other: 	other35
+  other: 	roles19
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
@@ -281,25 +278,35 @@
   clazz: 	assocRole5
   modified: 	false
   name: 	other
-  other: 	other34
+  other: 	other36
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
-- fileName36: 	Attribute
+- other36: 	AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	assocRole5
+  modified: 	false
+  name: 	other
+  other: 	other35
+  propertyStyle: 	POJO
+  roleType: 	"java.util.ArrayList<%s>"
+
+- fileName37: 	Attribute
   clazz: 	fileFragmentMap6
   modified: 	false
   name: 	fileName
   propertyStyle: 	POJO
   type: 	String
 
-- key37: 	Attribute
+- key38: 	Attribute
   clazz: 	codeFragment7
   modified: 	false
   name: 	key
   propertyStyle: 	POJO
   type: 	String
 
-- text38: 	Attribute
+- text39: 	Attribute
   clazz: 	codeFragment7
   modified: 	false
   name: 	text

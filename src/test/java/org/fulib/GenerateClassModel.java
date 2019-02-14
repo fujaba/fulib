@@ -15,6 +15,7 @@ class GenerateClassModel
       ClassBuilder classModel = mb.buildClass("ClassModel")
               .buildAttribute("packageName", ClassModelBuilder.STRING)
               .buildAttribute("mainJavaDir", ClassModelBuilder.STRING)
+              .buildAttribute("testJavaDir", ClassModelBuilder.STRING)
               .buildAttribute("defaultRoleType", ClassModelBuilder.STRING)
               .buildAttribute("defaultPropertyStyle", ClassModelBuilder.STRING, "\"POJO\"");
 

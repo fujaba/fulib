@@ -185,22 +185,25 @@ public class ClassModel
       return this;
    }
 
-   public ClassModel withoutClasses(Object... value) {
-      if (this.classes == null || value == null) {
-         return this;
-      }
-      for (Object item : value) {
-         if (item == null) {
-            continue;
-         }
-         if (item instanceof java.util.Collection) {
-            for (Object i : (java.util.Collection) item) {
+   public ClassModel withoutClasses(Object... value)
+   {
+      if (this.classes == null || value==null) return this;
+      for (Object item : value)
+      {
+         if (item == null) continue;
+         if (item instanceof java.util.Collection)
+         {
+            for (Object i : (java.util.Collection) item)
+            {
                this.withoutClasses(i);
             }
-         } else if (item instanceof Clazz) {
-            if (this.classes.contains(item)) {
-               this.classes.remove(item);
-               ((Clazz) item).setModel(null);
+         }
+         else if (item instanceof Clazz)
+         {
+            if (this.classes.contains(item))
+            {
+               this.classes.remove((Clazz)item);
+               ((Clazz)item).setModel(null);
                firePropertyChange("classes", item, null);
             }
          }
@@ -212,12 +215,15 @@ public class ClassModel
       return this.getTestJavaDir() + "/" + this.getPackageName().replaceAll("\\.", "/");
    }
 
-   public String getTestJavaDir() {
+   public String getTestJavaDir()
+   {
       return testJavaDir;
    }
 
-   public ClassModel setTestJavaDir(String value) {
-      if (value == null ? this.testJavaDir != null : !value.equals(this.testJavaDir)) {
+   public ClassModel setTestJavaDir(String value)
+   {
+      if (value == null ? this.testJavaDir != null : ! value.equals(this.testJavaDir))
+      {
          String oldValue = this.testJavaDir;
          this.testJavaDir = value;
          firePropertyChange("testJavaDir", oldValue, value);
