@@ -1,4 +1,4 @@
-testAttributesBody(className, attributeName, defaultValue, testValue) ::=
+testAttributesBody(className, attributeName, nullValue, defaultValue, testValue) ::=
 <<
 @Test
 void testAttribute<cap(attributeName)>() {
@@ -9,18 +9,18 @@ void testAttribute<cap(attributeName)>() {
     <className> object = new <className>();
     object.addPropertyChangeListener("<attributeName>", listener);
 
-    assertThat(object.get<cap(attributeName)>(), is(<catchNullDefault(defaultValue)>));
+    assertThat(object.get<cap(attributeName)>(), is(<nullValue>));
     assertThat(object.set<cap(attributeName)>(<testValue>), is(sameInstance(object)));
     assertThat(object.get<cap(attributeName)>(), is(equalTo(<testValue>)));
 
     assertThat(event.get(), is(notNullValue()));
     assertThat(event.get().getPropertyName(), is(equalTo("<attributeName>")));
-    assertThat(event.get().getOldValue(), is(<catchNullDefault(defaultValue)>));
+    assertThat(event.get().getOldValue(), is(<nullValue>));
     assertThat(event.get().getNewValue(), is(equalTo(<testValue>)));
 
     event.set(null);
     object.removePropertyChangeListener("<attributeName>", listener);
-    object.set<cap(attributeName)>(<catchNullValue(defaultValue)>);
+    object.set<cap(attributeName)>(<defaultValue>);
 
     assertThat(event.get(), is(nullValue()));
 
@@ -29,12 +29,12 @@ void testAttribute<cap(attributeName)>() {
 
     assertThat(event.get(), is(notNullValue()));
     assertThat(event.get().getPropertyName(), is(equalTo("<attributeName>")));
-    assertThat(event.get().getOldValue(), is(<catchNullDefault(defaultValue)>));
+    assertThat(event.get().getOldValue(), is(<nullValue>));
     assertThat(event.get().getNewValue(), is(equalTo(<testValue>)));
 
     event.set(null);
     object.removePropertyChangeListener(listener);
-    object.set<cap(attributeName)>(<catchNullValue(defaultValue)>);
+    object.set<cap(attributeName)>(<defaultValue>);
 
     assertThat(event.get(), is(nullValue()));
 
@@ -44,35 +44,25 @@ void testAttribute<cap(attributeName)>() {
 
 testMethodStringAttributes(className, attributeName) ::=
 <<
-    <testAttributesBody(className, attributeName, null, "\"randomString\"")>
+    <testAttributesBody(className, attributeName, "nullValue()", "null", "\"randomString\"")>
 >>
 
 testMethodBooleanAttributes(className, attributeName) ::=
 <<
-    <testAttributesBody(className, attributeName, "false", "true")>
+    <testAttributesBody(className, attributeName, "false", "false", "true")>
 >>
 
 testMethodIntegerAttributes(className, attributeName) ::=
 <<
-    <testAttributesBody(className, attributeName, "0", "42")>
+    <testAttributesBody(className, attributeName, "0", "0", "42")>
 >>
 
 testMethodDoubleAttributes(className, attributeName) ::=
 <<
-    <testAttributesBody(className, attributeName, "0.0", "42.0")>
+    <testAttributesBody(className, attributeName, "0.0", "0.0", "42.0")>
 >>
 
 cap(n) ::=
 <%
 <n; format="cap">
-%>
-
-catchNullDefault(value) ::=
-<%
-<if(value)><value><else>nullValue()<endif>
-%>
-
-catchNullValue(value) ::=
-<%
-<if(value)><value><else>null<endif>
 %>
