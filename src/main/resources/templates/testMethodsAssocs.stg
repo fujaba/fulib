@@ -1,0 +1,51 @@
+testOneToOneAssocBody(sourceClass, targetClass, sourceAssocName, targetAssocName) ::=
+<<
+@Test
+void testAssoc<cap(sourceAssocName)>() {
+
+    AtomicReference\<PropertyChangeEvent> event = new AtomicReference\<>();
+    PropertyChangeListener listener = event::set;
+
+    <sourceClass> object = new <sourceClass>();
+    object.addPropertyChangeListener("<sourceAssocName>", listener);
+
+    <targetClass> target = new <targetClass>();
+
+    assertThat(object.get<cap(sourceAssocName)>(), is(nullValue()));
+    assertThat(object.set<cap(sourceAssocName)>(target), is(sameInstance(object)));
+    assertThat(object.get<cap(sourceAssocName)>(), is(sameInstance(target)));
+    assertThat(target.get<cap(targetAssocName)>(), is(sameInstance(object)));
+
+    assertThat(event.get(), is(notNullValue()));
+    assertThat(event.get().getPropertyName(), is(equalTo("<sourceAssocName>")));
+    assertThat(event.get().getOldValue(), is(nullValue()));
+    assertThat(event.get().getNewValue(), is(sameInstance(target)));
+
+    event.set(null);
+    object.removePropertyChangeListener("<sourceAssocName>", listener);
+    object.set<cap(sourceAssocName)>(null);
+
+    assertThat(event.get(), is(nullValue()));
+
+    object.addPropertyChangeListener(listener);
+    object.set<cap(sourceAssocName)>(target);
+
+    assertThat(event.get(), is(notNullValue()));
+    assertThat(event.get().getPropertyName(), is(equalTo("<sourceAssocName>")));
+    assertThat(event.get().getOldValue(), is(nullValue()));
+    assertThat(event.get().getNewValue(), is(sameInstance(target)));
+
+    event.set(null);
+    object.removePropertyChangeListener(listener);
+    object.set<cap(sourceAssocName)>(null);
+
+    assertThat(event.get(), is(nullValue()));
+
+    assertThat(<sourceClass>.PROPERTY_<sourceAssocName>, is(equalTo("<sourceAssocName>")));
+}
+>>
+
+cap(n) ::=
+<%
+<n; format="cap">
+%>

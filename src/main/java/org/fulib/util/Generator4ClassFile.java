@@ -49,7 +49,7 @@ public class Generator4ClassFile extends FileGenerator {
         generateImportDecl(fragmentMap);
         generateClassDecl("Test" + clazz.getName(), "", null, fragmentMap);
         generateAttributeTests(clazz, fragmentMap);
-//        generateAssociationTests(clazz, fragmentMap);
+        generateAssociationTests(clazz, fragmentMap);
 //        generateToStringTests(clazz, fragmentMap);
 //        generateRemoveYouTests(clazz, fragmentMap);
 
@@ -162,12 +162,12 @@ public class Generator4ClassFile extends FileGenerator {
     }
 
     private void generateAttributeTests(Clazz clazz, FileFragmentMap fragmentMap) {
-        STGroup group;
-        ST template;
-        String result;
+
+        STGroup group = createSTGroup("templates/testMethodsAttributes.stg");
 
         for (Attribute attr : clazz.getAttributes()) {
-            group = createSTGroup("templates/testMethodsAttributes.stg");
+
+            ST template;
 
             switch (attr.getType()) {
                 case ClassModelBuilder.STRING:
@@ -187,9 +187,8 @@ public class Generator4ClassFile extends FileGenerator {
             template.add("className", clazz.getName());
             template.add("attributeName", attr.getName());
 
-            result = template.render();
-
-            fragmentMap.add(Parser.METHOD + ":testAttribute" + StrUtil.cap(attr.getName()) + "()", result, 2);
+            fragmentMap.add(Parser.METHOD + ":testAttribute" + StrUtil.cap(attr.getName()) + "()",
+                    template.render(), 2);
         }
     }
 
@@ -340,6 +339,34 @@ public class Generator4ClassFile extends FileGenerator {
             } else {
                 fragmentMap.add(Parser.METHOD + ":" + role.getName() + "Property()", "", 3, true);
             }
+        }
+    }
+
+    private void generateAssociationTests(Clazz clazz, FileFragmentMap fragmentMap) {
+
+        STGroup group = createSTGroup("templates/testMethodsAssocs.stg");
+
+        for (AssocRole role : clazz.getRoles()) {
+
+            if (role.getName() == null) {
+                continue;
+            }
+
+            ST template = null;
+
+            if (role.getCardinality() == ClassModelBuilder.ONE) {
+                template = group.getInstanceOf("testOneToOneAssocBody");
+            } else {
+                // TODO
+            }
+
+            template.add("sourceClass", clazz.getName());
+            template.add("targetClass", role.getOther().getClazz().getName());
+            template.add("sourceAssocName", role.getName());
+            template.add("targetAssocName", role.getOther().getName());
+
+            fragmentMap.add(Parser.METHOD + ":testAssoc" + StrUtil.cap(role.getName()) + "()",
+                    template.render(), 2);
         }
     }
 
