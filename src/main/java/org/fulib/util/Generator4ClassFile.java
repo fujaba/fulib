@@ -169,20 +169,23 @@ public class Generator4ClassFile extends FileGenerator {
         for (Attribute attr : clazz.getAttributes()) {
             group = createSTGroup("templates/testMethodsAttributes.stg");
 
-            if (attr.getType().equals("String")) {
-                template = group.getInstanceOf("testMethodStringAttributes");
-            } else if (attr.getType().equals("boolean")) {
-                template = group.getInstanceOf("testMethodBooleanAttributes");
-            } else {
-                template = group.getInstanceOf("testMethodNumberAttributes");
+            switch (attr.getType()) {
+                case ClassModelBuilder.STRING:
+                    template = group.getInstanceOf("testMethodStringAttributes");
+                    break;
+                case ClassModelBuilder.BOOLEAN:
+                    template = group.getInstanceOf("testMethodBooleanAttributes");
+                    break;
+                case ClassModelBuilder.INT:
+                    template = group.getInstanceOf("testMethodIntegerAttributes");
+                    break;
+                default:
+                    template = group.getInstanceOf("testMethodDoubleAttributes");
+                    break;
             }
 
             template.add("className", clazz.getName());
             template.add("attributeName", attr.getName());
-
-            if (attr.getType().equals("double") || attr.getType().equals("float")) {
-                template.add("decimal", "0");
-            }
 
             result = template.render();
 

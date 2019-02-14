@@ -1,64 +1,42 @@
+testAttributesBody(className, attributeName, defaultValue, testValue) ::=
+<<
+@Test
+void testAttribute<cap(attributeName)>() {
+
+    AtomicReference\<PropertyChangeEvent> event = new AtomicReference\<>();
+
+    <className> object = new <className>();
+    object.addPropertyChangeListener("<attributeName>", event::set);
+
+    assertThat(object.get<cap(attributeName)>(), is(<defaultValue>));
+    assertThat(object.set<cap(attributeName)>(<testValue>), is(sameInstance(object)));
+    assertThat(event, is(notNullValue()));
+    assertThat(event.get().getOldValue(), is(<defaultValue>));
+    assertThat(event.get().getNewValue(), is(equalTo(<testValue>)));
+    assertThat(object.get<cap(attributeName)>(), is(equalTo(<testValue>)));
+
+    assertThat(<className>.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
+}
+>>
+
 testMethodStringAttributes(className, attributeName) ::=
 <<
-    @Test
-    void testAttribute<cap(attributeName)>() {
-
-        AtomicReference\<PropertyChangeEvent> event = new AtomicReference\<>();
-
-        <className> object = new <className>();
-        object.addPropertyChangeListener("<attributeName>", event::set);
-
-        assertThat(object.get<cap(attributeName)>(), is(nullValue()));
-        assertThat(object.set<cap(attributeName)>("randomString"), is(sameInstance(object)));
-        assertThat(event, is(notNullValue()));
-        assertThat(event.get().getOldValue(), is(nullValue()));
-        assertThat(event.get().getNewValue(), is(equalTo("randomString")));
-        assertThat(object.get<cap(attributeName)>(), is(equalTo("randomString")));
-
-        assertThat(<className>.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
-    }
+    <testAttributesBody(className, attributeName, "nullValue()", "\"randomString\"")>
 >>
 
 testMethodBooleanAttributes(className, attributeName) ::=
 <<
-    @Test
-    void testAttribute<cap(attributeName)>() {
-
-        AtomicReference\<PropertyChangeEvent> event = new AtomicReference\<>();
-
-        <className> object = new <className>();
-        object.addPropertyChangeListener("<attributeName>", event::set);
-
-        assertThat(object.get<cap(attributeName)>(), is(false));
-        assertThat(object.set<cap(attributeName)>(true), is(sameInstance(object)));
-        assertThat(event, is(notNullValue()));
-        assertThat(event.get().getOldValue(), is(false));
-        assertThat(event.get().getNewValue(), is(true));
-        assertThat(object.get<cap(attributeName)>(), is(true));
-
-        assertThat(<className>.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
-    }
+    <testAttributesBody(className, attributeName, "false", "true")>
 >>
 
-testMethodNumberAttributes(className, attributeName, decimal) ::=
+testMethodIntegerAttributes(className, attributeName) ::=
 <<
-    @Test
-    void testAttribute<cap(attributeName)>() {
+    <testAttributesBody(className, attributeName, "0", "42")>
+>>
 
-        AtomicReference\<PropertyChangeEvent> event = new AtomicReference\<>();
-
-        <className> object = new <className>();
-        object.addPropertyChangeListener("<attributeName>", event::set);
-
-        assertThat(object.get<cap(attributeName)>(), is(0<if (decimal)>.<decimal><endif>));
-        assertThat(object.set<cap(attributeName)>(42<if (decimal)>.<decimal><endif>), is(sameInstance(object)));
-        assertThat(event, is(notNullValue()));
-        assertThat(event.get().getOldValue(), is(0<if (decimal)>.<decimal><endif>));
-        assertThat(event.get().getNewValue(), is(42<if (decimal)>.<decimal><endif>));
-        assertThat(object.get<cap(attributeName)>(), is(42<if (decimal)>.<decimal><endif>));
-
-        assertThat(<className>.PROPERTY_<attributeName>, is(equalTo("<attributeName>")));
-    }
+testMethodDoubleAttributes(className, attributeName) ::=
+<<
+    <testAttributesBody(className, attributeName, "0.0", "42.0")>
 >>
 
 cap(n) ::=
