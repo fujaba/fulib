@@ -1,4 +1,4 @@
-testOneToOneAssocBody(sourceClass, targetClass, sourceAssocName, targetAssocName) ::=
+testAssocBody(sourceClass, targetClass, sourceAssocName, targetAssocName, sourceManyCardinality, targetManyCardinality) ::=
 <<
     @Test
     void testAssoc<cap(sourceAssocName)>() {
@@ -11,10 +11,10 @@ testOneToOneAssocBody(sourceClass, targetClass, sourceAssocName, targetAssocName
 
         <targetClass> target = new <targetClass>();
 
-        assertThat(object.get<cap(sourceAssocName)>(), is(nullValue()));
-        assertThat(object.set<cap(sourceAssocName)>(target), is(sameInstance(object)));
-        assertThat(object.get<cap(sourceAssocName)>(), is(sameInstance(target)));
-        assertThat(target.get<cap(targetAssocName)>(), is(sameInstance(object)));
+        <if(sourceManyCardinality)><get("object", sourceAssocName, "is(empty())")><else><get("object", sourceAssocName, "is(nullValue())")><endif>
+        assertThat(object.<if(sourceManyCardinality)>with<else>set<endif><cap(sourceAssocName)>(target), is(sameInstance(object)));
+        <if(sourceManyCardinality)><get("object", sourceAssocName, "contains(target)")><else><get("object", sourceAssocName, "is(sameInstance(target))")><endif>
+        <if(targetManyCardinality)><get("target", targetAssocName, "contains(object)")><else><get("target", targetAssocName, "is(sameInstance(object))")><endif>
 
         assertThat(event.get(), is(notNullValue()));
         assertThat(event.get().getPropertyName(), is(equalTo("<sourceAssocName>")));
@@ -23,12 +23,12 @@ testOneToOneAssocBody(sourceClass, targetClass, sourceAssocName, targetAssocName
 
         event.set(null);
         object.removePropertyChangeListener("<sourceAssocName>", listener);
-        object.set<cap(sourceAssocName)>(null);
+        object.<if(sourceManyCardinality)>without<cap(sourceAssocName)>(target)<else>set<cap(sourceAssocName)>(null)<endif>;
 
         assertThat(event.get(), is(nullValue()));
 
         object.addPropertyChangeListener(listener);
-        object.set<cap(sourceAssocName)>(target);
+        object.<if(sourceManyCardinality)>with<else>set<endif><cap(sourceAssocName)>(target);
 
         assertThat(event.get(), is(notNullValue()));
         assertThat(event.get().getPropertyName(), is(equalTo("<sourceAssocName>")));
@@ -37,13 +37,18 @@ testOneToOneAssocBody(sourceClass, targetClass, sourceAssocName, targetAssocName
 
         event.set(null);
         object.removePropertyChangeListener(listener);
-        object.set<cap(sourceAssocName)>(null);
+        object.<if(sourceManyCardinality)>without<cap(sourceAssocName)>(target)<else>set<cap(sourceAssocName)>(null)<endif>;
 
         assertThat(event.get(), is(nullValue()));
 
         assertThat(<sourceClass>.PROPERTY_<sourceAssocName>, is(equalTo("<sourceAssocName>")));
     }
 >>
+
+get(object, sourceAssocName, expected) ::=
+<%
+assertThat(<object>.get<cap(sourceAssocName)>(), <expected>);
+%>
 
 cap(n) ::=
 <%

@@ -352,18 +352,19 @@ public class Generator4ClassFile extends FileGenerator {
                 continue;
             }
 
-            ST template = null;
-
-            if (role.getCardinality() == ClassModelBuilder.ONE) {
-                template = group.getInstanceOf("testOneToOneAssocBody");
-            } else {
-                // TODO
-            }
-
+            ST template = group.getInstanceOf("testAssocBody");
             template.add("sourceClass", clazz.getName());
             template.add("targetClass", role.getOther().getClazz().getName());
             template.add("sourceAssocName", role.getName());
             template.add("targetAssocName", role.getOther().getName());
+
+            if (role.getCardinality() != ClassModelBuilder.ONE) {
+                template.add("sourceManyCardinality", "true");
+            }
+
+            if (role.getOther().getCardinality() != ClassModelBuilder.ONE) {
+                template.add("targetManyCardinality", "true");
+            }
 
             fragmentMap.add(Parser.METHOD + ":testAssoc" + StrUtil.cap(role.getName()) + "()",
                     template.render(), 2);
