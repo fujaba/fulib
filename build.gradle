@@ -34,6 +34,7 @@ repositories {
 }
 
 dependencies {
+    compile files('../fulibYaml/build/libs/fulibYaml-1.0.1-SNAPSHOT.jar')
     compile 'org.antlr:ST4:4.0.8'
     compile 'org.fulib:fulibYaml:1.0.+'
 
