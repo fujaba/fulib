@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-class Tools {
+public class Tools {
 
     static int javac(String outFolder, String sourceFolder) {
         ArrayList<String> args = new ArrayList<>();

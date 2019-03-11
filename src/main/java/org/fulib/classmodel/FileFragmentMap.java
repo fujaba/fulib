@@ -3,15 +3,14 @@ package org.fulib.classmodel;
 import org.fulib.Parser;
 import org.fulib.StrUtil;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.sql.Struct;
 import java.util.ArrayList;
-import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeListener;
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -196,7 +195,7 @@ public class FileFragmentMap
                newText = result.getText().substring(0, resultPublicPos) + newText.substring(newTextPublicPos);
             }
          }
-         else if (key.startsWith(Parser.ATTRIBUTE))
+         else if (key.startsWith(Parser.ATTRIBUTE)) // ToDo: this looks wrong, remove it?
          {
             // keep everything before private
             int newTextPrivatePos = newText.indexOf("private");
@@ -235,6 +234,8 @@ public class FileFragmentMap
 
          // go to the gap before this
          pos--;
+
+         pos = Math.max(0, pos);
 
          fragmentList.add(pos, gap);
          pos++;
