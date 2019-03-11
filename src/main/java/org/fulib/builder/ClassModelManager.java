@@ -3,23 +3,14 @@ package org.fulib.builder;
 import org.fulib.Fulib;
 import org.fulib.StrUtil;
 import org.fulib.classmodel.ClassModel;
-import org.fulib.yaml.EventFiler;
 import org.fulib.yaml.EventSource;
 import org.fulib.yaml.Yamler;
 
-import static org.fulib.builder.ClassModelBuilder.*;
-
 import java.lang.reflect.TypeVariable;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import static org.fulib.builder.ClassModelBuilder.*;
 
 /**
  * ClassModelbuilder is used to create fulib class models that are input for

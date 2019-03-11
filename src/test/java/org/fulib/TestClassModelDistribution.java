@@ -8,7 +8,7 @@ public class TestClassModelDistribution
    @Test
    public void testClassModelDistribution()
    {
-      ClassModelManager mm = new ClassModelManager();
+      ClassModelManager mm = new ClassModelManager("uniks.studyright", "tmp");
 
       mm.havePackageName("uniks.studyright")
          .haveMainJavaDir("tmp");
