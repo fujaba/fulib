@@ -8,7 +8,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
 /**
- * <img src='doc-files/classDiagram.png' width='663'/>
+ * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
  */
 public class ClassModel  
 {
