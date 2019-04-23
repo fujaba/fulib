@@ -204,9 +204,9 @@ public class Generator
     * Provide your templates for code generation as in:
     * <pre>
     * <!-- insert_code_fragment: testCustomTemplates -->
-      Fulib.generator()
-            .setCustomTemplatesFile("templates/custom.stg")
-            .generate(model);
+        Fulib.generator()
+                .setCustomTemplatesFile("templates/custom.stg")
+                .generate(model);
     * <!-- end_code_fragment: testCustomTemplates -->
     * </pre>
     * @param customFileName

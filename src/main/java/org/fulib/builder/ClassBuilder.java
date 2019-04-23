@@ -12,9 +12,9 @@ import org.fulib.classmodel.Clazz;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
  *
@@ -67,9 +67,9 @@ public class ClassBuilder
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -88,8 +88,8 @@ public class ClassBuilder
    /**
     * <pre>
     * <!-- insert_code_fragment: ClassBuilder.buildAttribute_init -->
-      ClassBuilder student = mb.buildClass( "Student")
-            .buildAttribute("name", mb.STRING,"\"Karli\"");
+        ClassBuilder student = mb.buildClass("Student")
+                .buildAttribute("name", mb.STRING, "\"Karli\"");
     * <!-- end_code_fragment:  -->
     * </pre>
     * @param name
@@ -117,7 +117,7 @@ public class ClassBuilder
    /**
     * <pre>
     * <!-- insert_code_fragment: ClassBuilder.buildAssociation -->
-      universitiy.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
+        universitiy.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
     * <!-- end_code_fragment:  -->
     * </pre>
     * @param otherClass

@@ -18,9 +18,9 @@ import static org.fulib.builder.ClassModelBuilder.POJO;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
       * <!-- end_code_fragment:  -->
  * </pre>
  *
@@ -105,9 +105,9 @@ public class ClassModelManager implements IModelManager
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     */

@@ -16,9 +16,9 @@ import java.util.Objects;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
  *
