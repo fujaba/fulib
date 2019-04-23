@@ -1,7 +1,5 @@
 package org.fulib.builder;
 
-import org.fulib.classmodel.ClassModel;
-import org.fulib.yaml.EventFiler;
 import org.fulib.yaml.EventSource;
 import org.fulib.yaml.Yamler;
 
@@ -9,30 +7,36 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.function.Consumer;
 
-import static org.fulib.builder.ClassModelBuilder.COLLECTION_ARRAY_LIST;
-import static org.fulib.builder.ClassModelBuilder.POJO;
-
-public class ClassModelEventManager
+public class ModelEventManager
 {
    private final EventSource eventSource;
-   private final ClassModelManager modelManager;
+   private IModelManager modelManager;
    private LinkedHashMap<String, Consumer<LinkedHashMap<String, String>>> consumerMap;
 
 
 
-   public ClassModelEventManager()
+   public ModelEventManager()
    {
-      this.modelManager = new ClassModelManager(this);
-
       this.eventSource = new EventSource();
 
-      EventFiler eventFiler = new EventFiler(this.eventSource)
-            .setHistoryFileName("tmp/classmodel/ClassModel.yaml");
+//      EventFiler eventFiler = new EventFiler(this.eventSource)
+//            .setHistoryFileName("tmp/classmodel/ClassModel.yaml");
+//
+//      String yaml = eventFiler.loadHistory();
+//      this.applyEvents(yaml);
+//
+//      eventFiler.startEventLogging();
+   }
 
-      String yaml = eventFiler.loadHistory();
-      this.applyEvents(yaml);
 
-      eventFiler.startEventLogging();
+   public IModelManager getModelManager()
+   {
+      return modelManager;
+   }
+
+   public void setModelManager(IModelManager modelManager)
+   {
+      this.modelManager = modelManager;
    }
 
 
@@ -52,20 +56,7 @@ public class ClassModelEventManager
 
    public void applyEvents(ArrayList<LinkedHashMap<String, String>> events)
    {
-      if (consumerMap == null)
-      {
-         consumerMap = new LinkedHashMap<>();
-
-         consumerMap.put(ClassModelManager.HAVE_PACKAGE_NAME, map -> {
-            String packageName = map.get(ClassModel.PROPERTY_packageName);
-            modelManager.havePackageName(packageName);
-         });
-
-         consumerMap.put(ClassModelManager.HAVE_MAIN_JAVA_DIR, map -> {
-            String sourceFolder = map.get(ClassModel.PROPERTY_mainJavaDir);
-            modelManager.haveMainJavaDir(sourceFolder);
-         });
-      }
+      modelManager.initConsumers(consumerMap);
 
       // consume event list
       for (LinkedHashMap<String, String> map : events)
@@ -83,8 +74,6 @@ public class ClassModelEventManager
 
       this.eventSource.setOldEventTimeStamp(0);
    }
-
-
 
    public void append(LinkedHashMap<String, String> event)
    {

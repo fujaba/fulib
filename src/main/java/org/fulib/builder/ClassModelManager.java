@@ -2,15 +2,15 @@ package org.fulib.builder;
 
 import org.fulib.Fulib;
 import org.fulib.StrUtil;
-import org.fulib.classmodel.ClassModel;
+import org.fulib.classmodel.*;
 import org.fulib.yaml.EventSource;
 import org.fulib.yaml.Yamler;
 
-import java.lang.reflect.TypeVariable;
-import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.function.Consumer;
 
-import static org.fulib.builder.ClassModelBuilder.*;
+import static org.fulib.builder.ClassModelBuilder.COLLECTION_ARRAY_LIST;
+import static org.fulib.builder.ClassModelBuilder.POJO;
 
 /**
  * ClassModelbuilder is used to create fulib class models that are input for
@@ -25,14 +25,78 @@ import static org.fulib.builder.ClassModelBuilder.*;
  * </pre>
  *
  */
-public class ClassModelManager
+public class ClassModelManager implements IModelManager
 {
    public static final String THE_CLASS_MODEL = "theClassModel";
    public static final String HAVE_PACKAGE_NAME = "havePackageName";
    public static final String HAVE_MAIN_JAVA_DIR = "haveMainJavaDir";
+   public static final String HAVE_CLASS = "haveClass";
+   public static final String HAVE_ATTRIBUTE = "haveAttribute";
+   public static final String CLASS_NAME = "className";
+   public static final String ATTR_NAME = "attrName";
+   public static final String ATTR_TYPE = "attrType";
+   public static final String HAVE_ROLE = "haveRole";
+   public static final String SRC_CLASS_NAME = "srcClassName";
+   public static final String TGT_CLASS_NAME = "tgtClassName";
+   public static final String TGT_CARDINALITY = "tgtCardinality";
+   public static final String SRC_ROLE = "srcRole";
+   public static final String SRC_SIZE = "srcSize";
+   public static final String TGT_ROLE = "tgtRole";
+   public static final String TGT_SIZE = "tgtSize";
 
    private ClassModel classModel;
-   private ClassModelEventManager mem;
+   private LinkedHashMap<String, FMethod> methodMap;
+   private ModelEventManager mem;
+
+
+   @Override
+   public void initConsumers(LinkedHashMap<String, Consumer<LinkedHashMap<String, String>>> consumerMap)
+   {
+      if (consumerMap == null)
+      {
+         consumerMap = new LinkedHashMap<>();
+
+         consumerMap.put(ClassModelManager.HAVE_PACKAGE_NAME, map -> {
+            String packageName = map.get(ClassModel.PROPERTY_packageName);
+            havePackageName(packageName);
+         });
+
+         consumerMap.put(ClassModelManager.HAVE_MAIN_JAVA_DIR, map -> {
+            String sourceFolder = map.get(ClassModel.PROPERTY_mainJavaDir);
+            haveMainJavaDir(sourceFolder);
+         });
+
+         consumerMap.put(ClassModelManager.HAVE_CLASS, map -> {
+            String name = map.get(Clazz.PROPERTY_name);
+            haveClass(name);
+         });
+
+         consumerMap.put(ClassModelManager.HAVE_ATTRIBUTE, map -> {
+            String className = map.get(ClassModelManager.CLASS_NAME);
+            String attrName = map.get(ClassModelManager.ATTR_NAME);
+            String attrType = map.get(ClassModelManager.ATTR_TYPE);
+
+            Clazz clazz = haveClass(className);
+            haveAttribute(clazz, attrName, attrType);
+         });
+
+         // haveRole(Clazz srcClass, String attrName, Clazz tgtClass, int size)
+         consumerMap.put(ClassModelManager.HAVE_ROLE, map -> {
+            String srcClassName = map.get(ClassModelManager.SRC_CLASS_NAME);
+            String attrName = map.get(ClassModelManager.ATTR_NAME);
+            String tgtClassName = map.get(ClassModelManager.TGT_CLASS_NAME);
+            String sizeName = map.get(ClassModelManager.TGT_CARDINALITY);
+
+            Clazz srcClazz = haveClass(srcClassName);
+            Clazz tgClazz = haveClass(tgtClassName);
+            int size = Integer.valueOf(sizeName);
+
+            haveRole(srcClazz, attrName, tgClazz, size);
+         });
+
+      }
+   }
+
 
    /**
     * ClassModelManager is used to manage fulib class models that are input for
@@ -47,14 +111,30 @@ public class ClassModelManager
     * <!-- end_code_fragment:  -->
     * </pre>
     */
-   public ClassModelManager(ClassModelEventManager classModelEventManager)
+   public ClassModelManager(ModelEventManager classModelEventManager)
    {
       mem = classModelEventManager;
 
       this.classModel = new ClassModel()
             .setDefaultPropertyStyle(POJO)
             .setDefaultRoleType(COLLECTION_ARRAY_LIST);
+
+      this.methodMap = new LinkedHashMap<>();
    }
+
+
+   public ClassModel getClassModel()
+   {
+      return classModel;
+   }
+
+
+
+   public LinkedHashMap<String, FMethod> getMethodMap()
+   {
+      return methodMap;
+   }
+
 
 
    public ClassModelManager havePackageName(String packagename)
@@ -95,138 +175,155 @@ public class ClassModelManager
 
 
 
-   /**
-    * ClassModelbuilder is used to create fulib class models that are input for
-    * fulib code generation {@link Fulib#generator()}.<br>
-    * Typical usage:
-    * <pre>
-    * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
-    * <!-- end_code_fragment:  -->
-    * </pre>
-    * @param packagename
-    * @param sourceFolder
-    */
-   public ClassModelManager(String packagename, String sourceFolder)
+   public Clazz haveClass(String className)
    {
-      checkValidJavaId(packagename);
+      Clazz clazz = this.classModel.getClazz(className);
 
-      ClassModel classModel = new ClassModel()
-            .setPackageName(packagename)
-            .setMainJavaDir(sourceFolder)
-            .setDefaultPropertyStyle(POJO)
-            .setDefaultRoleType(COLLECTION_ARRAY_LIST);
+      if (clazz != null)  return clazz; //============================
 
-      this.setClassModel(classModel);
+      clazz = new ClassBuilder(this.classModel, className).getClazz();
+
+      LinkedHashMap<String, String> event = new LinkedHashMap<>();
+      event.put(EventSource.EVENT_TYPE, HAVE_CLASS);
+      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(className));
+      event.put(Clazz.PROPERTY_name, Yamler.encapsulate(className));
+      mem.append(event);
+
+      return clazz;
    }
 
 
-   static void checkValidJavaId(String myRoleName)
+
+   public Attribute haveAttribute(Clazz clazz, String attrName, String attrType)
    {
-      IllegalArgumentException illegalArgumentException = new IllegalArgumentException("" + myRoleName + " is not an valid java identifier");
+      Attribute attr = clazz.getAttribute(attrName);
 
-      if (myRoleName == null) throw illegalArgumentException;
+      if (attr != null && attr.getType().equals(attrType)) return attr; //==============================
 
-      if (myRoleName.endsWith(".") || myRoleName.startsWith(".")) throw illegalArgumentException;
-
-      if (myRoleName.indexOf('.') >= 0)
+      if (attr == null)
       {
-         for (String s : myRoleName.split("\\."))
+         ClassModelBuilder.checkValidJavaId(attrName);
+         if (clazz.getAttribute(attrName) != null
+               || clazz.getRole(attrName) != null)
+            throw new IllegalArgumentException("duplicate attribute / role name: " + attrName);
+
+         attr = new Attribute();
+         attr.setName(attrName);
+         attr.setClazz(clazz);
+         attr.setPropertyStyle(clazz.getPropertyStyle());
+      }
+
+      attr.setType(attrType);
+
+      LinkedHashMap<String, String> event = new LinkedHashMap<>();
+      event.put(EventSource.EVENT_TYPE, HAVE_ATTRIBUTE);
+      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(clazz.getName() + "." + attrName));
+      event.put(CLASS_NAME, Yamler.encapsulate(clazz.getName()));
+      event.put(ATTR_NAME, Yamler.encapsulate(attrName));
+      event.put(ATTR_TYPE, Yamler.encapsulate(attrType));
+      mem.append(event);
+
+
+
+      return attr;
+   }
+
+
+
+   public AssocRole haveRole(Clazz srcClass, String attrName, Clazz tgtClass, int size)
+   {
+      String otherRoleName = StrUtil.downFirstChar(srcClass.getName());
+      return this.haveRole(srcClass, attrName, tgtClass, size, otherRoleName, ClassModelBuilder.ONE, false);
+   }
+
+   public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize, String tgtRole, int tgtSize)
+   {
+      return this.haveRole(srcClass, srcRole, tgtClass, srcSize, tgtRole, tgtSize, true);
+   }
+
+   private AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize, String tgtRole, int tgtSize, boolean bothRoles)
+   {
+      AssocRole role = srcClass.getRole(srcRole);
+
+      if (role != null
+            && role.getCardinality() >= srcSize
+            && role.getOther().getClazz() == tgtClass
+            && ( ! bothRoles || role.getOther().getName().equals(tgtRole))
+            && ( ! bothRoles || role.getOther().getCardinality() >= tgtSize)
+      )
+         return role; //===============================================================
+
+      if (StrUtil.stringEquals(srcRole, tgtRole)) tgtSize = srcSize;
+
+      if (role == null)
+      {
+         role = new AssocRole()
+               .setClazz(srcClass)
+               .setName(srcRole)
+               .setCardinality(srcSize)
+               .setPropertyStyle(srcClass.getPropertyStyle())
+               .setRoleType(srcClass.getModel().getDefaultRoleType());
+
+         AssocRole otherRole = new AssocRole()
+               .setClazz(tgtClass)
+               .setName(tgtRole)
+               .setCardinality(tgtSize)
+               .setPropertyStyle(tgtClass.getPropertyStyle())
+               .setRoleType(tgtClass.getModel().getDefaultRoleType());
+
+         role.setOther(otherRole);
+      }
+
+      int maxSize = Math.max(role.getCardinality(), srcSize);
+      role.setCardinality(maxSize);
+
+      int maxTgtSize = Math.max(role.getOther().getCardinality(), tgtSize);
+      if (bothRoles) role.getOther().setName(tgtRole);
+      role.getOther().setCardinality(tgtSize);
+
+      // mm.haveRole(currentRegisterClazz, srcRole, tgtClass, srcSize, tgtRole, ClassModelBuilder.ONE);
+      LinkedHashMap<String, String> event = new LinkedHashMap<>();
+      event.put(EventSource.EVENT_TYPE, HAVE_ROLE);
+      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(srcClass.getName() + "." + srcRole));
+      event.put(SRC_CLASS_NAME, Yamler.encapsulate(srcClass.getName()));
+      event.put(SRC_ROLE, Yamler.encapsulate(srcRole));
+      event.put(TGT_CLASS_NAME, Yamler.encapsulate(tgtClass.getName()));
+      event.put(SRC_SIZE, "" + maxSize);
+      event.put(TGT_ROLE, Yamler.encapsulate(tgtRole));
+      event.put(TGT_SIZE, "" + maxTgtSize);
+      mem.append(event);
+
+      return role;
+   }
+
+
+   public FMethod haveMethod(Clazz srcClass, String methodName)
+   {
+      String key = srcClass.getName() + "." + methodName;
+
+      FMethod method = methodMap.get(key);
+
+      if (method == null)
+      {
+         method = new FMethod();
+         this.methodMap.put(key, method);
+      }
+
+      method.setClassName(srcClass.getName())
+            .setName(methodName);
+
+      return method;
+   }
+
+   public FMethod getMethod(String methodName) {
+      for (String key : this.getMethodMap().keySet())
+      {
+         String[] split = key.split("\\.");
+         if (methodName.equals(split[1]))
          {
-            checkValidJavaId(s);
+            return this.getMethodMap().get(key);
          }
-         return;
       }
-
-      if ( ! myRoleName.matches("[a-zA-Z_]\\w*")) throw illegalArgumentException;
-
-      String javaKeyWords = " abstract assert boolean break " +
-            "byte case catch char " +
-            "class const continue default " +
-            "do double else enum " +
-            "extends final finally float " +
-            "for goto if implements " +
-            "import instanceof int interface " +
-            "long native new package " +
-            "private protected public return " +
-            "short static strictfp super " +
-            "switch synchronized this throw " +
-            "throws transient try void " +
-            "volatile while  true  false " +
-            "null ";
-
-      if (javaKeyWords.indexOf(" " + myRoleName + " ") >= 0 ) throw illegalArgumentException;
-
-      // hm, myRoleName seems valid
+      return null;
    }
-
-
-   private void setClassModel(ClassModel classModel)
-   {
-      this.classModel = classModel;
-   }
-
-
-   /**
-    * @return the class model this builder is responsible for 
-    */
-   public ClassModel getClassModel()
-   {
-      return classModel;
-   }
-
-   /**
-    * set container class to be used for to-many associations,
-    * default is ClassModelBuilder.COLLECTION_ARRAY_LIST
-    * alternative is e.g.: ClassModelBuilder.
-    * @param collectionClass
-    * @return
-    */
-   public ClassModelManager setDefaultCollectionClass(Class collectionClass)
-   {
-      if ( ! Collection.class.isAssignableFrom(collectionClass))
-      {
-         throw new IllegalArgumentException("class is no collection");
-      }
-
-      String defaultRoleType = collectionClass.getName();
-      TypeVariable[] typeParameters = collectionClass.getTypeParameters();
-      if (typeParameters.length == 1)
-      {
-         defaultRoleType += "<%s>";
-      }
-      this.classModel.setDefaultRoleType(defaultRoleType);
-      return this;
-   }
-
-
-   public ClassModelManager setJavaFXPropertyStyle()
-   {
-      classModel.setDefaultPropertyStyle(JAVA_FX);
-      return this;
-   }
-
-
-   /**
-    * Builds and returns a class builder for the given classname and connects it to the model
-    * <pre>
-    * <!-- insert_code_fragment: ClassModelBuilder.twoParams -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java")
-            .setJavaFXPropertyStyle();
-
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
-    * <!-- end_code_fragment:  -->
-    * </pre>
-    * @param className
-    * @return new class builder
-    */
-   public ClassBuilder buildClass(String className)
-   {
-      ClassBuilder classBuilder = new ClassBuilder(this.classModel, className);
-      return classBuilder;
-   }
-
-
 }

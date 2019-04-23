@@ -8,10 +8,10 @@ public class TestClassModelDistribution
    @Test
    public void testClassModelDistribution()
    {
-      ClassModelManager mm = new ClassModelManager("uniks.studyright", "tmp");
-
-      mm.havePackageName("uniks.studyright")
-         .haveMainJavaDir("tmp");
+//      ClassModelManager mm = new ClassModelManager("uniks.studyright");
+//
+//      mm.havePackageName("uniks.studyright")
+//         .haveMainJavaDir("tmp");
    }
 
 }

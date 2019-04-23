@@ -27,4 +27,10 @@ public class StrUtil
       Objects.requireNonNull(oldTxt);
       return oldTxt.substring(0,1).toLowerCase() + oldTxt.substring(1);
    }
+
+   public static String truncate(String oldTxt, int numOfCharsToChop)
+   {
+      oldTxt = oldTxt.substring(0, oldTxt.length() - numOfCharsToChop);
+      return oldTxt;
+   }
 }
