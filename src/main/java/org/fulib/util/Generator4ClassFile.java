@@ -4,10 +4,7 @@ import org.fulib.Generator;
 import org.fulib.Parser;
 import org.fulib.StrUtil;
 import org.fulib.builder.ClassModelBuilder;
-import org.fulib.classmodel.AssocRole;
-import org.fulib.classmodel.Attribute;
-import org.fulib.classmodel.Clazz;
-import org.fulib.classmodel.FileFragmentMap;
+import org.fulib.classmodel.*;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
@@ -36,6 +33,8 @@ public class Generator4ClassFile {
       generateAttributes(clazz, fragmentMap);
 
       generateAssociations(clazz, fragmentMap);
+
+      generateMethods(clazz, fragmentMap);
 
       generatePropertyChangeSupport(clazz, fragmentMap);
 
@@ -333,6 +332,27 @@ public class Generator4ClassFile {
          }
       }
    }
+
+
+
+   private void generateMethods(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      for (FMethod method : clazz.getMethods())
+      {
+         String signature = method.getSignature();
+         String methodBody = method.getMethodBody();
+         if (methodBody == null) {
+            methodBody = "      // hello world\n";
+         }
+         String newText = "   " + method.getDeclaration() +
+               "{ \n" +
+               methodBody +
+               "   }";
+
+         fragmentMap.add(signature, newText, 2);
+      }
+   }
+
 
 
    private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap) {

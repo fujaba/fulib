@@ -47,7 +47,7 @@ public class FMethod
 
    public static final String PROPERTY_returnType = "returnType";
 
-   private String returnType;
+   private String returnType = "void";
 
    public String getReturnType()
    {
@@ -82,27 +82,6 @@ public class FMethod
          String oldValue = this.methodBody;
          this.methodBody = value;
          firePropertyChange("methodBody", oldValue, value);
-      }
-      return this;
-   }
-
-
-   public static final String PROPERTY_className = "className";
-
-   private String className;
-
-   public String getClassName()
-   {
-      return className;
-   }
-
-   public FMethod setClassName(String value)
-   {
-      if (value == null ? this.className != null : ! value.equals(this.className))
-      {
-         String oldValue = this.className;
-         this.className = value;
-         firePropertyChange("className", oldValue, value);
       }
       return this;
    }
@@ -149,7 +128,7 @@ public class FMethod
       return true;
    }
 
-   public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+   public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
    {
       if (listeners != null)
       {
@@ -166,9 +145,6 @@ public class FMethod
       result.append(" ").append(this.getName());
       result.append(" ").append(this.getReturnType());
       result.append(" ").append(this.getMethodBody());
-      result.append(" ").append(this.getClassName());
-      result.append(" ").append(this.getPackageName());
-      result.append(" ").append(this.getJavaSrcDir());
 
 
       return result.substring(1);
@@ -176,6 +152,8 @@ public class FMethod
 
    public void removeYou()
    {
+      this.setClazz(null);
+
    }
 
 
@@ -200,26 +178,6 @@ public class FMethod
    }
 
 
-   public static final String PROPERTY_javaSrcDir = "javaSrcDir";
-
-   private String javaSrcDir;
-
-   public String getJavaSrcDir()
-   {
-      return javaSrcDir;
-   }
-
-   public FMethod setJavaSrcDir(String value)
-   {
-      if (value == null ? this.javaSrcDir != null : ! value.equals(this.javaSrcDir))
-      {
-         String oldValue = this.javaSrcDir;
-         this.javaSrcDir = value;
-         firePropertyChange("javaSrcDir", oldValue, value);
-      }
-      return this;
-   }
-
 
    public String getSignature()
    {
@@ -229,6 +187,50 @@ public class FMethod
             this.getName(),
             paramTypes);
       return result;
+   }
+
+
+   public String getFullParamsString()
+   {
+      ArrayList<String> paramList = new ArrayList<>();
+      for (Map.Entry<String, String> entry : this.getParams().entrySet())
+      {
+         String paramName = entry.getKey();
+         String paramType = entry.getValue();
+         paramList.add(paramType + " " + paramName);
+      }
+      String result = String.join(",", paramList);
+
+      if (this.getReturnType() != null && ! this.getReturnType().equals("void")) {
+         result += ":" + this.getReturnType();
+      }
+
+      return result;
+   }
+
+
+   public FMethod setParamsByString(String params)
+   {
+      String pureParams = params;
+      int pos = params.indexOf(':');
+      if (pos >= 0) {
+         String[] split = params.split("\\:");
+         this.setReturnType(split[1]);
+         pureParams = split[0];
+      }
+
+      String[] split = pureParams.split(",");
+      this.getParams().clear();
+      for (String s : split)
+      {
+         if (s.equals("")) {
+            break;
+         }
+         String[] pair = s.split(" ");
+         this.getParams().put(pair[1], pair[0]);
+      }
+
+      return this;
    }
 
 
@@ -249,4 +251,34 @@ public class FMethod
             paramTypes);
       return result;
    }
+   public static final String PROPERTY_clazz = "clazz";
+
+   private Clazz clazz = null;
+
+   public Clazz getClazz()
+   {
+      return this.clazz;
+   }
+
+   public FMethod setClazz(Clazz value)
+   {
+      if (this.clazz != value)
+      {
+         Clazz oldValue = this.clazz;
+         if (this.clazz != null)
+         {
+            this.clazz = null;
+            oldValue.withoutMethods(this);
+         }
+         this.clazz = value;
+         if (value != null)
+         {
+            value.withMethods(this);
+         }
+         firePropertyChange("clazz", oldValue, value);
+      }
+      return this;
+   }
+
+
 }

@@ -397,6 +397,9 @@ public class Clazz
       this.withoutRoles(this.getRoles().clone());
 
 
+      this.withoutMethods(this.getMethods().clone());
+
+
       this.withoutSubClasses(this.getSubClasses().clone());
 
 
@@ -487,5 +490,83 @@ public class Clazz
    public static final String PROPERTY_superClass = "superClass";
 
    public static final String PROPERTY_subClasses = "subClasses";
+
+   public static final java.util.ArrayList<FMethod> EMPTY_methods = new java.util.ArrayList<FMethod>()
+   { @Override public boolean add(FMethod value){ throw new UnsupportedOperationException("No direct add! Use xy.withMethods(obj)"); }};
+
+
+   public static final String PROPERTY_methods = "methods";
+
+   private java.util.ArrayList<FMethod> methods = null;
+
+   public java.util.ArrayList<FMethod> getMethods()
+   {
+      if (this.methods == null)
+      {
+         return EMPTY_methods;
+      }
+
+      return this.methods;
+   }
+
+   public Clazz withMethods(Object... value)
+   {
+      if(value==null) return this;
+      for (Object item : value)
+      {
+         if (item == null) continue;
+         if (item instanceof java.util.Collection)
+         {
+            for (Object i : (java.util.Collection) item)
+            {
+               this.withMethods(i);
+            }
+         }
+         else if (item instanceof FMethod)
+         {
+            if (this.methods == null)
+            {
+               this.methods = new java.util.ArrayList<FMethod>();
+            }
+            if ( ! this.methods.contains(item))
+            {
+               this.methods.add((FMethod)item);
+               ((FMethod)item).setClazz(this);
+               firePropertyChange("methods", null, item);
+            }
+         }
+         else throw new IllegalArgumentException();
+      }
+      return this;
+   }
+
+
+
+   public Clazz withoutMethods(Object... value)
+   {
+      if (this.methods == null || value==null) return this;
+      for (Object item : value)
+      {
+         if (item == null) continue;
+         if (item instanceof java.util.Collection)
+         {
+            for (Object i : (java.util.Collection) item)
+            {
+               this.withoutMethods(i);
+            }
+         }
+         else if (item instanceof FMethod)
+         {
+            if (this.methods.contains(item))
+            {
+               this.methods.remove((FMethod)item);
+               ((FMethod)item).setClazz(null);
+               firePropertyChange("methods", item, null);
+            }
+         }
+      }
+      return this;
+   }
+
 
 }
