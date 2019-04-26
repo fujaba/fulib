@@ -2,10 +2,8 @@ package org.fulib;
 
 import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
-import org.fulib.classmodel.AssocRole;
-import org.fulib.classmodel.ClassModel;
-import org.fulib.classmodel.CodeFragment;
-import org.fulib.classmodel.FileFragmentMap;
+import org.fulib.builder.ClassModelManager;
+import org.fulib.classmodel.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -49,6 +47,31 @@ class TestGenerator {
     private Object studyRight;
     private Class<?> assignClass;
     private Class<?> studClass;
+
+    @Test
+    public void testFMethods() throws IOException
+    {
+        String targetFolder = "tmp";
+        String packageName = "party.partyApp";
+
+        Tools.removeDirAndFiles(targetFolder);
+
+        ClassModelManager mm = new ClassModelManager()
+              .havePackageName(packageName)
+              .haveMainJavaDir(targetFolder);
+
+        Clazz party = mm.haveClass("Party");
+
+        FMethod method = mm.haveMethod(party, "hello", "", "      System.out.println(\"World!\");\n");
+
+        ClassModel model = mm.getClassModel();
+        Fulib.generator().generate(model);
+
+        String outFolder = model.getMainJavaDir() + "/../out";
+        int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+        assertThat("compiler return code: ", returnCode, is(0));
+
+    }
 
     @Test
     void testAttributeGenerator() throws Exception {

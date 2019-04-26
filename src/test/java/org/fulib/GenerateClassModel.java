@@ -2,6 +2,7 @@ package org.fulib;
 
 import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
+import static org.fulib.builder.ClassModelBuilder.*;
 import org.fulib.classmodel.ClassModel;
 import org.junit.jupiter.api.Test;
 
@@ -38,11 +39,18 @@ class GenerateClassModel
               .buildAttribute("propertyStyle", mb.STRING)
               .buildAttribute("modified", mb.BOOLEAN, "false");
 
+      ClassBuilder fmethod = mb.buildClass("FMethod")
+            .buildAttribute("name", mb.STRING)
+            .buildAttribute("returnType", mb.STRING)
+            .buildAttribute("methodBody", mb.STRING);
+
       classModel.buildAssociation(fuClass, "classes", mb.MANY, "model", mb.ONE);
 
       fuClass.buildAssociation(attribute, "attributes", mb.MANY, "clazz", mb.ONE);
 
       fuClass.buildAssociation(assocRole, "roles", mb.MANY, "clazz", mb.ONE);
+
+      fuClass.buildAssociation(fmethod, "methods", MANY, "clazz", ONE);
 
       fuClass.buildAssociation(fuClass, "superClass", mb.ONE, "subClasses", mb.MANY);
 

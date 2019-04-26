@@ -18,9 +18,9 @@ import static org.fulib.builder.ClassModelBuilder.POJO;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
       * <!-- end_code_fragment:  -->
  * </pre>
  *
@@ -43,9 +43,12 @@ public class ClassModelManager implements IModelManager
    public static final String SRC_SIZE = "srcSize";
    public static final String TGT_ROLE = "tgtRole";
    public static final String TGT_SIZE = "tgtSize";
+   public static final String HAVE_METHOD = "haveMethod";
+   public static final String METHOD_NAME = "methodName";
+   public static final String PARAMS = "params";
+   public static final String METHOD_BODY = "methodBody";
 
    private ClassModel classModel;
-   private LinkedHashMap<String, FMethod> methodMap;
    private ModelEventManager mem;
 
 
@@ -98,6 +101,22 @@ public class ClassModelManager implements IModelManager
    }
 
 
+
+   /**
+    * ClassModelManager is used to manage fulib class models that are input for
+    * fulib code generation {@link Fulib#generator()}. Managed class models may
+    * be merged from multiple inputs<br>
+    */
+   public ClassModelManager()
+   {
+      mem = new ModelEventManager();
+      mem.setModelManager(this);
+
+      this.classModel = new ClassModel()
+            .setDefaultPropertyStyle(POJO)
+            .setDefaultRoleType(COLLECTION_ARRAY_LIST);
+   }
+
    /**
     * ClassModelManager is used to manage fulib class models that are input for
     * fulib code generation {@link Fulib#generator()}. Managed class models may
@@ -105,9 +124,9 @@ public class ClassModelManager implements IModelManager
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     */
@@ -118,21 +137,12 @@ public class ClassModelManager implements IModelManager
       this.classModel = new ClassModel()
             .setDefaultPropertyStyle(POJO)
             .setDefaultRoleType(COLLECTION_ARRAY_LIST);
-
-      this.methodMap = new LinkedHashMap<>();
    }
 
 
    public ClassModel getClassModel()
    {
       return classModel;
-   }
-
-
-
-   public LinkedHashMap<String, FMethod> getMethodMap()
-   {
-      return methodMap;
    }
 
 
@@ -297,31 +307,66 @@ public class ClassModelManager implements IModelManager
    }
 
 
+
    public FMethod haveMethod(Clazz srcClass, String methodName)
    {
-      String key = srcClass.getName() + "." + methodName;
+      return this.haveMethod(srcClass, methodName, null, null);
+   }
 
-      FMethod method = methodMap.get(key);
 
-      if (method == null)
+
+   public FMethod haveMethod(Clazz clazz, String methodName, String params, String body)
+   {
+      String key = clazz.getName() + "." + methodName;
+
+      FMethod method = null;
+      for (FMethod fMethod : clazz.getMethods())
       {
-         method = new FMethod();
-         this.methodMap.put(key, method);
+         if (fMethod.getName().equals(methodName)) {
+            method = fMethod;
+               break;
+         }
       }
 
-      method.setClassName(srcClass.getName())
-            .setName(methodName);
+      if (method != null) {
+         if (params == null || params.equals(method.getFullParamsString())) {
+            if (body == null || body.equals(method.getMethodBody())) {
+               return method;
+            }
+         }
+      }
+
+      if (method == null) {
+         method = new FMethod();
+      }
+
+      method.setClazz(clazz)
+            .setName(methodName)
+            .setParamsByString(params)
+            .setMethodBody(body);
+
+      LinkedHashMap<String, String> event = new LinkedHashMap<>();
+      event.put(EventSource.EVENT_TYPE, HAVE_METHOD);
+      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(clazz.getName() + "." + method.getName()));
+      event.put(CLASS_NAME, Yamler.encapsulate(clazz.getName()));
+      event.put(METHOD_NAME, Yamler.encapsulate(method.getName()));
+      event.put(PARAMS, Yamler.encapsulate(method.getFullParamsString()));
+      event.put(METHOD_BODY, Yamler.encapsulate(method.getMethodBody()));
+      mem.append(event);
 
       return method;
    }
 
-   public FMethod getMethod(String methodName) {
-      for (String key : this.getMethodMap().keySet())
+   public FMethod getMethod(String methodName)
+   {
+      for (Clazz clazz : this.getClassModel().getClasses())
       {
-         String[] split = key.split("\\.");
-         if (methodName.equals(split[1]))
+         for (FMethod fMethod : clazz.getMethods())
          {
-            return this.getMethodMap().get(key);
+            if (fMethod.getName().equals(methodName))
+            {
+               return fMethod;
+            }
          }
       }
       return null;
