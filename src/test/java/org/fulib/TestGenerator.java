@@ -49,7 +49,7 @@ class TestGenerator {
     private Class<?> studClass;
 
     @Test
-    public void testFMethods() throws IOException
+    public void testFMethods() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException
     {
         String targetFolder = "tmp";
         String packageName = "party.partyApp";
@@ -62,7 +62,7 @@ class TestGenerator {
 
         Clazz party = mm.haveClass("Party");
 
-        FMethod method = mm.haveMethod(party, "hello", "", "      System.out.println(\"World!\");\n");
+        FMethod method = mm.haveMethod(party, "public void hello()", "      System.out.println(\"World!\");\n");
 
         ClassModel model = mm.getClassModel();
         Fulib.generator().generate(model);
@@ -71,7 +71,42 @@ class TestGenerator {
         int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
         assertThat("compiler return code: ", returnCode, is(0));
 
+        // does removal work?
+        party.withoutMethods(method);
+        Fulib.generator().generate(model);
+        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+        assertThat("compiler return code: ", returnCode, is(0));
+
+        method = mm.haveMethod(party, "public int theAnswer()", "      return 42;\n");
+        Fulib.generator().generate(model);
+        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+        assertThat("compiler return code: ", returnCode, is(0));
+
+        // add a parameter
+        method.readParams().put("question", "int");
+        method.setMethodBody("      return question * 2;\n");
+
+        Fulib.generator().generate(model);
+        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+        assertThat("compiler return code: ", returnCode, is(0));
+
+        // Load and instantiate compiled class.
+        File classesDir = new File(outFolder);
+        URLClassLoader classLoader;
+        // Loading the class
+        classLoader = URLClassLoader.newInstance(new URL[]{classesDir.toURI().toURL()});
+
+        Class<?> partyClass = Class.forName(model.getPackageName() + ".Party", true, classLoader);
+
+        Object theParty = partyClass.newInstance();
+
+        Method answerMethod = partyClass.getMethod("theAnswer", int.class);
+
+        Object answer = answerMethod.invoke(theParty, 23);
+        assertThat(answer, equalTo(46));
     }
+
+
 
     @Test
     void testAttributeGenerator() throws Exception {

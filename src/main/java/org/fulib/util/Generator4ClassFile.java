@@ -339,7 +339,7 @@ public class Generator4ClassFile {
    {
       for (FMethod method : clazz.getMethods())
       {
-         String signature = method.getSignature();
+         String signature = method.readSignature();
          String methodBody = method.getMethodBody();
          if (methodBody == null) {
             methodBody = "      // hello world\n";
@@ -349,7 +349,7 @@ public class Generator4ClassFile {
                methodBody +
                "   }";
 
-         fragmentMap.add(signature, newText, 2);
+         fragmentMap.add(signature, newText, 2, method.getModified());
       }
    }
 

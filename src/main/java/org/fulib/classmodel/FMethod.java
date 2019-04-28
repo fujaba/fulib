@@ -7,63 +7,19 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class FMethod  
 {
 
    private LinkedHashMap<String, String> params;
 
-   public LinkedHashMap<String, String> getParams()
+   public LinkedHashMap<String, String> readParams()
    {
       if (params == null)
       {
          params = new LinkedHashMap<>();
       }
       return params;
-   }
-
-
-
-   public static final String PROPERTY_name = "name";
-
-   private String name;
-
-   public String getName()
-   {
-      return name;
-   }
-
-   public FMethod setName(String value)
-   {
-      if (value == null ? this.name != null : ! value.equals(this.name))
-      {
-         String oldValue = this.name;
-         this.name = value;
-         firePropertyChange("name", oldValue, value);
-      }
-      return this;
-   }
-
-
-   public static final String PROPERTY_returnType = "returnType";
-
-   private String returnType = "void";
-
-   public String getReturnType()
-   {
-      return returnType;
-   }
-
-   public FMethod setReturnType(String value)
-   {
-      if (value == null ? this.returnType != null : ! value.equals(this.returnType))
-      {
-         String oldValue = this.returnType;
-         this.returnType = value;
-         firePropertyChange("returnType", oldValue, value);
-      }
-      return this;
    }
 
 
@@ -138,19 +94,6 @@ public class FMethod
       return true;
    }
 
-   @Override
-   public String toString()
-   {
-      StringBuilder result = new StringBuilder();
-
-      result.append(" ").append(this.getName());
-      result.append(" ").append(this.getReturnType());
-      result.append(" ").append(this.getMethodBody());
-
-
-      return result.substring(1);
-   }
-
    public void removeYou()
    {
       this.setClazz(null);
@@ -158,53 +101,100 @@ public class FMethod
    }
 
 
-   public static final String PROPERTY_packageName = "packageName";
+   private String name;
 
-   private String packageName;
-
-   public String getPackageName()
-   {
-      return packageName;
+   public String readName() {
+      return name;
    }
 
-   public FMethod setPackageName(String value)
+   public FMethod writeName(String newName) {
+      this.name = newName;
+      return this;
+   }
+
+
+   public String readSignature()
    {
-      if (value == null ? this.packageName != null : ! value.equals(this.packageName))
+      this.readParams().remove("this");
+      String paramTypes = String.join(",", this.readParams().values());
+      String result = String.format(Parser.METHOD + ":%s(%s)",
+            this.readName(),
+            paramTypes);
+      return result;
+   }
+
+   private String returnType;
+
+   public String readReturnType() {
+      return this.returnType;
+   }
+
+   public FMethod writeReturnType(String value) {
+      this.returnType = value;
+      return this;
+   }
+
+   public static final String PROPERTY_declaration = "declaration";
+
+   // private String declaration;
+
+   public FMethod setDeclaration(String value) // no fulib
+   {
+      // a declaration looks like
+      // public void m(T1 p1, T2 p2)
+      if (value == null) {
+         if (this.getDeclaration() == null) {
+            return this;
+         } else {
+            this.name = null;
+            this.returnType = "void";
+            this.readParams().clear();
+         }
+      }
+
+      if (! value.equals(this.getDeclaration()))
       {
-         String oldValue = this.packageName;
-         this.packageName = value;
-         firePropertyChange("packageName", oldValue, value);
+         String oldValue = this.getDeclaration();
+         int pos = value.indexOf('(');
+         String namePart = value.substring(0, pos);
+         String params = value.substring(pos+1, value.length()-1);
+         String[] split = namePart.split(" ");
+         String newName = split[2];
+         this.name = newName;
+         String newReturnType = split[1];
+         this.returnType = newReturnType;
+         this.setParamsByString(params);
+         firePropertyChange("declaration", oldValue, value);
       }
       return this;
    }
 
 
-
-   public String getSignature()
+   public String getDeclaration() // no fulib
    {
-      this.getParams().remove("this");
-      String paramTypes = String.join(",", this.getParams().values());
-      String result = String.format(Parser.METHOD + ":%s(%s)",
-            this.getName(),
-            paramTypes);
-      return result;
+      // e.g. public void m(T1 p1, T2 p2)
+      if (this.name == null) {
+         return null;
+      }
+
+      String declaration = String.format("public %s %s(%s)",
+            this.returnType, this.name, this.readFullParamsString());
+
+      return declaration;
    }
 
 
-   public String getFullParamsString()
+   public String readFullParamsString()
    {
       ArrayList<String> paramList = new ArrayList<>();
-      for (Map.Entry<String, String> entry : this.getParams().entrySet())
+      for (Map.Entry<String, String> entry : this.readParams().entrySet())
       {
          String paramName = entry.getKey();
          String paramType = entry.getValue();
          paramList.add(paramType + " " + paramName);
       }
-      String result = String.join(",", paramList);
 
-      if (this.getReturnType() != null && ! this.getReturnType().equals("void")) {
-         result += ":" + this.getReturnType();
-      }
+      String result = String.join(", ", paramList);
 
       return result;
    }
@@ -212,46 +202,21 @@ public class FMethod
 
    public FMethod setParamsByString(String params)
    {
-      String pureParams = params;
-      int pos = params.indexOf(':');
-      if (pos >= 0) {
-         String[] split = params.split("\\:");
-         this.setReturnType(split[1]);
-         pureParams = split[0];
-      }
-
-      String[] split = pureParams.split(",");
-      this.getParams().clear();
+      String[] split = params.split(", ");
+      this.readParams().clear();
       for (String s : split)
       {
          if (s.equals("")) {
             break;
          }
          String[] pair = s.split(" ");
-         this.getParams().put(pair[1], pair[0]);
+         this.readParams().put(pair[1], pair[0]);
       }
 
       return this;
    }
 
 
-   public String getDeclaration()
-   {
-      ArrayList<String> paramList = new ArrayList<>();
-      for (Map.Entry<String, String> entry : this.getParams().entrySet())
-      {
-         String oneParam = entry.getValue() + " " + entry.getKey();
-         paramList.add(oneParam);
-      }
-
-      String paramTypes = String.join(", ", paramList);
-
-      String result = String.format("public %s %s(%s)",
-            this.getReturnType(),
-            this.getName(),
-            paramTypes);
-      return result;
-   }
    public static final String PROPERTY_clazz = "clazz";
 
    private Clazz clazz = null;
@@ -277,6 +242,41 @@ public class FMethod
             value.withMethods(this);
          }
          firePropertyChange("clazz", oldValue, value);
+      }
+      return this;
+   }
+
+
+   @Override
+   public String toString()
+   {
+      StringBuilder result = new StringBuilder();
+
+      result.append(" ").append(this.getDeclaration());
+      result.append(" ").append(this.getMethodBody());
+
+
+      return result.substring(1);
+   }
+
+   private String declaration;
+
+   public static final String PROPERTY_modified = "modified";
+
+   private boolean modified = false;
+
+   public boolean getModified()
+   {
+      return modified;
+   }
+
+   public FMethod setModified(boolean value)
+   {
+      if (value != this.modified)
+      {
+         boolean oldValue = this.modified;
+         this.modified = value;
+         firePropertyChange("modified", oldValue, value);
       }
       return this;
    }

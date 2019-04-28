@@ -47,6 +47,7 @@ public class ClassModelManager implements IModelManager
    public static final String METHOD_NAME = "methodName";
    public static final String PARAMS = "params";
    public static final String METHOD_BODY = "methodBody";
+   public static final String DECLARATION = "declaration";
 
    private ClassModel classModel;
    private ModelEventManager mem;
@@ -308,31 +309,28 @@ public class ClassModelManager implements IModelManager
 
 
 
-   public FMethod haveMethod(Clazz srcClass, String methodName)
+   public FMethod haveMethod(Clazz srcClass, String declaration)
    {
-      return this.haveMethod(srcClass, methodName, null, null);
+      return this.haveMethod(srcClass, declaration, null);
    }
 
 
 
-   public FMethod haveMethod(Clazz clazz, String methodName, String params, String body)
+   public FMethod haveMethod(Clazz clazz, String declaration, String body)
    {
-      String key = clazz.getName() + "." + methodName;
 
       FMethod method = null;
       for (FMethod fMethod : clazz.getMethods())
       {
-         if (fMethod.getName().equals(methodName)) {
+         if (fMethod.getDeclaration().equals(declaration)) {
             method = fMethod;
                break;
          }
       }
 
       if (method != null) {
-         if (params == null || params.equals(method.getFullParamsString())) {
-            if (body == null || body.equals(method.getMethodBody())) {
-               return method;
-            }
+         if (body == null || body.equals(method.getMethodBody())) {
+            return method;
          }
       }
 
@@ -341,29 +339,29 @@ public class ClassModelManager implements IModelManager
       }
 
       method.setClazz(clazz)
-            .setName(methodName)
-            .setParamsByString(params)
+            .setDeclaration(declaration)
             .setMethodBody(body);
+
+      String key = clazz.getName() + "." + method.getDeclaration();
 
       LinkedHashMap<String, String> event = new LinkedHashMap<>();
       event.put(EventSource.EVENT_TYPE, HAVE_METHOD);
-      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(clazz.getName() + "." + method.getName()));
+      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(key));
       event.put(CLASS_NAME, Yamler.encapsulate(clazz.getName()));
-      event.put(METHOD_NAME, Yamler.encapsulate(method.getName()));
-      event.put(PARAMS, Yamler.encapsulate(method.getFullParamsString()));
+      event.put(DECLARATION, Yamler.encapsulate(method.getDeclaration()));
       event.put(METHOD_BODY, Yamler.encapsulate(method.getMethodBody()));
       mem.append(event);
 
       return method;
    }
 
-   public FMethod getMethod(String methodName)
+   public FMethod getMethod(String declaration)
    {
       for (Clazz clazz : this.getClassModel().getClasses())
       {
          for (FMethod fMethod : clazz.getMethods())
          {
-            if (fMethod.getName().equals(methodName))
+            if (fMethod.getDeclaration().equals(declaration))
             {
                return fMethod;
             }

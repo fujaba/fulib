@@ -40,9 +40,9 @@ class GenerateClassModel
               .buildAttribute("modified", mb.BOOLEAN, "false");
 
       ClassBuilder fmethod = mb.buildClass("FMethod")
-            .buildAttribute("name", mb.STRING)
-            .buildAttribute("returnType", mb.STRING)
-            .buildAttribute("methodBody", mb.STRING);
+            .buildAttribute("declaration", mb.STRING)
+            .buildAttribute("methodBody", mb.STRING)
+            .buildAttribute("modified", mb.BOOLEAN, "false");
 
       classModel.buildAssociation(fuClass, "classes", mb.MANY, "model", mb.ONE);
 

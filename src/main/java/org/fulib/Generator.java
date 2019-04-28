@@ -1,9 +1,6 @@
 package org.fulib;
 
-import org.fulib.classmodel.AssocRole;
-import org.fulib.classmodel.Attribute;
-import org.fulib.classmodel.ClassModel;
-import org.fulib.classmodel.Clazz;
+import org.fulib.classmodel.*;
 import org.fulib.util.Generator4ClassFile;
 import org.fulib.yaml.YamlIdMap;
 
@@ -141,18 +138,15 @@ public class Generator
    private void markModifiedElementsInOldClazz(Clazz oldClazz, Clazz newClazz)
    {
       logger = Logger.getLogger(Generator.class.getName());
-      if (newClazz == null)
-      {
+      if (newClazz == null) {
          oldClazz.markAsModified();
          logger.info("\n   markedAsModified: class " + oldClazz.getName());
       }
 
-      for (Attribute oldAttr : oldClazz.getAttributes())
-      {
+      for (Attribute oldAttr : oldClazz.getAttributes()) {
          boolean modified = newClazz == null;
 
-         if ( ! modified)
-         {
+         if ( ! modified) {
             Attribute newAttr = newClazz.getAttribute(oldAttr.getName());
 
             modified = newAttr == null
@@ -160,19 +154,16 @@ public class Generator
                   || ! StrUtil.stringEquals(oldAttr.getPropertyStyle(), newAttr.getPropertyStyle());
          }
 
-         if (modified)
-         {
+         if (modified) {
             oldAttr.markAsModified();
             logger.info("\n   markedAsModified: attribute " + oldAttr.getName());
          }
       }
 
-      for (AssocRole oldRole : oldClazz.getRoles())
-      {
+      for (AssocRole oldRole : oldClazz.getRoles()) {
          boolean modified = newClazz == null;
 
-         if ( ! modified)
-         {
+         if ( ! modified) {
             AssocRole newRole = newClazz.getRole(oldRole.getName());
 
             modified = newRole == null
@@ -180,8 +171,7 @@ public class Generator
                   || ! StrUtil.stringEquals(oldRole.getPropertyStyle(), oldRole.getPropertyStyle());
          }
 
-         if (modified)
-         {
+         if (modified) {
             oldRole.markAsModified();
             logger.info("\n   markedAsModified: role " + oldRole.getName());
             if (oldRole.getOther() != null)
@@ -189,6 +179,28 @@ public class Generator
                oldRole.getOther().markAsModified();
                logger.info("\n   markedAsModified: role " + oldRole.getOther().getName());
             }
+         }
+      }
+
+      for (FMethod oldMethod : oldClazz.getMethods())
+      {
+         boolean modified = newClazz == null;
+
+         String oldDeclaration = oldMethod.getDeclaration();
+
+         if ( ! modified) {
+            for (FMethod newMethod : newClazz.getMethods()) {
+               if (newMethod.getDeclaration().equals(oldDeclaration)) {
+                  modified = false;
+                  break;
+               }
+            }
+            modified = true;
+         }
+
+         if (modified) {
+            oldMethod.setModified(true);
+            logger.info("\n   markedAsModified: method " + oldMethod.getDeclaration());
          }
       }
    }

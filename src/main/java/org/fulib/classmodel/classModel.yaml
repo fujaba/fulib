@@ -39,7 +39,7 @@
   roles: 	clazz35 	other36 	other37 	
 
 - fMethod6: 	Clazz
-  attributes: 	name38 	returnType39 	methodBody40 	
+  attributes: 	declaration38 	methodBody39 	modified40 	
   model: 	c1
   modified: 	false
   name: 	FMethod
@@ -301,26 +301,27 @@
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
-- name38: 	Attribute
+- declaration38: 	Attribute
   clazz: 	fMethod6
   modified: 	false
-  name: 	name
+  name: 	declaration
   propertyStyle: 	POJO
   type: 	String
 
-- returnType39: 	Attribute
-  clazz: 	fMethod6
-  modified: 	false
-  name: 	returnType
-  propertyStyle: 	POJO
-  type: 	String
-
-- methodBody40: 	Attribute
+- methodBody39: 	Attribute
   clazz: 	fMethod6
   modified: 	false
   name: 	methodBody
   propertyStyle: 	POJO
   type: 	String
+
+- modified40: 	Attribute
+  clazz: 	fMethod6
+  initialization: 	false
+  modified: 	false
+  name: 	modified
+  propertyStyle: 	POJO
+  type: 	boolean
 
 - clazz41: 	AssocRole
   aggregation: 	false

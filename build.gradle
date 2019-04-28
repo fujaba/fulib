@@ -36,7 +36,7 @@ repositories {
 dependencies {
     // compile files('../fulibYaml/build/libs/fulibYaml-1.0.2-SNAPSHOT.jar')
     compile 'org.antlr:ST4:4.0.8'
-    compile 'org.fulib:fulibYaml:1.0.+'
+    compile 'org.fulib:fulibYaml:1.0.3+'
 
     testCompile 'org.hamcrest:hamcrest-library:2.1'
 
