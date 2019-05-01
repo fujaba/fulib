@@ -28,8 +28,6 @@ public class Generator4ClassFile {
       // doGenerate code for class
       generatePackageDecl(clazz, fragmentMap);
 
-      generateImports(clazz, fragmentMap);
-
       generateClassDecl(clazz, fragmentMap);
 
       generateAttributes(clazz, fragmentMap);
@@ -45,6 +43,8 @@ public class Generator4ClassFile {
       generateRemoveYou(clazz, fragmentMap);
 
       fragmentMap.add(Parser.CLASS_END, "}", 1);
+
+      generateImports(clazz, fragmentMap);
 
       if (clazz.getModified() == true && fragmentMap.classBodyIsEmpty(fragmentMap)) {
          Path path = Paths.get(classFileName);
