@@ -6,6 +6,8 @@ import static org.fulib.builder.ClassModelBuilder.*;
 import org.fulib.classmodel.ClassModel;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 class GenerateClassModel
 {
    @Test
@@ -22,7 +24,8 @@ class GenerateClassModel
       ClassBuilder fuClass = mb.buildClass("Clazz")
               .buildAttribute("name", mb.STRING)
               .buildAttribute("propertyStyle", mb.STRING)
-              .buildAttribute("modified", mb.BOOLEAN, "false");
+              .buildAttribute("modified", mb.BOOLEAN, "false")
+              .buildAttribute("importList", "java.util.LinkedHashSet<String>", "new java.util.LinkedHashSet<>()");
 
       ClassBuilder attribute = mb.buildClass("Attribute")
               .buildAttribute("name", mb.STRING)
@@ -42,7 +45,8 @@ class GenerateClassModel
       ClassBuilder fmethod = mb.buildClass("FMethod")
             .buildAttribute("declaration", mb.STRING)
             .buildAttribute("methodBody", mb.STRING)
-            .buildAttribute("modified", mb.BOOLEAN, "false");
+            .buildAttribute("modified", mb.BOOLEAN, "false")
+            .buildAttribute("annotations", mb.STRING);
 
       classModel.buildAssociation(fuClass, "classes", mb.MANY, "model", mb.ONE);
 

@@ -468,19 +468,6 @@ public class Clazz
       return this;
    }
 
-
-   @Override
-   public String toString()
-   {
-      StringBuilder result = new StringBuilder();
-
-      result.append(" ").append(this.getName());
-      result.append(" ").append(this.getPropertyStyle());
-
-
-      return result.substring(1);
-   }
-
    public static final String PROPERTY_model = "model";
 
    public static final String PROPERTY_attributes = "attributes";
@@ -568,5 +555,38 @@ public class Clazz
       return this;
    }
 
+
+   public static final String PROPERTY_importList = "importList";
+
+   private java.util.LinkedHashSet<String> importList = new java.util.LinkedHashSet<>();
+
+   public java.util.LinkedHashSet<String> getImportList()
+   {
+      return importList;
+   }
+
+   public Clazz setImportList(java.util.LinkedHashSet<String> value)
+   {
+      if (value != this.importList)
+      {
+         java.util.LinkedHashSet<String> oldValue = this.importList;
+         this.importList = value;
+         firePropertyChange("importList", oldValue, value);
+      }
+      return this;
+   }
+
+
+   @Override
+   public String toString()
+   {
+      StringBuilder result = new StringBuilder();
+
+      result.append(" ").append(this.getName());
+      result.append(" ").append(this.getPropertyStyle());
+
+
+      return result.substring(1);
+   }
 
 }

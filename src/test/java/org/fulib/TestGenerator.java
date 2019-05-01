@@ -90,6 +90,22 @@ class TestGenerator {
         returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
         assertThat("compiler return code: ", returnCode, is(0));
 
+
+
+        party.getImportList().add("import org.junit.jupiter.api.Test;");
+        party.getImportList().add("import static org.hamcrest.CoreMatchers.*;\n");
+        party.getImportList().add("import static org.hamcrest.MatcherAssert.assertThat;");
+
+        FMethod testMethod = mm.haveMethod(party, "" +
+              "@Test\n" +
+              "public void testQuestion()", "" +
+              "      assertThat(theAnswer(21), equalTo(42));\n");
+
+        Fulib.generator().generate(model);
+        String classPath = System.getProperty("java.class.path");
+        returnCode = Tools.javac(classPath, outFolder, model.getPackageSrcFolder());
+        assertThat("compiler return code: ", returnCode, is(0));
+
         // Load and instantiate compiled class.
         File classesDir = new File(outFolder);
         URLClassLoader classLoader;
@@ -104,6 +120,10 @@ class TestGenerator {
 
         Object answer = answerMethod.invoke(theParty, 23);
         assertThat(answer, equalTo(46));
+
+        Method secondMethod = partyClass.getMethod("testQuestion");
+        secondMethod.invoke(theParty);
+
     }
 
 

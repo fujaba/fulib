@@ -28,6 +28,8 @@ public class Generator4ClassFile {
       // doGenerate code for class
       generatePackageDecl(clazz, fragmentMap);
 
+      generateImports(clazz, fragmentMap);
+
       generateClassDecl(clazz, fragmentMap);
 
       generateAttributes(clazz, fragmentMap);
@@ -62,6 +64,20 @@ public class Generator4ClassFile {
       String result = String.format("package %s;", clazz.getModel().getPackageName());
       fragmentMap.add(Parser.PACKAGE, result, 2);
    }
+
+
+   private void generateImports(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      for (String imp : clazz.getImportList())
+      {
+         String[] split = imp.split(" ");
+         String key = split[split.length-1];
+         key = key.substring(0, key.length()-1);
+         fragmentMap.add(Parser.IMPORT + ":" + key, imp, 1);
+      }
+
+   }
+
 
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap) {
@@ -345,7 +361,7 @@ public class Generator4ClassFile {
             methodBody = "      // hello world\n";
          }
          String newText = "   " + method.getDeclaration() +
-               "{ \n" +
+               " { \n" +
                methodBody +
                "   }";
 

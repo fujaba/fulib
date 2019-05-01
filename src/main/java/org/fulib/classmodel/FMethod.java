@@ -159,6 +159,12 @@ public class FMethod
          String namePart = value.substring(0, pos);
          String params = value.substring(pos+1, value.length()-1);
          String[] split = namePart.split(" ");
+         String modifier = split[0];
+         if (modifier.startsWith("@")) {
+            int publicPos = modifier.indexOf("public");
+            String annos = modifier.substring(0, publicPos-1);
+            setAnnotations(annos);
+         }
          String newName = split[2];
          this.name = newName;
          String newReturnType = split[1];
@@ -179,6 +185,10 @@ public class FMethod
 
       String declaration = String.format("public %s %s(%s)",
             this.returnType, this.name, this.readFullParamsString());
+
+      if (this.annotations != null) {
+         declaration = this.annotations + "\n   " + declaration;
+      }
 
       return declaration;
    }
@@ -254,6 +264,7 @@ public class FMethod
 
       result.append(" ").append(this.getDeclaration());
       result.append(" ").append(this.getMethodBody());
+      result.append(" ").append(this.getAnnotations());
 
 
       return result.substring(1);
@@ -277,6 +288,27 @@ public class FMethod
          boolean oldValue = this.modified;
          this.modified = value;
          firePropertyChange("modified", oldValue, value);
+      }
+      return this;
+   }
+
+
+   public static final String PROPERTY_annotations = "annotations";
+
+   private String annotations;
+
+   public String getAnnotations()
+   {
+      return annotations;
+   }
+
+   public FMethod setAnnotations(String value)
+   {
+      if (value == null ? this.annotations != null : ! value.equals(this.annotations))
+      {
+         String oldValue = this.annotations;
+         this.annotations = value;
+         firePropertyChange("annotations", oldValue, value);
       }
       return this;
    }
