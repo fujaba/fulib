@@ -372,6 +372,10 @@ public class Generator4ClassFile {
 
 
    private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap) {
+      if (clazz.getAttributes().size() == 0 && clazz.getRoles().size() == 0) {
+         return;
+      }
+
       fragmentMap.add(Parser.IMPORT + ":java.beans.PropertyChangeSupport", "import java.beans.PropertyChangeSupport;", 1);
       fragmentMap.add(Parser.IMPORT + ":java.beans.PropertyChangeListener", "import java.beans.PropertyChangeListener;", 1);
 
