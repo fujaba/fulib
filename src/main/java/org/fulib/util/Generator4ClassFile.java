@@ -433,6 +433,10 @@ public class Generator4ClassFile {
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
    {
+      if (clazz.getRoles().size() == 0) {
+         return;
+      }
+
       ArrayList<String> toOneList = new ArrayList<>();
       ArrayList<String> toManyList = new ArrayList<>();
       ArrayList<String> toOneAggregationList = new ArrayList<>();
