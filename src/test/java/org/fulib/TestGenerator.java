@@ -61,6 +61,7 @@ class TestGenerator {
               .haveMainJavaDir(targetFolder);
 
         Clazz party = mm.haveClass("Party");
+        // mm.haveAttribute(party, "name", "String");
 
         FMethod method = mm.haveMethod(party, "public void hello()", "      System.out.println(\"World!\");\n");
 
@@ -93,7 +94,7 @@ class TestGenerator {
 
 
         party.getImportList().add("import org.junit.jupiter.api.Test;");
-        party.getImportList().add("import static org.hamcrest.CoreMatchers.*;\n");
+        party.getImportList().add("import static org.hamcrest.CoreMatchers.*;");
         party.getImportList().add("import static org.hamcrest.MatcherAssert.assertThat;");
 
         FMethod testMethod = mm.haveMethod(party, "" +
@@ -102,6 +103,14 @@ class TestGenerator {
               "      assertThat(theAnswer(21), equalTo(42));\n");
 
         Fulib.generator().generate(model);
+
+        mm.haveMethod(party, "public int theAnswer()", "      return 42;\n");
+        Fulib.generator().generate(model);
+
+        Fulib.generator().generate(model);
+
+        Fulib.generator().generate(model);
+
         String classPath = System.getProperty("java.class.path");
         returnCode = Tools.javac(classPath, outFolder, model.getPackageSrcFolder());
         assertThat("compiler return code: ", returnCode, is(0));

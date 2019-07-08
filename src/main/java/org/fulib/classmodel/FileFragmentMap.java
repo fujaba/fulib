@@ -74,6 +74,10 @@ public class FileFragmentMap
    private LinkedHashMap<String, CodeFragment> codeMap = new LinkedHashMap<>();
    private ArrayList<CodeFragment> fragmentList = new ArrayList<>();
 
+   public ArrayList<CodeFragment> getFragmentList()
+   {
+      return fragmentList;
+   }
 
    //==========================================================================
 
@@ -239,8 +243,8 @@ public class FileFragmentMap
 
          fragmentList.add(pos, gap);
          pos++;
-         fragmentList.add(pos, gap);
-         pos++;
+         //         fragmentList.add(pos, gap);
+         //         pos++;
          fragmentList.add(pos, result);
 
          return result;

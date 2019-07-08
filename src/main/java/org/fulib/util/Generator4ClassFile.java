@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class Generator4ClassFile {
 
@@ -56,8 +57,43 @@ public class Generator4ClassFile {
             e.printStackTrace();
          }
       } else {
+         compressBlankLines(fragmentMap);
          fragmentMap.writeFile();
       }
+   }
+
+   private void compressBlankLines(FileFragmentMap fragmentMap)
+   {
+      ArrayList<CodeFragment> fragmentList = fragmentMap.getFragmentList();
+      int noOfBlankLines = 0;
+      for (int i = 0; i < fragmentList.size(); i++) {
+         CodeFragment firstFragment = fragmentList.get(i);
+         if (firstFragment.getText().matches("\\s*")) {
+
+            String newText = "";
+            for (int pos = firstFragment.getText().length() -1; pos >= 0; pos--)
+            {
+               if (firstFragment.getText().charAt(pos) == '\n') {
+                  noOfBlankLines ++;
+                  if (noOfBlankLines == 2) {
+                     newText = firstFragment.getText().substring(pos);
+                     firstFragment.setText(newText);
+                     break;
+                  }
+                  if (noOfBlankLines > 2) {
+                     newText = firstFragment.getText().substring(pos+1);
+                     firstFragment.setText(newText);
+                     break;
+                  }
+               }
+            }
+         }
+         else {
+            noOfBlankLines = 0;
+         }
+      }
+      System.out.println();
+
    }
 
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap) {
