@@ -92,8 +92,6 @@ public class Generator4ClassFile {
             noOfBlankLines = 0;
          }
       }
-      System.out.println();
-
    }
 
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap) {
