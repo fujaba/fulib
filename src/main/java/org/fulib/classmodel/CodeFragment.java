@@ -9,7 +9,6 @@ import java.beans.PropertyChangeListener;
 public class CodeFragment  
 {
 
-
    protected PropertyChangeSupport listeners = null;
 
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
@@ -60,7 +59,6 @@ public class CodeFragment
       return true;
    }
 
-
    public void removeYou()
    {
    }
@@ -85,7 +83,6 @@ public class CodeFragment
       return this;
    }
 
-
    public static final String PROPERTY_text = "text";
 
    private String text;
@@ -105,7 +102,6 @@ public class CodeFragment
       }
       return this;
    }
-
 
    @Override
    public String toString()

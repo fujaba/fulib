@@ -84,6 +84,6 @@ repositories {
 <pre>
 <!-- insert_code_fragment: gradle.dependencies -->
 dependencies {
-    testCompile 'org.fulib:fulib:1.0.+'
+    testCompile 'org.fulib:fulib:19.10.+'
 <!-- end_code_fragment: -->
 </pre>

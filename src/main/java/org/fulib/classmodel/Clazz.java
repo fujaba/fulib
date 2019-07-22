@@ -14,7 +14,6 @@ import java.beans.PropertyChangeListener;
 public class Clazz  
 {
 
-
    private ClassModel model = null;
 
    public ClassModel getModel()
@@ -42,11 +41,8 @@ public class Clazz
       return this;
    }
 
-
-
    public static final java.util.ArrayList<Attribute> EMPTY_attributes = new java.util.ArrayList<Attribute>()
    { @Override public boolean add(Attribute value){ throw new UnsupportedOperationException("No direct add! Use xy.withAttributes(obj)"); }};
-
 
    private java.util.ArrayList<Attribute> attributes = null;
 
@@ -71,8 +67,6 @@ public class Clazz
       }
       return null;
    }
-
-
 
    public Clazz withAttributes(Object... value)
    {
@@ -105,8 +99,6 @@ public class Clazz
       return this;
    }
 
-
-
    public Clazz withoutAttributes(Object... value)
    {
       if (this.attributes == null || value==null) return this;
@@ -133,10 +125,8 @@ public class Clazz
       return this;
    }
 
-
    public static final java.util.ArrayList<AssocRole> EMPTY_roles = new java.util.ArrayList<AssocRole>()
    { @Override public boolean add(AssocRole value){ throw new UnsupportedOperationException("No direct add! Use xy.withRoles(obj)"); }};
-
 
    private java.util.ArrayList<AssocRole> roles = null;
 
@@ -161,8 +151,6 @@ public class Clazz
       }
       return null;
    }
-
-
 
    public Clazz withRoles(Object... value)
    {
@@ -195,8 +183,6 @@ public class Clazz
       return this;
    }
 
-
-
    public Clazz withoutRoles(Object... value)
    {
       if (this.roles == null || value==null) return this;
@@ -222,7 +208,6 @@ public class Clazz
       }
       return this;
    }
-
 
    protected PropertyChangeSupport listeners = null;
 
@@ -279,11 +264,8 @@ public class Clazz
       return this.setModified(true);
    }
 
-
-
    public static final java.util.ArrayList<Clazz> EMPTY_subClasses = new java.util.ArrayList<Clazz>()
    { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withSubClasses(obj)"); }};
-
 
    private java.util.ArrayList<Clazz> subClasses = null;
 
@@ -328,8 +310,6 @@ public class Clazz
       return this;
    }
 
-
-
    public Clazz withoutSubClasses(Object... value)
    {
       if (this.subClasses == null || value==null) return this;
@@ -355,7 +335,6 @@ public class Clazz
       }
       return this;
    }
-
 
    private Clazz superClass = null;
 
@@ -384,8 +363,6 @@ public class Clazz
       return this;
    }
 
-
-
    public void removeYou()
    {
       this.setModel(null);
@@ -404,7 +381,6 @@ public class Clazz
 
 
    }
-
 
    public static final String PROPERTY_name = "name";
 
@@ -426,7 +402,6 @@ public class Clazz
       return this;
    }
 
-
    public static final String PROPERTY_propertyStyle = "propertyStyle";
 
    private String propertyStyle;
@@ -446,7 +421,6 @@ public class Clazz
       }
       return this;
    }
-
 
    public static final String PROPERTY_modified = "modified";
 
@@ -480,7 +454,6 @@ public class Clazz
 
    public static final java.util.ArrayList<FMethod> EMPTY_methods = new java.util.ArrayList<FMethod>()
    { @Override public boolean add(FMethod value){ throw new UnsupportedOperationException("No direct add! Use xy.withMethods(obj)"); }};
-
 
    public static final String PROPERTY_methods = "methods";
 
@@ -527,8 +500,6 @@ public class Clazz
       return this;
    }
 
-
-
    public Clazz withoutMethods(Object... value)
    {
       if (this.methods == null || value==null) return this;
@@ -555,7 +526,6 @@ public class Clazz
       return this;
    }
 
-
    public static final String PROPERTY_importList = "importList";
 
    private java.util.LinkedHashSet<String> importList = new java.util.LinkedHashSet<>();
@@ -575,7 +545,6 @@ public class Clazz
       }
       return this;
    }
-
 
    @Override
    public String toString()

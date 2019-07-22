@@ -20,23 +20,38 @@ plugins {
 }
 //declare the release plugin
 apply plugin: 'net.researchgate.release'
+apply plugin: 'maven-publish'
 apply plugin: 'maven'
-apply plugin: 'signing'
-apply from: 'gradle/mavencentral.gradle'
+// apply plugin: 'signing'
+// apply from: 'gradle/mavencentral.gradle'
+
 
 
 sourceCompatibility = 1.8
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     jcenter()
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+
+
 dependencies {
     // compile files('../fulibYaml/build/libs/fulibYaml-1.0.2-SNAPSHOT.jar')
-    compile 'org.antlr:ST4:4.0.8'
-    compile 'org.fulib:fulibYaml:1.0.3+'
+    implementation 'org.antlr:ST4:4.0.8'
+    implementation 'org.fulib:fulibYaml:19.10.+'
 
     testCompile 'org.hamcrest:hamcrest-library:2.1'
 

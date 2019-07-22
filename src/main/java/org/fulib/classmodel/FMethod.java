@@ -22,7 +22,6 @@ public class FMethod
       return params;
    }
 
-
    public static final String PROPERTY_methodBody = "methodBody";
 
    private String methodBody;
@@ -42,7 +41,6 @@ public class FMethod
       }
       return this;
    }
-
 
    protected PropertyChangeSupport listeners = null;
 
@@ -100,7 +98,6 @@ public class FMethod
 
    }
 
-
    private String name;
 
    public String readName() {
@@ -111,7 +108,6 @@ public class FMethod
       this.name = newName;
       return this;
    }
-
 
    public String readSignature()
    {
@@ -175,7 +171,6 @@ public class FMethod
       return this;
    }
 
-
    public String getDeclaration() // no fulib
    {
       // e.g. public void m(T1 p1, T2 p2)
@@ -193,7 +188,6 @@ public class FMethod
       return declaration;
    }
 
-
    public String readFullParamsString()
    {
       ArrayList<String> paramList = new ArrayList<>();
@@ -208,7 +202,6 @@ public class FMethod
 
       return result;
    }
-
 
    public FMethod setParamsByString(String params)
    {
@@ -225,7 +218,6 @@ public class FMethod
 
       return this;
    }
-
 
    public static final String PROPERTY_clazz = "clazz";
 
@@ -255,7 +247,6 @@ public class FMethod
       }
       return this;
    }
-
 
    @Override
    public String toString()
@@ -292,7 +283,6 @@ public class FMethod
       return this;
    }
 
-
    public static final String PROPERTY_annotations = "annotations";
 
    private String annotations;
@@ -312,6 +302,5 @@ public class FMethod
       }
       return this;
    }
-
 
 }

@@ -12,7 +12,6 @@ import java.beans.PropertyChangeListener;
 public class Attribute  
 {
 
-
    private Clazz clazz = null;
 
    public Clazz getClazz()
@@ -39,8 +38,6 @@ public class Attribute
       }
       return this;
    }
-
-
 
    protected PropertyChangeSupport listeners = null;
 
@@ -97,13 +94,11 @@ public class Attribute
       return setModified(true);
    }
 
-
    public void removeYou()
    {
       this.setClazz(null);
 
    }
-
 
    public static final String PROPERTY_name = "name";
 
@@ -125,7 +120,6 @@ public class Attribute
       return this;
    }
 
-
    public static final String PROPERTY_type = "type";
 
    private String type;
@@ -145,7 +139,6 @@ public class Attribute
       }
       return this;
    }
-
 
    public static final String PROPERTY_initialization = "initialization";
 
@@ -167,7 +160,6 @@ public class Attribute
       return this;
    }
 
-
    public static final String PROPERTY_propertyStyle = "propertyStyle";
 
    private String propertyStyle;
@@ -188,7 +180,6 @@ public class Attribute
       return this;
    }
 
-
    public static final String PROPERTY_modified = "modified";
 
    private boolean modified = false;
@@ -208,7 +199,6 @@ public class Attribute
       }
       return this;
    }
-
 
    @Override
    public String toString()

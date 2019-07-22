@@ -13,10 +13,8 @@ import java.util.Collections;
 public class ClassModel  
 {
 
-
    public static final java.util.ArrayList<Clazz> EMPTY_classes = new java.util.ArrayList<Clazz>()
    { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withClasses(obj)"); }};
-
 
    private java.util.ArrayList<Clazz> classes = null;
 
@@ -30,7 +28,6 @@ public class ClassModel
       return this.classes;
    }
 
-
    public Clazz getClazz(String name)
    {
       for (Clazz clazz : this.getClasses())
@@ -42,8 +39,6 @@ public class ClassModel
       }
       return null;
    }
-
-
 
    public ClassModel withClasses(Object... value)
    {
@@ -76,8 +71,6 @@ public class ClassModel
       return this;
    }
 
-
-
    public ClassModel withoutClasses(Object... value)
    {
       if (this.classes == null || value==null) return this;
@@ -103,7 +96,6 @@ public class ClassModel
       }
       return this;
    }
-
 
    public String getPackageSrcFolder()
    {
@@ -170,7 +162,6 @@ public class ClassModel
 
    }
 
-
    public static final String PROPERTY_packageName = "packageName";
 
    private String packageName;
@@ -190,7 +181,6 @@ public class ClassModel
       }
       return this;
    }
-
 
    public static final String PROPERTY_mainJavaDir = "mainJavaDir";
 
@@ -212,7 +202,6 @@ public class ClassModel
       return this;
    }
 
-
    public static final String PROPERTY_defaultRoleType = "defaultRoleType";
 
    private String defaultRoleType;
@@ -233,7 +222,6 @@ public class ClassModel
       return this;
    }
 
-
    public static final String PROPERTY_defaultPropertyStyle = "defaultPropertyStyle";
 
    private String defaultPropertyStyle = "POJO";
@@ -253,7 +241,6 @@ public class ClassModel
       }
       return this;
    }
-
 
    @Override
    public String toString()

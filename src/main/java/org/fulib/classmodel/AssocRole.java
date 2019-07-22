@@ -12,7 +12,6 @@ import java.beans.PropertyChangeListener;
 public class AssocRole  
 {
 
-
    private Clazz clazz = null;
 
    public Clazz getClazz()
@@ -40,8 +39,6 @@ public class AssocRole
       return this;
    }
 
-
-
 private AssocRole other = null;
 
 public AssocRole getOther()
@@ -68,7 +65,6 @@ public AssocRole setOther(AssocRole value)
       }
       return this;
    }
-
 
    protected PropertyChangeSupport listeners = null;
 
@@ -133,7 +129,6 @@ public AssocRole setOther(AssocRole value)
 
    }
 
-
    public static final String PROPERTY_name = "name";
 
    private String name;
@@ -153,7 +148,6 @@ public AssocRole setOther(AssocRole value)
       }
       return this;
    }
-
 
    public static final String PROPERTY_cardinality = "cardinality";
 
@@ -175,7 +169,6 @@ public AssocRole setOther(AssocRole value)
       return this;
    }
 
-
    public static final String PROPERTY_roleType = "roleType";
 
    private String roleType;
@@ -195,7 +188,6 @@ public AssocRole setOther(AssocRole value)
       }
       return this;
    }
-
 
    public static final String PROPERTY_aggregation = "aggregation";
 
@@ -217,7 +209,6 @@ public AssocRole setOther(AssocRole value)
       return this;
    }
 
-
    public static final String PROPERTY_propertyStyle = "propertyStyle";
 
    private String propertyStyle;
@@ -238,7 +229,6 @@ public AssocRole setOther(AssocRole value)
       return this;
    }
 
-
    public static final String PROPERTY_modified = "modified";
 
    private boolean modified = false;
@@ -258,7 +248,6 @@ public AssocRole setOther(AssocRole value)
       }
       return this;
    }
-
 
    @Override
    public String toString()

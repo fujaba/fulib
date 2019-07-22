@@ -15,10 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class FileFragmentMap  
 {
-
 
    protected PropertyChangeSupport listeners = null;
 
@@ -70,7 +68,6 @@ public class FileFragmentMap
       return true;
    }
 
-
    private LinkedHashMap<String, CodeFragment> codeMap = new LinkedHashMap<>();
    private ArrayList<CodeFragment> fragmentList = new ArrayList<>();
 
@@ -92,12 +89,10 @@ public class FileFragmentMap
       this.setFileName(fileName);
    }
 
-
    public CodeFragment getFragment(String key)
    {
       return codeMap.get(key);
    }
-
 
    @Override // no fulib
    public String toString()
@@ -124,7 +119,6 @@ public class FileFragmentMap
 
       return fileBody.toString();
    }
-
 
    public CodeFragment add(String key, String newText, int newLines)
    {
@@ -348,6 +342,5 @@ public class FileFragmentMap
       }
       return this;
    }
-
 
 }
