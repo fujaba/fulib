@@ -188,6 +188,10 @@ public class ClassModelManager implements IModelManager
 
    public Clazz haveClass(String className)
    {
+      if ("String".equals(className)) {
+         className = "String2";
+      }
+
       Clazz clazz = this.classModel.getClazz(className);
 
       if (clazz != null)  return clazz; //============================
