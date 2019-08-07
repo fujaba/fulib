@@ -38,6 +38,7 @@ import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 class TestGenerator {
@@ -47,6 +48,25 @@ class TestGenerator {
     private Object studyRight;
     private Class<?> assignClass;
     private Class<?> studClass;
+
+    @Test
+    public void testForbiddenClasses()
+    {
+        ClassModelBuilder mb = new ClassModelBuilder("org.testFulib");
+        genClass(mb, "Object");
+        genClass(mb, "String");
+        genClass(mb, "Integer");
+    }
+
+    private void genClass(ClassModelBuilder mb, String className)
+    {
+        try {
+            ClassBuilder objectClass = mb.buildClass(className);
+            fail();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void testFMethods() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException

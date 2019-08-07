@@ -33,6 +33,20 @@ public class ClassBuilder
    public ClassBuilder(ClassModel classModel, String className)
    {
       ClassModelBuilder.checkValidJavaId(className);
+
+      // java lang classes like Object, String, ...
+      String javaLangName = "java.lang." + className;
+      try
+      {
+         Class<?> javaLangClass = this.getClass().getClassLoader().loadClass(javaLangName);
+         // that is no good
+         throw new IllegalArgumentException("name clash with " + javaLangName);
+      }
+      catch (ClassNotFoundException e)
+      {
+         // that is good
+      }
+
       if (classModel.getClazz(className) != null) throw new IllegalArgumentException("duplicate class name" + className);
 
       Clazz clazz = new Clazz();
