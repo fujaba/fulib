@@ -1,65 +1,75 @@
-
-
-
-
-// add the build script
-buildscript {
-  repositories {
-    maven {
-      url 'https://plugins.gradle.org/m2/'
-    }
-  }
-  dependencies {
-    classpath 'net.researchgate:gradle-release:2.6.0'
-  }
-}
-
 plugins {
-    id 'java'
+	id 'java'
+	id 'maven-publish'
+	id 'com.jfrog.bintray' version '1.8.4'
+	id 'de.clashsoft.simple-publish' version '0.5.0'
+	// id 'org.fulib.fulibGradle' version '0.1.0'
 }
-//declare the release plugin
-apply plugin: 'net.researchgate.release'
-apply plugin: 'maven-publish'
-apply plugin: 'maven'
-// apply plugin: 'signing'
-// apply from: 'gradle/mavencentral.gradle'
 
+group = 'org.fulib'
+version = 'git describe --tags'.execute().text[1..-2] // strip v and \n
+description = 'Fulib is a Java-code generating library.'
 
+publishInfo {
+    organization = 'fujaba'
+    githubRepo = 'fujaba/fulib'
+    labels = [ 'fulib', 'code-generator' ]
+
+    developer {
+        id = 'zuendorf'
+        name = 'Albert Zuendorf'
+    }
+    developer {
+        id = 'digitalhoax'
+        name = 'Tobias George'
+    }
+    developer {
+        id = 'eicke123'
+        name = 'Christoph Eickhoff'
+    }
+
+    license {
+        name = 'MIT License'
+        url = 'http://www.opensource.org/licenses/mit-license.php'
+    }
+}
 
 sourceCompatibility = 1.8
 
+// --------------- Dependencies ---------------
+
 repositories {
-    mavenLocal()
-    mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    jcenter()
+	mavenLocal()
+	mavenCentral()
+	jcenter()
 }
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-    repositories {
-        mavenLocal()
-    }
-}
-
 
 dependencies {
-    // compile files('../fulibYaml/build/libs/fulibYaml-1.0.2-SNAPSHOT.jar')
-    implementation 'org.antlr:ST4:4.0.8'
-    implementation 'org.fulib:fulibYaml:19.10.+'
+	// https://mvnrepository.com/artifact/org.antlr/ST4
+	implementation group: 'org.antlr', name: 'ST4', version: '4.0.8'
 
-    testCompile 'org.hamcrest:hamcrest-library:2.1'
+	// https://mvnrepository.com/artifact/org.fulib/fulibYaml
+	implementation group: 'org.fulib', name: 'fulibYaml', version: '[1.1.0-rc.1,)'
 
-    testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.2'
-    testCompile 'org.junit.jupiter:junit-jupiter-params:5.3.2'
+	// https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library
+	testCompile group: 'org.hamcrest', name: 'hamcrest-library', version: '2.1'
 
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
+	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
+
+	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params
+	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.3.2'
+
+	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.2'
 }
 
+// --------------- Misc. Settings ---------------
+
 test {
-    useJUnitPlatform()
+	useJUnitPlatform()
+}
+
+javadoc {
+	failOnError = false
 }
