@@ -1,6 +1,30 @@
-# fulib - Fujaba library [![Build Status](https://travis-ci.org/fujaba/fulib.svg?branch=master)](https://travis-ci.org/fujaba/fulib)
+# fulib - Fujaba library
+
+[![Build Status](https://travis-ci.org/fujaba/fulib.svg?branch=master)](https://travis-ci.org/fujaba/fulib)
+[![Download](https://api.bintray.com/packages/fujaba/maven/fulib/images/download.svg)](https://bintray.com/fujaba/maven/fulib/_latestVersion "Download")
 
 Fulib is a Java-code generating library.
+
+## Installation
+
+`build.gradle`:
+
+```groovy
+repositories {
+    mavenCentral()
+    // and/or:
+    jcenter()
+}
+```
+
+```groovy
+dependencies {
+    // https://mvnrepository.com/artifact/org.fulib/fulibYaml
+    compile group: 'org.fulib', name: 'fulib', version: '1.1.0'
+}
+```
+
+## Usage
 
 First you write code that builds up your class model:
 
@@ -69,21 +93,3 @@ For more details on class models and code generation see: [Fulib Class Models](d
 
 Fulib also provides means for model queries and model transformations, see:
 [Fulib Tables](doc/FulibTables.md)
-
-### Gradle
-
-<pre>
-<!-- insert_code_fragment: gradle.repositories -->
-repositories {
-    mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
-<!-- end_code_fragment: -->
-</pre>
-
-<pre>
-<!-- insert_code_fragment: gradle.dependencies -->
-dependencies {
-    testCompile 'org.fulib:fulib:19.10.+'
-<!-- end_code_fragment: -->
-</pre>
