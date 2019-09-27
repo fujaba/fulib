@@ -68,6 +68,13 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+
+	workingDir = temporaryDir
+	outputs.dir workingDir
+
+	doFirst {
+		workingDir.mkdirs()
+	}
 }
 
 javadoc {
