@@ -131,8 +131,8 @@ class TestGenerator {
 
         Fulib.generator().generate(model);
 
-        String classPath = System.getProperty("java.class.path");
-        returnCode = Tools.javac(classPath, outFolder, model.getPackageSrcFolder());
+
+        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
         assertThat("compiler return code: ", returnCode, is(0));
 
         // Load and instantiate compiled class.

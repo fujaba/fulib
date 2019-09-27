@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Tools {
@@ -75,30 +74,8 @@ public class Tools {
 
 
     static int javac(String outFolder, String sourceFolder) {
-        ArrayList<String> args = new ArrayList<>();
-
-        try {
-            Files.createDirectories(Paths.get(outFolder));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        File source = new File(sourceFolder);
-
-        for (File file : Objects.requireNonNull(source.listFiles())) {
-            if (file.getName().endsWith(".java")) {
-                args.add(sourceFolder + "/" + file.getName());
-            }
-        }
-
-        args.add("-d");
-        args.add(outFolder);
-        args.add("-classpath");
-        args.add(outFolder);
-
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-
-        return compiler.run(null, System.out, System.err, args.toArray(new String[0]));
+        final String classPath = System.getProperty("java.class.path");
+        return javac(classPath, outFolder, sourceFolder);
     }
 
     static void removeDirAndFiles(String toBeDeletedDir) throws IOException {
