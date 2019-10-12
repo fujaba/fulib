@@ -12,7 +12,6 @@ Fulib is a Java-code generating library.
 ```groovy
 repositories {
     mavenCentral()
-    // and/or:
     jcenter()
 }
 ```
