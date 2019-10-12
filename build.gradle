@@ -65,7 +65,7 @@ repositories {
 
 dependencies {
 	// https://mvnrepository.com/artifact/org.fulib/fulibYaml
-	api group: 'org.fulib', name: 'fulibYaml', version: '1.1.0-rc.1'
+	api group: 'org.fulib', name: 'fulibYaml', version: '1.1.0'
 
 	// https://mvnrepository.com/artifact/org.antlr/ST4
 	implementation group: 'org.antlr', name: 'ST4', version: '4.0.8'
