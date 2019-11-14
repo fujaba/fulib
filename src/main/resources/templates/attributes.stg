@@ -32,6 +32,65 @@ attrSet(class, name, type, useEquals) ::=
    }
 >>
 
+attrWith(class, name, listType, baseType) ::=
+<<
+   public <class> with<name; format="cap">(Object... value)
+   {
+      if(value==null) return this;
+      for (Object item : value)
+      {
+         if (item == null) continue;
+         if (item instanceof java.util.Collection)
+         {
+            for (Object i : (java.util.Collection) item)
+            {
+               this.with<name; format="cap">(i);
+            }
+         }
+         else if (item instanceof <baseType>)
+         {
+            if (this.<name> == null)
+            {
+               this.<name> = new <listType>();
+            }
+            this.resultList.add((<baseType>) item);
+            firePropertyChange("<name>", null, item);
+         }
+         else throw new IllegalArgumentException();
+      }
+      return this;
+   }
+>>
+
+
+attrWithout(class, name, listType, baseType) ::=
+<<
+   public <class> without<name; format="cap">(Object... value)
+   {
+      if (this.<name> == null || value==null) return this;
+      for (Object item : value)
+      {
+         if (item == null) continue;
+         if (item instanceof java.util.Collection)
+         {
+            for (Object i : (java.util.Collection) item)
+            {
+               this.without<name; format="cap">(i);
+            }
+         }
+         else if (item instanceof <baseType>)
+         {
+            if (this.resultList.contains(item))
+            {
+               this.resultList.remove((<baseType>) item);
+               firePropertyChange("<name>", item, null);
+            }
+         }
+      }
+      return this;
+   }
+>>
+
 
 simpleAttrSet(class, name, type) ::=
 <<

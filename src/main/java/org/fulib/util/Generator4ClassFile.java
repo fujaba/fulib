@@ -153,6 +153,18 @@ public class Generator4ClassFile {
                attrType = StrUtil.cap(attrType);
             }
          }
+
+         String baseType = attrType;
+         String boxType = baseType;
+         if (attrType.endsWith(ClassModelBuilder.__LIST)) {
+            baseType = attrType.substring(0, attrType.length() - ClassModelBuilder.__LIST.length());
+            if (baseType.equals("int")) {
+               boxType = "Integer";
+            } else {
+               boxType = StrUtil.cap(baseType);
+            }
+            attrType = String.format("java.util.ArrayList<%s>", boxType);
+         }
          attrTemplate = group.getInstanceOf("propertyDecl");
          attrTemplate.add("name", attr.getName());
          result = attrTemplate.render();
@@ -183,21 +195,40 @@ public class Generator4ClassFile {
          }
 
          attrTemplate = group.getInstanceOf("attrGet");
-         attrTemplate.add("type", attr.getType());
+         attrTemplate.add("type", attrType);
          attrTemplate.add("name", attr.getName());
          result = attrTemplate.render();
 
          fragmentMap.add(Parser.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
 
+         if (attr.getType().endsWith(ClassModelBuilder.__LIST)) {
+            // attrWith(class, name, listType, baseType)
+            attrTemplate = group.getInstanceOf("attrWith");
+            attrTemplate.add("class", attr.getClazz().getName());
+            attrTemplate.add("listType", attrType);
+            attrTemplate.add("baseType", boxType);
+            attrTemplate.add("name", attr.getName());
+            result = attrTemplate.render();
 
-         attrTemplate = group.getInstanceOf("attrSet");
-         attrTemplate.add("class", attr.getClazz().getName());
-         attrTemplate.add("type", attr.getType());
-         attrTemplate.add("name", attr.getName());
-         attrTemplate.add("useEquals", attr.getType().equals("String"));
-         result = attrTemplate.render();
+            fragmentMap.add(Parser.METHOD + ":with" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3, attr.getModified());
+            // attrWith(class, name, listType, baseType)
+            attrTemplate = group.getInstanceOf("attrWithout");
+            attrTemplate.add("class", attr.getClazz().getName());
+            attrTemplate.add("listType", attrType);
+            attrTemplate.add("baseType", boxType);
+            attrTemplate.add("name", attr.getName());
+            result = attrTemplate.render();
 
-         fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3, attr.getModified());
+            fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3, attr.getModified());
+         } else { // ususal attribute
+            attrTemplate = group.getInstanceOf("attrSet");
+            attrTemplate.add("class", attr.getClazz().getName());
+            attrTemplate.add("type", attr.getType());
+            attrTemplate.add("name", attr.getName());
+            result = attrTemplate.render();
+
+            fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3, attr.getModified());
+         }
 
          if (ClassModelBuilder.JAVA_FX.equals(attr.getPropertyStyle()))
          {
