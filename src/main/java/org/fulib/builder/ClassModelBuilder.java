@@ -21,18 +21,6 @@ import java.util.Collection;
  */
 public class ClassModelBuilder
 {
-   public static final String STRING = "String";
-   public static final String LONG = "long";
-   public static final String INT = "int";
-   public static final String FLOAT = "float";
-   public static final String DOUBLE = "double";
-   public static final String BOOLEAN = "boolean";
-   public static final int ONE = 1;
-   public static final int MANY = 42;
-   public static final String COLLECTION_ARRAY_LIST = "java.util.ArrayList<%s>";
-   public static final String COLLECTION_LINKED_HASH_SET = "java.util.LinkedHashSet<%s>";
-   public static final String POJO = "POJO";
-   public static final String JAVA_FX = "JavaFX";
 
    private ClassModel classModel;
 
@@ -76,8 +64,8 @@ public class ClassModelBuilder
       ClassModel classModel = new ClassModel()
             .setPackageName(packagename)
             .setMainJavaDir(sourceFolder)
-            .setDefaultPropertyStyle(POJO)
-            .setDefaultRoleType(COLLECTION_ARRAY_LIST);
+            .setDefaultPropertyStyle(Type.POJO)
+            .setDefaultRoleType(Type.COLLECTION_ARRAY_LIST);
 
       this.setClassModel(classModel);
    }
@@ -164,7 +152,7 @@ public class ClassModelBuilder
 
    public ClassModelBuilder setJavaFXPropertyStyle()
    {
-      classModel.setDefaultPropertyStyle(JAVA_FX);
+      classModel.setDefaultPropertyStyle(Type.JAVA_FX);
       return this;
    }
 

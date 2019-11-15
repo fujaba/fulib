@@ -24,7 +24,6 @@ public class ClassBuilder
 
    private Clazz clazz;
 
-
    /**
     * Builds a class builder for the given classname and connects it to the model
     * @param classModel
@@ -185,7 +184,7 @@ public class ClassBuilder
 
    public ClassBuilder setJavaFXPropertyStyle()
    {
-      clazz.setPropertyStyle(ClassModelBuilder.JAVA_FX);
+      clazz.setPropertyStyle(Type.JAVA_FX);
       return this;
    }
 

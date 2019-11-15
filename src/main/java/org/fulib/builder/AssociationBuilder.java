@@ -2,9 +2,6 @@ package org.fulib.builder;
 
 import org.fulib.Fulib;
 import org.fulib.classmodel.AssocRole;
-import org.fulib.classmodel.Attribute;
-import org.fulib.classmodel.ClassModel;
-import org.fulib.classmodel.Clazz;
 
 import java.lang.reflect.TypeVariable;
 import java.util.Collection;
@@ -75,8 +72,8 @@ public class AssociationBuilder
 
    public AssociationBuilder setJavaFXPropertyStyle()
    {
-      srcRole.setPropertyStyle(ClassModelBuilder.JAVA_FX);
-      srcRole.getOther().setPropertyStyle(ClassModelBuilder.JAVA_FX);
+      srcRole.setPropertyStyle(Type.JAVA_FX);
+      srcRole.getOther().setPropertyStyle(Type.JAVA_FX);
       return this;
    }
 

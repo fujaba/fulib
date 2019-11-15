@@ -3,7 +3,7 @@ package org.fulib.util;
 import org.fulib.Generator;
 import org.fulib.Parser;
 import org.fulib.StrUtil;
-import org.fulib.builder.ClassModelBuilder;
+import org.fulib.builder.Type;
 import org.fulib.classmodel.*;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 public class Generator4ClassFile {
 
@@ -131,7 +130,7 @@ public class Generator4ClassFile {
 
       for (Attribute attr : clazz.getAttributes())
       {
-         if (ClassModelBuilder.JAVA_FX.equals(attr.getPropertyStyle()))
+         if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
          {
             group = createSTGroup("templates/JavaFXattributes.stg");
             fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
@@ -142,7 +141,7 @@ public class Generator4ClassFile {
          }
 
          String attrType = attr.getType();
-         if (ClassModelBuilder.JAVA_FX.equals(attr.getPropertyStyle()))
+         if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
          {
             if (attrType.equals("int"))
             {
@@ -168,7 +167,7 @@ public class Generator4ClassFile {
          fragmentMap.add(Parser.ATTRIBUTE + ":" + attr.getName(), result, 2, attr.getModified());
 
 
-         if (ClassModelBuilder.JAVA_FX.equals(attr.getPropertyStyle()))
+         if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
          {
             attrTemplate = group.getInstanceOf("initMethod");
             attrTemplate.add("name", attr.getName());
@@ -199,7 +198,7 @@ public class Generator4ClassFile {
 
          fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3, attr.getModified());
 
-         if (ClassModelBuilder.JAVA_FX.equals(attr.getPropertyStyle()))
+         if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
          {
             attrTemplate = group.getInstanceOf("propertyGet");
             attrTemplate.add("name", attr.getName());
@@ -228,7 +227,7 @@ public class Generator4ClassFile {
             continue; //=====================================
          }
 
-         if (ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle()))
+         if (Type.JAVA_FX.equals(role.getPropertyStyle()))
          {
             group = createSTGroup("templates/JavaFXassociations.stg");
             fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
@@ -241,8 +240,8 @@ public class Generator4ClassFile {
          String roleType = role.getOther().getClazz().getName();
 
          // provide empty_set in this class
-         if (role.getCardinality() != ClassModelBuilder.ONE
-               && ! ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle()))
+         if (role.getCardinality() != Type.ONE
+               && ! Type.JAVA_FX.equals(role.getPropertyStyle()))
          {
             // add empty set decl
             roleType = String.format(role.getRoleType(), role.getOther().getClazz().getName());
@@ -266,13 +265,13 @@ public class Generator4ClassFile {
          st = group.getInstanceOf("roleAttrDecl");
          st.add("roleName", role.getName());
          st.add("roleType", roleType);
-         st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+         st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("otherClassName", role.getOther().getClazz().getName());
          result = st.render();
 
          fragmentMap.add(Parser.ATTRIBUTE + ":" + role.getName(), result, 2, role.getModified());
 
-         if (ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle()))
+         if (Type.JAVA_FX.equals(role.getPropertyStyle()))
          {
             // remove empty set decl
             result = "";
@@ -281,11 +280,11 @@ public class Generator4ClassFile {
             // add _init method
             st = group.getInstanceOf("initMethod");
             st.add("roleName", role.getName());
-            st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+            st.add("toMany", role.getCardinality() != Type.ONE);
             st.add("myClassName", clazz.getName());
             st.add("otherClassName", role.getOther().getClazz().getName());
             st.add("otherRoleName", role.getOther().getName());
-            st.add("otherToMany", role.getOther().getCardinality() != ClassModelBuilder.ONE);
+            st.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
             result = st.render();
 
             fragmentMap.add(Parser.METHOD + ":_init" + StrUtil.cap(role.getName()) + "()", result, 2, role.getModified());
@@ -300,7 +299,7 @@ public class Generator4ClassFile {
          st = group.getInstanceOf("getMethod");
 
          st.add("roleName", role.getName());
-         st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+         st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("otherClassName", role.getOther().getClazz().getName());
          st.add("roleType", roleType);
          result = st.render();
@@ -310,23 +309,23 @@ public class Generator4ClassFile {
 
          st = group.getInstanceOf("setMethod");
          st.add("roleName", role.getName());
-         st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+         st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("myClassName", clazz.getName());
          st.add("otherClassName", role.getOther().getClazz().getName());
          st.add("otherRoleName", role.getOther().getName());
-         st.add("otherToMany", role.getOther().getCardinality() != ClassModelBuilder.ONE);
+         st.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
          st.add("roleType", roleType);
          result = st.render();
 
          String signature = "set";
          String paramType = role.getOther().getClazz().getName();
-         if (role.getCardinality() != ClassModelBuilder.ONE) {
+         if (role.getCardinality() != Type.ONE) {
             signature = "with";
             paramType = "Object...";
          }
-         if (ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle()))
+         if (Type.JAVA_FX.equals(role.getPropertyStyle()))
          {
-            if (role.getCardinality() != ClassModelBuilder.ONE)
+            if (role.getCardinality() != Type.ONE)
             {
                // remove withXY(Object...) method
                String oldSignature = "with" + StrUtil.cap(role.getName()) + "(" + paramType + ")";
@@ -346,28 +345,28 @@ public class Generator4ClassFile {
          fragmentMap.add(Parser.METHOD + ":" + signature, result, 3, role.getModified());
 
 
-         if (role.getCardinality() != ClassModelBuilder.ONE) {
+         if (role.getCardinality() != Type.ONE) {
 
             st = group.getInstanceOf("withoutMethod");
             st.add("roleName", role.getName());
-            st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+            st.add("toMany", role.getCardinality() != Type.ONE);
             st.add("myClassName", clazz.getName());
             st.add("otherClassName", role.getOther().getClazz().getName());
             st.add("otherRoleName", role.getOther().getName());
-            st.add("otherToMany", role.getOther().getCardinality() != ClassModelBuilder.ONE);
+            st.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
             st.add("roleType", roleType);
             result = st.render();
 
             paramType = "Object...";
-            if (ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle()))
+            if (Type.JAVA_FX.equals(role.getPropertyStyle()))
             {
                paramType = role.getOther().getClazz().getName();
             }
             fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(role.getName()) + "(" + paramType + ")", result, 3, role.getModified());
          }
 
-         if (ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle())
-               && role.getCardinality() == ClassModelBuilder.ONE)
+         if (Type.JAVA_FX.equals(role.getPropertyStyle())
+               && role.getCardinality() == Type.ONE)
          {
             st = group.getInstanceOf("propertyMethod");
             st.add("roleName", role.getName());
@@ -444,7 +443,7 @@ public class Generator4ClassFile {
       ArrayList<String> nameList = new ArrayList<>();
       boolean modified = false;
       for (Attribute attr : clazz.getAttributes()) {
-         if (attr.getType().equals(ClassModelBuilder.STRING)) {
+         if (attr.getType().equals(Type.STRING)) {
             nameList.add(attr.getName());
          }
 
@@ -485,7 +484,7 @@ public class Generator4ClassFile {
             continue; //=============================
          }
 
-         if (role.getCardinality() == ClassModelBuilder.ONE)
+         if (role.getCardinality() == Type.ONE)
          {
             if (role.getAggregation() == true)
             {
@@ -506,7 +505,7 @@ public class Generator4ClassFile {
             else
             {
                toManyList.add(role.getName());
-               javaFXStyles.add(ClassModelBuilder.JAVA_FX.equals(role.getPropertyStyle()));
+               javaFXStyles.add(Type.JAVA_FX.equals(role.getPropertyStyle()));
             }
          }
       }
