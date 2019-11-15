@@ -51,6 +51,50 @@ class TestGenerator {
     private Class<?> studClass;
 
     @Test
+    public void testAttrList() throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, MalformedURLException
+    {
+        ClassModelBuilder mb = Fulib.classModelBuilder("org.testAttrList", "tmp/src");
+        ClassBuilder root = mb.buildClass("Root");
+        root.buildAttribute("resultList", mb.INT + mb.__LIST);
+
+        ClassModel model = mb.getClassModel();
+        Fulib.generator().generate(model);
+
+        String outFolder = model.getMainJavaDir() + "/../out";
+        int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+        assertThat("compiler return code: ", returnCode, is(0));
+
+        // Load and instantiate compiled class.
+        File classesDir = new File(outFolder);
+        URLClassLoader classLoader;
+        // Loading the class
+        classLoader = URLClassLoader.newInstance(new URL[]{classesDir.toURI().toURL()});
+
+        Class<?> rootClass = Class.forName(model.getPackageName() + ".Root", true, classLoader);
+
+        Object theRoot = rootClass.newInstance();
+
+        Method withMethod = rootClass.getMethod("withResultList", Object[].class);
+
+        Object answer = withMethod.invoke(theRoot, new Object[]{new Object[]{23}});
+        assertThat(answer, equalTo(theRoot));
+
+        Method getMethod = rootClass.getMethod("getResultList");
+        ArrayList theList = (ArrayList) getMethod.invoke(theRoot);
+        assertThat(theList.size(), equalTo(1));
+
+        withMethod.invoke(theRoot, new Object[]{new Object[]{42}});
+        withMethod.invoke(theRoot, new Object[]{new Object[]{23}});
+        assertThat(theList.size(), equalTo(3));
+
+        Method withoutMethod = rootClass.getMethod("withoutResultList", Object[].class);
+        withoutMethod.invoke(theRoot, new Object[]{new Object[]{23}});
+        assertThat(theList.size(), equalTo(2));
+
+    }
+
+
+    @Test
     public void testForbiddenClasses()
     {
         ClassModelBuilder mb = new ClassModelBuilder("org.testFulib");
