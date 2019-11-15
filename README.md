@@ -31,24 +31,24 @@ First you write code that builds up your class model:
       ClassModelBuilder mb = Fulib.classModelBuilder("de.uniks.studyright");
 
       ClassBuilder university = mb.buildClass("University")
-            .buildAttribute("name", ClassModelBuilder.STRING);
+            .buildAttribute("name", Type.STRING);
 
       ClassBuilder student = mb.buildClass("Student")
-            .buildAttribute("name", ClassModelBuilder.STRING)
-            .buildAttribute("studentId", ClassModelBuilder.STRING)
-            .buildAttribute("credits", ClassModelBuilder.DOUBLE)
-            .buildAttribute("motivation", ClassModelBuilder.DOUBLE);
+            .buildAttribute("name", Type.STRING)
+            .buildAttribute("studentId", Type.STRING)
+            .buildAttribute("credits", Type.DOUBLE)
+            .buildAttribute("motivation", Type.DOUBLE);
 
       ;
 
       ClassBuilder room = mb.buildClass("Room")
-            .buildAttribute("roomNo", ClassModelBuilder.STRING)
-            .buildAttribute("topic", ClassModelBuilder.STRING)
-            .buildAttribute("credits", ClassModelBuilder.DOUBLE);
+            .buildAttribute("roomNo", Type.STRING)
+            .buildAttribute("topic", Type.STRING)
+            .buildAttribute("credits", Type.DOUBLE);
 
-      university.buildAssociation(student, "students", ClassModelBuilder.MANY, "uni", ClassModelBuilder.ONE);
-      university.buildAssociation(room, "rooms", ClassModelBuilder.MANY, "uni", ClassModelBuilder.ONE);
-      room.buildAssociation(student, "students", ClassModelBuilder.MANY, "in", ClassModelBuilder.ONE);
+      university.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
+      university.buildAssociation(room, "rooms", Type.MANY, "uni", Type.ONE);
+      room.buildAssociation(student, "students", Type.MANY, "in", Type.ONE);
 
 
       ClassModel model = mb.getClassModel();
