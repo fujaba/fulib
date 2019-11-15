@@ -55,7 +55,7 @@ class TestGenerator {
     {
         ClassModelBuilder mb = Fulib.classModelBuilder("org.testAttrList", "tmp/src");
         ClassBuilder root = mb.buildClass("Root");
-        root.buildAttribute("resultList", mb.INT + mb.__LIST);
+        root.buildAttribute("resultList", Type.INT + Type.__LIST);
 
         ClassModel model = mb.getClassModel();
         Fulib.generator().generate(model);
