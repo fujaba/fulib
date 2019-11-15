@@ -3,6 +3,7 @@ package org.fulib.util;
 import org.fulib.Generator;
 import org.fulib.Parser;
 import org.fulib.StrUtil;
+import org.fulib.builder.ClassModelBuilder;
 import org.fulib.builder.Type;
 import org.fulib.classmodel.*;
 import org.stringtemplate.v4.ST;
@@ -155,8 +156,8 @@ public class Generator4ClassFile {
 
          String baseType = attrType;
          String boxType = baseType;
-         if (attrType.endsWith(ClassModelBuilder.__LIST)) {
-            baseType = attrType.substring(0, attrType.length() - ClassModelBuilder.__LIST.length());
+         if (attrType.endsWith(Type.__LIST)) {
+            baseType = attrType.substring(0, attrType.length() - Type.__LIST.length());
             if (baseType.equals("int")) {
                boxType = "Integer";
             } else {
@@ -200,7 +201,7 @@ public class Generator4ClassFile {
 
          fragmentMap.add(Parser.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
 
-         if (attr.getType().endsWith(ClassModelBuilder.__LIST)) {
+         if (attr.getType().endsWith(Type.__LIST)) {
             // attrWith(class, name, listType, baseType)
             attrTemplate = group.getInstanceOf("attrWith");
             attrTemplate.add("class", attr.getClazz().getName());
