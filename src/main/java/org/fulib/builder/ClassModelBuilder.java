@@ -184,9 +184,6 @@ public class ClassModelBuilder
     */
    public ClassBuilder buildClass(String className)
    {
-      ClassBuilder classBuilder = new ClassBuilder(this.classModel, className);
-      return classBuilder;
+      return new ClassBuilder(this.classModel, className);
    }
-
-
 }
