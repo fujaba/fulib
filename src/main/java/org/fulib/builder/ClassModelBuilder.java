@@ -21,6 +21,19 @@ import java.util.Collection;
  */
 public class ClassModelBuilder
 {
+   @Deprecated public static final String STRING = "String";
+   @Deprecated public static final String LONG = "long";
+   @Deprecated public static final String INT = "int";
+   @Deprecated public static final String FLOAT = "float";
+   @Deprecated public static final String DOUBLE = "double";
+   @Deprecated public static final String BOOLEAN = "boolean";
+   @Deprecated public static final String __LIST = "__list";
+   @Deprecated public static final int ONE = 1;
+   @Deprecated public static final int MANY = 42;
+   @Deprecated public static final String COLLECTION_ARRAY_LIST = "java.util.ArrayList<%s>";
+   @Deprecated public static final String COLLECTION_LINKED_HASH_SET = "java.util.LinkedHashSet<%s>";
+   @Deprecated public static final String POJO = "POJO";
+   @Deprecated public static final String JAVA_FX = "JavaFX";
 
    private ClassModel classModel;
 
