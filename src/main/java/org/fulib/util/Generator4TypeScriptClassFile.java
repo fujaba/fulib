@@ -4,7 +4,7 @@ import org.fulib.Generator;
 import org.fulib.Parser;
 import org.fulib.StrUtil;
 import org.fulib.TypeScriptParser;
-import org.fulib.builder.ClassModelBuilder;
+import org.fulib.builder.Type;
 import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.Clazz;
@@ -82,7 +82,7 @@ public class Generator4TypeScriptClassFile
       for (Attribute attribute : clazz.getAttributes())
       {
          String initValue = "0";
-         if (attribute.getType().equals(ClassModelBuilder.STRING)) initValue = "''";
+         if (attribute.getType().equals(Type.STRING)) initValue = "''";
 
          buf.append("this.").append(attribute.getName()).append(" = " + initValue + ";\n");
       }
@@ -92,7 +92,7 @@ public class Generator4TypeScriptClassFile
       {
          String initValue = "[]";
 
-         if (role.getCardinality() == ClassModelBuilder.ONE)
+         if (role.getCardinality() == Type.ONE)
             initValue = "null";
 
          buf.append("this._").append(role.getName()).append(" = ").append(initValue).append(";\n");
@@ -158,7 +158,7 @@ public class Generator4TypeScriptClassFile
             fragmentMap.add(Parser.IMPORT + ":" + roleType, importText, 0);
          }
 
-         if (role.getCardinality() != ClassModelBuilder.ONE) roleType += "[]";
+         if (role.getCardinality() != Type.ONE) roleType += "[]";
 
          st = group.getInstanceOf("roleAttrDecl");
          st.add("roleName", role.getName());
@@ -178,31 +178,31 @@ public class Generator4TypeScriptClassFile
 
          st = group.getInstanceOf("setMethod");
          st.add("roleName", role.getName());
-         st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+         st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("myClassName", clazz.getName());
          st.add("otherClassName", role.getOther().getClazz().getName());
          st.add("otherRoleName", role.getOther().getName());
-         st.add("otherToMany", role.getOther().getCardinality() != ClassModelBuilder.ONE);
+         st.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
          st.add("roleType", roleType);
          result = st.render();
 
          String signature = "set " + role.getName() + "(" + role.getOther().getClazz().getName() + ")";
-         if (role.getCardinality() != ClassModelBuilder.ONE) {
+         if (role.getCardinality() != Type.ONE) {
             signature = "with" + StrUtil.cap(role.getName()) + "(any[])";
          }
 
          fragmentMap.add(Parser.METHOD + ":" + signature, result, 3, role.getModified());
 
 
-         if (role.getCardinality() != ClassModelBuilder.ONE) {
+         if (role.getCardinality() != Type.ONE) {
 
             st = group.getInstanceOf("withoutMethod");
             st.add("roleName", role.getName());
-            st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+            st.add("toMany", role.getCardinality() != Type.ONE);
             st.add("myClassName", clazz.getName());
             st.add("otherClassName", role.getOther().getClazz().getName());
             st.add("otherRoleName", role.getOther().getName());
-            st.add("otherToMany", role.getOther().getCardinality() != ClassModelBuilder.ONE);
+            st.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
             st.add("roleType", roleType);
             result = st.render();
 
@@ -220,7 +220,7 @@ public class Generator4TypeScriptClassFile
 
       for (AssocRole role : clazz.getRoles())
       {
-         if (role.getCardinality() == ClassModelBuilder.ONE)
+         if (role.getCardinality() == Type.ONE)
          {
             buf.append("this.").append(role.getName()).append(" = null;\n");
          }

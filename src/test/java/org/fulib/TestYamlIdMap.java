@@ -2,6 +2,7 @@ package org.fulib;
 
 import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
+import org.fulib.builder.Type;
 import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
@@ -49,12 +50,12 @@ class TestYamlIdMap {
         ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
 
         ClassBuilder university = mb.buildClass("University")
-                .buildAttribute("uniName", ClassModelBuilder.STRING);
+                .buildAttribute("uniName", Type.STRING);
 
         ClassBuilder student = mb.buildClass("Student")
-                .buildAttribute("studentId", ClassModelBuilder.STRING);
+                .buildAttribute("studentId", Type.STRING);
 
-        university.buildAssociation(student, "students", ClassModelBuilder.MANY, "uni", ClassModelBuilder.ONE);
+        university.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
 
         // encode it
         String packageName = ClassModel.class.getPackage().getName();

@@ -14,26 +14,26 @@ import java.util.Collection;
  * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
       * <!-- end_code_fragment:  -->
  * </pre>
  *
  */
 public class ClassModelBuilder
 {
-   public static final String STRING = "String";
-   public static final String LONG = "long";
-   public static final String INT = "int";
-   public static final String FLOAT = "float";
-   public static final String DOUBLE = "double";
-   public static final String BOOLEAN = "boolean";
-   public static final String __LIST = "__list";
-   public static final int ONE = 1;
-   public static final int MANY = 42;
-   public static final String COLLECTION_ARRAY_LIST = "java.util.ArrayList<%s>";
-   public static final String COLLECTION_LINKED_HASH_SET = "java.util.LinkedHashSet<%s>";
-   public static final String POJO = "POJO";
-   public static final String JAVA_FX = "JavaFX";
+   @Deprecated public static final String STRING = "String";
+   @Deprecated public static final String LONG = "long";
+   @Deprecated public static final String INT = "int";
+   @Deprecated public static final String FLOAT = "float";
+   @Deprecated public static final String DOUBLE = "double";
+   @Deprecated public static final String BOOLEAN = "boolean";
+   @Deprecated public static final String __LIST = "__list";
+   @Deprecated public static final int ONE = 1;
+   @Deprecated public static final int MANY = 42;
+   @Deprecated public static final String COLLECTION_ARRAY_LIST = "java.util.ArrayList<%s>";
+   @Deprecated public static final String COLLECTION_LINKED_HASH_SET = "java.util.LinkedHashSet<%s>";
+   @Deprecated public static final String POJO = "POJO";
+   @Deprecated public static final String JAVA_FX = "JavaFX";
 
    private ClassModel classModel;
 
@@ -45,7 +45,7 @@ public class ClassModelBuilder
     * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     * @param packagename
@@ -64,7 +64,7 @@ public class ClassModelBuilder
     * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     * @param packagename
@@ -77,8 +77,8 @@ public class ClassModelBuilder
       ClassModel classModel = new ClassModel()
             .setPackageName(packagename)
             .setMainJavaDir(sourceFolder)
-            .setDefaultPropertyStyle(POJO)
-            .setDefaultRoleType(COLLECTION_ARRAY_LIST);
+            .setDefaultPropertyStyle(Type.POJO)
+            .setDefaultRoleType(Type.COLLECTION_ARRAY_LIST);
 
       this.setClassModel(classModel);
    }
@@ -140,7 +140,7 @@ public class ClassModelBuilder
 
    /**
     * set container class to be used for to-many associations,
-    * default is ClassModelBuilder.COLLECTION_ARRAY_LIST
+    * default is Type.COLLECTION_ARRAY_LIST
     * alternative is e.g.: ClassModelBuilder.
     * @param collectionClass
     * @return
@@ -165,7 +165,7 @@ public class ClassModelBuilder
 
    public ClassModelBuilder setJavaFXPropertyStyle()
    {
-      classModel.setDefaultPropertyStyle(JAVA_FX);
+      classModel.setDefaultPropertyStyle(Type.JAVA_FX);
       return this;
    }
 
@@ -177,7 +177,7 @@ public class ClassModelBuilder
       ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java")
             .setJavaFXPropertyStyle();
 
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     * @param className
@@ -185,9 +185,6 @@ public class ClassModelBuilder
     */
    public ClassBuilder buildClass(String className)
    {
-      ClassBuilder classBuilder = new ClassBuilder(this.classModel, className);
-      return classBuilder;
+      return new ClassBuilder(this.classModel, className);
    }
-
-
 }

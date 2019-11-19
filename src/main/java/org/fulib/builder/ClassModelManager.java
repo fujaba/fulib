@@ -9,8 +9,8 @@ import org.fulib.yaml.Yamler;
 import java.util.LinkedHashMap;
 import java.util.function.Consumer;
 
-import static org.fulib.builder.ClassModelBuilder.COLLECTION_ARRAY_LIST;
-import static org.fulib.builder.ClassModelBuilder.POJO;
+import static org.fulib.builder.Type.COLLECTION_ARRAY_LIST;
+import static org.fulib.builder.Type.POJO;
 
 /**
  * ClassModelbuilder is used to create fulib class models that are input for
@@ -127,7 +127,7 @@ public class ClassModelManager implements IModelManager
     * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     */
@@ -248,7 +248,7 @@ public class ClassModelManager implements IModelManager
    public AssocRole haveRole(Clazz srcClass, String attrName, Clazz tgtClass, int size)
    {
       String otherRoleName = StrUtil.downFirstChar(srcClass.getName());
-      return this.haveRole(srcClass, attrName, tgtClass, size, otherRoleName, ClassModelBuilder.ONE, false);
+      return this.haveRole(srcClass, attrName, tgtClass, size, otherRoleName, Type.ONE, false);
    }
 
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize, String tgtRole, int tgtSize)
