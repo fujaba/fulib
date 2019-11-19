@@ -14,7 +14,7 @@ import org.fulib.classmodel.Clazz;
  * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
  *
@@ -82,7 +82,7 @@ public class ClassBuilder
     * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -102,7 +102,7 @@ public class ClassBuilder
     * <pre>
     * <!-- insert_code_fragment: ClassBuilder.buildAttribute_init -->
         ClassBuilder student = mb.buildClass("Student")
-                .buildAttribute("name", mb.STRING, "\"Karli\"");
+                .buildAttribute("name", Type.STRING, "\"Karli\"");
     * <!-- end_code_fragment:  -->
     * </pre>
     * @param name
@@ -130,7 +130,7 @@ public class ClassBuilder
    /**
     * <pre>
     * <!-- insert_code_fragment: ClassBuilder.buildAssociation -->
-        universitiy.buildAssociation(student, "students", mb.MANY, "uni", mb.ONE);
+        universitiy.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
     * <!-- end_code_fragment:  -->
     * </pre>
     * @param otherClass

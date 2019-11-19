@@ -127,7 +127,7 @@ public class ClassModelManager implements IModelManager
     * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     */

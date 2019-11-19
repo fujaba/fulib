@@ -14,7 +14,7 @@ import java.util.Collection;
  * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
       * <!-- end_code_fragment:  -->
  * </pre>
  *
@@ -45,7 +45,7 @@ public class ClassModelBuilder
     * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     * @param packagename
@@ -64,7 +64,7 @@ public class ClassModelBuilder
     * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     * @param packagename
@@ -140,7 +140,7 @@ public class ClassModelBuilder
 
    /**
     * set container class to be used for to-many associations,
-    * default is ClassModelBuilder.COLLECTION_ARRAY_LIST
+    * default is Type.COLLECTION_ARRAY_LIST
     * alternative is e.g.: ClassModelBuilder.
     * @param collectionClass
     * @return
@@ -177,7 +177,7 @@ public class ClassModelBuilder
       ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java")
             .setJavaFXPropertyStyle();
 
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", mb.STRING);
+      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     * @param className
