@@ -394,6 +394,12 @@ public class ClassModelManager implements IModelManager
          this.haveClass(name);
       });
 
+      consumerMap.put(HAVE_SUPER, map -> {
+         Clazz subClass = this.haveClass(map.get(SUB_CLASS));
+         Clazz superClass = this.haveClass(map.get(SUPER_CLASS));
+         this.haveSuper(subClass, superClass);
+      });
+
       consumerMap.put(HAVE_ATTRIBUTE, map -> {
          String className = map.get(CLASS_NAME);
          String attrName = map.get(ATTR_NAME);
