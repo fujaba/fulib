@@ -1,6 +1,4 @@
-package org.fulib;
-
-import org.fulib.builder.ClassModelManager;
+package org.fulib.builder;
 
 public interface ClassModelDecorator
 {
