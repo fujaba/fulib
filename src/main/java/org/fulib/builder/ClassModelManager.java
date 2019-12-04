@@ -33,6 +33,8 @@ import static org.fulib.yaml.EventSource.EVENT_TYPE;
  */
 public class ClassModelManager implements IModelManager
 {
+   // =============== Constants ===============
+
    public static final String THE_CLASS_MODEL = "theClassModel";
    public static final String HAVE_PACKAGE_NAME = "havePackageName";
    public static final String HAVE_MAIN_JAVA_DIR = "haveMainJavaDir";
@@ -58,59 +60,12 @@ public class ClassModelManager implements IModelManager
    public static final String SUB_CLASS = "subClass";
    public static final String SUPER_CLASS = "superClass";
 
+   // =============== Fields ===============
+
    private ClassModel classModel;
    private ModelEventManager mem;
 
-
-   @Override
-   public void initConsumers(LinkedHashMap<String, Consumer<LinkedHashMap<String, String>>> consumerMap)
-   {
-      if (consumerMap == null)
-      {
-         consumerMap = new LinkedHashMap<>();
-
-         consumerMap.put(ClassModelManager.HAVE_PACKAGE_NAME, map -> {
-            String packageName = map.get(PROPERTY_packageName);
-            havePackageName(packageName);
-         });
-
-         consumerMap.put(ClassModelManager.HAVE_MAIN_JAVA_DIR, map -> {
-            String sourceFolder = map.get(PROPERTY_mainJavaDir);
-            haveMainJavaDir(sourceFolder);
-         });
-
-         consumerMap.put(ClassModelManager.HAVE_CLASS, map -> {
-            String name = map.get(PROPERTY_name);
-            haveClass(name);
-         });
-
-         consumerMap.put(ClassModelManager.HAVE_ATTRIBUTE, map -> {
-            String className = map.get(ClassModelManager.CLASS_NAME);
-            String attrName = map.get(ClassModelManager.ATTR_NAME);
-            String attrType = map.get(ClassModelManager.ATTR_TYPE);
-
-            Clazz clazz = haveClass(className);
-            haveAttribute(clazz, attrName, attrType);
-         });
-
-         // haveRole(Clazz srcClass, String attrName, Clazz tgtClass, int size)
-         consumerMap.put(ClassModelManager.HAVE_ROLE, map -> {
-            String srcClassName = map.get(ClassModelManager.SRC_CLASS_NAME);
-            String attrName = map.get(ClassModelManager.ATTR_NAME);
-            String tgtClassName = map.get(ClassModelManager.TGT_CLASS_NAME);
-            String sizeName = map.get(ClassModelManager.TGT_CARDINALITY);
-
-            Clazz srcClazz = haveClass(srcClassName);
-            Clazz tgClazz = haveClass(tgtClassName);
-            int size = Integer.valueOf(sizeName);
-
-            haveRole(srcClazz, attrName, tgClazz, size);
-         });
-
-      }
-   }
-
-
+   // =============== Constructors ===============
 
    /**
     * ClassModelManager is used to manage fulib class models that are input for
@@ -149,13 +104,16 @@ public class ClassModelManager implements IModelManager
             .setDefaultRoleType(COLLECTION_ARRAY_LIST);
    }
 
+   // =============== Properties ===============
 
    public ClassModel getClassModel()
    {
       return classModel;
    }
 
+   // =============== Methods ===============
 
+   // --------------- Settings ---------------
 
    public ClassModelManager havePackageName(String packagename)
    {
@@ -174,8 +132,6 @@ public class ClassModelManager implements IModelManager
       return this;
    }
 
-
-
    public ClassModelManager haveMainJavaDir(String sourceFolder)
    {
       String mainJavaDir = classModel.getMainJavaDir();
@@ -193,7 +149,7 @@ public class ClassModelManager implements IModelManager
       return this;
    }
 
-
+   // --------------- Classes ---------------
 
    public Clazz haveClass(String className)
    {
@@ -212,7 +168,6 @@ public class ClassModelManager implements IModelManager
       return clazz;
    }
 
-
    public Clazz haveSuper(Clazz subClass, Clazz superClass)
    {
       subClass.setSuperClass(superClass);
@@ -227,6 +182,7 @@ public class ClassModelManager implements IModelManager
       return subClass;
    }
 
+   // --------------- Attributes ---------------
 
    public Attribute haveAttribute(Clazz clazz, String attrName, String attrType)
    {
@@ -259,6 +215,8 @@ public class ClassModelManager implements IModelManager
 
       return attr;
    }
+
+   // --------------- Associations ---------------
 
    /**
     * @deprecated use {@link #haveRole(Clazz, String, int, Clazz)}, which provides better parameter symmetry.
@@ -345,14 +303,12 @@ public class ClassModelManager implements IModelManager
       return role;
    }
 
-
+   // --------------- Methods ---------------
 
    public FMethod haveMethod(Clazz srcClass, String declaration)
    {
       return this.haveMethod(srcClass, declaration, null);
    }
-
-
 
    public FMethod haveMethod(Clazz clazz, String declaration, String body)
    {
@@ -411,10 +367,60 @@ public class ClassModelManager implements IModelManager
       return null;
    }
 
+   // --------------- Events ---------------
+
    private void event(Consumer<? super Map<String, String>> populator)
    {
       final LinkedHashMap<String, String> map = new LinkedHashMap<>();
       populator.accept(map);
       this.mem.append(map);
+   }
+
+   @Override
+   public void initConsumers(LinkedHashMap<String, Consumer<LinkedHashMap<String, String>>> consumerMap)
+   {
+      if (consumerMap == null)
+      {
+         consumerMap = new LinkedHashMap<>();
+
+         consumerMap.put(ClassModelManager.HAVE_PACKAGE_NAME, map -> {
+            String packageName = map.get(PROPERTY_packageName);
+            havePackageName(packageName);
+         });
+
+         consumerMap.put(ClassModelManager.HAVE_MAIN_JAVA_DIR, map -> {
+            String sourceFolder = map.get(PROPERTY_mainJavaDir);
+            haveMainJavaDir(sourceFolder);
+         });
+
+         consumerMap.put(ClassModelManager.HAVE_CLASS, map -> {
+            String name = map.get(PROPERTY_name);
+            haveClass(name);
+         });
+
+         consumerMap.put(ClassModelManager.HAVE_ATTRIBUTE, map -> {
+            String className = map.get(ClassModelManager.CLASS_NAME);
+            String attrName = map.get(ClassModelManager.ATTR_NAME);
+            String attrType = map.get(ClassModelManager.ATTR_TYPE);
+
+            Clazz clazz = haveClass(className);
+            haveAttribute(clazz, attrName, attrType);
+         });
+
+         // haveRole(Clazz srcClass, String attrName, Clazz tgtClass, int size)
+         consumerMap.put(ClassModelManager.HAVE_ROLE, map -> {
+            String srcClassName = map.get(ClassModelManager.SRC_CLASS_NAME);
+            String attrName = map.get(ClassModelManager.ATTR_NAME);
+            String tgtClassName = map.get(ClassModelManager.TGT_CLASS_NAME);
+            String sizeName = map.get(ClassModelManager.TGT_CARDINALITY);
+
+            Clazz srcClazz = haveClass(srcClassName);
+            Clazz tgClazz = haveClass(tgtClassName);
+            int size = Integer.valueOf(sizeName);
+
+            haveRole(srcClazz, attrName, tgClazz, size);
+         });
+
+      }
    }
 }
