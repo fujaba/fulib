@@ -12,9 +12,11 @@ import java.util.function.Consumer;
 
 import static org.fulib.builder.ClassModelBuilder.COLLECTION_ARRAY_LIST;
 import static org.fulib.builder.ClassModelBuilder.POJO;
-import static org.fulib.classmodel.ClassModel.*;
-import static org.fulib.classmodel.Clazz.*;
-import static org.fulib.yaml.EventSource.*;
+import static org.fulib.classmodel.ClassModel.PROPERTY_mainJavaDir;
+import static org.fulib.classmodel.ClassModel.PROPERTY_packageName;
+import static org.fulib.classmodel.Clazz.PROPERTY_name;
+import static org.fulib.yaml.EventSource.EVENT_KEY;
+import static org.fulib.yaml.EventSource.EVENT_TYPE;
 
 /**
  * ClassModelbuilder is used to create fulib class models that are input for
@@ -258,20 +260,37 @@ public class ClassModelManager implements IModelManager
       return attr;
    }
 
-
-
+   /**
+    * @deprecated use {@link #haveRole(Clazz, String, int, Clazz)}, which provides better parameter symmetry.
+    */
+   @Deprecated
    public AssocRole haveRole(Clazz srcClass, String attrName, Clazz tgtClass, int size)
    {
-      String otherRoleName = StrUtil.downFirstChar(srcClass.getName());
-      return this.haveRole(srcClass, attrName, tgtClass, size, otherRoleName, ClassModelBuilder.ONE, false);
+      return this.haveRole(srcClass, attrName, size, tgtClass);
    }
 
+   public AssocRole haveRole(Clazz srcClass, String attrName, int size, Clazz tgtClass)
+   {
+      String otherRoleName = StrUtil.downFirstChar(srcClass.getName());
+      return this.haveRole(srcClass, attrName, size, tgtClass, otherRoleName, ClassModelBuilder.ONE, false);
+   }
+
+   /**
+    * @deprecated use {@link #haveRole(Clazz, String, int, Clazz, String, int)}, which provides better parameter symmetry.
+    */
+   @Deprecated
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize, String tgtRole, int tgtSize)
    {
-      return this.haveRole(srcClass, srcRole, tgtClass, srcSize, tgtRole, tgtSize, true);
+      return this.haveRole(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize, true);
    }
 
-   private AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize, String tgtRole, int tgtSize, boolean bothRoles)
+   public AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize)
+   {
+      return this.haveRole(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize, true);
+   }
+
+   private AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize,
+       boolean bothRoles)
    {
       AssocRole role = srcClass.getRole(srcRole);
 
