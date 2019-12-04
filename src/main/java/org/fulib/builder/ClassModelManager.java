@@ -379,48 +379,42 @@ public class ClassModelManager implements IModelManager
    @Override
    public void initConsumers(LinkedHashMap<String, Consumer<LinkedHashMap<String, String>>> consumerMap)
    {
-      if (consumerMap == null)
-      {
-         consumerMap = new LinkedHashMap<>();
+      consumerMap.put(HAVE_PACKAGE_NAME, map -> {
+         String packageName = map.get(PROPERTY_packageName);
+         this.havePackageName(packageName);
+      });
 
-         consumerMap.put(ClassModelManager.HAVE_PACKAGE_NAME, map -> {
-            String packageName = map.get(PROPERTY_packageName);
-            havePackageName(packageName);
-         });
+      consumerMap.put(HAVE_MAIN_JAVA_DIR, map -> {
+         String sourceFolder = map.get(PROPERTY_mainJavaDir);
+         this.haveMainJavaDir(sourceFolder);
+      });
 
-         consumerMap.put(ClassModelManager.HAVE_MAIN_JAVA_DIR, map -> {
-            String sourceFolder = map.get(PROPERTY_mainJavaDir);
-            haveMainJavaDir(sourceFolder);
-         });
+      consumerMap.put(HAVE_CLASS, map -> {
+         String name = map.get(PROPERTY_name);
+         this.haveClass(name);
+      });
 
-         consumerMap.put(ClassModelManager.HAVE_CLASS, map -> {
-            String name = map.get(PROPERTY_name);
-            haveClass(name);
-         });
+      consumerMap.put(HAVE_ATTRIBUTE, map -> {
+         String className = map.get(CLASS_NAME);
+         String attrName = map.get(ATTR_NAME);
+         String attrType = map.get(ATTR_TYPE);
 
-         consumerMap.put(ClassModelManager.HAVE_ATTRIBUTE, map -> {
-            String className = map.get(ClassModelManager.CLASS_NAME);
-            String attrName = map.get(ClassModelManager.ATTR_NAME);
-            String attrType = map.get(ClassModelManager.ATTR_TYPE);
+         Clazz clazz = this.haveClass(className);
+         this.haveAttribute(clazz, attrName, attrType);
+      });
 
-            Clazz clazz = haveClass(className);
-            haveAttribute(clazz, attrName, attrType);
-         });
+      // haveRole(Clazz srcClass, String attrName, Clazz tgtClass, int size)
+      consumerMap.put(HAVE_ROLE, map -> {
+         String srcClassName = map.get(SRC_CLASS_NAME);
+         String attrName = map.get(ATTR_NAME);
+         String tgtClassName = map.get(TGT_CLASS_NAME);
+         String sizeName = map.get(TGT_CARDINALITY);
 
-         // haveRole(Clazz srcClass, String attrName, Clazz tgtClass, int size)
-         consumerMap.put(ClassModelManager.HAVE_ROLE, map -> {
-            String srcClassName = map.get(ClassModelManager.SRC_CLASS_NAME);
-            String attrName = map.get(ClassModelManager.ATTR_NAME);
-            String tgtClassName = map.get(ClassModelManager.TGT_CLASS_NAME);
-            String sizeName = map.get(ClassModelManager.TGT_CARDINALITY);
+         Clazz srcClazz = this.haveClass(srcClassName);
+         Clazz tgClazz = this.haveClass(tgtClassName);
+         int size = Integer.parseInt(sizeName);
 
-            Clazz srcClazz = haveClass(srcClassName);
-            Clazz tgClazz = haveClass(tgtClassName);
-            int size = Integer.valueOf(sizeName);
-
-            haveRole(srcClazz, attrName, tgClazz, size);
-         });
-
-      }
+         this.haveRole(srcClazz, attrName, tgClazz, size);
+      });
    }
 }
