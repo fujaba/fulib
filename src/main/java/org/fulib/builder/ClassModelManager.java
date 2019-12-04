@@ -195,21 +195,17 @@ public class ClassModelManager implements IModelManager
 
    public Clazz haveClass(String className)
    {
-      if ("String".equals(className)) {
-         className = "String2";
-      }
-
       Clazz clazz = this.classModel.getClazz(className);
 
       if (clazz != null)  return clazz; //============================
 
       clazz = new ClassBuilder(this.classModel, className).getClazz();
 
-      LinkedHashMap<String, String> event = new LinkedHashMap<>();
-      event.put(EventSource.EVENT_TYPE, HAVE_CLASS);
-      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(className));
-      event.put(Clazz.PROPERTY_name, Yamler.encapsulate(className));
-      mem.append(event);
+      this.event(e -> {
+         e.put(EventSource.EVENT_TYPE, HAVE_CLASS);
+         e.put(EventSource.EVENT_KEY, Yamler.encapsulate(className));
+         e.put(Clazz.PROPERTY_name, Yamler.encapsulate(className));
+      });
 
       return clazz;
    }
@@ -361,19 +357,22 @@ public class ClassModelManager implements IModelManager
          method = new FMethod();
       }
 
-      method.setClazz(clazz)
+      // need a final variable due to use in lambda expression below.
+      final FMethod foundMethod = method;
+
+      foundMethod.setClazz(clazz)
             .setDeclaration(declaration)
             .setMethodBody(body);
 
-      String key = clazz.getName() + "." + method.getDeclaration();
+      String key = clazz.getName() + "." + foundMethod.getDeclaration();
 
-      LinkedHashMap<String, String> event = new LinkedHashMap<>();
-      event.put(EventSource.EVENT_TYPE, HAVE_METHOD);
-      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(key));
-      event.put(CLASS_NAME, Yamler.encapsulate(clazz.getName()));
-      event.put(DECLARATION, Yamler.encapsulate(method.getDeclaration()));
-      event.put(METHOD_BODY, Yamler.encapsulate(method.getMethodBody()));
-      mem.append(event);
+      this.event(e -> {
+         e.put(EVENT_TYPE, HAVE_METHOD);
+         e.put(EVENT_KEY, Yamler.encapsulate(key));
+         e.put(CLASS_NAME, Yamler.encapsulate(clazz.getName()));
+         e.put(DECLARATION, Yamler.encapsulate(foundMethod.getDeclaration()));
+         e.put(METHOD_BODY, Yamler.encapsulate(foundMethod.getMethodBody()));
+      });
 
       return method;
    }
