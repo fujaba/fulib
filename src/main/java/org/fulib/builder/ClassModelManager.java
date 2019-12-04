@@ -48,6 +48,9 @@ public class ClassModelManager implements IModelManager
    public static final String PARAMS = "params";
    public static final String METHOD_BODY = "methodBody";
    public static final String DECLARATION = "declaration";
+   public static final String HAVE_SUPER = "haveSuper";
+   public static final String SUB_CLASS = "subClass";
+   public static final String SUPER_CLASS = "superClass";
 
    private ClassModel classModel;
    private ModelEventManager mem;
@@ -207,6 +210,20 @@ public class ClassModelManager implements IModelManager
       return clazz;
    }
 
+
+   public Clazz haveSuper(Clazz subClass, Clazz superClass)
+   {
+      subClass.setSuperClass(superClass);
+
+      LinkedHashMap<String, String> event = new LinkedHashMap<>();
+      event.put(EventSource.EVENT_TYPE, HAVE_SUPER);
+      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(subClass.getName()));
+      event.put(SUB_CLASS, Yamler.encapsulate(subClass.getName()));
+      event.put(SUPER_CLASS, Yamler.encapsulate(superClass.getName()));
+      mem.append(event);
+
+      return subClass;
+   }
 
 
    public Attribute haveAttribute(Clazz clazz, String attrName, String attrType)
