@@ -3,7 +3,7 @@ package org.fulib.util;
 import org.fulib.Generator;
 import org.fulib.Parser;
 import org.fulib.StrUtil;
-import org.fulib.builder.ClassModelBuilder;
+import org.fulib.builder.Type;
 import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.Clazz;
@@ -187,7 +187,7 @@ public class Generator4TableClassFile
          // getMethod(roleName,toMany,className,otherClassName) ::=
          st = group.getInstanceOf("expandMethod");
          st.add("roleName", role.getName());
-         st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+         st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("className", clazz.getName());
          st.add("otherClassName", otherClassName);
          result = st.render();
@@ -196,7 +196,7 @@ public class Generator4TableClassFile
          // hasMethod(roleName,toMany,className,otherClassName) ::=
          st = group.getInstanceOf("hasMethod");
          st.add("roleName", role.getName());
-         st.add("toMany", role.getCardinality() != ClassModelBuilder.ONE);
+         st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("className", clazz.getName());
          st.add("otherClassName", otherClassName);
          result = st.render();

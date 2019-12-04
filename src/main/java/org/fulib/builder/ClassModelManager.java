@@ -10,8 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static org.fulib.builder.ClassModelBuilder.COLLECTION_ARRAY_LIST;
-import static org.fulib.builder.ClassModelBuilder.POJO;
+import static org.fulib.builder.Type.COLLECTION_ARRAY_LIST;
+import static org.fulib.builder.Type.POJO;
 import static org.fulib.classmodel.ClassModel.PROPERTY_mainJavaDir;
 import static org.fulib.classmodel.ClassModel.PROPERTY_packageName;
 import static org.fulib.classmodel.Clazz.PROPERTY_name;
@@ -91,7 +91,7 @@ public class ClassModelManager implements IModelManager
     * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     */
@@ -230,7 +230,7 @@ public class ClassModelManager implements IModelManager
    public AssocRole haveRole(Clazz srcClass, String attrName, int size, Clazz tgtClass)
    {
       String otherRoleName = StrUtil.downFirstChar(srcClass.getName());
-      return this.haveRole(srcClass, attrName, size, tgtClass, otherRoleName, ClassModelBuilder.ONE, false);
+      return this.haveRole(srcClass, attrName, size, tgtClass, otherRoleName, Type.ONE, false);
    }
 
    /**
