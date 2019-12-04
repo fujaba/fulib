@@ -7,10 +7,14 @@ import org.fulib.yaml.EventSource;
 import org.fulib.yaml.Yamler;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static org.fulib.builder.ClassModelBuilder.COLLECTION_ARRAY_LIST;
 import static org.fulib.builder.ClassModelBuilder.POJO;
+import static org.fulib.classmodel.ClassModel.*;
+import static org.fulib.classmodel.Clazz.*;
+import static org.fulib.yaml.EventSource.*;
 
 /**
  * ClassModelbuilder is used to create fulib class models that are input for
@@ -64,17 +68,17 @@ public class ClassModelManager implements IModelManager
          consumerMap = new LinkedHashMap<>();
 
          consumerMap.put(ClassModelManager.HAVE_PACKAGE_NAME, map -> {
-            String packageName = map.get(ClassModel.PROPERTY_packageName);
+            String packageName = map.get(PROPERTY_packageName);
             havePackageName(packageName);
          });
 
          consumerMap.put(ClassModelManager.HAVE_MAIN_JAVA_DIR, map -> {
-            String sourceFolder = map.get(ClassModel.PROPERTY_mainJavaDir);
+            String sourceFolder = map.get(PROPERTY_mainJavaDir);
             haveMainJavaDir(sourceFolder);
          });
 
          consumerMap.put(ClassModelManager.HAVE_CLASS, map -> {
-            String name = map.get(Clazz.PROPERTY_name);
+            String name = map.get(PROPERTY_name);
             haveClass(name);
          });
 
@@ -159,11 +163,11 @@ public class ClassModelManager implements IModelManager
 
       classModel.setPackageName(packagename);
 
-      LinkedHashMap<String, String> event = new LinkedHashMap<>();
-      event.put(EventSource.EVENT_TYPE, HAVE_PACKAGE_NAME);
-      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(THE_CLASS_MODEL + "_" + ClassModel.PROPERTY_packageName));
-      event.put(ClassModel.PROPERTY_packageName, Yamler.encapsulate(packagename));
-      mem.append(event);
+      this.event(e -> {
+         e.put(EVENT_TYPE, HAVE_PACKAGE_NAME);
+         e.put(EVENT_KEY, Yamler.encapsulate(THE_CLASS_MODEL + "_" + PROPERTY_packageName));
+         e.put(PROPERTY_packageName, Yamler.encapsulate(packagename));
+      });
 
       return this;
    }
@@ -178,11 +182,11 @@ public class ClassModelManager implements IModelManager
 
       classModel.setMainJavaDir(sourceFolder);
 
-      LinkedHashMap<String, String> event = new LinkedHashMap<>();
-      event.put(EventSource.EVENT_TYPE, HAVE_MAIN_JAVA_DIR);
-      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(THE_CLASS_MODEL + "_" + ClassModel.PROPERTY_mainJavaDir));
-      event.put(ClassModel.PROPERTY_mainJavaDir, Yamler.encapsulate(sourceFolder));
-      mem.append(event);
+      this.event(e -> {
+         e.put(EVENT_TYPE, HAVE_MAIN_JAVA_DIR);
+         e.put(EVENT_KEY, Yamler.encapsulate(THE_CLASS_MODEL + "_" + PROPERTY_mainJavaDir));
+         e.put(PROPERTY_mainJavaDir, Yamler.encapsulate(sourceFolder));
+      });
 
       return this;
    }
@@ -215,12 +219,12 @@ public class ClassModelManager implements IModelManager
    {
       subClass.setSuperClass(superClass);
 
-      LinkedHashMap<String, String> event = new LinkedHashMap<>();
-      event.put(EventSource.EVENT_TYPE, HAVE_SUPER);
-      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(subClass.getName()));
-      event.put(SUB_CLASS, Yamler.encapsulate(subClass.getName()));
-      event.put(SUPER_CLASS, Yamler.encapsulate(superClass.getName()));
-      mem.append(event);
+      this.event(e -> {
+         e.put(EVENT_TYPE, HAVE_SUPER);
+         e.put(EVENT_KEY, Yamler.encapsulate(subClass.getName()));
+         e.put(SUB_CLASS, Yamler.encapsulate(subClass.getName()));
+         e.put(SUPER_CLASS, Yamler.encapsulate(superClass.getName()));
+      });
 
       return subClass;
    }
@@ -247,15 +251,13 @@ public class ClassModelManager implements IModelManager
 
       attr.setType(attrType);
 
-      LinkedHashMap<String, String> event = new LinkedHashMap<>();
-      event.put(EventSource.EVENT_TYPE, HAVE_ATTRIBUTE);
-      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(clazz.getName() + "." + attrName));
-      event.put(CLASS_NAME, Yamler.encapsulate(clazz.getName()));
-      event.put(ATTR_NAME, Yamler.encapsulate(attrName));
-      event.put(ATTR_TYPE, Yamler.encapsulate(attrType));
-      mem.append(event);
-
-
+      this.event(e -> {
+         e.put(EVENT_TYPE, HAVE_ATTRIBUTE);
+         e.put(EVENT_KEY, Yamler.encapsulate(clazz.getName() + "." + attrName));
+         e.put(CLASS_NAME, Yamler.encapsulate(clazz.getName()));
+         e.put(ATTR_NAME, Yamler.encapsulate(attrName));
+         e.put(ATTR_TYPE, Yamler.encapsulate(attrType));
+      });
 
       return attr;
    }
@@ -314,16 +316,16 @@ public class ClassModelManager implements IModelManager
       role.getOther().setCardinality(tgtSize);
 
       // mm.haveRole(currentRegisterClazz, srcRole, tgtClass, srcSize, tgtRole, ClassModelBuilder.ONE);
-      LinkedHashMap<String, String> event = new LinkedHashMap<>();
-      event.put(EventSource.EVENT_TYPE, HAVE_ROLE);
-      event.put(EventSource.EVENT_KEY, Yamler.encapsulate(srcClass.getName() + "." + srcRole));
-      event.put(SRC_CLASS_NAME, Yamler.encapsulate(srcClass.getName()));
-      event.put(SRC_ROLE, Yamler.encapsulate(srcRole));
-      event.put(TGT_CLASS_NAME, Yamler.encapsulate(tgtClass.getName()));
-      event.put(SRC_SIZE, "" + maxSize);
-      event.put(TGT_ROLE, Yamler.encapsulate(tgtRole));
-      event.put(TGT_SIZE, "" + maxTgtSize);
-      mem.append(event);
+      this.event(e -> {
+         e.put(EVENT_TYPE, HAVE_ROLE);
+         e.put(EVENT_KEY, Yamler.encapsulate(srcClass.getName() + "." + srcRole));
+         e.put(SRC_CLASS_NAME, Yamler.encapsulate(srcClass.getName()));
+         e.put(SRC_ROLE, Yamler.encapsulate(srcRole));
+         e.put(TGT_CLASS_NAME, Yamler.encapsulate(tgtClass.getName()));
+         e.put(SRC_SIZE, "" + maxSize);
+         e.put(TGT_ROLE, Yamler.encapsulate(tgtRole));
+         e.put(TGT_SIZE, "" + maxTgtSize);
+      });
 
       return role;
    }
@@ -389,5 +391,12 @@ public class ClassModelManager implements IModelManager
          }
       }
       return null;
+   }
+
+   private void event(Consumer<? super Map<String, String>> populator)
+   {
+      final LinkedHashMap<String, String> map = new LinkedHashMap<>();
+      populator.accept(map);
+      this.mem.append(map);
    }
 }
