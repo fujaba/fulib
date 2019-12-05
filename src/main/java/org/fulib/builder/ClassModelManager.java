@@ -51,6 +51,7 @@ public class ClassModelManager implements IModelManager
    public static final String SRC_SIZE = "srcSize";
    public static final String TGT_ROLE = "tgtRole";
    public static final String TGT_SIZE = "tgtSize";
+   public static final String BOTH_ROLES = "bothRoles";
    public static final String HAVE_METHOD = "haveMethod";
    public static final String METHOD_BODY = "methodBody";
    public static final String DECLARATION = "declaration";
@@ -289,12 +290,14 @@ public class ClassModelManager implements IModelManager
       this.event(e -> {
          e.put(EVENT_TYPE, HAVE_ROLE);
          e.put(EVENT_KEY, Yamler.encapsulate(srcClass.getName() + "." + srcRole));
+
          e.put(SRC_CLASS_NAME, Yamler.encapsulate(srcClass.getName()));
          e.put(SRC_ROLE, Yamler.encapsulate(srcRole));
+         e.put(SRC_SIZE, Integer.toString(maxSize));
          e.put(TGT_CLASS_NAME, Yamler.encapsulate(tgtClass.getName()));
-         e.put(SRC_SIZE, "" + maxSize);
          e.put(TGT_ROLE, Yamler.encapsulate(tgtRole));
-         e.put(TGT_SIZE, "" + maxTgtSize);
+         e.put(TGT_SIZE, Integer.toString(maxTgtSize));
+         e.put(BOTH_ROLES, Boolean.toString(bothRoles));
       });
 
       return role;
@@ -411,18 +414,19 @@ public class ClassModelManager implements IModelManager
          this.haveAttribute(clazz, attrName, attrType);
       });
 
-      // haveRole(Clazz srcClass, String attrName, Clazz tgtClass, int size)
       consumerMap.put(HAVE_ROLE, map -> {
-         String srcClassName = map.get(SRC_CLASS_NAME);
-         String attrName = map.get(ATTR_NAME);
-         String tgtClassName = map.get(TGT_CLASS_NAME);
-         String sizeName = map.get(TGT_CARDINALITY);
+         final String srcClassName = map.get(SRC_CLASS_NAME);
+         final String srcRole = map.get(SRC_ROLE);
+         final int srcSize = Integer.parseInt(map.get(SRC_SIZE));
+         final String tgtClassName = map.get(TGT_CLASS_NAME);
+         final String tgtRole = map.get(TGT_ROLE);
+         final int tgtSize = Integer.parseInt(map.get(TGT_CARDINALITY));
+         final boolean bothRoles = Boolean.parseBoolean(map.get(BOTH_ROLES));
 
-         Clazz srcClazz = this.haveClass(srcClassName);
-         Clazz tgClazz = this.haveClass(tgtClassName);
-         int size = Integer.parseInt(sizeName);
+         final Clazz srcClazz = this.haveClass(srcClassName);
+         final Clazz tgtClazz = this.haveClass(tgtClassName);
 
-         this.haveRole(srcClazz, attrName, tgClazz, size);
+         this.haveRole(srcClazz, srcRole, srcSize, tgtClazz, tgtRole, tgtSize, bothRoles);
       });
    }
 }
