@@ -89,6 +89,9 @@ public class ClassModelManager implements IModelManager
         ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
+    *
+    * @param classModelEventManager
+    *    the model event manager
     */
    public ClassModelManager(ModelEventManager classModelEventManager)
    {
@@ -228,21 +231,69 @@ public class ClassModelManager implements IModelManager
    // --------------- Associations ---------------
 
    /**
+    * Creates an association like {@link #haveRole(Clazz, String, int, Clazz, String, int)},
+    * but with the target role name inferred from the name of the source class,
+    * and the target cardinality 1.
+    *
+    * @param srcClass
+    *    the source class
+    * @param tgtClass
+    *    the target class
+    * @param srcRole
+    *    the role name in the source class
+    * @param srcSize
+    *    the cardinality in the source class
+    *
+    * @return the new {@link AssocRole} in the source class.
+    *
     * @deprecated use {@link #haveRole(Clazz, String, int, Clazz)}, which provides better parameter symmetry.
     */
    @Deprecated
-   public AssocRole haveRole(Clazz srcClass, String attrName, Clazz tgtClass, int size)
+   public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize)
    {
-      return this.haveRole(srcClass, attrName, size, tgtClass);
-   }
-
-   public AssocRole haveRole(Clazz srcClass, String attrName, int size, Clazz tgtClass)
-   {
-      String otherRoleName = StrUtil.downFirstChar(srcClass.getName());
-      return this.haveRole(srcClass, attrName, size, tgtClass, otherRoleName, Type.ONE, false);
+      return this.haveRole(srcClass, srcRole, srcSize, tgtClass);
    }
 
    /**
+    * Creates an association like {@link #haveRole(Clazz, String, int, Clazz, String, int)},
+    * but with the target role name inferred from the name of the source class,
+    * and the target cardinality 1.
+    *
+    * @param srcClass
+    *    the source class
+    * @param srcRole
+    *    the role name in the source class
+    * @param srcSize
+    *    the cardinality in the source class
+    * @param tgtClass
+    *    the target class
+    *
+    * @return the new {@link AssocRole} in the source class.
+    */
+   public AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass)
+   {
+      String otherRoleName = StrUtil.downFirstChar(srcClass.getName());
+      return this.haveRole(srcClass, srcRole, srcSize, tgtClass, otherRoleName, Type.ONE, false);
+   }
+
+   /**
+    * Creates an association from the source class to the target class.
+    *
+    * @param srcClass
+    *    the source class
+    * @param srcRole
+    *    the role name in the source class
+    * @param tgtClass
+    *    the target class
+    * @param srcSize
+    *    the cardinality in the source class
+    * @param tgtRole
+    *    the role name in the target class
+    * @param tgtSize
+    *    the cardinality in the target class
+    *
+    * @return the new {@link AssocRole} in the source class.
+    *
     * @deprecated use {@link #haveRole(Clazz, String, int, Clazz, String, int)}, which provides better parameter symmetry.
     */
    @Deprecated
@@ -251,13 +302,31 @@ public class ClassModelManager implements IModelManager
       return this.haveRole(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize, true);
    }
 
+   /**
+    * Creates an association from the source class to the target class.
+    *
+    * @param srcClass
+    *    the source class
+    * @param srcRole
+    *    the role name in the source class
+    * @param srcSize
+    *    the cardinality in the source class
+    * @param tgtClass
+    *    the target class
+    * @param tgtRole
+    *    the role name in the target class
+    * @param tgtSize
+    *    the cardinality in the target class
+    *
+    * @return the new {@link AssocRole} in the source class.
+    */
    public AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize)
    {
       return this.haveRole(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize, true);
    }
 
    private AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize,
-       boolean bothRoles)
+      boolean bothRoles)
    {
       AssocRole role = srcClass.getRole(srcRole);
 
