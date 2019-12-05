@@ -17,7 +17,10 @@ public class Fulib
         ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
+    *
     * @param packagename
+    *    the package name
+    *
     * @return a class model builder for the given package name and with the default source folder "src/main/java"
     */
    public static ClassModelBuilder classModelBuilder(String packagename)
@@ -38,8 +41,12 @@ public class Fulib
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
+    *
     * @param packagename
+    *    the package name
     * @param sourceFolder
+    *    the source folder
+    *
     * @return a class model builder for the given package name and source folder
     */
    public static ClassModelBuilder classModelBuilder(String packagename, String sourceFolder)
@@ -56,7 +63,8 @@ public class Fulib
       Fulib.generator().generate(model);
     * <!-- end_code_fragment:  -->
     * </pre>
-    * @return
+    *
+    * @return the generator
     */
    public static Generator generator()
    {
@@ -72,7 +80,8 @@ public class Fulib
     Fulib.tablesGenerator().generate(model);
     * <!-- end_code_fragment:  -->
     * </pre>
-    * @return
+    *
+    * @return the tables generator
     */
    public static TablesGenerator tablesGenerator()
    {

@@ -38,6 +38,9 @@ public class TypeScriptGenerator
 
    /**
     * The fulib TypeScriptGenerator generates testCompile classes from a class model.
+    *
+    * @param model
+    *    the class model
     */
    public void generate(ClassModel model)
    {
@@ -130,7 +133,9 @@ public class TypeScriptGenerator
     * Provide your templates for code generation as in:
     *
     * @param customFileName
-    * @return
+    *    the custom templates file name
+    *
+    * @return this instance, to allow call chaining
     */
    public TypeScriptGenerator setCustomTemplatesFile(String customFileName)
    {

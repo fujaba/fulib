@@ -50,6 +50,9 @@ public class TablesGenerator
     Fulib.tablesGenerator().generate(model);
     * <!-- end_code_fragment:  -->
     * </pre>
+    *
+    * @param model
+    *    the class model
     */
    public void generate(ClassModel model)
    {
@@ -185,8 +188,11 @@ public class TablesGenerator
                 .generate(model);
     * <!-- end_code_fragment: testCustomTemplates -->
     * </pre>
+    *
     * @param customFileName
-    * @return
+    *    the custom templates file name
+    *
+    * @return this instance, to allow call chaining.
     */
    public TablesGenerator setCustomTemplatesFile(String customFileName)
    {

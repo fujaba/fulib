@@ -25,10 +25,11 @@ public class AssociationBuilder
 
    private AssocRole srcRole;
 
-
    /**
     * Allows to define additional properties for associations, e.g. aggregation or Collection to be used
+    *
     * @param myRole
+    *    the role to operate on
     */
    public AssociationBuilder(AssocRole myRole)
    {
