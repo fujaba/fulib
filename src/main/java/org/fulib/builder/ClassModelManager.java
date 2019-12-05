@@ -72,12 +72,7 @@ public class ClassModelManager implements IModelManager
     */
    public ClassModelManager()
    {
-      this.mem = new ModelEventManager();
-      this.mem.setModelManager(this);
-
-      this.classModel = new ClassModel()
-            .setDefaultPropertyStyle(POJO)
-            .setDefaultRoleType(COLLECTION_ARRAY_LIST);
+      this(null);
    }
 
    /**
@@ -95,7 +90,11 @@ public class ClassModelManager implements IModelManager
     */
    public ClassModelManager(ModelEventManager classModelEventManager)
    {
-      this.mem = classModelEventManager;
+      if (classModelEventManager != null)
+      {
+         this.mem = classModelEventManager;
+         this.mem.setModelManager(this);
+      }
 
       this.classModel = new ClassModel()
             .setDefaultPropertyStyle(POJO)
@@ -369,6 +368,11 @@ public class ClassModelManager implements IModelManager
 
    private void event(Consumer<? super Map<String, String>> populator)
    {
+      if (this.mem == null)
+      {
+         return;
+      }
+
       final LinkedHashMap<String, String> map = new LinkedHashMap<>();
       populator.accept(map);
       this.mem.append(map);
