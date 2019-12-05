@@ -52,8 +52,6 @@ public class ClassModelManager implements IModelManager
    public static final String TGT_ROLE = "tgtRole";
    public static final String TGT_SIZE = "tgtSize";
    public static final String HAVE_METHOD = "haveMethod";
-   public static final String METHOD_NAME = "methodName";
-   public static final String PARAMS = "params";
    public static final String METHOD_BODY = "methodBody";
    public static final String DECLARATION = "declaration";
    public static final String HAVE_SUPER = "haveSuper";
@@ -74,8 +72,8 @@ public class ClassModelManager implements IModelManager
     */
    public ClassModelManager()
    {
-      mem = new ModelEventManager();
-      mem.setModelManager(this);
+      this.mem = new ModelEventManager();
+      this.mem.setModelManager(this);
 
       this.classModel = new ClassModel()
             .setDefaultPropertyStyle(POJO)
@@ -97,7 +95,7 @@ public class ClassModelManager implements IModelManager
     */
    public ClassModelManager(ModelEventManager classModelEventManager)
    {
-      mem = classModelEventManager;
+      this.mem = classModelEventManager;
 
       this.classModel = new ClassModel()
             .setDefaultPropertyStyle(POJO)
@@ -108,7 +106,7 @@ public class ClassModelManager implements IModelManager
 
    public ClassModel getClassModel()
    {
-      return classModel;
+      return this.classModel;
    }
 
    // =============== Methods ===============
@@ -117,11 +115,11 @@ public class ClassModelManager implements IModelManager
 
    public ClassModelManager havePackageName(String packagename)
    {
-      String oldPackageName = classModel.getPackageName();
+      String oldPackageName = this.classModel.getPackageName();
 
       if (StrUtil.stringEquals(oldPackageName, packagename)) return this;
 
-      classModel.setPackageName(packagename);
+      this.classModel.setPackageName(packagename);
 
       this.event(e -> {
          e.put(EVENT_TYPE, HAVE_PACKAGE_NAME);
@@ -134,11 +132,11 @@ public class ClassModelManager implements IModelManager
 
    public ClassModelManager haveMainJavaDir(String sourceFolder)
    {
-      String mainJavaDir = classModel.getMainJavaDir();
+      String mainJavaDir = this.classModel.getMainJavaDir();
 
       if (StrUtil.stringEquals(mainJavaDir, sourceFolder)) return this;
 
-      classModel.setMainJavaDir(sourceFolder);
+      this.classModel.setMainJavaDir(sourceFolder);
 
       this.event(e -> {
          e.put(EVENT_TYPE, HAVE_MAIN_JAVA_DIR);
