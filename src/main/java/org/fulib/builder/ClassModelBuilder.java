@@ -48,7 +48,9 @@ public class ClassModelBuilder
         ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
+    *
     * @param packagename
+    *    the package name
     */
    public ClassModelBuilder(String packagename)
    {
@@ -67,8 +69,11 @@ public class ClassModelBuilder
         ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
+    *
     * @param packagename
+    *    the package name
     * @param sourceFolder
+    *    the source folder
     */
    public ClassModelBuilder(String packagename, String sourceFolder)
    {
@@ -142,8 +147,11 @@ public class ClassModelBuilder
     * set container class to be used for to-many associations,
     * default is Type.COLLECTION_ARRAY_LIST
     * alternative is e.g.: ClassModelBuilder.
+    *
     * @param collectionClass
+    *    the collection class
     * @return
+    *    this instance, to allow call chaining
     */
    public ClassModelBuilder setDefaultCollectionClass(Class collectionClass)
    {
@@ -180,7 +188,10 @@ public class ClassModelBuilder
       ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
+    *
     * @param className
+    *    the class name
+    *
     * @return new class builder
     */
    public ClassBuilder buildClass(String className)

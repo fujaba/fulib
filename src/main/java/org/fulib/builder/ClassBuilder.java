@@ -26,8 +26,11 @@ public class ClassBuilder
 
    /**
     * Builds a class builder for the given classname and connects it to the model
+    *
     * @param classModel
+    *    the class model
     * @param className
+    *    the class name
     */
    public ClassBuilder(ClassModel classModel, String className)
    {
@@ -87,7 +90,10 @@ public class ClassBuilder
     * </pre>
     *
     * @param name
+    *    the attribute name
     * @param type
+    *    the attribute type
+    *
     * @return this class builder, for fluent style
     */
    public ClassBuilder buildAttribute(String name, String type)
@@ -105,9 +111,14 @@ public class ClassBuilder
                 .buildAttribute("name", Type.STRING, "\"Karli\"");
     * <!-- end_code_fragment:  -->
     * </pre>
+    *
     * @param name
+    *    the attribute name
     * @param type
+    *    the attribute type
     * @param initialValue
+    *    the initialize value; can be any Java expression.
+    *
     * @return this class builder, for fluent style
     */
    public ClassBuilder buildAttribute(String name, String type, String initialValue)
@@ -133,11 +144,19 @@ public class ClassBuilder
         universitiy.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
     * <!-- end_code_fragment:  -->
     * </pre>
+    *
     * @param otherClass
+    *    the ClassBuilder representing the target class
     * @param myRoleName
+    *    the role name in this class
     * @param myCardinality
+    *    the cardinality in this class
     * @param otherRoleName
+    *    the role name in the target class
     * @param otherCardinality
+    *    the cardinality in the target class
+    *
+    * @return an AssociationBuilder that allows further customization of the association
     */
    public AssociationBuilder buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality)
    {
