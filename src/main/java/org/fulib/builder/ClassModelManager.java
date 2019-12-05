@@ -61,7 +61,8 @@ public class ClassModelManager implements IModelManager
 
    // =============== Fields ===============
 
-   private ClassModel classModel;
+   private final ClassModel classModel;
+
    private ModelEventManager mem;
 
    // =============== Constructors ===============
@@ -91,11 +92,7 @@ public class ClassModelManager implements IModelManager
     */
    public ClassModelManager(ModelEventManager classModelEventManager)
    {
-      if (classModelEventManager != null)
-      {
-         this.mem = classModelEventManager;
-         this.mem.setModelManager(this);
-      }
+      this.setModelEventManager(classModelEventManager);
 
       this.classModel = new ClassModel()
             .setDefaultPropertyStyle(POJO)
@@ -107,6 +104,20 @@ public class ClassModelManager implements IModelManager
    public ClassModel getClassModel()
    {
       return this.classModel;
+   }
+
+   public ModelEventManager getModelEventManager()
+   {
+      return this.mem;
+   }
+
+   public void setModelEventManager(ModelEventManager mem)
+   {
+      this.mem = mem;
+      if (mem != null)
+      {
+         mem.setModelManager(this);
+      }
    }
 
    // =============== Methods ===============
