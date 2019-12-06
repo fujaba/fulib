@@ -51,15 +51,15 @@ public class ClassModelManager implements IModelManager
 
    public static final String CLASS_NAME = "className";
 
-   public static final String ASSOCIATE = "associate";
+   public static final String ASSOCIATE      = "associate";
    public static final String SRC_CLASS_NAME = "srcClassName";
    public static final String TGT_CLASS_NAME = "tgtClassName";
-   public static final String TGT_CARDINALITY = "tgtCardinality";
-   public static final String SRC_ROLE = "srcRole";
-   public static final String SRC_SIZE = "srcSize";
-   public static final String TGT_ROLE = "tgtRole";
-   public static final String TGT_SIZE = "tgtSize";
-   public static final String BOTH_ROLES = "bothRoles";
+   public static final String SRC_ROLE       = "srcRole";
+   public static final String SRC_SIZE       = "srcSize";
+   public static final String TGT_ROLE       = "tgtRole";
+   public static final String TGT_SIZE       = "tgtSize";
+   public static final String BOTH_ROLES     = "bothRoles";
+
    public static final String HAVE_METHOD = "haveMethod";
    public static final String METHOD_BODY = "methodBody";
    public static final String DECLARATION = "declaration";
@@ -639,7 +639,7 @@ public class ClassModelManager implements IModelManager
          final int srcSize = Integer.parseInt(map.get(SRC_SIZE));
          final String tgtClassName = map.get(TGT_CLASS_NAME);
          final String tgtRole = map.get(TGT_ROLE);
-         final int tgtSize = Integer.parseInt(map.get(TGT_CARDINALITY));
+         final int tgtSize = Integer.parseInt(map.get(TGT_SIZE));
          final boolean bothRoles = Boolean.parseBoolean(map.get(BOTH_ROLES));
 
          final Clazz srcClazz = this.haveClass(srcClassName);
