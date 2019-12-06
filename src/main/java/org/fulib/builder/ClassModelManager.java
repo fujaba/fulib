@@ -8,6 +8,7 @@ import org.fulib.yaml.Yamler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static org.fulib.builder.Type.COLLECTION_ARRAY_LIST;
@@ -26,8 +27,8 @@ import static org.fulib.yaml.EventSource.EVENT_TYPE;
  * <!-- insert_code_fragment: ClassModelBuilder -->
         ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
-      * <!-- end_code_fragment:  -->
+ ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+ * <!-- end_code_fragment:  -->
  * </pre>
  *
  */
@@ -36,8 +37,10 @@ public class ClassModelManager implements IModelManager
    // =============== Constants ===============
 
    public static final String THE_CLASS_MODEL = "theClassModel";
-   public static final String HAVE_PACKAGE_NAME = "havePackageName";
-   public static final String HAVE_MAIN_JAVA_DIR = "haveMainJavaDir";
+
+   public static final String USE_PACKAGE_NAME  = "usePackageName";
+   public static final String USE_SOURCE_FOLDER = "useSourceFolder";
+
    public static final String HAVE_CLASS = "haveClass";
    public static final String HAVE_ATTRIBUTE = "haveAttribute";
    public static final String CLASS_NAME = "className";
@@ -127,38 +130,86 @@ public class ClassModelManager implements IModelManager
 
    // --------------- Settings ---------------
 
+   /**
+    * @param packagename
+    *    the package name
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @deprecated use {@link #usePackageName(String)}
+    */
+   @Deprecated
    public ClassModelManager havePackageName(String packagename)
    {
-      String oldPackageName = this.classModel.getPackageName();
-
-      if (StrUtil.stringEquals(oldPackageName, packagename)) return this;
-
-      this.classModel.setPackageName(packagename);
-
-      this.event(e -> {
-         e.put(EVENT_TYPE, HAVE_PACKAGE_NAME);
-         e.put(EVENT_KEY, Yamler.encapsulate(THE_CLASS_MODEL + "_" + PROPERTY_packageName));
-         e.put(PROPERTY_packageName, Yamler.encapsulate(packagename));
-      });
-
+      this.usePackageName(packagename);
       return this;
    }
 
+   /**
+    * Sets the package name to use for generated classes.
+    *
+    * @param packageName
+    *    the package name
+    *
+    * @since 1.2
+    */
+   public void usePackageName(String packageName)
+   {
+      final String oldPackageName = this.classModel.getPackageName();
+
+      if (Objects.equals(oldPackageName, packageName))
+      {
+         return;
+      }
+
+      this.classModel.setPackageName(packageName);
+
+      this.event(e -> {
+         e.put(EVENT_TYPE, USE_PACKAGE_NAME);
+         e.put(EVENT_KEY, Yamler.encapsulate(THE_CLASS_MODEL + "_" + PROPERTY_packageName));
+         e.put(PROPERTY_packageName, Yamler.encapsulate(packageName));
+      });
+   }
+
+   /**
+    * @param sourceFolder
+    *    the source folder
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @deprecated use {@link #useSourceFolder(String)}
+    */
+   @Deprecated
    public ClassModelManager haveMainJavaDir(String sourceFolder)
    {
-      String mainJavaDir = this.classModel.getMainJavaDir();
+      this.useSourceFolder(sourceFolder);
+      return this;
+   }
 
-      if (StrUtil.stringEquals(mainJavaDir, sourceFolder)) return this;
+   /**
+    * Sets the source folder to generate model classes into.
+    *
+    * @param sourceFolder
+    *    the source folder
+    *
+    * @since 1.2
+    */
+   public void useSourceFolder(String sourceFolder)
+   {
+      final String mainJavaDir = this.classModel.getMainJavaDir();
+
+      if (Objects.equals(mainJavaDir, sourceFolder))
+      {
+         return;
+      }
 
       this.classModel.setMainJavaDir(sourceFolder);
 
       this.event(e -> {
-         e.put(EVENT_TYPE, HAVE_MAIN_JAVA_DIR);
+         e.put(EVENT_TYPE, USE_SOURCE_FOLDER);
          e.put(EVENT_KEY, Yamler.encapsulate(THE_CLASS_MODEL + "_" + PROPERTY_mainJavaDir));
          e.put(PROPERTY_mainJavaDir, Yamler.encapsulate(sourceFolder));
       });
-
-      return this;
    }
 
    // --------------- Classes ---------------
@@ -468,15 +519,19 @@ public class ClassModelManager implements IModelManager
    @Override
    public void initConsumers(LinkedHashMap<String, Consumer<LinkedHashMap<String, String>>> consumerMap)
    {
-      consumerMap.put(HAVE_PACKAGE_NAME, map -> {
-         String packageName = map.get(PROPERTY_packageName);
-         this.havePackageName(packageName);
-      });
+      final Consumer<LinkedHashMap<String, String>> usePackageName = map -> {
+         final String packageName = map.get(PROPERTY_packageName);
+         this.usePackageName(packageName);
+      };
+      consumerMap.put(USE_PACKAGE_NAME, usePackageName);
+      consumerMap.put("havePackageName", usePackageName); // legacy name
 
-      consumerMap.put(HAVE_MAIN_JAVA_DIR, map -> {
-         String sourceFolder = map.get(PROPERTY_mainJavaDir);
-         this.haveMainJavaDir(sourceFolder);
-      });
+      final Consumer<LinkedHashMap<String, String>> useSourceFolder = map -> {
+         final String sourceFolder = map.get(PROPERTY_mainJavaDir);
+         this.useSourceFolder(sourceFolder);
+      };
+      consumerMap.put(USE_SOURCE_FOLDER, useSourceFolder); // legacy name
+      consumerMap.put("haveMainJavaDir", useSourceFolder); // legacy name
 
       consumerMap.put(HAVE_CLASS, map -> {
          String name = map.get(PROPERTY_name);
