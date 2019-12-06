@@ -529,7 +529,7 @@ public class ClassModelManager implements IModelManager
          final String sourceFolder = map.get(PROPERTY_mainJavaDir);
          this.useSourceFolder(sourceFolder);
       };
-      consumerMap.put(USE_SOURCE_FOLDER, useSourceFolder); // legacy name
+      consumerMap.put(USE_SOURCE_FOLDER, useSourceFolder);
       consumerMap.put("haveMainJavaDir", useSourceFolder); // legacy name
 
       consumerMap.put(HAVE_CLASS, map -> {
