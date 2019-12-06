@@ -42,10 +42,15 @@ public class ClassModelManager implements IModelManager
    public static final String USE_SOURCE_FOLDER = "useSourceFolder";
 
    public static final String HAVE_CLASS = "haveClass";
-   public static final String HAVE_ATTRIBUTE = "haveAttribute";
+
+   public static final String ATTRIBUTE  = "attribute";
+   public static final String OWNER_NAME = "ownerName";
+   public static final String NAME       = "name";
+   public static final String TYPE       = "type";
+   public static final String INIT       = "init";
+
    public static final String CLASS_NAME = "className";
-   public static final String ATTR_NAME = "attrName";
-   public static final String ATTR_TYPE = "attrType";
+
    public static final String ASSOCIATE = "associate";
    public static final String SRC_CLASS_NAME = "srcClassName";
    public static final String TGT_CLASS_NAME = "tgtClassName";
@@ -246,33 +251,98 @@ public class ClassModelManager implements IModelManager
 
    // --------------- Attributes ---------------
 
-   public Attribute haveAttribute(Clazz clazz, String name, String type)
+   /**
+    * Creates an attribute with the specified name and type in the owner class.
+    *
+    * @param owner
+    *    the owner class
+    * @param name
+    *    the name
+    * @param type
+    *    the type
+    *
+    * @return the new {@link Attribute}
+    *
+    * @deprecated since 1.2; use {@link #attribute(Clazz, String, String)} instead
+    */
+   @Deprecated
+   public Attribute haveAttribute(Clazz owner, String name, String type)
    {
-      Attribute attr = clazz.getAttribute(name);
+      return this.attribute(owner, name, type, null);
+   }
 
-      if (attr != null && attr.getType().equals(type)) return attr; //==============================
+   /**
+    * Creates an attribute with the specified name and type in the owner class.
+    *
+    * @param owner
+    *    the owner class
+    * @param name
+    *    the name
+    * @param type
+    *    the type
+    *
+    * @return the new {@link Attribute}
+    *
+    * @since 1.2
+    */
+   public Attribute attribute(Clazz owner, String name, String type)
+   {
+      return this.attribute(owner, name, type, null);
+   }
+
+   /**
+    * Creates an attribute with the specified name, type and initialization expression in the owner class.
+    *
+    * @param owner
+    *    the owner class
+    * @param name
+    *    the name
+    * @param type
+    *    the type
+    * @param init
+    *    the initialization expression
+    *
+    * @return the new {@link Attribute}
+    *
+    * @since 1.2
+    */
+   public Attribute attribute(Clazz owner, String name, String type, String init)
+   {
+      Attribute attr = owner.getAttribute(name);
 
       if (attr == null)
       {
          ClassModelBuilder.checkValidJavaId(name);
-         if (clazz.getAttribute(name) != null
-               || clazz.getRole(name) != null)
-            throw new IllegalArgumentException("duplicate attribute / role name: " + name);
+         if (owner.getRole(name) != null)
+         {
+            throw new IllegalArgumentException(
+               "cannot create attribute with name '" + name + "', a role with that name already exists");
+         }
 
          attr = new Attribute();
          attr.setName(name);
-         attr.setClazz(clazz);
-         attr.setPropertyStyle(clazz.getPropertyStyle());
+         attr.setClazz(owner);
+         attr.setPropertyStyle(owner.getPropertyStyle());
+      }
+      else if (Objects.equals(attr.getType(), type) && Objects.equals(attr.getInitialization(), init))
+      {
+         return attr;
       }
 
       attr.setType(type);
+      attr.setInitialization(init);
 
       this.event(e -> {
-         e.put(EVENT_TYPE, HAVE_ATTRIBUTE);
-         e.put(EVENT_KEY, Yamler.encapsulate(clazz.getName() + "." + name));
-         e.put(CLASS_NAME, Yamler.encapsulate(clazz.getName()));
-         e.put(ATTR_NAME, Yamler.encapsulate(name));
-         e.put(ATTR_TYPE, Yamler.encapsulate(type));
+         e.put(EVENT_TYPE, ATTRIBUTE);
+         e.put(EVENT_KEY, Yamler.encapsulate(owner.getName() + "." + name));
+         e.put(OWNER_NAME, Yamler.encapsulate(owner.getName()));
+         e.put(NAME, Yamler.encapsulate(name));
+         e.put(TYPE, Yamler.encapsulate(type));
+
+         if (init != null)
+         {
+            e.put(INIT, Yamler.encapsulate(init));
+         }
       });
 
       return attr;
@@ -543,13 +613,24 @@ public class ClassModelManager implements IModelManager
          this.extend(subClass, superClass);
       });
 
-      consumerMap.put(HAVE_ATTRIBUTE, map -> {
-         String className = map.get(CLASS_NAME);
-         String attrName = map.get(ATTR_NAME);
-         String attrType = map.get(ATTR_TYPE);
+      consumerMap.put(ATTRIBUTE, map -> {
+         final String ownerName = map.get(OWNER_NAME);
+         final String name = map.get(NAME);
+         final String type = map.get(TYPE);
+         final String init = map.get(INIT);
+
+         final Clazz owner = this.haveClass(ownerName);
+         this.attribute(owner, name, type, init);
+      });
+
+      // legacy naming
+      consumerMap.put("haveAttribute", map -> {
+         String className = map.get("className");
+         String attrName = map.get("attrName");
+         String attrType = map.get("attrType");
 
          Clazz clazz = this.haveClass(className);
-         this.haveAttribute(clazz, attrName, attrType);
+         this.attribute(clazz, attrName, attrType);
       });
 
       final Consumer<LinkedHashMap<String, String>> associateHandler = map -> {
