@@ -1,71 +1,80 @@
 package org.fulib;
 
-import org.fulib.builder.ClassBuilder;
-import org.fulib.builder.ClassModelBuilder;
-
-import org.fulib.builder.Type;
+import org.fulib.builder.ClassModelManager;
 import org.fulib.classmodel.ClassModel;
+import org.fulib.classmodel.Clazz;
 import org.junit.jupiter.api.Test;
+
+import static org.fulib.builder.Type.*;
 
 class GenerateClassModel
 {
    @Test
-   void testGenerateModel()
+   void generateModel()
    {
-      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.classmodel", "src/main/java");
+      final ClassModelManager mb = new ClassModelManager();
+      mb.useSourceFolder("src/main/java");
+      mb.usePackageName("org.fulib.classmodel");
 
-      ClassBuilder classModel = mb.buildClass("ClassModel")
-              .buildAttribute("packageName", Type.STRING)
-              .buildAttribute("mainJavaDir", Type.STRING)
-              .buildAttribute("defaultRoleType", Type.STRING)
-              .buildAttribute("defaultPropertyStyle", Type.STRING, "\"POJO\"");
+      // Classes
+      final Clazz ClassModel = mb.haveClass("ClassModel", c -> {
+         c.attribute("packageName", STRING);
+         c.attribute("mainJavaDir", STRING);
+         c.attribute("defaultRoleType", STRING);
+         c.attribute("defaultPropertyStyle", STRING, "\"POJO\"");
+      });
 
-      ClassBuilder fuClass = mb.buildClass("Clazz")
-              .buildAttribute("name", Type.STRING)
-              .buildAttribute("propertyStyle", Type.STRING)
-              .buildAttribute("modified", Type.BOOLEAN, "false")
-              .buildAttribute("importList", "java.util.LinkedHashSet<String>", "new java.util.LinkedHashSet<>()");
+      final Clazz Clazz = mb.haveClass("Clazz", c -> {
+         c.attribute("name", STRING);
+         c.attribute("propertyStyle", STRING);
+         c.attribute("modified", BOOLEAN);
+         c.attribute("importList", "java.util.LinkedHashSet<String>", "new java.util.LinkedHashSet<>()");
+      });
 
-      ClassBuilder attribute = mb.buildClass("Attribute")
-              .buildAttribute("name", Type.STRING)
-              .buildAttribute("type", Type.STRING)
-              .buildAttribute("initialization", Type.STRING)
-              .buildAttribute("propertyStyle", Type.STRING)
-              .buildAttribute("modified", Type.BOOLEAN, "false");
+      final Clazz Attribute = mb.haveClass("Attribute", c -> {
+         c.attribute("name", STRING);
+         c.attribute("type", STRING);
+         c.attribute("initialization", STRING);
+         c.attribute("propertyStyle", STRING);
+         c.attribute("modified", BOOLEAN);
+      });
 
-      ClassBuilder assocRole = mb.buildClass("AssocRole")
-              .buildAttribute("name", Type.STRING)
-              .buildAttribute("cardinality", Type.INT)
-              .buildAttribute("roleType", Type.STRING)
-              .buildAttribute("aggregation", Type.BOOLEAN, "false")
-              .buildAttribute("propertyStyle", Type.STRING)
-              .buildAttribute("modified", Type.BOOLEAN, "false");
+      final Clazz AssocRole = mb.haveClass("AssocRole", c -> {
+         c.attribute("name", STRING);
+         c.attribute("cardinality", INT);
+         c.attribute("roleType", STRING);
+         c.attribute("aggregation", BOOLEAN);
+         c.attribute("propertyStyle", STRING);
+         c.attribute("modified", BOOLEAN);
+      });
 
-      ClassBuilder fmethod = mb.buildClass("FMethod")
-            .buildAttribute("declaration", Type.STRING)
-            .buildAttribute("methodBody", Type.STRING)
-            .buildAttribute("modified", Type.BOOLEAN, "false")
-            .buildAttribute("annotations", Type.STRING);
+      final Clazz FMethod = mb.haveClass("FMethod", c -> {
+         c.attribute("declaration", STRING);
+         c.attribute("methodBody", STRING);
+         c.attribute("modified", BOOLEAN);
+         c.attribute("annotations", STRING);
+      });
 
-      classModel.buildAssociation(fuClass, "classes", Type.MANY, "model", Type.ONE);
+      mb.associate(ClassModel, "classes", MANY, Clazz, "model", ONE);
 
-      fuClass.buildAssociation(attribute, "attributes", Type.MANY, "clazz", Type.ONE);
+      mb.associate(Clazz, "attributes", MANY, Attribute, "clazz", ONE);
 
-      fuClass.buildAssociation(assocRole, "roles", Type.MANY, "clazz", Type.ONE);
+      mb.associate(Clazz, "roles", MANY, AssocRole, "clazz", ONE);
 
-      fuClass.buildAssociation(fmethod, "methods", Type.MANY, "clazz", Type.ONE);
+      mb.associate(Clazz, "methods", MANY, FMethod, "clazz", ONE);
 
-      fuClass.buildAssociation(fuClass, "superClass", Type.ONE, "subClasses", Type.MANY);
+      mb.associate(Clazz, "superClass", ONE, Clazz, "subClasses", MANY);
 
-      assocRole.buildAssociation(assocRole, "other", Type.ONE, "other", Type.ONE);
+      mb.associate(AssocRole, "other", ONE, AssocRole, "other", ONE);
 
-      mb.buildClass("FileFragmentMap")
-              .buildAttribute("fileName", Type.STRING);
+      mb.haveClass("FileFragmentMap", c -> {
+         c.attribute("fileName", STRING);
+      });
 
-      mb.buildClass("CodeFragment")
-              .buildAttribute("key", Type.STRING)
-              .buildAttribute("text", Type.STRING);
-
+      mb.haveClass("CodeFragment", c -> {
+         c.attribute("key", STRING);
+         c.attribute("text", STRING);
+      });
 
       // start_code_fragment: Fulib.createGenerator
       ClassModel model = mb.getClassModel();
