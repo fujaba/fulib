@@ -246,33 +246,33 @@ public class ClassModelManager implements IModelManager
 
    // --------------- Attributes ---------------
 
-   public Attribute haveAttribute(Clazz clazz, String attrName, String attrType)
+   public Attribute haveAttribute(Clazz clazz, String name, String type)
    {
-      Attribute attr = clazz.getAttribute(attrName);
+      Attribute attr = clazz.getAttribute(name);
 
-      if (attr != null && attr.getType().equals(attrType)) return attr; //==============================
+      if (attr != null && attr.getType().equals(type)) return attr; //==============================
 
       if (attr == null)
       {
-         ClassModelBuilder.checkValidJavaId(attrName);
-         if (clazz.getAttribute(attrName) != null
-               || clazz.getRole(attrName) != null)
-            throw new IllegalArgumentException("duplicate attribute / role name: " + attrName);
+         ClassModelBuilder.checkValidJavaId(name);
+         if (clazz.getAttribute(name) != null
+               || clazz.getRole(name) != null)
+            throw new IllegalArgumentException("duplicate attribute / role name: " + name);
 
          attr = new Attribute();
-         attr.setName(attrName);
+         attr.setName(name);
          attr.setClazz(clazz);
          attr.setPropertyStyle(clazz.getPropertyStyle());
       }
 
-      attr.setType(attrType);
+      attr.setType(type);
 
       this.event(e -> {
          e.put(EVENT_TYPE, HAVE_ATTRIBUTE);
-         e.put(EVENT_KEY, Yamler.encapsulate(clazz.getName() + "." + attrName));
+         e.put(EVENT_KEY, Yamler.encapsulate(clazz.getName() + "." + name));
          e.put(CLASS_NAME, Yamler.encapsulate(clazz.getName()));
-         e.put(ATTR_NAME, Yamler.encapsulate(attrName));
-         e.put(ATTR_TYPE, Yamler.encapsulate(attrType));
+         e.put(ATTR_NAME, Yamler.encapsulate(name));
+         e.put(ATTR_TYPE, Yamler.encapsulate(type));
       });
 
       return attr;
