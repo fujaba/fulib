@@ -34,6 +34,33 @@ import static org.fulib.yaml.EventSource.EVENT_TYPE;
  */
 public class ClassModelManager implements IModelManager
 {
+   // =============== Classes ===============
+
+   public class ClassManager
+   {
+      private final Clazz clazz;
+
+      public ClassManager(Clazz clazz)
+      {
+         this.clazz = clazz;
+      }
+
+      public void extend(Clazz superClazz)
+      {
+         ClassModelManager.this.extend(this.clazz, superClazz);
+      }
+
+      public void attribute(String name, String type)
+      {
+         ClassModelManager.this.attribute(this.clazz, name, type);
+      }
+
+      public void attribute(String name, String type, String init)
+      {
+         ClassModelManager.this.attribute(this.clazz, name, type, init);
+      }
+   }
+
    // =============== Constants ===============
 
    public static final String THE_CLASS_MODEL = "theClassModel";
@@ -234,6 +261,21 @@ public class ClassModelManager implements IModelManager
          e.put(Clazz.PROPERTY_name, Yamler.encapsulate(className));
       });
 
+      return clazz;
+   }
+
+   public Clazz haveClass(String className, Consumer<? super ClassManager> body)
+   {
+      final Clazz clazz = this.haveClass(className);
+      body.accept(new ClassManager(clazz));
+      return clazz;
+   }
+
+   public Clazz haveClass(String className, Clazz superClass, Consumer<? super ClassManager> body)
+   {
+      final Clazz clazz = this.haveClass(className);
+      this.extend(clazz, superClass);
+      body.accept(new ClassManager(clazz));
       return clazz;
    }
 
