@@ -43,7 +43,7 @@ public class ClassModelManager implements IModelManager
    public static final String CLASS_NAME = "className";
    public static final String ATTR_NAME = "attrName";
    public static final String ATTR_TYPE = "attrType";
-   public static final String HAVE_ROLE = "haveRole";
+   public static final String ASSOCIATE = "associate";
    public static final String SRC_CLASS_NAME = "srcClassName";
    public static final String TGT_CLASS_NAME = "tgtClassName";
    public static final String TGT_CARDINALITY = "tgtCardinality";
@@ -231,7 +231,7 @@ public class ClassModelManager implements IModelManager
    // --------------- Associations ---------------
 
    /**
-    * Creates an association like {@link #haveRole(Clazz, String, int, Clazz, String, int)},
+    * Creates an association like {@link #associate(Clazz, String, int, Clazz, String, int)},
     * but with the target role name inferred from the name of the source class,
     * and the target cardinality 1.
     *
@@ -246,16 +246,16 @@ public class ClassModelManager implements IModelManager
     *
     * @return the new {@link AssocRole} in the source class.
     *
-    * @deprecated use {@link #haveRole(Clazz, String, int, Clazz)}, which provides better parameter symmetry.
+    * @deprecated use {@link #associate(Clazz, String, int, Clazz)}, which provides better parameter symmetry.
     */
    @Deprecated
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize)
    {
-      return this.haveRole(srcClass, srcRole, srcSize, tgtClass);
+      return this.associate(srcClass, srcRole, srcSize, tgtClass);
    }
 
    /**
-    * Creates an association like {@link #haveRole(Clazz, String, int, Clazz, String, int)},
+    * Creates an association like {@link #associate(Clazz, String, int, Clazz, String, int)},
     * but with the target role name inferred from the name of the source class,
     * and the target cardinality 1.
     *
@@ -269,11 +269,13 @@ public class ClassModelManager implements IModelManager
     *    the target class
     *
     * @return the new {@link AssocRole} in the source class.
+    *
+    * @since 1.2
     */
-   public AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass)
+   public AssocRole associate(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass)
    {
       String otherRoleName = StrUtil.downFirstChar(srcClass.getName());
-      return this.haveRole(srcClass, srcRole, srcSize, tgtClass, otherRoleName, Type.ONE, false);
+      return this.associate(srcClass, srcRole, srcSize, tgtClass, otherRoleName, Type.ONE, false);
    }
 
    /**
@@ -294,12 +296,12 @@ public class ClassModelManager implements IModelManager
     *
     * @return the new {@link AssocRole} in the source class.
     *
-    * @deprecated use {@link #haveRole(Clazz, String, int, Clazz, String, int)}, which provides better parameter symmetry.
+    * @deprecated use {@link #associate(Clazz, String, int, Clazz, String, int)}, which provides better parameter symmetry.
     */
    @Deprecated
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize, String tgtRole, int tgtSize)
    {
-      return this.haveRole(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize, true);
+      return this.associate(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize, true);
    }
 
    /**
@@ -319,13 +321,15 @@ public class ClassModelManager implements IModelManager
     *    the cardinality in the target class
     *
     * @return the new {@link AssocRole} in the source class.
+    *
+    * @since 1.2
     */
-   public AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize)
+   public AssocRole associate(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize)
    {
-      return this.haveRole(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize, true);
+      return this.associate(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize, true);
    }
 
-   private AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize,
+   private AssocRole associate(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize,
       boolean bothRoles)
    {
       AssocRole role = srcClass.getRole(srcRole);
@@ -368,7 +372,7 @@ public class ClassModelManager implements IModelManager
 
       // mm.haveRole(currentRegisterClazz, srcRole, tgtClass, srcSize, tgtRole, ClassModelBuilder.ONE);
       this.event(e -> {
-         e.put(EVENT_TYPE, HAVE_ROLE);
+         e.put(EVENT_TYPE, ASSOCIATE);
          e.put(EVENT_KEY, Yamler.encapsulate(srcClass.getName() + "." + srcRole));
 
          e.put(SRC_CLASS_NAME, Yamler.encapsulate(srcClass.getName()));
@@ -494,7 +498,7 @@ public class ClassModelManager implements IModelManager
          this.haveAttribute(clazz, attrName, attrType);
       });
 
-      consumerMap.put(HAVE_ROLE, map -> {
+      final Consumer<LinkedHashMap<String, String>> associateHandler = map -> {
          final String srcClassName = map.get(SRC_CLASS_NAME);
          final String srcRole = map.get(SRC_ROLE);
          final int srcSize = Integer.parseInt(map.get(SRC_SIZE));
@@ -506,7 +510,10 @@ public class ClassModelManager implements IModelManager
          final Clazz srcClazz = this.haveClass(srcClassName);
          final Clazz tgtClazz = this.haveClass(tgtClassName);
 
-         this.haveRole(srcClazz, srcRole, srcSize, tgtClazz, tgtRole, tgtSize, bothRoles);
-      });
+         this.associate(srcClazz, srcRole, srcSize, tgtClazz, tgtRole, tgtSize, bothRoles);
+      };
+
+      consumerMap.put(ASSOCIATE, associateHandler);
+      consumerMap.put("haveRole", associateHandler); // legacy name
    }
 }
