@@ -58,8 +58,9 @@ public class ClassModelManager implements IModelManager
    public static final String HAVE_METHOD = "haveMethod";
    public static final String METHOD_BODY = "methodBody";
    public static final String DECLARATION = "declaration";
-   public static final String HAVE_SUPER = "haveSuper";
-   public static final String SUB_CLASS = "subClass";
+
+   public static final String EXTEND      = "extend";
+   public static final String SUB_CLASS   = "subClass";
    public static final String SUPER_CLASS = "superClass";
 
    // =============== Fields ===============
@@ -231,18 +232,16 @@ public class ClassModelManager implements IModelManager
       return clazz;
    }
 
-   public Clazz haveSuper(Clazz subClass, Clazz superClass)
+   public void extend(Clazz subClass, Clazz superClass)
    {
       subClass.setSuperClass(superClass);
 
       this.event(e -> {
-         e.put(EVENT_TYPE, HAVE_SUPER);
+         e.put(EVENT_TYPE, EXTEND);
          e.put(EVENT_KEY, Yamler.encapsulate(subClass.getName()));
          e.put(SUB_CLASS, Yamler.encapsulate(subClass.getName()));
          e.put(SUPER_CLASS, Yamler.encapsulate(superClass.getName()));
       });
-
-      return subClass;
    }
 
    // --------------- Attributes ---------------
@@ -538,10 +537,10 @@ public class ClassModelManager implements IModelManager
          this.haveClass(name);
       });
 
-      consumerMap.put(HAVE_SUPER, map -> {
+      consumerMap.put(EXTEND, map -> {
          Clazz subClass = this.haveClass(map.get(SUB_CLASS));
          Clazz superClass = this.haveClass(map.get(SUPER_CLASS));
-         this.haveSuper(subClass, superClass);
+         this.extend(subClass, superClass);
       });
 
       consumerMap.put(HAVE_ATTRIBUTE, map -> {
