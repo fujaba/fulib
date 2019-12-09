@@ -9,29 +9,33 @@ import java.util.function.Consumer;
 
 public class ModelEventManager
 {
-   private final EventSource eventSource;
-   private IModelManager modelManager;
+   // =============== Fields ===============
+
+   private final EventSource   eventSource;
+   private       IModelManager modelManager;
+
    private LinkedHashMap<String, Consumer<LinkedHashMap<String, String>>> consumerMap;
 
-
+   // =============== Constructors ===============
 
    public ModelEventManager()
    {
       this.eventSource = new EventSource();
 
-//      EventFiler eventFiler = new EventFiler(this.eventSource)
-//            .setHistoryFileName("tmp/classmodel/ClassModel.yaml");
-//
-//      String yaml = eventFiler.loadHistory();
-//      this.applyEvents(yaml);
-//
-//      eventFiler.startEventLogging();
+      //      EventFiler eventFiler = new EventFiler(this.eventSource)
+      //            .setHistoryFileName("tmp/classmodel/ClassModel.yaml");
+      //
+      //      String yaml = eventFiler.loadHistory();
+      //      this.applyEvents(yaml);
+      //
+      //      eventFiler.startEventLogging();
    }
 
+   // =============== Properties ===============
 
    public IModelManager getModelManager()
    {
-      return modelManager;
+      return this.modelManager;
    }
 
    public void setModelManager(IModelManager modelManager)
@@ -39,36 +43,39 @@ public class ModelEventManager
       this.modelManager = modelManager;
    }
 
-
+   // =============== Methods ===============
 
    // event handling
    public void applyEvents(String yaml)
    {
-      if (yaml == null) return;
+      if (yaml == null)
+      {
+         return;
+      }
 
       Yamler yamler = new Yamler();
       ArrayList<LinkedHashMap<String, String>> list = yamler.decodeList(yaml);
-      applyEvents(list);
+      this.applyEvents(list);
    }
-
-
-
 
    public void applyEvents(ArrayList<LinkedHashMap<String, String>> events)
    {
-      modelManager.initConsumers(consumerMap);
+      this.modelManager.initConsumers(this.consumerMap);
 
       // consume event list
       for (LinkedHashMap<String, String> map : events)
       {
-         if (eventSource.isOverwritten(map)) continue;
+         if (this.eventSource.isOverwritten(map))
+         {
+            continue;
+         }
 
          String oldTimeStampString = map.get(EventSource.EVENT_TIMESTAMP);
 
-         eventSource.setOldEventTimeStamp(oldTimeStampString);
+         this.eventSource.setOldEventTimeStamp(oldTimeStampString);
 
          String eventType = map.get(EventSource.EVENT_TYPE);
-         Consumer<LinkedHashMap<String, String>> consumer = consumerMap.get(eventType);
+         Consumer<LinkedHashMap<String, String>> consumer = this.consumerMap.get(eventType);
          consumer.accept(map);
       }
 
