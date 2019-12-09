@@ -9,9 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Objects;
 
 import static org.fulib.Parser.CLASS_END;
-import static org.fulib.Parser.PACKAGE;
 
 public class TypeScriptParser
 {
@@ -369,7 +369,7 @@ public class TypeScriptParser
 
    private boolean currentRealTokenEquals(String word)
    {
-      return StrUtil.stringEquals(currentRealWord(), word);
+	   return Objects.equals(currentRealWord(), word);
    }
 
 

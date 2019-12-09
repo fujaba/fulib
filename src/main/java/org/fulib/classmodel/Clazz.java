@@ -1,12 +1,9 @@
 package org.fulib.classmodel;
 
-import org.fulib.StrUtil;
-
-import java.util.ArrayList;
-
 import java.beans.PropertyChangeSupport;
 
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
 
 /**
  * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
@@ -60,7 +57,7 @@ public class Clazz
    {
       for (Attribute attr : this.getAttributes())
       {
-         if (StrUtil.stringEquals(attr.getName(), name))
+	      if (Objects.equals(attr.getName(), name))
          {
             return attr;
          }
@@ -144,7 +141,7 @@ public class Clazz
    {
       for (AssocRole role : this.getRoles())
       {
-         if (StrUtil.stringEquals(role.getName(), name))
+	      if (Objects.equals(role.getName(), name))
          {
             return role;
          }

@@ -1,7 +1,6 @@
 package org.fulib.classmodel;
 
 import org.fulib.Parser;
-import org.fulib.StrUtil;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -12,6 +11,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -144,7 +144,7 @@ public class FileFragmentMap
             int pos = fragmentList.indexOf(result);
             fragmentList.remove(pos);
             CodeFragment gap = fragmentList.get(pos - 1);
-            if (StrUtil.stringEquals(gap.getKey(), Parser.GAP))
+	         if (Objects.equals(gap.getKey(), Parser.GAP))
             {
                fragmentList.remove(pos - 1);
             }
@@ -311,7 +311,7 @@ public class FileFragmentMap
       for (int i = fragmentList.indexOf(startFragment) + 1; i < endPos; i++)
       {
          CodeFragment fragment = fragmentList.get(i);
-         if ( ! StrUtil.stringEquals(fragment.getKey(), Parser.GAP))
+	      if ( !Objects.equals(fragment.getKey(), Parser.GAP))
          {
             return false;
          }

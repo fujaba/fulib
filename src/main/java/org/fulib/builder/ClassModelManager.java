@@ -505,7 +505,7 @@ public class ClassModelManager implements IModelManager
       )
          return role; //===============================================================
 
-      if (StrUtil.stringEquals(srcRole, tgtRole)) tgtSize = srcSize;
+      if (Objects.equals(srcRole, tgtRole)) tgtSize = srcSize;
 
       if (role == null)
       {

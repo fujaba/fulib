@@ -1,11 +1,8 @@
 package org.fulib.classmodel;
 
-import org.fulib.StrUtil;
-
-import java.util.ArrayList;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
-import java.util.Collections;
+import java.util.Objects;
 
 /**
  * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
@@ -32,7 +29,7 @@ public class ClassModel
    {
       for (Clazz clazz : this.getClasses())
       {
-         if (StrUtil.stringEquals(clazz.getName(), name))
+	      if (Objects.equals(clazz.getName(), name))
          {
             return clazz;
          }

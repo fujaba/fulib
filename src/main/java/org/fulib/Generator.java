@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -149,9 +150,9 @@ public class Generator
          if ( ! modified) {
             Attribute newAttr = newClazz.getAttribute(oldAttr.getName());
 
-            modified = newAttr == null
-                  || ! StrUtil.stringEquals(oldAttr.getType(), newAttr.getType())
-                  || ! StrUtil.stringEquals(oldAttr.getPropertyStyle(), newAttr.getPropertyStyle());
+	         modified = newAttr == null
+                  || !Objects.equals(oldAttr.getType(), newAttr.getType())
+                  || !Objects.equals(oldAttr.getPropertyStyle(), newAttr.getPropertyStyle());
          }
 
          if (modified) {
@@ -166,9 +167,9 @@ public class Generator
          if ( ! modified) {
             AssocRole newRole = newClazz.getRole(oldRole.getName());
 
-            modified = newRole == null
+	         modified = newRole == null
                   || oldRole.getCardinality() != newRole.getCardinality()
-                  || ! StrUtil.stringEquals(oldRole.getPropertyStyle(), oldRole.getPropertyStyle());
+                  || !Objects.equals(oldRole.getPropertyStyle(), oldRole.getPropertyStyle());
          }
 
          if (modified) {

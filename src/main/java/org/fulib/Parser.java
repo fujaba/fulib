@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 public class Parser
 {
@@ -735,7 +736,7 @@ public class Parser
 
    private boolean currentRealTokenEquals(String word)
    {
-      return StrUtil.stringEquals(currentRealWord(), word);
+	   return Objects.equals(currentRealWord(), word);
    }
 
    private String parseModifiers()
