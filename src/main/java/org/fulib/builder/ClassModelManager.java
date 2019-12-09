@@ -200,8 +200,8 @@ public class ClassModelManager implements IModelManager
 
       this.event(e -> {
          e.put(EVENT_TYPE, USE_PACKAGE_NAME);
-         e.put(EVENT_KEY, Yamler.encapsulate(THE_CLASS_MODEL + "_" + PROPERTY_packageName));
-         e.put(PROPERTY_packageName, Yamler.encapsulate(packageName));
+         e.put(EVENT_KEY, THE_CLASS_MODEL + "_" + PROPERTY_packageName);
+         e.put(PROPERTY_packageName, packageName);
       });
    }
 
@@ -241,8 +241,8 @@ public class ClassModelManager implements IModelManager
 
       this.event(e -> {
          e.put(EVENT_TYPE, USE_SOURCE_FOLDER);
-         e.put(EVENT_KEY, Yamler.encapsulate(THE_CLASS_MODEL + "_" + PROPERTY_mainJavaDir));
-         e.put(PROPERTY_mainJavaDir, Yamler.encapsulate(sourceFolder));
+         e.put(EVENT_KEY, THE_CLASS_MODEL + "_" + PROPERTY_mainJavaDir);
+         e.put(PROPERTY_mainJavaDir, sourceFolder);
       });
    }
 
@@ -258,8 +258,8 @@ public class ClassModelManager implements IModelManager
 
       this.event(e -> {
          e.put(EventSource.EVENT_TYPE, HAVE_CLASS);
-         e.put(EventSource.EVENT_KEY, Yamler.encapsulate(className));
-         e.put(Clazz.PROPERTY_name, Yamler.encapsulate(className));
+         e.put(EventSource.EVENT_KEY, className);
+         e.put(Clazz.PROPERTY_name, className);
       });
 
       return clazz;
@@ -286,9 +286,9 @@ public class ClassModelManager implements IModelManager
 
       this.event(e -> {
          e.put(EVENT_TYPE, EXTEND);
-         e.put(EVENT_KEY, Yamler.encapsulate(subClass.getName()));
-         e.put(SUB_CLASS, Yamler.encapsulate(subClass.getName()));
-         e.put(SUPER_CLASS, Yamler.encapsulate(superClass.getName()));
+         e.put(EVENT_KEY, subClass.getName());
+         e.put(SUB_CLASS, subClass.getName());
+         e.put(SUPER_CLASS, superClass.getName());
       });
    }
 
@@ -377,14 +377,14 @@ public class ClassModelManager implements IModelManager
 
       this.event(e -> {
          e.put(EVENT_TYPE, ATTRIBUTE);
-         e.put(EVENT_KEY, Yamler.encapsulate(owner.getName() + "." + name));
-         e.put(OWNER_NAME, Yamler.encapsulate(owner.getName()));
-         e.put(NAME, Yamler.encapsulate(name));
-         e.put(TYPE, Yamler.encapsulate(type));
+         e.put(EVENT_KEY, owner.getName() + "." + name);
+         e.put(OWNER_NAME, owner.getName());
+         e.put(NAME, name);
+         e.put(TYPE, type);
 
          if (init != null)
          {
-            e.put(INIT, Yamler.encapsulate(init));
+            e.put(INIT, init);
          }
       });
 
@@ -536,13 +536,13 @@ public class ClassModelManager implements IModelManager
       // mm.haveRole(currentRegisterClazz, srcRole, tgtClass, srcSize, tgtRole, ClassModelBuilder.ONE);
       this.event(e -> {
          e.put(EVENT_TYPE, ASSOCIATE);
-         e.put(EVENT_KEY, Yamler.encapsulate(srcClass.getName() + "." + srcRole));
+         e.put(EVENT_KEY, srcClass.getName() + "." + srcRole);
 
-         e.put(SRC_CLASS_NAME, Yamler.encapsulate(srcClass.getName()));
-         e.put(SRC_ROLE, Yamler.encapsulate(srcRole));
+         e.put(SRC_CLASS_NAME, srcClass.getName());
+         e.put(SRC_ROLE, srcRole);
          e.put(SRC_SIZE, Integer.toString(maxSize));
-         e.put(TGT_CLASS_NAME, Yamler.encapsulate(tgtClass.getName()));
-         e.put(TGT_ROLE, Yamler.encapsulate(tgtRole));
+         e.put(TGT_CLASS_NAME, tgtClass.getName());
+         e.put(TGT_ROLE, tgtRole);
          e.put(TGT_SIZE, Integer.toString(maxTgtSize));
          e.put(BOTH_ROLES, Boolean.toString(bothRoles));
       });
@@ -590,10 +590,10 @@ public class ClassModelManager implements IModelManager
 
       this.event(e -> {
          e.put(EVENT_TYPE, HAVE_METHOD);
-         e.put(EVENT_KEY, Yamler.encapsulate(key));
-         e.put(CLASS_NAME, Yamler.encapsulate(clazz.getName()));
-         e.put(DECLARATION, Yamler.encapsulate(foundMethod.getDeclaration()));
-         e.put(METHOD_BODY, Yamler.encapsulate(foundMethod.getMethodBody()));
+         e.put(EVENT_KEY, key);
+         e.put(CLASS_NAME, clazz.getName());
+         e.put(DECLARATION, foundMethod.getDeclaration());
+         e.put(METHOD_BODY, foundMethod.getMethodBody());
       });
 
       return method;
