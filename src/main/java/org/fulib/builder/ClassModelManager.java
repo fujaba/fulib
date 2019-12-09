@@ -3,6 +3,7 @@ package org.fulib.builder;
 import org.fulib.Fulib;
 import org.fulib.StrUtil;
 import org.fulib.classmodel.*;
+import org.fulib.util.Validator;
 import org.fulib.yaml.EventSource;
 import org.fulib.yaml.Yamler;
 
@@ -354,7 +355,7 @@ public class ClassModelManager implements IModelManager
 
       if (attr == null)
       {
-         ClassModelBuilder.checkValidJavaId(name);
+         Validator.checkValidJavaId(name);
          if (owner.getRole(name) != null)
          {
             throw new IllegalArgumentException(

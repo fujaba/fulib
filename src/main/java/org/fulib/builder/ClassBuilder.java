@@ -5,6 +5,7 @@ import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
+import org.fulib.util.Validator;
 
 /**
  * ClassModelbuilder is used to create fulib class models that are input for
@@ -34,7 +35,7 @@ public class ClassBuilder
     */
    public ClassBuilder(ClassModel classModel, String className)
    {
-      ClassModelBuilder.checkValidJavaId(className);
+      Validator.checkValidJavaId(className);
 
       // java lang classes like Object, String, ...
       String javaLangName = "java.lang." + className;
@@ -123,7 +124,7 @@ public class ClassBuilder
     */
    public ClassBuilder buildAttribute(String name, String type, String initialValue)
    {
-      ClassModelBuilder.checkValidJavaId(name);
+      Validator.checkValidJavaId(name);
       if (clazz.getAttribute(name) != null
       || clazz.getRole(name) != null)
          throw new IllegalArgumentException("duplicate attribute / role name");
@@ -160,10 +161,10 @@ public class ClassBuilder
     */
    public AssociationBuilder buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality)
    {
-      ClassModelBuilder.checkValidJavaId(myRoleName);
+      Validator.checkValidJavaId(myRoleName);
 
       if (otherRoleName != null) {
-         ClassModelBuilder.checkValidJavaId(otherRoleName);
+         Validator.checkValidJavaId(otherRoleName);
       }
 
       if (clazz.getAttribute(myRoleName) != null

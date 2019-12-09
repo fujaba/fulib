@@ -2,6 +2,7 @@ package org.fulib.builder;
 
 import org.fulib.Fulib;
 import org.fulib.classmodel.ClassModel;
+import org.fulib.util.Validator;
 
 import java.lang.reflect.TypeVariable;
 import java.util.Collection;
@@ -77,7 +78,7 @@ public class ClassModelBuilder
     */
    public ClassModelBuilder(String packagename, String sourceFolder)
    {
-      checkValidJavaId(packagename);
+      Validator.checkValidJavaId(packagename);
 
       ClassModel classModel = new ClassModel()
             .setPackageName(packagename)
@@ -88,44 +89,20 @@ public class ClassModelBuilder
       this.setClassModel(classModel);
    }
 
-
-   static void checkValidJavaId(String myRoleName)
+   /**
+    * Checks whether the string is a valid Java identifier, and throws an {@link IllegalArgumentException} if not.
+    *
+    * @param string
+    *    the string to check
+    *
+    * @throws IllegalArgumentException
+    *    if the string is not a valid Java identifier
+    * @deprecated since 1.2; use {@link Validator#checkValidJavaId(String)} instead
+    */
+   @Deprecated
+   static void checkValidJavaId(String string)
    {
-      IllegalArgumentException illegalArgumentException = new IllegalArgumentException("" + myRoleName + " is not an valid java identifier");
-
-      if (myRoleName == null) throw illegalArgumentException;
-
-      if (myRoleName.endsWith(".") || myRoleName.startsWith(".")) throw illegalArgumentException;
-
-      if (myRoleName.indexOf('.') >= 0)
-      {
-         for (String s : myRoleName.split("\\."))
-         {
-            checkValidJavaId(s);
-         }
-         return;
-      }
-
-      if ( ! myRoleName.matches("[a-zA-Z_]\\w*")) throw illegalArgumentException;
-
-      String javaKeyWords = " abstract assert boolean break " +
-            "byte case catch char " +
-            "class const continue default " +
-            "do double else enum " +
-            "extends final finally float " +
-            "for goto if implements " +
-            "import instanceof int interface " +
-            "long native new package " +
-            "private protected public return " +
-            "short static strictfp super " +
-            "switch synchronized this throw " +
-            "throws transient try void " +
-            "volatile while  true  false " +
-            "null ";
-
-      if (javaKeyWords.indexOf(" " + myRoleName + " ") >= 0 ) throw illegalArgumentException;
-
-      // hm, myRoleName seems valid
+      Validator.checkValidJavaId(string);
    }
 
 
