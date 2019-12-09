@@ -355,7 +355,7 @@ public class ClassModelManager implements IModelManager
 
       if (attr == null)
       {
-         Validator.checkValidJavaId(name);
+         Validator.checkSimpleName(name);
          if (owner.getRole(name) != null)
          {
             throw new IllegalArgumentException(

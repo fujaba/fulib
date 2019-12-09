@@ -35,7 +35,7 @@ public class ClassBuilder
     */
    public ClassBuilder(ClassModel classModel, String className)
    {
-      Validator.checkValidJavaId(className);
+      Validator.checkSimpleName(className);
 
       // java lang classes like Object, String, ...
       String javaLangName = "java.lang." + className;
@@ -124,7 +124,7 @@ public class ClassBuilder
     */
    public ClassBuilder buildAttribute(String name, String type, String initialValue)
    {
-      Validator.checkValidJavaId(name);
+      Validator.checkSimpleName(name);
       if (clazz.getAttribute(name) != null
       || clazz.getRole(name) != null)
          throw new IllegalArgumentException("duplicate attribute / role name");
@@ -161,10 +161,10 @@ public class ClassBuilder
     */
    public AssociationBuilder buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality)
    {
-      Validator.checkValidJavaId(myRoleName);
+      Validator.checkSimpleName(myRoleName);
 
       if (otherRoleName != null) {
-         Validator.checkValidJavaId(otherRoleName);
+         Validator.checkSimpleName(otherRoleName);
       }
 
       if (clazz.getAttribute(myRoleName) != null

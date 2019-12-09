@@ -78,7 +78,7 @@ public class ClassModelBuilder
     */
    public ClassModelBuilder(String packagename, String sourceFolder)
    {
-      Validator.checkValidJavaId(packagename);
+      Validator.checkQualifiedName(packagename);
 
       ClassModel classModel = new ClassModel()
             .setPackageName(packagename)
@@ -97,12 +97,12 @@ public class ClassModelBuilder
     *
     * @throws IllegalArgumentException
     *    if the string is not a valid Java identifier
-    * @deprecated since 1.2; use {@link Validator#checkValidJavaId(String)} instead
+    * @deprecated since 1.2; use {@link Validator#checkQualifiedName(String)} instead
     */
    @Deprecated
    static void checkValidJavaId(String string)
    {
-      Validator.checkValidJavaId(string);
+      Validator.checkQualifiedName(string);
    }
 
 
