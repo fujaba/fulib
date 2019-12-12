@@ -39,8 +39,8 @@ public class DecoratorMain
       }
 
       final ClassModelManager manager = new ClassModelManager();
-      manager.useSourceFolder(sourceFolder);
-      manager.usePackageName(packageName);
+      manager.setSourceFolder(sourceFolder);
+      manager.setPackageName(packageName);
 
       // if any decorator errors, we do not generate the model
       boolean shouldGenerate = true;

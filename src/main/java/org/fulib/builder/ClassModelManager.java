@@ -5,7 +5,6 @@ import org.fulib.StrUtil;
 import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
 import org.fulib.yaml.EventSource;
-import org.fulib.yaml.Yamler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -170,12 +169,12 @@ public class ClassModelManager implements IModelManager
     *
     * @return this instance, to allow method chaining
     *
-    * @deprecated use {@link #usePackageName(String)}
+    * @deprecated since 1.2; use {@link #setPackageName(String)} instead
     */
    @Deprecated
    public ClassModelManager havePackageName(String packagename)
    {
-      this.usePackageName(packagename);
+      this.setPackageName(packagename);
       return this;
    }
 
@@ -187,7 +186,7 @@ public class ClassModelManager implements IModelManager
     *
     * @since 1.2
     */
-   public void usePackageName(String packageName)
+   public void setPackageName(String packageName)
    {
       final String oldPackageName = this.classModel.getPackageName();
 
@@ -211,12 +210,12 @@ public class ClassModelManager implements IModelManager
     *
     * @return this instance, to allow method chaining
     *
-    * @deprecated use {@link #useSourceFolder(String)}
+    * @deprecated since 1.2; use {@link #setSourceFolder(String)} instead
     */
    @Deprecated
    public ClassModelManager haveMainJavaDir(String sourceFolder)
    {
-      this.useSourceFolder(sourceFolder);
+      this.setSourceFolder(sourceFolder);
       return this;
    }
 
@@ -228,7 +227,7 @@ public class ClassModelManager implements IModelManager
     *
     * @since 1.2
     */
-   public void useSourceFolder(String sourceFolder)
+   public void setSourceFolder(String sourceFolder)
    {
       final String mainJavaDir = this.classModel.getMainJavaDir();
 
@@ -633,14 +632,14 @@ public class ClassModelManager implements IModelManager
    {
       final Consumer<LinkedHashMap<String, String>> usePackageName = map -> {
          final String packageName = map.get(PROPERTY_packageName);
-         this.usePackageName(packageName);
+         this.setPackageName(packageName);
       };
       consumerMap.put(USE_PACKAGE_NAME, usePackageName);
       consumerMap.put("havePackageName", usePackageName); // legacy name
 
       final Consumer<LinkedHashMap<String, String>> useSourceFolder = map -> {
          final String sourceFolder = map.get(PROPERTY_mainJavaDir);
-         this.useSourceFolder(sourceFolder);
+         this.setSourceFolder(sourceFolder);
       };
       consumerMap.put(USE_SOURCE_FOLDER, useSourceFolder);
       consumerMap.put("haveMainJavaDir", useSourceFolder); // legacy name

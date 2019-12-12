@@ -13,8 +13,8 @@ class GenerateClassModel
    void generateModel()
    {
       final ClassModelManager mb = new ClassModelManager();
-      mb.useSourceFolder("src/main/java");
-      mb.usePackageName("org.fulib.classmodel");
+      mb.setSourceFolder("src/main/java");
+      mb.setPackageName("org.fulib.classmodel");
 
       // Classes
       final Clazz ClassModel = mb.haveClass("ClassModel", c -> {
