@@ -1,27 +1,23 @@
 package org.fulib.util;
 
-import org.fulib.Generator;
-import org.fulib.Parser;
 import org.fulib.classmodel.FMethod;
-import org.fulib.classmodel.FileFragmentMap;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.logging.Logger;
-
+/**
+ * Unused.
+ *
+ * @deprecated since 1.2
+ */
+@Deprecated
 public class Generator4FMethod
 {
-
    public void generate(FMethod method)
    {
-//      String packageDir = method.getPackageName().replaceAll("\\.", "/");
-//      String srcDir = method.getJavaSrcDir() + "/" + packageDir;
-//      String classFileName = srcDir + "/" + method.getClassName() + ".java";
-//      FileFragmentMap fragmentMap = Parser.parse(classFileName);
-//
-//      String signature = method.getSignature();
+      //      String packageDir = method.getPackageName().replaceAll("\\.", "/");
+      //      String srcDir = method.getJavaSrcDir() + "/" + packageDir;
+      //      String classFileName = srcDir + "/" + method.getClassName() + ".java";
+      //      FileFragmentMap fragmentMap = Parser.parse(classFileName);
+      //
+      //      String signature = method.getSignature();
 //      String methodBody = method.getMethodBody();
 //      if (methodBody == null) {
 //         methodBody = "      // hello world\n";
