@@ -56,7 +56,7 @@ class TestGenerator {
         ClassModelBuilder mb = Fulib.classModelBuilder("org.testAttrList", "tmp/src");
         ClassBuilder root = mb.buildClass("Root");
         root.buildAttribute("resultList", Type.INT + Type.__LIST);
-
+        ClassBuilder kid = mb.buildClass("Kid").setSuperClass(root);
         ClassModel model = mb.getClassModel();
         Fulib.generator().generate(model);
 
@@ -91,6 +91,24 @@ class TestGenerator {
         withoutMethod.invoke(theRoot, new Object[]{new Object[]{23}});
         assertThat(theList.size(), equalTo(2));
 
+        // change to simple attribute
+        Clazz modelRoot = model.getClazz("Root");
+        Attribute modelResultList = modelRoot.getAttribute("resultList");
+        modelResultList.setType(Type.INT);
+
+        Fulib.generator().generate(model);
+
+        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+        assertThat("compiler return code: ", returnCode, is(0));
+
+        modelResultList.setType(Type.INT + Type.__LIST);
+
+        Fulib.generator().generate(model);
+
+        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+        assertThat("compiler return code: ", returnCode, is(0));
+
+        System.out.println();
     }
 
 
@@ -109,7 +127,7 @@ class TestGenerator {
             ClassBuilder objectClass = mb.buildClass(className);
             fail();
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 
