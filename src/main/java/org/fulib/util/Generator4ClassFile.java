@@ -84,39 +84,40 @@ public class Generator4ClassFile extends AbstractGenerator
       int noOfBlankLines = 0;
       for (CodeFragment firstFragment : fragmentList)
       {
-         if (firstFragment.getText().matches("\\s*"))
-         {
-
-            String newText = "";
-            for (int pos = firstFragment.getText().length() - 1; pos >= 0; pos--)
-            {
-               if (firstFragment.getText().charAt(pos) == '\n')
-               {
-                  noOfBlankLines++;
-                  if (noOfBlankLines == 2)
-                  {
-                     newText = firstFragment.getText().substring(pos);
-                     firstFragment.setText(newText);
-                     break;
-                  }
-                  if (noOfBlankLines > 2)
-                  {
-                     newText = firstFragment.getText().substring(pos + 1);
-                     firstFragment.setText(newText);
-                     break;
-                  }
-               }
-            }
-         }
-         else
+         if (!firstFragment.getText().matches("\\s*"))
          {
             noOfBlankLines = 0;
+            continue;
+         }
+
+         String newText = "";
+         for (int pos = firstFragment.getText().length() - 1; pos >= 0; pos--)
+         {
+            if (firstFragment.getText().charAt(pos) != '\n')
+            {
+               continue;
+            }
+
+            noOfBlankLines++;
+            if (noOfBlankLines == 2)
+            {
+               newText = firstFragment.getText().substring(pos);
+               firstFragment.setText(newText);
+               break;
+            }
+            if (noOfBlankLines > 2)
+            {
+               newText = firstFragment.getText().substring(pos + 1);
+               firstFragment.setText(newText);
+               break;
+            }
          }
       }
    }
 
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
+      // TODO template?
       String result = String.format("package %s;", clazz.getModel().getPackageName());
       fragmentMap.add(Parser.PACKAGE, result, 2);
    }
@@ -125,6 +126,7 @@ public class Generator4ClassFile extends AbstractGenerator
    {
       for (String imp : clazz.getImportList())
       {
+         // TODO not sure why this is here
          String[] split = imp.split(" ");
          String key = split[split.length - 1];
          key = key.substring(0, key.length() - 1);
@@ -134,12 +136,11 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("templates/classDecl.stg");
-      ST st = group.getInstanceOf("classDecl");
-      st.add("name", clazz.getName());
-      st.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() : null);
-      String result = st.render();
-      fragmentMap.add(Parser.CLASS, result, 2);
+      final STGroup group = this.getSTGroup("templates/classDecl.stg");
+      final ST classDecl = group.getInstanceOf("classDecl");
+      classDecl.add("name", clazz.getName());
+      classDecl.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() : null);
+      fragmentMap.add(Parser.CLASS, classDecl.render(), 2);
    }
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
