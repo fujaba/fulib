@@ -441,11 +441,11 @@ class TestGenerator {
 
     @ParameterizedTest
     @ValueSource (strings = {
-            "org.extends.tools",
+            "org.extends.tools", // keyword
             "org.fulib.",
             ".org.fulib",
             "org fulib",
-            "org$fulib"
+            // "org$fulib", // valid Java identifier
     })
     void testValidPackageNames(String packageName) {
         assertThrows(IllegalArgumentException.class, () -> Fulib.classModelBuilder(packageName));
