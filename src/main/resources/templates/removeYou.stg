@@ -1,8 +1,11 @@
 
-removeYou(toOneNames, toManyNames, toOneAggregations, toManyAggregations, toManyTypes, javaFXStyles) ::=
+removeYou(toOneNames, toManyNames, toOneAggregations, toManyAggregations, toManyTypes, javaFXStyles, superClass) ::=
 <<
    public void removeYou()
    {
+      <if(superClass)>
+      super.removeYou();
+      <endif>
       <toOneNames : {name | <toOneLine(name)>}>
       <toOneAggregations : {name | <toOneAggregationLine(name)>}>
       <toManyNames, javaFXStyles : {name, javaFX | <toManyLine(name, javaFX)>}>

@@ -210,7 +210,7 @@ public class Generator4ClassFile {
             attrTemplate.add("name", attr.getName());
             result = attrTemplate.render();
 
-            fragmentMap.add(Parser.METHOD + ":with" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3, attr.getModified());
+            fragmentMap.add(Parser.METHOD + ":with" + StrUtil.cap(attr.getName()) + "(Object...)", result, 3, attr.getModified());
             // attrWith(class, name, listType, baseType)
             attrTemplate = group.getInstanceOf("attrWithout");
             attrTemplate.add("class", attr.getClazz().getName());
@@ -219,7 +219,7 @@ public class Generator4ClassFile {
             attrTemplate.add("name", attr.getName());
             result = attrTemplate.render();
 
-            fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3, attr.getModified());
+            fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(attr.getName()) + "(Object...)", result, 3, attr.getModified());
          } else { // ususal attribute
             attrTemplate = group.getInstanceOf("attrSet");
             attrTemplate.add("class", attr.getClazz().getName());
@@ -498,10 +498,6 @@ public class Generator4ClassFile {
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      if (clazz.getRoles().size() == 0) {
-         return;
-      }
-
       ArrayList<String> toOneList = new ArrayList<>();
       ArrayList<String> toManyList = new ArrayList<>();
       ArrayList<String> toOneAggregationList = new ArrayList<>();
@@ -551,6 +547,9 @@ public class Generator4ClassFile {
       st.add("toManyAggregations", toManyAggregationList.toArray(new String[0]));
       st.add("toManyTypes", toManyTypes.toArray(new String[0]));
       st.add("javaFXStyles", javaFXStyles.toArray(new Boolean[0]));
+      if (clazz.getSuperClass() != null) {
+         st.add("superClass", "yes");
+      }
       result = st.render();
 
       fragmentMap.add(Parser.METHOD + ":removeYou()", result, 2, modified);
