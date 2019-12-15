@@ -100,10 +100,12 @@ public class Generator
 
    private void generateClasses(ClassModel model)
    {
-      // loop through all classes
+      final Generator4ClassFile generator = new Generator4ClassFile()
+         .setCustomTemplatesFile(this.getCustomTemplateFile());
+
       for (Clazz clazz : model.getClasses())
       {
-         new Generator4ClassFile().setCustomTemplatesFile(this.getCustomTemplateFile()).generate(clazz);
+         generator.generate(clazz);
       }
    }
 
@@ -229,6 +231,7 @@ public class Generator
             {
                if (newMethod.getDeclaration().equals(oldDeclaration))
                {
+                  // FIXME this assignment is useless
                   modified = false;
                   break;
                }
