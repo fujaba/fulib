@@ -1,3 +1,7 @@
+packageDecl(packageName) ::= <<
+package <packageName>;
+>>
+
 classDecl(name, superClass) ::= <<
 public class <name><if(superClass)> extends <superClass><endif>
 {

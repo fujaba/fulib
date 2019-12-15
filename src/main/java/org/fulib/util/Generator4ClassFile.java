@@ -114,9 +114,10 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      // TODO template?
-      String result = String.format("package %s;", clazz.getModel().getPackageName());
-      fragmentMap.add(Parser.PACKAGE, result, 2);
+      final STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
+      final ST packageDecl = group.getInstanceOf("packageDecl");
+      packageDecl.add("packageName", clazz.getModel().getPackageName());
+      fragmentMap.add(Parser.PACKAGE, packageDecl.render(), 2);
    }
 
    private void generateImports(Clazz clazz, FileFragmentMap fragmentMap)
