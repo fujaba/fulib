@@ -263,10 +263,6 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateAssociations(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group;
-
-      String result;
-      ST st;
       for (AssocRole role : clazz.getRoles())
       {
          if (role.getName() == null)
@@ -274,83 +270,134 @@ public class Generator4ClassFile extends AbstractGenerator
             continue; //=====================================
          }
 
-         if (Type.JAVA_FX.equals(role.getPropertyStyle()))
-         {
-            group = this.getSTGroup("templates/JavaFXassociations.stg");
-            fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
-         }
-         else
-         {
-            group = this.getSTGroup("templates/associations.stg");
-         }
+         this.generateAssociation(clazz, fragmentMap, role);
+      }
+   }
 
-         String roleType = role.getOther().getClazz().getName();
+   private void generateAssociation(Clazz clazz, FileFragmentMap fragmentMap, AssocRole role)
+   {
+      STGroup group;
+      ST st;
+      String result;
+      if (Type.JAVA_FX.equals(role.getPropertyStyle()))
+      {
+         group = this.getSTGroup("templates/JavaFXassociations.stg");
+         fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
+      }
+      else
+      {
+         group = this.getSTGroup("templates/associations.stg");
+      }
 
-         // provide empty_set in this class
-         if (role.getCardinality() != Type.ONE && !Type.JAVA_FX.equals(role.getPropertyStyle()))
-         {
-            // add empty set decl
-            roleType = String.format(role.getRoleType(), role.getOther().getClazz().getName());
+      String roleType = role.getOther().getClazz().getName();
 
-            st = group.getInstanceOf("emptySetDecl");
-            st.add("roleName", role.getName());
-            st.add("otherClassName", role.getOther().getClazz().getName());
-            st.add("roleType", roleType);
-            result = st.render();
+      // provide empty_set in this class
+      if (role.getCardinality() != Type.ONE && !Type.JAVA_FX.equals(role.getPropertyStyle()))
+      {
+         // add empty set decl
+         roleType = String.format(role.getRoleType(), role.getOther().getClazz().getName());
 
-            fragmentMap.add(Parser.ATTRIBUTE + ":EMPTY_" + role.getName(), result, 3, role.getModified());
-         }
-
-         st = group.getInstanceOf("propertyDecl");
+         st = group.getInstanceOf("emptySetDecl");
          st.add("roleName", role.getName());
-         result = st.render();
-         fragmentMap.add(Parser.ATTRIBUTE + ":PROPERTY_" + role.getName(), result, 2, role.getModified());
-
-         st = group.getInstanceOf("roleAttrDecl");
-         st.add("roleName", role.getName());
-         st.add("roleType", roleType);
-         st.add("toMany", role.getCardinality() != Type.ONE);
-         st.add("otherClassName", role.getOther().getClazz().getName());
-         result = st.render();
-
-         fragmentMap.add(Parser.ATTRIBUTE + ":" + role.getName(), result, 2, role.getModified());
-
-         if (Type.JAVA_FX.equals(role.getPropertyStyle()))
-         {
-            // remove empty set decl
-            result = "";
-            fragmentMap.add(Parser.ATTRIBUTE + ":EMPTY_" + role.getName(), result, 3, true);
-
-            // add _init method
-            st = group.getInstanceOf("initMethod");
-            st.add("roleName", role.getName());
-            st.add("toMany", role.getCardinality() != Type.ONE);
-            st.add("myClassName", clazz.getName());
-            st.add("otherClassName", role.getOther().getClazz().getName());
-            st.add("otherRoleName", role.getOther().getName());
-            st.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
-            result = st.render();
-
-            fragmentMap
-               .add(Parser.METHOD + ":_init" + StrUtil.cap(role.getName()) + "()", result, 2, role.getModified());
-         }
-         else
-         {
-            // remove _init method
-            fragmentMap.add(Parser.METHOD + ":_init" + StrUtil.cap(role.getName()) + "()", "", 2, true);
-         }
-
-         st = group.getInstanceOf("getMethod");
-
-         st.add("roleName", role.getName());
-         st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("otherClassName", role.getOther().getClazz().getName());
          st.add("roleType", roleType);
          result = st.render();
 
-         fragmentMap.add(Parser.METHOD + ":get" + StrUtil.cap(role.getName()) + "()", result, 2, role.getModified());
+         fragmentMap.add(Parser.ATTRIBUTE + ":EMPTY_" + role.getName(), result, 3, role.getModified());
+      }
 
-         st = group.getInstanceOf("setMethod");
+      st = group.getInstanceOf("propertyDecl");
+      st.add("roleName", role.getName());
+      result = st.render();
+      fragmentMap.add(Parser.ATTRIBUTE + ":PROPERTY_" + role.getName(), result, 2, role.getModified());
+
+      st = group.getInstanceOf("roleAttrDecl");
+      st.add("roleName", role.getName());
+      st.add("roleType", roleType);
+      st.add("toMany", role.getCardinality() != Type.ONE);
+      st.add("otherClassName", role.getOther().getClazz().getName());
+      result = st.render();
+
+      fragmentMap.add(Parser.ATTRIBUTE + ":" + role.getName(), result, 2, role.getModified());
+
+      if (Type.JAVA_FX.equals(role.getPropertyStyle()))
+      {
+         // remove empty set decl
+         result = "";
+         fragmentMap.add(Parser.ATTRIBUTE + ":EMPTY_" + role.getName(), result, 3, true);
+
+         // add _init method
+         st = group.getInstanceOf("initMethod");
+         st.add("roleName", role.getName());
+         st.add("toMany", role.getCardinality() != Type.ONE);
+         st.add("myClassName", clazz.getName());
+         st.add("otherClassName", role.getOther().getClazz().getName());
+         st.add("otherRoleName", role.getOther().getName());
+         st.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
+         result = st.render();
+
+         fragmentMap
+            .add(Parser.METHOD + ":_init" + StrUtil.cap(role.getName()) + "()", result, 2, role.getModified());
+      }
+      else
+      {
+         // remove _init method
+         fragmentMap.add(Parser.METHOD + ":_init" + StrUtil.cap(role.getName()) + "()", "", 2, true);
+      }
+
+      st = group.getInstanceOf("getMethod");
+
+      st.add("roleName", role.getName());
+      st.add("toMany", role.getCardinality() != Type.ONE);
+      st.add("otherClassName", role.getOther().getClazz().getName());
+      st.add("roleType", roleType);
+      result = st.render();
+
+      fragmentMap.add(Parser.METHOD + ":get" + StrUtil.cap(role.getName()) + "()", result, 2, role.getModified());
+
+      st = group.getInstanceOf("setMethod");
+      st.add("roleName", role.getName());
+      st.add("toMany", role.getCardinality() != Type.ONE);
+      st.add("myClassName", clazz.getName());
+      st.add("otherClassName", role.getOther().getClazz().getName());
+      st.add("otherRoleName", role.getOther().getName());
+      st.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
+      st.add("roleType", roleType);
+      result = st.render();
+
+      String signature = "set";
+      String paramType = role.getOther().getClazz().getName();
+      if (role.getCardinality() != Type.ONE)
+      {
+         signature = "with";
+         paramType = "Object...";
+      }
+      if (Type.JAVA_FX.equals(role.getPropertyStyle()))
+      {
+         if (role.getCardinality() != Type.ONE)
+         {
+            // remove withXY(Object...) method
+            String oldSignature = "with" + StrUtil.cap(role.getName()) + "(" + paramType + ")";
+            fragmentMap.add(Parser.METHOD + ":" + oldSignature, "", 3, true);
+         }
+         paramType = role.getOther().getClazz().getName();
+      }
+      else
+      {
+         // remove withXY(OtherClass)
+         String oldSignature =
+            "with" + StrUtil.cap(role.getName()) + "(" + role.getOther().getClazz().getName() + ")";
+         fragmentMap.add(Parser.METHOD + ":" + oldSignature, "", 3, true);
+      }
+
+      signature += StrUtil.cap(role.getName()) + "(" + paramType + ")";
+
+      fragmentMap.add(Parser.METHOD + ":" + signature, result, 3, role.getModified());
+
+      if (role.getCardinality() != Type.ONE)
+      {
+
+         st = group.getInstanceOf("withoutMethod");
          st.add("roleName", role.getName());
          st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("myClassName", clazz.getName());
@@ -360,70 +407,27 @@ public class Generator4ClassFile extends AbstractGenerator
          st.add("roleType", roleType);
          result = st.render();
 
-         String signature = "set";
-         String paramType = role.getOther().getClazz().getName();
-         if (role.getCardinality() != Type.ONE)
-         {
-            signature = "with";
-            paramType = "Object...";
-         }
+         paramType = "Object...";
          if (Type.JAVA_FX.equals(role.getPropertyStyle()))
          {
-            if (role.getCardinality() != Type.ONE)
-            {
-               // remove withXY(Object...) method
-               String oldSignature = "with" + StrUtil.cap(role.getName()) + "(" + paramType + ")";
-               fragmentMap.add(Parser.METHOD + ":" + oldSignature, "", 3, true);
-            }
             paramType = role.getOther().getClazz().getName();
          }
-         else
-         {
-            // remove withXY(OtherClass)
-            String oldSignature =
-               "with" + StrUtil.cap(role.getName()) + "(" + role.getOther().getClazz().getName() + ")";
-            fragmentMap.add(Parser.METHOD + ":" + oldSignature, "", 3, true);
-         }
+         fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(role.getName()) + "(" + paramType + ")", result, 3,
+                         role.getModified());
+      }
 
-         signature += StrUtil.cap(role.getName()) + "(" + paramType + ")";
+      if (Type.JAVA_FX.equals(role.getPropertyStyle()) && role.getCardinality() == Type.ONE)
+      {
+         st = group.getInstanceOf("propertyMethod");
+         st.add("roleName", role.getName());
+         st.add("otherClassName", role.getOther().getClazz().getName());
+         result = st.render();
 
-         fragmentMap.add(Parser.METHOD + ":" + signature, result, 3, role.getModified());
-
-         if (role.getCardinality() != Type.ONE)
-         {
-
-            st = group.getInstanceOf("withoutMethod");
-            st.add("roleName", role.getName());
-            st.add("toMany", role.getCardinality() != Type.ONE);
-            st.add("myClassName", clazz.getName());
-            st.add("otherClassName", role.getOther().getClazz().getName());
-            st.add("otherRoleName", role.getOther().getName());
-            st.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
-            st.add("roleType", roleType);
-            result = st.render();
-
-            paramType = "Object...";
-            if (Type.JAVA_FX.equals(role.getPropertyStyle()))
-            {
-               paramType = role.getOther().getClazz().getName();
-            }
-            fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(role.getName()) + "(" + paramType + ")", result, 3,
-                            role.getModified());
-         }
-
-         if (Type.JAVA_FX.equals(role.getPropertyStyle()) && role.getCardinality() == Type.ONE)
-         {
-            st = group.getInstanceOf("propertyMethod");
-            st.add("roleName", role.getName());
-            st.add("otherClassName", role.getOther().getClazz().getName());
-            result = st.render();
-
-            fragmentMap.add(Parser.METHOD + ":" + role.getName() + "Property()", result, 3, role.getModified());
-         }
-         else
-         {
-            fragmentMap.add(Parser.METHOD + ":" + role.getName() + "Property()", "", 3, true);
-         }
+         fragmentMap.add(Parser.METHOD + ":" + role.getName() + "Property()", result, 3, role.getModified());
+      }
+      else
+      {
+         fragmentMap.add(Parser.METHOD + ":" + role.getName() + "Property()", "", 3, true);
       }
    }
 
