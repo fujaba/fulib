@@ -19,24 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class Generator4ClassFile
+public class Generator4ClassFile extends AbstractGenerator
 {
-   // =============== Fields ===============
-
-   private String customTemplatesFile;
-
-   private Map<String, STGroup> stGroups = new HashMap<>();
-
    // =============== Properties ===============
 
-   public String getCustomTemplatesFile()
+   @Override
+   public Generator4ClassFile setCustomTemplatesFile(String customTemplatesFile)
    {
-      return this.customTemplatesFile;
-   }
-
-   public Generator4ClassFile setCustomTemplatesFile(String customTemplateFile)
-   {
-      this.customTemplatesFile = customTemplateFile;
+      super.setCustomTemplatesFile(customTemplatesFile);
       return this;
    }
 
@@ -595,27 +585,5 @@ public class Generator4ClassFile
       }
 
       fragmentMap.add(Parser.METHOD + ":removeYou()", st.render(), 2, modified);
-   }
-
-   private STGroup getSTGroup(String origFileName)
-   {
-      return this.stGroups.computeIfAbsent(origFileName, this::loadSTGroup);
-   }
-
-   private STGroup loadSTGroup(String origFileName)
-   {
-      STGroup group;
-      try
-      {
-         group = new STGroupFile(this.customTemplatesFile);
-         STGroup origGroup = new STGroupFile(origFileName);
-         group.importTemplates(origGroup);
-      }
-      catch (Exception e)
-      {
-         group = new STGroupFile(origFileName);
-      }
-      group.registerRenderer(String.class, new StringRenderer());
-      return group;
    }
 }
