@@ -2,6 +2,10 @@ packageDecl(packageName) ::= <<
 package <packageName>;
 >>
 
+importDecl(qualifiedName) ::= <<
+import <qualifiedName>;
+>>
+
 classDecl(name, superClass) ::= <<
 public class <name><if(superClass)> extends <superClass><endif>
 {

@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 public class Generator4ClassFile extends AbstractGenerator
@@ -122,13 +124,33 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateImports(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      for (String imp : clazz.getImportList())
+      final Set<String> qualifiedNames = new TreeSet<>();
+
+      // parse user-supplied imports
+      for (String importItem : clazz.getImportList())
       {
-         // TODO not sure why this is here
-         String[] split = imp.split(" ");
-         String key = split[split.length - 1];
-         key = key.substring(0, key.length() - 1);
-         fragmentMap.add(Parser.IMPORT + ":" + key, imp, 1);
+         final int spaceIndex = importItem.lastIndexOf(' ');
+         if (spaceIndex > 0)
+         {
+            // assuming format 'import <qualifiedName>;'
+            qualifiedNames.add(importItem.substring(spaceIndex + 1, importItem.length() - 1));
+         }
+         else
+         {
+            qualifiedNames.add(importItem);
+         }
+      }
+
+      // TODO add default imports (Objects, Collection, ...)
+
+      // add fragments
+
+      final STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
+      for (final String qualifiedName : qualifiedNames)
+      {
+         final ST importDecl = group.getInstanceOf("importDecl");
+         importDecl.add("qualifiedName", qualifiedName);
+         fragmentMap.add(Parser.IMPORT + ":" + qualifiedName, importDecl.render(), 1);
       }
    }
 
