@@ -30,7 +30,7 @@ public class AbstractGenerator
 
    // =============== Methods ===============
 
-   protected STGroup getSTGroup(String origFileName)
+   public STGroup getSTGroup(String origFileName)
    {
       return this.stGroups.computeIfAbsent(origFileName, this::loadSTGroup);
    }
