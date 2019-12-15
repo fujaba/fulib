@@ -143,116 +143,121 @@ public class Generator4ClassFile extends AbstractGenerator
    {
       for (Attribute attr : clazz.getAttributes())
       {
-         final STGroup group;
-         if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
+         this.generateAttribute(fragmentMap, attr);
+      }
+   }
+
+   private void generateAttribute(FileFragmentMap fragmentMap, Attribute attr)
+   {
+      final STGroup group;
+      if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
+      {
+         group = this.getSTGroup("templates/JavaFXattributes.stg");
+         fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
+      }
+      else
+      {
+         group = this.getSTGroup("templates/attributes.stg");
+      }
+
+      String attrType = attr.getType();
+      if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
+      {
+         if ("int".equals(attrType))
          {
-            group = this.getSTGroup("templates/JavaFXattributes.stg");
-            fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
+            attrType = "Integer";
          }
          else
          {
-            group = this.getSTGroup("templates/attributes.stg");
+            attrType = StrUtil.cap(attrType);
          }
+      }
 
-         String attrType = attr.getType();
-         if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
+      String baseType = attrType;
+      String boxType = baseType;
+      if (attrType.endsWith(Type.__LIST))
+      {
+         baseType = attrType.substring(0, attrType.length() - Type.__LIST.length());
+         if ("int".equals(baseType))
          {
-            if ("int".equals(attrType))
-            {
-               attrType = "Integer";
-            }
-            else
-            {
-               attrType = StrUtil.cap(attrType);
-            }
-         }
-
-         String baseType = attrType;
-         String boxType = baseType;
-         if (attrType.endsWith(Type.__LIST))
-         {
-            baseType = attrType.substring(0, attrType.length() - Type.__LIST.length());
-            if ("int".equals(baseType))
-            {
-               boxType = "Integer";
-            }
-            else
-            {
-               boxType = StrUtil.cap(baseType);
-            }
-            attrType = String.format("java.util.ArrayList<%s>", boxType);
-         }
-
-         final String capAttrName = StrUtil.cap(attr.getName());
-
-         final ST propertyDecl = group.getInstanceOf("propertyDecl");
-         propertyDecl.add("name", attr.getName());
-         fragmentMap.add(Parser.ATTRIBUTE + ":PROPERTY_" + attr.getName(), propertyDecl.render(), 2, attr.getModified());
-
-         final ST attrDecl = group.getInstanceOf("attrDecl");
-         attrDecl.add("type", attrType);
-         attrDecl.add("name", attr.getName());
-         attrDecl.add("value", attr.getInitialization());
-         fragmentMap.add(Parser.ATTRIBUTE + ":" + attr.getName(), attrDecl.render(), 2, attr.getModified());
-
-         if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
-         {
-            final ST initMethod = group.getInstanceOf("initMethod");
-            initMethod.add("name", attr.getName());
-            initMethod.add("type", attrType);
-            fragmentMap
-               .add(Parser.METHOD + ":_init" + capAttrName + "()", initMethod.render(), 2, attr.getModified());
+            boxType = "Integer";
          }
          else
          {
-            fragmentMap.add(Parser.METHOD + ":_init" + capAttrName + "()", "", 2, true);
+            boxType = StrUtil.cap(baseType);
          }
+         attrType = String.format("java.util.ArrayList<%s>", boxType);
+      }
 
-         final ST attrGet = group.getInstanceOf("attrGet");
-         attrGet.add("type", attrType);
-         attrGet.add("name", attr.getName());
-         fragmentMap.add(Parser.METHOD + ":get" + capAttrName + "()", attrGet.render(), 2, attr.getModified());
+      final String capAttrName = StrUtil.cap(attr.getName());
 
-         if (attr.getType().endsWith(Type.__LIST))
-         {
-            final ST attrWith = group.getInstanceOf("attrWith");
-            attrWith.add("class", attr.getClazz().getName());
-            attrWith.add("listType", attrType);
-            attrWith.add("baseType", boxType);
-            attrWith.add("name", attr.getName());
-            fragmentMap.add(Parser.METHOD + ":with" + capAttrName + "(Object...)", attrWith.render(), 3,
-                            attr.getModified());
+      final ST propertyDecl = group.getInstanceOf("propertyDecl");
+      propertyDecl.add("name", attr.getName());
+      fragmentMap.add(Parser.ATTRIBUTE + ":PROPERTY_" + attr.getName(), propertyDecl.render(), 2, attr.getModified());
 
-            final ST attrWithout = group.getInstanceOf("attrWithout");
-            attrWithout.add("class", attr.getClazz().getName());
-            attrWithout.add("listType", attrType);
-            attrWithout.add("baseType", boxType);
-            attrWithout.add("name", attr.getName());
-            fragmentMap.add(Parser.METHOD + ":without" + capAttrName + "(Object...)", attrWithout.render(), 3,
-                            attr.getModified());
-         }
-         else // usual attribute
-         {
-            final ST attrSet = group.getInstanceOf("attrSet");
-            attrSet.add("class", attr.getClazz().getName());
-            attrSet.add("type", attr.getType());
-            attrSet.add("name", attr.getName());
-            fragmentMap
-               .add(Parser.METHOD + ":set" + capAttrName + "(" + attr.getType() + ")", attrSet.render(), 3,
-                    attr.getModified());
-         }
+      final ST attrDecl = group.getInstanceOf("attrDecl");
+      attrDecl.add("type", attrType);
+      attrDecl.add("name", attr.getName());
+      attrDecl.add("value", attr.getInitialization());
+      fragmentMap.add(Parser.ATTRIBUTE + ":" + attr.getName(), attrDecl.render(), 2, attr.getModified());
 
-         if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
-         {
-            final ST propertyGet = group.getInstanceOf("propertyGet");
-            propertyGet.add("name", attr.getName());
-            propertyGet.add("type", attrType);
-            fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", propertyGet.render(), 3, attr.getModified());
-         }
-         else
-         {
-            fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", "", 3, true);
-         }
+      if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
+      {
+         final ST initMethod = group.getInstanceOf("initMethod");
+         initMethod.add("name", attr.getName());
+         initMethod.add("type", attrType);
+         fragmentMap
+            .add(Parser.METHOD + ":_init" + capAttrName + "()", initMethod.render(), 2, attr.getModified());
+      }
+      else
+      {
+         fragmentMap.add(Parser.METHOD + ":_init" + capAttrName + "()", "", 2, true);
+      }
+
+      final ST attrGet = group.getInstanceOf("attrGet");
+      attrGet.add("type", attrType);
+      attrGet.add("name", attr.getName());
+      fragmentMap.add(Parser.METHOD + ":get" + capAttrName + "()", attrGet.render(), 2, attr.getModified());
+
+      if (attr.getType().endsWith(Type.__LIST))
+      {
+         final ST attrWith = group.getInstanceOf("attrWith");
+         attrWith.add("class", attr.getClazz().getName());
+         attrWith.add("listType", attrType);
+         attrWith.add("baseType", boxType);
+         attrWith.add("name", attr.getName());
+         fragmentMap.add(Parser.METHOD + ":with" + capAttrName + "(Object...)", attrWith.render(), 3,
+                         attr.getModified());
+
+         final ST attrWithout = group.getInstanceOf("attrWithout");
+         attrWithout.add("class", attr.getClazz().getName());
+         attrWithout.add("listType", attrType);
+         attrWithout.add("baseType", boxType);
+         attrWithout.add("name", attr.getName());
+         fragmentMap.add(Parser.METHOD + ":without" + capAttrName + "(Object...)", attrWithout.render(), 3,
+                         attr.getModified());
+      }
+      else // usual attribute
+      {
+         final ST attrSet = group.getInstanceOf("attrSet");
+         attrSet.add("class", attr.getClazz().getName());
+         attrSet.add("type", attr.getType());
+         attrSet.add("name", attr.getName());
+         fragmentMap
+            .add(Parser.METHOD + ":set" + capAttrName + "(" + attr.getType() + ")", attrSet.render(), 3,
+                 attr.getModified());
+      }
+
+      if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
+      {
+         final ST propertyGet = group.getInstanceOf("propertyGet");
+         propertyGet.add("name", attr.getName());
+         propertyGet.add("type", attrType);
+         fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", propertyGet.render(), 3, attr.getModified());
+      }
+      else
+      {
+         fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", "", 3, true);
       }
    }
 
