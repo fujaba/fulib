@@ -110,6 +110,8 @@ public class Generator4ClassFile extends AbstractGenerator
       }
    }
 
+   // --------------- Declarations ---------------
+
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
       // TODO template?
@@ -137,6 +139,8 @@ public class Generator4ClassFile extends AbstractGenerator
       classDecl.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() : null);
       fragmentMap.add(Parser.CLASS, classDecl.render(), 2);
    }
+
+   // --------------- Attributes ---------------
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
    {
@@ -259,6 +263,8 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", "", 3, true);
       }
    }
+
+   // --------------- Associations ---------------
 
    private void generateAssociations(Clazz clazz, FileFragmentMap fragmentMap)
    {
@@ -412,6 +418,8 @@ public class Generator4ClassFile extends AbstractGenerator
       }
    }
 
+   // --------------- Methods ---------------
+
    private void generateMethods(Clazz clazz, FileFragmentMap fragmentMap)
    {
       for (FMethod method : clazz.getMethods())
@@ -432,6 +440,8 @@ public class Generator4ClassFile extends AbstractGenerator
 
       fragmentMap.add(signature, fragment, 2, method.getModified());
    }
+
+   // --------------- Additional Fragments ---------------
 
    private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap)
    {
