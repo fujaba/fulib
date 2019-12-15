@@ -88,7 +88,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("org/fulib/templates/classDecl.stg");
+      STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
       ST st = group.getInstanceOf("classDecl");
       st.add("name", clazz.getName() + "Table");
       st.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() + "Table" : null);
