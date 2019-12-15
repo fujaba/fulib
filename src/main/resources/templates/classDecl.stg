@@ -1,13 +1,4 @@
-
-classDecl(name,superClass) ::=
-<<
-public class <name> <extendsClause(superClass)>
+classDecl(name, superClass) ::= <<
+public class <name><if(superClass)> extends <superClass><endif>
 {
 >>
-
-extendsClause(superClass) ::=
-<%
-    <if (superClass)>
-       extends <superClass>
-    <endif>
-%>
