@@ -69,7 +69,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("templates/typescript/tsClassDecl.stg");
+      STGroup group = this.getSTGroup("org/fulib/templates/typescript/tsClassDecl.stg");
       ST st = group.getInstanceOf("classDecl");
       st.add("name", clazz.getName());
       String result = st.render();
@@ -78,7 +78,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
 
    private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("templates/typescript/tsClassDecl.stg");
+      STGroup group = this.getSTGroup("org/fulib/templates/typescript/tsClassDecl.stg");
 
       StringBuilder buf = new StringBuilder();
 
@@ -117,7 +117,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
 
       for (Attribute attr : clazz.getAttributes())
       {
-         group = this.getSTGroup("templates/typescript/attributes.stg");
+         group = this.getSTGroup("org/fulib/templates/typescript/attributes.stg");
 
          String attrType = attr.getType();
 
@@ -150,7 +150,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
             continue; //=====================================
          }
 
-         group = this.getSTGroup("templates/typescript/associations.stg");
+         group = this.getSTGroup("org/fulib/templates/typescript/associations.stg");
 
          String roleType = role.getOther().getClazz().getName();
 
@@ -217,7 +217,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("templates/typescript/tsClassDecl.stg");
+      STGroup group = this.getSTGroup("org/fulib/templates/typescript/tsClassDecl.stg");
 
       StringBuilder buf = new StringBuilder();
 

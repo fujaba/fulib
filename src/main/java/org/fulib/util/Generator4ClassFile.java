@@ -133,7 +133,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      final STGroup group = this.getSTGroup("templates/classDecl.stg");
+      final STGroup group = this.getSTGroup("org/fulib/templates/classDecl.stg");
       final ST classDecl = group.getInstanceOf("classDecl");
       classDecl.add("name", clazz.getName());
       classDecl.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() : null);
@@ -155,12 +155,12 @@ public class Generator4ClassFile extends AbstractGenerator
       final STGroup group;
       if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
       {
-         group = this.getSTGroup("templates/JavaFXattributes.stg");
+         group = this.getSTGroup("org/fulib/templates/JavaFXattributes.stg");
          fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
       }
       else
       {
-         group = this.getSTGroup("templates/attributes.stg");
+         group = this.getSTGroup("org/fulib/templates/attributes.stg");
       }
 
       String attrType = attr.getType();
@@ -293,12 +293,12 @@ public class Generator4ClassFile extends AbstractGenerator
       final STGroup group;
       if (Type.JAVA_FX.equals(role.getPropertyStyle()))
       {
-         group = this.getSTGroup("templates/JavaFXassociations.stg");
+         group = this.getSTGroup("org/fulib/templates/JavaFXassociations.stg");
          fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
       }
       else
       {
-         group = this.getSTGroup("templates/associations.stg");
+         group = this.getSTGroup("org/fulib/templates/associations.stg");
       }
 
       String roleType = role.getOther().getClazz().getName();
@@ -464,7 +464,7 @@ public class Generator4ClassFile extends AbstractGenerator
       fragmentMap
          .add(Parser.IMPORT + ":java.beans.PropertyChangeListener", "import java.beans.PropertyChangeListener;", 1);
 
-      final STGroup group = this.getSTGroup("templates/propertyChangeSupport.stg");
+      final STGroup group = this.getSTGroup("org/fulib/templates/propertyChangeSupport.stg");
 
       // TODO template
       final String listeners = "   protected PropertyChangeSupport listeners = null;";
@@ -516,7 +516,7 @@ public class Generator4ClassFile extends AbstractGenerator
       }
       else
       {
-         final STGroup group = this.getSTGroup("templates/toString.stg");
+         final STGroup group = this.getSTGroup("org/fulib/templates/toString.stg");
          final ST toString = group.getInstanceOf("toString");
          toString.add("names", nameList);
          fragment = toString.render();
@@ -567,7 +567,7 @@ public class Generator4ClassFile extends AbstractGenerator
          }
       }
 
-      final STGroup group = this.getSTGroup("templates/removeYou.stg");
+      final STGroup group = this.getSTGroup("org/fulib/templates/removeYou.stg");
       final ST removeYou = group.getInstanceOf("removeYou");
       removeYou.add("toOneNames", toOneList);
       removeYou.add("toManyNames", toManyList);
