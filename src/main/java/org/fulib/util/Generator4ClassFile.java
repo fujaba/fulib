@@ -78,6 +78,7 @@ public class Generator4ClassFile extends AbstractGenerator
    {
       ArrayList<CodeFragment> fragmentList = fragmentMap.getFragmentList();
       int noOfBlankLines = 0;
+
       for (CodeFragment firstFragment : fragmentList)
       {
          if (!firstFragment.getText().matches("\\s*"))
@@ -86,7 +87,6 @@ public class Generator4ClassFile extends AbstractGenerator
             continue;
          }
 
-         String newText = "";
          for (int pos = firstFragment.getText().length() - 1; pos >= 0; pos--)
          {
             if (firstFragment.getText().charAt(pos) != '\n')
@@ -97,14 +97,12 @@ public class Generator4ClassFile extends AbstractGenerator
             noOfBlankLines++;
             if (noOfBlankLines == 2)
             {
-               newText = firstFragment.getText().substring(pos);
-               firstFragment.setText(newText);
+               firstFragment.setText(firstFragment.getText().substring(pos));
                break;
             }
             if (noOfBlankLines > 2)
             {
-               newText = firstFragment.getText().substring(pos + 1);
-               firstFragment.setText(newText);
+               firstFragment.setText(firstFragment.getText().substring(pos + 1));
                break;
             }
          }
@@ -417,16 +415,21 @@ public class Generator4ClassFile extends AbstractGenerator
    {
       for (FMethod method : clazz.getMethods())
       {
-         String signature = method.readSignature();
-         String methodBody = method.getMethodBody();
-         if (methodBody == null)
-         {
-            methodBody = "      // hello world\n";
-         }
-         String newText = "   " + method.getDeclaration() + " { \n" + methodBody + "   }";
-
-         fragmentMap.add(signature, newText, 2, method.getModified());
+         this.generateMethod(fragmentMap, method);
       }
+   }
+
+   private void generateMethod(FileFragmentMap fragmentMap, FMethod method)
+   {
+      final String signature = method.readSignature();
+      String methodBody = method.getMethodBody();
+      if (methodBody == null)
+      {
+         methodBody = "      // hello world\n";
+      }
+      final String fragment = "   " + method.getDeclaration() + " { \n" + methodBody + "   }";
+
+      fragmentMap.add(signature, fragment, 2, method.getModified());
    }
 
    private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap)
