@@ -444,34 +444,32 @@ public class Generator4ClassFile extends AbstractGenerator
       fragmentMap
          .add(Parser.IMPORT + ":java.beans.PropertyChangeListener", "import java.beans.PropertyChangeListener;", 1);
 
-      STGroup group = this.getSTGroup("templates/propertyChangeSupport.stg");
+      final STGroup group = this.getSTGroup("templates/propertyChangeSupport.stg");
 
-      String result = "   protected PropertyChangeSupport listeners = null;";
-      fragmentMap.add(Parser.ATTRIBUTE + ":listeners", result, 2, clazz.getModified());
+      // TODO template
+      final String listeners = "   protected PropertyChangeSupport listeners = null;";
+      fragmentMap.add(Parser.ATTRIBUTE + ":listeners", listeners, 2, clazz.getModified());
 
-      ST st = group.getInstanceOf("firePropertyChange");
-      result = st.render();
-      fragmentMap.add(Parser.METHOD + ":firePropertyChange(String,Object,Object)", result, 2, clazz.getModified());
-
-      st = group.getInstanceOf("addPropertyChangeListener1");
-      result = st.render();
-      fragmentMap
-         .add(Parser.METHOD + ":addPropertyChangeListener(PropertyChangeListener)", result, 2, clazz.getModified());
-
-      st = group.getInstanceOf("addPropertyChangeListener2");
-      result = st.render();
-      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", result, 2,
+      final ST firePropertyChange = group.getInstanceOf("firePropertyChange");
+      fragmentMap.add(Parser.METHOD + ":firePropertyChange(String,Object,Object)", firePropertyChange.render(), 2,
                       clazz.getModified());
 
-      st = group.getInstanceOf("removePropertyChangeListener1");
-      result = st.render();
-      fragmentMap
-         .add(Parser.METHOD + ":removePropertyChangeListener(PropertyChangeListener)", result, 2, clazz.getModified());
-
-      st = group.getInstanceOf("removePropertyChangeListener2");
-      result = st.render();
-      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(String,PropertyChangeListener)", result, 2,
+      final ST addPCL1 = group.getInstanceOf("addPropertyChangeListener1");
+      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(PropertyChangeListener)", addPCL1.render(), 2,
                       clazz.getModified());
+
+      final ST addPCL2 = group.getInstanceOf("addPropertyChangeListener2");
+      fragmentMap.add(Parser.METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", addPCL2.render(), 2,
+                      clazz.getModified());
+
+      final ST removePCL1 = group.getInstanceOf("removePropertyChangeListener1");
+      fragmentMap.add(Parser.METHOD + ":removePropertyChangeListener(PropertyChangeListener)", removePCL1.render(), 2,
+                      clazz.getModified());
+
+      final ST removePCL2 = group.getInstanceOf("removePropertyChangeListener2");
+      fragmentMap
+         .add(Parser.METHOD + ":removePropertyChangeListener(String,PropertyChangeListener)", removePCL2.render(), 2,
+              clazz.getModified());
    }
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
