@@ -483,22 +483,26 @@ public class Generator4ClassFile extends AbstractGenerator
             nameList.add(attr.getName());
          }
 
-         if (attr.getModified())
+         if (!modified && attr.getModified())
          {
             modified = true;
          }
       }
 
-      String result = "";
-      if (!nameList.isEmpty())
+      final String fragment;
+      if (nameList.isEmpty())
       {
-         STGroup group = this.getSTGroup("templates/toString.stg");
-         ST st = group.getInstanceOf("toString");
-         st.add("names", nameList.toArray(new String[0]));
-         result = st.render();
+         fragment = "";
+      }
+      else
+      {
+         final STGroup group = this.getSTGroup("templates/toString.stg");
+         final ST toString = group.getInstanceOf("toString");
+         toString.add("names", nameList);
+         fragment = toString.render();
       }
 
-      fragmentMap.add(Parser.METHOD + ":toString()", result, 2, modified);
+      fragmentMap.add(Parser.METHOD + ":toString()", fragment, 2, modified);
    }
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)

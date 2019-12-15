@@ -5,7 +5,7 @@ toString(names) ::= <<
    {
       StringBuilder result = new StringBuilder();
 
-      <names : {name | <attrLine(name)>}>
+      <names:attrLine()>
 
       return result.substring(1);
    }
