@@ -166,14 +166,7 @@ public class Generator4ClassFile extends AbstractGenerator
       String attrType = attr.getType();
       if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
       {
-         if ("int".equals(attrType))
-         {
-            attrType = "Integer";
-         }
-         else
-         {
-            attrType = StrUtil.cap(attrType);
-         }
+         attrType = getBoxType(attrType);
       }
 
       String baseType = attrType;
@@ -181,14 +174,7 @@ public class Generator4ClassFile extends AbstractGenerator
       if (attrType.endsWith(Type.__LIST))
       {
          baseType = attrType.substring(0, attrType.length() - Type.__LIST.length());
-         if ("int".equals(baseType))
-         {
-            boxType = "Integer";
-         }
-         else
-         {
-            boxType = StrUtil.cap(baseType);
-         }
+         boxType = getBoxType(baseType);
          attrType = String.format("java.util.ArrayList<%s>", boxType);
       }
 
@@ -256,12 +242,35 @@ public class Generator4ClassFile extends AbstractGenerator
          final ST propertyGet = group.getInstanceOf("propertyGet");
          propertyGet.add("name", attr.getName());
          propertyGet.add("type", attrType);
-         fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", propertyGet.render(), 3, attr.getModified());
+         fragmentMap
+            .add(Parser.METHOD + ":" + attr.getName() + "Property()", propertyGet.render(), 3, attr.getModified());
       }
       else
       {
          fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", "", 3, true);
       }
+   }
+
+   private static String getBoxType(String attrType)
+   {
+      switch (attrType)
+      {
+      case "byte":
+         return "Byte";
+      case "short":
+         return "Short";
+      case "char":
+         return "Character"; // !
+      case "int":
+         return "Integer"; // !
+      case "long":
+         return "Long";
+      case "float":
+         return "Float";
+      case "double":
+         return "Double";
+      }
+      return attrType;
    }
 
    // --------------- Associations ---------------
