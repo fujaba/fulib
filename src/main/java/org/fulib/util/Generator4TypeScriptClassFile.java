@@ -11,8 +11,6 @@ import org.fulib.classmodel.Clazz;
 import org.fulib.classmodel.FileFragmentMap;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
-import org.stringtemplate.v4.StringRenderer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,46 +36,49 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
       String classFileName = clazz.getModel().getPackageSrcFolder() + "/" + clazz.getName() + ".ts";
       FileFragmentMap fragmentMap = TypeScriptParser.parse(classFileName);
 
-      generateClassDecl(clazz, fragmentMap);
+      this.generateClassDecl(clazz, fragmentMap);
 
-      generateAttributes(clazz, fragmentMap);
+      this.generateAttributes(clazz, fragmentMap);
 
-      generateConstructor(clazz, fragmentMap);
+      this.generateConstructor(clazz, fragmentMap);
 
-      generateRoles(clazz, fragmentMap);
+      this.generateRoles(clazz, fragmentMap);
 
-      generateRemoveYou(clazz, fragmentMap);
+      this.generateRemoveYou(clazz, fragmentMap);
 
       fragmentMap.add(Parser.CLASS_END, "}", 1);
 
-      if (clazz.getModified() == true && fragmentMap.classBodyIsEmpty(fragmentMap)) {
+      if (clazz.getModified() && fragmentMap.classBodyIsEmpty(fragmentMap))
+      {
          Path path = Paths.get(classFileName);
-         try {
+         try
+         {
             Files.deleteIfExists(path);
-            Logger.getLogger(Generator.class.getName())
-                  .info("\n   deleting empty file " + classFileName);
-         } catch (IOException e) {
+            Logger.getLogger(Generator.class.getName()).info("\n   deleting empty file " + classFileName);
+         }
+         catch (IOException e)
+         {
             e.printStackTrace();
          }
-      } else {
+      }
+      else
+      {
          fragmentMap.writeFile();
       }
    }
 
-
-
-   private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap) {
-      STGroup group = getSTGroup("templates/typescript/tsClassDecl.stg");
+   private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      STGroup group = this.getSTGroup("templates/typescript/tsClassDecl.stg");
       ST st = group.getInstanceOf("classDecl");
       st.add("name", clazz.getName());
       String result = st.render();
       fragmentMap.add(Parser.CLASS, result, 1);
    }
 
-
-
-   private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap) {
-      STGroup group = getSTGroup("templates/typescript/tsClassDecl.stg");
+   private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      STGroup group = this.getSTGroup("templates/typescript/tsClassDecl.stg");
 
       StringBuilder buf = new StringBuilder();
 
@@ -85,9 +86,10 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
       for (Attribute attribute : clazz.getAttributes())
       {
          String initValue = "0";
-         if (attribute.getType().equals(Type.STRING)) initValue = "''";
+         if (attribute.getType().equals(Type.STRING))
+            initValue = "''";
 
-         buf.append("this.").append(attribute.getName()).append(" = " + initValue + ";\n");
+         buf.append("this.").append(attribute.getName()).append(" = ").append(initValue).append(";\n");
       }
 
       // init roles
@@ -101,29 +103,27 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
          buf.append("this._").append(role.getName()).append(" = ").append(initValue).append(";\n");
       }
 
-
       ST st = group.getInstanceOf("constructor");
       st.add("body", buf.toString());
       String result = st.render();
       fragmentMap.add(Parser.METHOD + ":constructor()", result, 2);
    }
 
-
-
-   private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap) {
+   private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
+   {
       STGroup group;
       ST attrTemplate;
       String result;
 
       for (Attribute attr : clazz.getAttributes())
       {
-         group = getSTGroup("templates/typescript/attributes.stg");
+         group = this.getSTGroup("templates/typescript/attributes.stg");
 
          String attrType = attr.getType();
 
          attrType = StrUtil.downFirstChar(attrType);
 
-         if ( " double int ".indexOf(attrType) >= 0)
+         if (" double int ".contains(attrType))
          {
             attrType = "number";
          }
@@ -137,8 +137,6 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
       }
    }
 
-
-
    private void generateRoles(Clazz clazz, FileFragmentMap fragmentMap)
    {
       STGroup group;
@@ -147,21 +145,23 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
       ST st;
       for (AssocRole role : clazz.getRoles())
       {
-         if (role.getName() == null) {
+         if (role.getName() == null)
+         {
             continue; //=====================================
          }
 
-         group = getSTGroup("templates/typescript/associations.stg");
+         group = this.getSTGroup("templates/typescript/associations.stg");
 
          String roleType = role.getOther().getClazz().getName();
 
-         if ( ! roleType.equals(clazz.getName()))
+         if (!roleType.equals(clazz.getName()))
          {
             String importText = String.format("import %s from \"./%s\";\n\n", roleType, roleType);
             fragmentMap.add(Parser.IMPORT + ":" + roleType, importText, 0);
          }
 
-         if (role.getCardinality() != Type.ONE) roleType += "[]";
+         if (role.getCardinality() != Type.ONE)
+            roleType += "[]";
 
          st = group.getInstanceOf("roleAttrDecl");
          st.add("roleName", role.getName());
@@ -178,7 +178,6 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
 
          fragmentMap.add(Parser.METHOD + ":get " + role.getName() + "()", result, 2, role.getModified());
 
-
          st = group.getInstanceOf("setMethod");
          st.add("roleName", role.getName());
          st.add("toMany", role.getCardinality() != Type.ONE);
@@ -190,14 +189,15 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
          result = st.render();
 
          String signature = "set " + role.getName() + "(" + role.getOther().getClazz().getName() + ")";
-         if (role.getCardinality() != Type.ONE) {
+         if (role.getCardinality() != Type.ONE)
+         {
             signature = "with" + StrUtil.cap(role.getName()) + "(any[])";
          }
 
          fragmentMap.add(Parser.METHOD + ":" + signature, result, 3, role.getModified());
 
-
-         if (role.getCardinality() != Type.ONE) {
+         if (role.getCardinality() != Type.ONE)
+         {
 
             st = group.getInstanceOf("withoutMethod");
             st.add("roleName", role.getName());
@@ -209,15 +209,15 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
             st.add("roleType", roleType);
             result = st.render();
 
-            fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(role.getName()) + "(any[])", result, 3, role.getModified());
+            fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(role.getName()) + "(any[])", result, 3,
+                            role.getModified());
          }
       }
    }
 
-
-
-   private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap) {
-      STGroup group = getSTGroup("templates/typescript/tsClassDecl.stg");
+   private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      STGroup group = this.getSTGroup("templates/typescript/tsClassDecl.stg");
 
       StringBuilder buf = new StringBuilder();
 
@@ -229,11 +229,10 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
          }
          else
          {
-            buf.append("this.without").append(StrUtil.cap(role.getName()))
-                  .append("(this._").append(role.getName()).append(");\n");
+            buf.append("this.without").append(StrUtil.cap(role.getName())).append("(this._").append(role.getName())
+               .append(");\n");
          }
       }
-
 
       ST st = group.getInstanceOf("removeYou");
       st.add("body", buf.toString());
