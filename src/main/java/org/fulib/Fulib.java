@@ -2,19 +2,17 @@ package org.fulib;
 
 import org.fulib.builder.ClassModelBuilder;
 
-
 public class Fulib
 {
-
    /**
     * ClassModelbuilder is used to create fulib class models that are input for
     * fulib code generation {@link Fulib#generator()}.<br>
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+    *
+    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -28,17 +26,16 @@ public class Fulib
       return new ClassModelBuilder(packagename);
    }
 
-
    /**
     * ClassModelbuilder is used to create fulib class models that are input for
     * fulib code generation {@link Fulib#generator()}.<br>
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder.twoParams -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java")
-            .setJavaFXPropertyStyle();
-
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", Type.STRING);
+    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java")
+    * .setJavaFXPropertyStyle();
+    *
+    * ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -54,13 +51,12 @@ public class Fulib
       return new ClassModelBuilder(packagename, sourceFolder);
    }
 
-
    /**
     * The fulib Generator generates Java code from a class model
     * <pre>
     * <!-- insert_code_fragment: Fulib.createGenerator-->
-      ClassModel model = mb.getClassModel();
-      Fulib.generator().generate(model);
+    * ClassModel model = mb.getClassModel();
+    * Fulib.generator().generate(model);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -76,8 +72,8 @@ public class Fulib
     * Table classes are used for relational model queries.
     * <pre>
     * <!-- insert_code_fragment: Fulib.tablesGenerator-->
-    ClassModel model = mb.getClassModel();
-    Fulib.tablesGenerator().generate(model);
+    * ClassModel model = mb.getClassModel();
+    * Fulib.tablesGenerator().generate(model);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -87,5 +83,4 @@ public class Fulib
    {
       return new TablesGenerator();
    }
-
 }
