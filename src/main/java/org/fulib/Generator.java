@@ -13,68 +13,99 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * The fulib Generator generates Java code from a class model
  * <pre>
  * <!-- insert_code_fragment: Fulib.createGenerator-->
-      ClassModel model = mb.getClassModel();
-      Fulib.generator().generate(model);
+ * ClassModel model = mb.getClassModel();
+ * Fulib.generator().generate(model);
  * <!-- end_code_fragment:  -->
  * </pre>
  */
 public class Generator
 {
+   // =============== Static Fields ===============
 
    private static Logger logger;
 
-   static {
+   static
+   {
       logger = Logger.getLogger(Generator.class.getName());
       logger.setLevel(Level.SEVERE);
    }
 
-   private String customTemplateFile = null;
+   // =============== Fields ===============
+
+   private String customTemplateFile;
+
+   // =============== Properties ===============
+
+   public String getCustomTemplateFile()
+   {
+      return this.customTemplateFile;
+   }
+
+   /**
+    * You may overwrite code generation templates within some custom template file. <br>
+    * Provide your templates for code generation as in:
+    * <pre>
+    * <!-- insert_code_fragment: testCustomTemplates -->
+    * Fulib.generator()
+    * .setCustomTemplatesFile("templates/custom.stg")
+    * .generate(model);
+    * <!-- end_code_fragment: testCustomTemplates -->
+    * </pre>
+    *
+    * @param customFileName
+    *    the custom templates file name
+    *
+    * @return this instance, to allow call chaining
+    */
+   public Generator setCustomTemplatesFile(String customFileName)
+   {
+      this.customTemplateFile = customFileName;
+      return this;
+   }
+
+   // =============== Methods ===============
 
    /**
     * The fulib Generator generates Java code from a class model
     * <pre>
     * <!-- insert_code_fragment: Fulib.createGenerator-->
-      ClassModel model = mb.getClassModel();
-      Fulib.generator().generate(model);
+    * ClassModel model = mb.getClassModel();
+    * Fulib.generator().generate(model);
     * <!-- end_code_fragment:  -->
     * </pre>
-    * @param model providing classes to generate Java implementations for
+    *
+    * @param model
+    *    providing classes to generate Java implementations for
     */
    public void generate(ClassModel model)
    {
-      ClassModel oldModel = loadOldClassModel(model.getPackageSrcFolder());
+      ClassModel oldModel = this.loadOldClassModel(model.getPackageSrcFolder());
 
       if (oldModel != null)
       {
-         markModifiedElementsInOldModel(oldModel, model);
+         this.markModifiedElementsInOldModel(oldModel, model);
 
          // remove code of modfiedElements
-         generateClasses(oldModel);
+         this.generateClasses(oldModel);
       }
 
-      generateClasses(model);
+      this.generateClasses(model);
 
-      saveClassmodel(model);
-
+      this.saveClassmodel(model);
    }
-
 
    private void generateClasses(ClassModel model)
    {
       // loop through all classes
       for (Clazz clazz : model.getClasses())
       {
-         new Generator4ClassFile()
-               .setCustomTemplatesFile(this.getCustomTemplateFile())
-               .generate(clazz);
+         new Generator4ClassFile().setCustomTemplatesFile(this.getCustomTemplateFile()).generate(clazz);
       }
    }
-
 
    private ClassModel loadOldClassModel(String modelFolder)
    {
@@ -84,7 +115,7 @@ public class Generator
       {
          Path path = Paths.get(fileName);
 
-         if ( ! Files.exists(path))
+         if (!Files.exists(path))
          {
             return null;
          }
@@ -93,8 +124,7 @@ public class Generator
          String yamlString = new String(bytes);
 
          YamlIdMap idMap = new YamlIdMap(ClassModel.class.getPackage().getName());
-         ClassModel model = (ClassModel) idMap.decode(yamlString);
-         return model;
+         return (ClassModel) idMap.decode(yamlString);
       }
       catch (IOException e)
       {
@@ -103,7 +133,6 @@ public class Generator
 
       return null;
    }
-
 
    private void saveClassmodel(ClassModel model)
    {
@@ -115,14 +144,14 @@ public class Generator
          String modelFolder = model.getPackageSrcFolder();
          String fileName = modelFolder + "/classModel.yaml";
          Files.createDirectories(Paths.get(modelFolder));
-         Files.write(Paths.get(fileName), yamlString.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+         Files.write(Paths.get(fileName), yamlString.getBytes(), StandardOpenOption.CREATE,
+                     StandardOpenOption.TRUNCATE_EXISTING);
       }
       catch (IOException e)
       {
          e.printStackTrace();
       }
    }
-
 
    public void markModifiedElementsInOldModel(ClassModel oldModel, ClassModel newModel)
    {
@@ -132,47 +161,52 @@ public class Generator
       {
          Clazz newClazz = newModel.getClazz(oldClazz.getName());
 
-         markModifiedElementsInOldClazz(oldClazz, newClazz);
+         this.markModifiedElementsInOldClazz(oldClazz, newClazz);
       }
    }
 
    private void markModifiedElementsInOldClazz(Clazz oldClazz, Clazz newClazz)
    {
       logger = Logger.getLogger(Generator.class.getName());
-      if (newClazz == null) {
+      if (newClazz == null)
+      {
          oldClazz.markAsModified();
          logger.info("\n   markedAsModified: class " + oldClazz.getName());
       }
 
-      for (Attribute oldAttr : oldClazz.getAttributes()) {
+      for (Attribute oldAttr : oldClazz.getAttributes())
+      {
          boolean modified = newClazz == null;
 
-         if ( ! modified) {
+         if (!modified)
+         {
             Attribute newAttr = newClazz.getAttribute(oldAttr.getName());
 
-	         modified = newAttr == null
-                  || !Objects.equals(oldAttr.getType(), newAttr.getType())
-                  || !Objects.equals(oldAttr.getPropertyStyle(), newAttr.getPropertyStyle());
+            modified = newAttr == null || !Objects.equals(oldAttr.getType(), newAttr.getType()) || !Objects
+               .equals(oldAttr.getPropertyStyle(), newAttr.getPropertyStyle());
          }
 
-         if (modified) {
+         if (modified)
+         {
             oldAttr.markAsModified();
             logger.info("\n   markedAsModified: attribute " + oldAttr.getName());
          }
       }
 
-      for (AssocRole oldRole : oldClazz.getRoles()) {
+      for (AssocRole oldRole : oldClazz.getRoles())
+      {
          boolean modified = newClazz == null;
 
-         if ( ! modified) {
+         if (!modified)
+         {
             AssocRole newRole = newClazz.getRole(oldRole.getName());
 
-	         modified = newRole == null
-                  || oldRole.getCardinality() != newRole.getCardinality()
-                  || !Objects.equals(oldRole.getPropertyStyle(), oldRole.getPropertyStyle());
+            modified = newRole == null || oldRole.getCardinality() != newRole.getCardinality() || !Objects
+               .equals(oldRole.getPropertyStyle(), oldRole.getPropertyStyle());
          }
 
-         if (modified) {
+         if (modified)
+         {
             oldRole.markAsModified();
             logger.info("\n   markedAsModified: role " + oldRole.getName());
             if (oldRole.getOther() != null)
@@ -189,9 +223,12 @@ public class Generator
 
          String oldDeclaration = oldMethod.getDeclaration();
 
-         if ( ! modified) {
-            for (FMethod newMethod : newClazz.getMethods()) {
-               if (newMethod.getDeclaration().equals(oldDeclaration)) {
+         if (!modified)
+         {
+            for (FMethod newMethod : newClazz.getMethods())
+            {
+               if (newMethod.getDeclaration().equals(oldDeclaration))
+               {
                   modified = false;
                   break;
                }
@@ -199,38 +236,11 @@ public class Generator
             modified = true;
          }
 
-         if (modified) {
+         if (modified)
+         {
             oldMethod.setModified(true);
             logger.info("\n   markedAsModified: method " + oldMethod.getDeclaration());
          }
       }
-   }
-
-
-   public String getCustomTemplateFile()
-   {
-      return customTemplateFile;
-   }
-
-   /**
-    * You may overwrite code generation templates within some custom template file. <br>
-    * Provide your templates for code generation as in:
-    * <pre>
-    * <!-- insert_code_fragment: testCustomTemplates -->
-        Fulib.generator()
-                .setCustomTemplatesFile("templates/custom.stg")
-                .generate(model);
-    * <!-- end_code_fragment: testCustomTemplates -->
-    * </pre>
-    *
-    * @param customFileName
-    *    the custom templates file name
-    *
-    * @return this instance, to allow call chaining
-    */
-   public Generator setCustomTemplatesFile(String customFileName)
-   {
-      this.customTemplateFile = customFileName;
-      return this;
    }
 }
