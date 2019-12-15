@@ -1,9 +1,8 @@
-
 toString(names) ::= <<
    @Override
    public String toString()
    {
-      StringBuilder result = new StringBuilder();
+      final StringBuilder result = new StringBuilder();
 
       <names:attrLine()>
 
@@ -11,8 +10,7 @@ toString(names) ::= <<
    }
 >>
 
-
 attrLine(name) ::= <<
-result.append(" ").append(this.get<name; format="cap">());
+result.append(' ').append(this.get<name; format="cap">());
 
 >>
