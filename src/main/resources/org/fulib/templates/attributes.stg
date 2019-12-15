@@ -1,14 +1,10 @@
+attrDecl(type, name, value) ::= <<
+   private <type> <name><if(value)> = <value><endif>;
+>>
 
-attrDecl(type, name, value) ::=
-<<   private <type> <name><init(value)>;>>
-
-
-init(v) ::= "<if(v)> = <v><endif>"
-
-
-propertyDecl(name) ::=
-<<   public static final String PROPERTY_<name> = "<name>";>>
-
+propertyDecl(name) ::= <<
+   public static final String PROPERTY_<name> = "<name>";
+>>
 
 attrGet(name, type) ::= <<
    public <type> get<name; format="cap">()
@@ -17,35 +13,35 @@ attrGet(name, type) ::= <<
    }
 >>
 
-
-attrSet(class, name, type, useEquals) ::=
-<<
+attrSet(class, name, type, useEquals) ::= <<
    public <class> set<name; format="cap">(<type> value)
    {
       if (<condition(name, type, useEquals)>)
       {
-         <type> oldValue = this.<name>;
+         final <type> oldValue = this.<name>;
          this.<name> = value;
-         firePropertyChange("<name>", oldValue, value);
+         this.firePropertyChange("<name>", oldValue, value);
       }
       return this;
    }
 >>
 
-attrWith(class, name, listType, baseType) ::=
-<<
+attrWith(class, name, listType, baseType) ::= <<
    public <class> with<name; format="cap">(Object... value)
    {
-      if(value==null) return this;
+      if (value == null)
+      {
+         return this;
+      }
       for (Object item : value)
       {
-         if (item == null) continue;
+         if (item == null)
+         {
+            continue;
+         }
          if (item instanceof java.util.Collection)
          {
-            for (Object i : (java.util.Collection) item)
-            {
-               this.with<name; format="cap">(i);
-            }
+            this.with<name; format="cap">(((java.util.Collection) item).toArray());
          }
          else if (item instanceof <baseType>)
          {
@@ -53,37 +49,40 @@ attrWith(class, name, listType, baseType) ::=
             {
                this.<name> = new <listType>();
             }
-            this.resultList.add((<baseType>) item);
-            firePropertyChange("<name>", null, item);
+            this.<name>.add((<baseType>) item);
+            this.firePropertyChange("<name>", null, item);
          }
-         else throw new IllegalArgumentException();
+         else
+         {
+            throw new IllegalArgumentException();
+         }
       }
       return this;
    }
 >>
 
-
-attrWithout(class, name, listType, baseType) ::=
-<<
+attrWithout(class, name, listType, baseType) ::= <<
    public <class> without<name; format="cap">(Object... value)
    {
-      if (this.<name> == null || value==null) return this;
+      if (this.<name> == null || value == null)
+      {
+         return this;
+      }
       for (Object item : value)
       {
-         if (item == null) continue;
+         if (item == null)
+         {
+            continue;
+         }
          if (item instanceof java.util.Collection)
          {
-            for (Object i : (java.util.Collection) item)
-            {
-               this.without<name; format="cap">(i);
-            }
+            this.without<name; format="cap">(((java.util.Collection) item).toArray());
          }
          else if (item instanceof <baseType>)
          {
-            if (this.resultList.contains(item))
+            if (this.<name>.remove(item))
             {
-               this.resultList.remove((<baseType>) item);
-               firePropertyChange("<name>", item, null);
+               this.firePropertyChange("<name>", item, null);
             }
          }
       }
@@ -91,9 +90,7 @@ attrWithout(class, name, listType, baseType) ::=
    }
 >>
 
-
-simpleAttrSet(class, name, type) ::=
-<<
+simpleAttrSet(class, name, type) ::= <<
    public <class> set<name; format="cap">(<type> value)
    {
       this.<name> = value;
@@ -101,11 +98,10 @@ simpleAttrSet(class, name, type) ::=
    }
 >>
 
-
-
 condition(name, type, useEquals) ::=
 <%
-<if(useEquals)>value == null ? this.<name> != null : ! value.equals(this.<name>)
+<if(useEquals)>
+!Objects.equals(value, this.<name>)
 <else>
 value != this.<name>
 <endif>
