@@ -1,10 +1,7 @@
 package org.fulib;
 
-import org.fulib.classmodel.AssocRole;
-import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
-import org.fulib.util.Generator4ClassFile;
 import org.fulib.util.Generator4TableClassFile;
 import org.fulib.yaml.YamlIdMap;
 import org.stringtemplate.v4.ST;
@@ -92,7 +89,7 @@ public class TablesGenerator
       generatePrimitivTable(model, generator4TableClassFile, "double", "Double");
       generatePrimitivTable(model, generator4TableClassFile, "float", "Float");
 
-      STGroup group = generator4TableClassFile.getSTGroup("templates/StringTable.stg");
+      STGroup group = generator4TableClassFile.getSTGroup("templates/tables/StringTable.stg");
       ST st = group.getInstanceOf("StringTable");
       st.add("packageName", model.getPackageName() + ".tables");
       String result = st.render();
@@ -101,7 +98,7 @@ public class TablesGenerator
 
    private void generatePrimitivTable(ClassModel model, Generator4TableClassFile generator4TableClassFile, String primitivType, String objectType)
    {
-      STGroup group = generator4TableClassFile.getSTGroup("templates/intTable.stg");
+      STGroup group = generator4TableClassFile.getSTGroup("templates/tables/intTable.stg");
       ST st = group.getInstanceOf("intTable");
       st.add("packageName", model.getPackageName() + ".tables");
       st.add("primitiveType", primitivType);

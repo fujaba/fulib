@@ -98,7 +98,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
    private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("templates/tableConstructor.stg");
+      STGroup group = this.getSTGroup("templates/tables/constructor.stg");
       ST st = group.getInstanceOf("constructor");
       st.add("className", clazz.getName());
       String result = st.render();
@@ -155,7 +155,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("templates/tablesAttributes.stg");
+      STGroup group = this.getSTGroup("templates/tables/attributes.stg");
       ST attrTemplate;
       String result;
 
@@ -177,7 +177,7 @@ public class Generator4TableClassFile extends AbstractGenerator
       String fullClassName = clazz.getModel().getPackageName() + "." + clazz.getName();
       fragmentMap.add(Parser.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
 
-      STGroup group = this.getSTGroup("templates/tablesAssociations.stg");
+      STGroup group = this.getSTGroup("templates/tables/associations.stg");
       String result;
       ST st;
       for (AssocRole role : clazz.getRoles())
@@ -220,7 +220,7 @@ public class Generator4TableClassFile extends AbstractGenerator
       fragmentMap.add(Parser.IMPORT + ":java.util.Arrays", "import java.util.Arrays;", 1);
 
       String result;
-      STGroup group = this.getSTGroup("templates/tablesSelectColumns.stg");
+      STGroup group = this.getSTGroup("templates/tables/selectColumns.stg");
       ST st = group.getInstanceOf("selectColumns");
       st.add("className", clazz.getName());
       result = st.render();
@@ -237,7 +237,7 @@ public class Generator4TableClassFile extends AbstractGenerator
    private void generateAddColumn(Clazz clazz, FileFragmentMap fragmentMap)
    {
       String result;
-      STGroup group = this.getSTGroup("templates/tablesSelectColumns.stg");
+      STGroup group = this.getSTGroup("templates/tables/selectColumns.stg");
       ST st = group.getInstanceOf("addColumn");
       st.add("className", clazz.getName());
       result = st.render();
@@ -251,7 +251,7 @@ public class Generator4TableClassFile extends AbstractGenerator
    {
       fragmentMap.add(Parser.IMPORT + ":java.util.function.Predicate", "import java.util.function.Predicate;", 1);
 
-      STGroup group = this.getSTGroup("templates/tablesFilter.stg");
+      STGroup group = this.getSTGroup("templates/tables/filter.stg");
       ST st = group.getInstanceOf("filter");
       st.add("className", clazz.getName());
 
@@ -274,7 +274,7 @@ public class Generator4TableClassFile extends AbstractGenerator
    {
       fragmentMap.add(Parser.IMPORT + ":java.util.LinkedHashSet", "import java.util.LinkedHashSet;", 1);
 
-      STGroup group = this.getSTGroup("templates/tablesToSet.stg");
+      STGroup group = this.getSTGroup("templates/tables/toSet.stg");
       ST st = group.getInstanceOf("toSet");
       st.add("className", clazz.getName());
 
@@ -290,7 +290,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("templates/tablesToString.stg");
+      STGroup group = this.getSTGroup("templates/tables/toString.stg");
       ST st = group.getInstanceOf("toString");
 
       fragmentMap.add(Parser.METHOD + ":toString()", st.render(), 2, clazz.getModified());
