@@ -141,7 +141,7 @@ public class Generator4ClassFile extends AbstractGenerator
          }
       }
 
-      // TODO add default imports (Objects, Collection, ...)
+      this.addDefaultImports(clazz, qualifiedNames);
 
       // add fragments
 
@@ -151,6 +151,23 @@ public class Generator4ClassFile extends AbstractGenerator
          final ST importDecl = group.getInstanceOf("importDecl");
          importDecl.add("qualifiedName", qualifiedName);
          fragmentMap.add(Parser.IMPORT + ":" + qualifiedName, importDecl.render(), 1);
+      }
+   }
+
+   private void addDefaultImports(Clazz clazz, Set<String> qualifiedNames)
+   {
+      // any roles or attributes
+      if (!clazz.getRoles().isEmpty() || !clazz.getAttributes().isEmpty())
+      {
+         qualifiedNames.add("java.beans.PropertyChangeSupport");
+         qualifiedNames.add("java.beans.PropertyChangeListener");
+      }
+
+      // any JavaFX roles or attributes
+      if (clazz.getRoles().stream().anyMatch(a -> Type.JAVA_FX.equals(a.getPropertyStyle())) //
+          || clazz.getAttributes().stream().anyMatch(a -> Type.JAVA_FX.equals(a.getPropertyStyle())))
+      {
+         qualifiedNames.add("javafx.beans.property.*");
       }
    }
 
@@ -179,7 +196,6 @@ public class Generator4ClassFile extends AbstractGenerator
       if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
       {
          group = this.getSTGroup("org/fulib/templates/JavaFXattributes.stg");
-         fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
       }
       else
       {
@@ -325,7 +341,6 @@ public class Generator4ClassFile extends AbstractGenerator
       if (Type.JAVA_FX.equals(role.getPropertyStyle()))
       {
          group = this.getSTGroup("org/fulib/templates/JavaFXassociations.stg");
-         fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
       }
       else
       {
@@ -489,11 +504,6 @@ public class Generator4ClassFile extends AbstractGenerator
       {
          return;
       }
-
-      fragmentMap
-         .add(Parser.IMPORT + ":java.beans.PropertyChangeSupport", "import java.beans.PropertyChangeSupport;", 1);
-      fragmentMap
-         .add(Parser.IMPORT + ":java.beans.PropertyChangeListener", "import java.beans.PropertyChangeListener;", 1);
 
       final STGroup group = this.getSTGroup("org/fulib/templates/propertyChangeSupport.stg");
 
