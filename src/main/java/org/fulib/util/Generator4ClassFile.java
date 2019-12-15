@@ -176,8 +176,8 @@ public class Generator4ClassFile extends AbstractGenerator
          qualifiedNames.add("java.util.Objects");
       }
 
-      // any roles or to-n attributes
-      if (!clazz.getRoles().isEmpty() //
+      // any to-n roles or to-n attributes
+      if (clazz.getRoles().stream().anyMatch(a -> a.getCardinality() != Type.ONE) //
           || clazz.getAttributes().stream().anyMatch(a -> a.getType().endsWith(Type.__LIST)))
       {
          qualifiedNames.add("java.util.Collection");
