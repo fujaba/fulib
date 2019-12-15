@@ -31,7 +31,7 @@ attrSet(class, name, type, useEquals) ::= <<
 condition(name, type, useEquals) ::=
 <%
 <if(useEquals)>
-java.util.Objects.equals(value, this.<name>)
+Objects.equals(value, this.<name>)
 <else>
 value == this.<name>
 <endif>
@@ -58,9 +58,9 @@ attrWith(class, name, listType, baseType) ::= <<
          {
             continue;
          }
-         if (item instanceof java.util.Collection)
+         if (item instanceof Collection)
          {
-            this.with<name; format="cap">(((java.util.Collection) item).toArray());
+            this.with<name; format="cap">(((Collection) item).toArray());
          }
          else if (item instanceof <baseType>)
          {
@@ -93,9 +93,9 @@ attrWithout(class, name, listType, baseType) ::= <<
          {
             continue;
          }
-         if (item instanceof java.util.Collection)
+         if (item instanceof Collection)
          {
-            this.without<name; format="cap">(((java.util.Collection) item).toArray());
+            this.without<name; format="cap">(((Collection) item).toArray());
          }
          else if (item instanceof <baseType>)
          {

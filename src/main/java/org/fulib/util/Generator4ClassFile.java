@@ -169,6 +169,19 @@ public class Generator4ClassFile extends AbstractGenerator
       {
          qualifiedNames.add("javafx.beans.property.*");
       }
+
+      // any non-primitive attributes
+      if (clazz.getAttributes().stream().anyMatch(a -> !isPrimitive(a.getType())))
+      {
+         qualifiedNames.add("java.util.Objects");
+      }
+
+      // any roles or to-n attributes
+      if (!clazz.getRoles().isEmpty() //
+          || clazz.getAttributes().stream().anyMatch(a -> a.getType().endsWith(Type.__LIST)))
+      {
+         qualifiedNames.add("java.util.Collection");
+      }
    }
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)

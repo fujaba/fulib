@@ -37,9 +37,9 @@ setMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToM
          {
             continue;
          }
-         if (item instanceof java.util.Collection)
+         if (item instanceof Collection)
          {
-            this.with<roleName; format="cap">(((java.util.Collection) item).toArray());
+            this.with<roleName; format="cap">(((Collection) item).toArray());
          }
          else if (item instanceof <otherClassName>)
          {
@@ -105,9 +105,9 @@ withoutMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, othe
          {
             continue;
          }
-         if (item instanceof java.util.Collection)
+         if (item instanceof Collection)
          {
-            this.without<roleName; format="cap">(((java.util.Collection) item).toArray());
+            this.without<roleName; format="cap">(((Collection) item).toArray());
          }
          else if (item instanceof <otherClassName>)
          {
