@@ -6,8 +6,8 @@ removeYou(toOneNames, toManyNames, toOneAggregations, toManyAggregations, toMany
       <if(superClass)>
       super.removeYou();
       <endif>
-      <toOneNames : {name | <toOneLine(name)>}>
-      <toOneAggregations : {name | <toOneAggregationLine(name)>}>
+      <toOneNames:toOneLine()>
+      <toOneAggregations:toOneAggregationLine()>
       <toManyNames, javaFXStyles : {name, javaFX | <toManyLine(name, javaFX)>}>
       <toManyAggregations, toManyTypes : {name, type | <toManyAggregationLine(name, type)>}>
    }

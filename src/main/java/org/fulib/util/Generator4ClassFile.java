@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Generator4ClassFile extends AbstractGenerator
@@ -507,13 +508,12 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      ArrayList<String> toOneList = new ArrayList<>();
-      ArrayList<String> toManyList = new ArrayList<>();
-      ArrayList<String> toOneAggregationList = new ArrayList<>();
-      ArrayList<String> toManyAggregationList = new ArrayList<>();
-      ArrayList<String> toManyTypes = new ArrayList<>();
-      ArrayList<Boolean> javaFXStyles = new ArrayList<>();
-      boolean modified = clazz.getModified();
+      final List<String> toOneList = new ArrayList<>();
+      final List<String> toManyList = new ArrayList<>();
+      final List<String> toOneAggregationList = new ArrayList<>();
+      final List<String> toManyAggregationList = new ArrayList<>();
+      final List<String> toManyTypes = new ArrayList<>();
+      final List<Boolean> javaFXStyles = new ArrayList<>();
 
       for (AssocRole role : clazz.getRoles())
       {
@@ -548,19 +548,19 @@ public class Generator4ClassFile extends AbstractGenerator
          }
       }
 
-      STGroup group = this.getSTGroup("templates/removeYou.stg");
-      ST st = group.getInstanceOf("removeYou");
-      st.add("toOneNames", toOneList.toArray(new String[0]));
-      st.add("toManyNames", toManyList.toArray(new String[0]));
-      st.add("toOneAggregations", toOneAggregationList.toArray(new String[0]));
-      st.add("toManyAggregations", toManyAggregationList.toArray(new String[0]));
-      st.add("toManyTypes", toManyTypes.toArray(new String[0]));
-      st.add("javaFXStyles", javaFXStyles.toArray(new Boolean[0]));
+      final STGroup group = this.getSTGroup("templates/removeYou.stg");
+      final ST removeYou = group.getInstanceOf("removeYou");
+      removeYou.add("toOneNames", toOneList);
+      removeYou.add("toManyNames", toManyList);
+      removeYou.add("toOneAggregations", toOneAggregationList);
+      removeYou.add("toManyAggregations", toManyAggregationList);
+      removeYou.add("toManyTypes", toManyTypes);
+      removeYou.add("javaFXStyles", javaFXStyles);
       if (clazz.getSuperClass() != null)
       {
-         st.add("superClass", "yes");
+         removeYou.add("superClass", "yes");
       }
 
-      fragmentMap.add(Parser.METHOD + ":removeYou()", st.render(), 2, modified);
+      fragmentMap.add(Parser.METHOD + ":removeYou()", removeYou.render(), 2, clazz.getModified());
    }
 }
