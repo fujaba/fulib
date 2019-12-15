@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.beans.PropertyChangeSupport;
 
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
 
 public class CodeFragment  
 {
@@ -13,9 +14,9 @@ public class CodeFragment
 
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.firePropertyChange(propertyName, oldValue, newValue);
+         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
          return true;
       }
       return false;
@@ -23,38 +24,38 @@ public class CodeFragment
 
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(listener);
+      this.listeners.addPropertyChangeListener(listener);
       return true;
    }
 
    public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(propertyName, listener);
+      this.listeners.addPropertyChangeListener(propertyName, listener);
       return true;
    }
 
    public boolean removePropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(listener);
+         this.listeners.removePropertyChangeListener(listener);
       }
       return true;
    }
 
    public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(propertyName, listener);
+         this.listeners.removePropertyChangeListener(propertyName, listener);
       }
       return true;
    }
@@ -69,17 +70,19 @@ public class CodeFragment
 
    public String getKey()
    {
-      return key;
+      return this.key;
    }
 
    public CodeFragment setKey(String value)
    {
-      if (value == null ? this.key != null : ! value.equals(this.key))
+      if (Objects.equals(value, this.key))
       {
-         String oldValue = this.key;
-         this.key = value;
-         firePropertyChange("key", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.key;
+      this.key = value;
+      this.firePropertyChange("key", oldValue, value);
       return this;
    }
 
@@ -89,27 +92,29 @@ public class CodeFragment
 
    public String getText()
    {
-      return text;
+      return this.text;
    }
 
    public CodeFragment setText(String value)
    {
-      if (value == null ? this.text != null : ! value.equals(this.text))
+      if (Objects.equals(value, this.text))
       {
-         String oldValue = this.text;
-         this.text = value;
-         firePropertyChange("text", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.text;
+      this.text = value;
+      this.firePropertyChange("text", oldValue, value);
       return this;
    }
 
    @Override
    public String toString()
    {
-      StringBuilder result = new StringBuilder();
+      final StringBuilder result = new StringBuilder();
 
-      result.append(" ").append(this.getKey());
-      result.append(" ").append(this.getText());
+      result.append(' ').append(this.getKey());
+      result.append(' ').append(this.getText());
 
 
       return result.substring(1);

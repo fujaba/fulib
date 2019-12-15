@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.beans.PropertyChangeSupport;
 
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
 
 /**
  * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
@@ -21,21 +22,23 @@ public class Attribute
 
    public Attribute setClazz(Clazz value)
    {
-      if (this.clazz != value)
+      if (this.clazz == value)
       {
-         Clazz oldValue = this.clazz;
-         if (this.clazz != null)
-         {
-            this.clazz = null;
-            oldValue.withoutAttributes(this);
-         }
-         this.clazz = value;
-         if (value != null)
-         {
-            value.withAttributes(this);
-         }
-         firePropertyChange("clazz", oldValue, value);
+         return this;
       }
+
+      final Clazz oldValue = this.clazz;
+      if (this.clazz != null)
+      {
+         this.clazz = null;
+         oldValue.withoutAttributes(this);
+      }
+      this.clazz = value;
+      if (value != null)
+      {
+         value.withAttributes(this);
+      }
+      this.firePropertyChange("clazz", oldValue, value);
       return this;
    }
 
@@ -43,9 +46,9 @@ public class Attribute
 
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.firePropertyChange(propertyName, oldValue, newValue);
+         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
          return true;
       }
       return false;
@@ -53,38 +56,38 @@ public class Attribute
 
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(listener);
+      this.listeners.addPropertyChangeListener(listener);
       return true;
    }
 
    public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(propertyName, listener);
+      this.listeners.addPropertyChangeListener(propertyName, listener);
       return true;
    }
 
    public boolean removePropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(listener);
+         this.listeners.removePropertyChangeListener(listener);
       }
       return true;
    }
 
    public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(propertyName, listener);
+         this.listeners.removePropertyChangeListener(propertyName, listener);
       }
       return true;
    }
@@ -106,17 +109,19 @@ public class Attribute
 
    public String getName()
    {
-      return name;
+      return this.name;
    }
 
    public Attribute setName(String value)
    {
-      if (value == null ? this.name != null : ! value.equals(this.name))
+      if (Objects.equals(value, this.name))
       {
-         String oldValue = this.name;
-         this.name = value;
-         firePropertyChange("name", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.name;
+      this.name = value;
+      this.firePropertyChange("name", oldValue, value);
       return this;
    }
 
@@ -126,17 +131,19 @@ public class Attribute
 
    public String getType()
    {
-      return type;
+      return this.type;
    }
 
    public Attribute setType(String value)
    {
-      if (value == null ? this.type != null : ! value.equals(this.type))
+      if (Objects.equals(value, this.type))
       {
-         String oldValue = this.type;
-         this.type = value;
-         firePropertyChange("type", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.type;
+      this.type = value;
+      this.firePropertyChange("type", oldValue, value);
       return this;
    }
 
@@ -146,17 +153,19 @@ public class Attribute
 
    public String getInitialization()
    {
-      return initialization;
+      return this.initialization;
    }
 
    public Attribute setInitialization(String value)
    {
-      if (value == null ? this.initialization != null : ! value.equals(this.initialization))
+      if (Objects.equals(value, this.initialization))
       {
-         String oldValue = this.initialization;
-         this.initialization = value;
-         firePropertyChange("initialization", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.initialization;
+      this.initialization = value;
+      this.firePropertyChange("initialization", oldValue, value);
       return this;
    }
 
@@ -166,49 +175,53 @@ public class Attribute
 
    public String getPropertyStyle()
    {
-      return propertyStyle;
+      return this.propertyStyle;
    }
 
    public Attribute setPropertyStyle(String value)
    {
-      if (value == null ? this.propertyStyle != null : ! value.equals(this.propertyStyle))
+      if (Objects.equals(value, this.propertyStyle))
       {
-         String oldValue = this.propertyStyle;
-         this.propertyStyle = value;
-         firePropertyChange("propertyStyle", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.propertyStyle;
+      this.propertyStyle = value;
+      this.firePropertyChange("propertyStyle", oldValue, value);
       return this;
    }
 
    public static final String PROPERTY_modified = "modified";
 
-   private boolean modified = false;
+   private boolean modified;
 
    public boolean getModified()
    {
-      return modified;
+      return this.modified;
    }
 
    public Attribute setModified(boolean value)
    {
-      if (value != this.modified)
+      if (value == this.modified)
       {
-         boolean oldValue = this.modified;
-         this.modified = value;
-         firePropertyChange("modified", oldValue, value);
+         return this;
       }
+
+      final boolean oldValue = this.modified;
+      this.modified = value;
+      this.firePropertyChange("modified", oldValue, value);
       return this;
    }
 
    @Override
    public String toString()
    {
-      StringBuilder result = new StringBuilder();
+      final StringBuilder result = new StringBuilder();
 
-      result.append(" ").append(this.getName());
-      result.append(" ").append(this.getType());
-      result.append(" ").append(this.getInitialization());
-      result.append(" ").append(this.getPropertyStyle());
+      result.append(' ').append(this.getName());
+      result.append(' ').append(this.getType());
+      result.append(' ').append(this.getInitialization());
+      result.append(' ').append(this.getPropertyStyle());
 
 
       return result.substring(1);

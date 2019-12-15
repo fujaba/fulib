@@ -7,6 +7,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FMethod  
 {
@@ -28,17 +29,19 @@ public class FMethod
 
    public String getMethodBody()
    {
-      return methodBody;
+      return this.methodBody;
    }
 
    public FMethod setMethodBody(String value)
    {
-      if (value == null ? this.methodBody != null : ! value.equals(this.methodBody))
+      if (Objects.equals(value, this.methodBody))
       {
-         String oldValue = this.methodBody;
-         this.methodBody = value;
-         firePropertyChange("methodBody", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.methodBody;
+      this.methodBody = value;
+      this.firePropertyChange("methodBody", oldValue, value);
       return this;
    }
 
@@ -46,9 +49,9 @@ public class FMethod
 
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.firePropertyChange(propertyName, oldValue, newValue);
+         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
          return true;
       }
       return false;
@@ -56,38 +59,38 @@ public class FMethod
 
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(listener);
+      this.listeners.addPropertyChangeListener(listener);
       return true;
    }
 
    public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(propertyName, listener);
+      this.listeners.addPropertyChangeListener(propertyName, listener);
       return true;
    }
 
    public boolean removePropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(listener);
+         this.listeners.removePropertyChangeListener(listener);
       }
       return true;
    }
 
    public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(propertyName, listener);
+         this.listeners.removePropertyChangeListener(propertyName, listener);
       }
       return true;
    }
@@ -230,32 +233,34 @@ public class FMethod
 
    public FMethod setClazz(Clazz value)
    {
-      if (this.clazz != value)
+      if (this.clazz == value)
       {
-         Clazz oldValue = this.clazz;
-         if (this.clazz != null)
-         {
-            this.clazz = null;
-            oldValue.withoutMethods(this);
-         }
-         this.clazz = value;
-         if (value != null)
-         {
-            value.withMethods(this);
-         }
-         firePropertyChange("clazz", oldValue, value);
+         return this;
       }
+
+      final Clazz oldValue = this.clazz;
+      if (this.clazz != null)
+      {
+         this.clazz = null;
+         oldValue.withoutMethods(this);
+      }
+      this.clazz = value;
+      if (value != null)
+      {
+         value.withMethods(this);
+      }
+      this.firePropertyChange("clazz", oldValue, value);
       return this;
    }
 
    @Override
    public String toString()
    {
-      StringBuilder result = new StringBuilder();
+      final StringBuilder result = new StringBuilder();
 
-      result.append(" ").append(this.getDeclaration());
-      result.append(" ").append(this.getMethodBody());
-      result.append(" ").append(this.getAnnotations());
+      result.append(' ').append(this.getDeclaration());
+      result.append(' ').append(this.getMethodBody());
+      result.append(' ').append(this.getAnnotations());
 
 
       return result.substring(1);
@@ -265,21 +270,23 @@ public class FMethod
 
    public static final String PROPERTY_modified = "modified";
 
-   private boolean modified = false;
+   private boolean modified;
 
    public boolean getModified()
    {
-      return modified;
+      return this.modified;
    }
 
    public FMethod setModified(boolean value)
    {
-      if (value != this.modified)
+      if (value == this.modified)
       {
-         boolean oldValue = this.modified;
-         this.modified = value;
-         firePropertyChange("modified", oldValue, value);
+         return this;
       }
+
+      final boolean oldValue = this.modified;
+      this.modified = value;
+      this.firePropertyChange("modified", oldValue, value);
       return this;
    }
 
@@ -289,17 +296,19 @@ public class FMethod
 
    public String getAnnotations()
    {
-      return annotations;
+      return this.annotations;
    }
 
    public FMethod setAnnotations(String value)
    {
-      if (value == null ? this.annotations != null : ! value.equals(this.annotations))
+      if (Objects.equals(value, this.annotations))
       {
-         String oldValue = this.annotations;
-         this.annotations = value;
-         firePropertyChange("annotations", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.annotations;
+      this.annotations = value;
+      this.firePropertyChange("annotations", oldValue, value);
       return this;
    }
 

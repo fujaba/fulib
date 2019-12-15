@@ -22,9 +22,9 @@ public class FileFragmentMap
 
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.firePropertyChange(propertyName, oldValue, newValue);
+         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
          return true;
       }
       return false;
@@ -32,38 +32,38 @@ public class FileFragmentMap
 
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(listener);
+      this.listeners.addPropertyChangeListener(listener);
       return true;
    }
 
    public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(propertyName, listener);
+      this.listeners.addPropertyChangeListener(propertyName, listener);
       return true;
    }
 
    public boolean removePropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(listener);
+         this.listeners.removePropertyChangeListener(listener);
       }
       return true;
    }
 
    public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(propertyName, listener);
+         this.listeners.removePropertyChangeListener(propertyName, listener);
       }
       return true;
    }
@@ -329,17 +329,19 @@ public class FileFragmentMap
 
    public String getFileName()
    {
-      return fileName;
+      return this.fileName;
    }
 
    public FileFragmentMap setFileName(String value)
    {
-      if (value == null ? this.fileName != null : ! value.equals(this.fileName))
+      if (Objects.equals(value, this.fileName))
       {
-         String oldValue = this.fileName;
-         this.fileName = value;
-         firePropertyChange("fileName", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.fileName;
+      this.fileName = value;
+      this.firePropertyChange("fileName", oldValue, value);
       return this;
    }
 

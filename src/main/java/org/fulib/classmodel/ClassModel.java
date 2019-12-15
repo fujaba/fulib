@@ -3,6 +3,7 @@ package org.fulib.classmodel;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 import java.util.Objects;
+import java.util.Collection;
 
 /**
  * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
@@ -17,12 +18,7 @@ public class ClassModel
 
    public java.util.ArrayList<Clazz> getClasses()
    {
-      if (this.classes == null)
-      {
-         return EMPTY_classes;
-      }
-
-      return this.classes;
+      return this.classes != null ? this.classes : EMPTY_classes;
    }
 
    public Clazz getClazz(String name)
@@ -39,16 +35,19 @@ public class ClassModel
 
    public ClassModel withClasses(Object... value)
    {
-      if(value==null) return this;
+      if (value == null)
+      {
+         return this;
+      }
       for (Object item : value)
       {
-         if (item == null) continue;
-         if (item instanceof java.util.Collection)
+         if (item == null)
          {
-            for (Object i : (java.util.Collection) item)
-            {
-               this.withClasses(i);
-            }
+            continue;
+         }
+         if (item instanceof Collection)
+         {
+            this.withClasses(((Collection<?>) item).toArray());
          }
          else if (item instanceof Clazz)
          {
@@ -56,38 +55,43 @@ public class ClassModel
             {
                this.classes = new java.util.ArrayList<Clazz>();
             }
-            if ( ! this.classes.contains(item))
+            if (!this.classes.contains(item))
             {
                this.classes.add((Clazz)item);
                ((Clazz)item).setModel(this);
-               firePropertyChange("classes", null, item);
+               this.firePropertyChange("classes", null, item);
             }
          }
-         else throw new IllegalArgumentException();
+         else
+         {
+            throw new IllegalArgumentException();
+         }
       }
       return this;
    }
 
    public ClassModel withoutClasses(Object... value)
    {
-      if (this.classes == null || value==null) return this;
+      if (this.classes == null || value == null)
+      {
+         return this;
+      }
       for (Object item : value)
       {
-         if (item == null) continue;
-         if (item instanceof java.util.Collection)
+         if (item == null)
          {
-            for (Object i : (java.util.Collection) item)
-            {
-               this.withoutClasses(i);
-            }
+            continue;
+         }
+         if (item instanceof Collection)
+         {
+            this.withoutClasses(((Collection<?>) item).toArray());
          }
          else if (item instanceof Clazz)
          {
-            if (this.classes.contains(item))
+            if (this.classes.remove(item))
             {
-               this.classes.remove((Clazz)item);
                ((Clazz)item).setModel(null);
-               firePropertyChange("classes", item, null);
+               this.firePropertyChange("classes", item, null);
             }
          }
       }
@@ -106,9 +110,9 @@ public class ClassModel
 
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.firePropertyChange(propertyName, oldValue, newValue);
+         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
          return true;
       }
       return false;
@@ -116,38 +120,38 @@ public class ClassModel
 
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(listener);
+      this.listeners.addPropertyChangeListener(listener);
       return true;
    }
 
    public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(propertyName, listener);
+      this.listeners.addPropertyChangeListener(propertyName, listener);
       return true;
    }
 
    public boolean removePropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(listener);
+         this.listeners.removePropertyChangeListener(listener);
       }
       return true;
    }
 
    public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(propertyName, listener);
+         this.listeners.removePropertyChangeListener(propertyName, listener);
       }
       return true;
    }
@@ -165,17 +169,19 @@ public class ClassModel
 
    public String getPackageName()
    {
-      return packageName;
+      return this.packageName;
    }
 
    public ClassModel setPackageName(String value)
    {
-      if (value == null ? this.packageName != null : ! value.equals(this.packageName))
+      if (Objects.equals(value, this.packageName))
       {
-         String oldValue = this.packageName;
-         this.packageName = value;
-         firePropertyChange("packageName", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.packageName;
+      this.packageName = value;
+      this.firePropertyChange("packageName", oldValue, value);
       return this;
    }
 
@@ -185,17 +191,19 @@ public class ClassModel
 
    public String getMainJavaDir()
    {
-      return mainJavaDir;
+      return this.mainJavaDir;
    }
 
    public ClassModel setMainJavaDir(String value)
    {
-      if (value == null ? this.mainJavaDir != null : ! value.equals(this.mainJavaDir))
+      if (Objects.equals(value, this.mainJavaDir))
       {
-         String oldValue = this.mainJavaDir;
-         this.mainJavaDir = value;
-         firePropertyChange("mainJavaDir", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.mainJavaDir;
+      this.mainJavaDir = value;
+      this.firePropertyChange("mainJavaDir", oldValue, value);
       return this;
    }
 
@@ -205,17 +213,19 @@ public class ClassModel
 
    public String getDefaultRoleType()
    {
-      return defaultRoleType;
+      return this.defaultRoleType;
    }
 
    public ClassModel setDefaultRoleType(String value)
    {
-      if (value == null ? this.defaultRoleType != null : ! value.equals(this.defaultRoleType))
+      if (Objects.equals(value, this.defaultRoleType))
       {
-         String oldValue = this.defaultRoleType;
-         this.defaultRoleType = value;
-         firePropertyChange("defaultRoleType", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.defaultRoleType;
+      this.defaultRoleType = value;
+      this.firePropertyChange("defaultRoleType", oldValue, value);
       return this;
    }
 
@@ -225,29 +235,31 @@ public class ClassModel
 
    public String getDefaultPropertyStyle()
    {
-      return defaultPropertyStyle;
+      return this.defaultPropertyStyle;
    }
 
    public ClassModel setDefaultPropertyStyle(String value)
    {
-      if (value == null ? this.defaultPropertyStyle != null : ! value.equals(this.defaultPropertyStyle))
+      if (Objects.equals(value, this.defaultPropertyStyle))
       {
-         String oldValue = this.defaultPropertyStyle;
-         this.defaultPropertyStyle = value;
-         firePropertyChange("defaultPropertyStyle", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.defaultPropertyStyle;
+      this.defaultPropertyStyle = value;
+      this.firePropertyChange("defaultPropertyStyle", oldValue, value);
       return this;
    }
 
    @Override
    public String toString()
    {
-      StringBuilder result = new StringBuilder();
+      final StringBuilder result = new StringBuilder();
 
-      result.append(" ").append(this.getPackageName());
-      result.append(" ").append(this.getMainJavaDir());
-      result.append(" ").append(this.getDefaultRoleType());
-      result.append(" ").append(this.getDefaultPropertyStyle());
+      result.append(' ').append(this.getPackageName());
+      result.append(' ').append(this.getMainJavaDir());
+      result.append(' ').append(this.getDefaultRoleType());
+      result.append(' ').append(this.getDefaultPropertyStyle());
 
 
       return result.substring(1);

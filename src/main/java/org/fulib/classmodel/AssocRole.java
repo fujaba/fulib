@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.beans.PropertyChangeSupport;
 
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
 
 /**
  * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
@@ -21,21 +22,23 @@ public class AssocRole
 
    public AssocRole setClazz(Clazz value)
    {
-      if (this.clazz != value)
+      if (this.clazz == value)
       {
-         Clazz oldValue = this.clazz;
-         if (this.clazz != null)
-         {
-            this.clazz = null;
-            oldValue.withoutRoles(this);
-         }
-         this.clazz = value;
-         if (value != null)
-         {
-            value.withRoles(this);
-         }
-         firePropertyChange("clazz", oldValue, value);
+         return this;
       }
+
+      final Clazz oldValue = this.clazz;
+      if (this.clazz != null)
+      {
+         this.clazz = null;
+         oldValue.withoutRoles(this);
+      }
+      this.clazz = value;
+      if (value != null)
+      {
+         value.withRoles(this);
+      }
+      this.firePropertyChange("clazz", oldValue, value);
       return this;
    }
 
@@ -48,21 +51,23 @@ public AssocRole getOther()
 
 public AssocRole setOther(AssocRole value)
    {
-      if (this.other != value)
+      if (this.other == value)
       {
-         AssocRole oldValue = this.other;
-         if (this.other != null)
-         {
-            this.other = null;
-            oldValue.setOther(null);
-         }
-         this.other = value;
-         if (value != null)
-         {
-            value.setOther(this);
-         }
-         firePropertyChange("other", oldValue, value);
+         return this;
       }
+
+      final AssocRole oldValue = this.other;
+      if (this.other != null)
+      {
+         this.other = null;
+         oldValue.setOther(null);
+      }
+      this.other = value;
+      if (value != null)
+      {
+         value.setOther(this);
+      }
+      this.firePropertyChange("other", oldValue, value);
       return this;
    }
 
@@ -70,9 +75,9 @@ public AssocRole setOther(AssocRole value)
 
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.firePropertyChange(propertyName, oldValue, newValue);
+         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
          return true;
       }
       return false;
@@ -80,38 +85,38 @@ public AssocRole setOther(AssocRole value)
 
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(listener);
+      this.listeners.addPropertyChangeListener(listener);
       return true;
    }
 
    public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
-      if (listeners == null)
+      if (this.listeners == null)
       {
-         listeners = new PropertyChangeSupport(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      listeners.addPropertyChangeListener(propertyName, listener);
+      this.listeners.addPropertyChangeListener(propertyName, listener);
       return true;
    }
 
    public boolean removePropertyChangeListener(PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(listener);
+         this.listeners.removePropertyChangeListener(listener);
       }
       return true;
    }
 
    public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
    {
-      if (listeners != null)
+      if (this.listeners != null)
       {
-         listeners.removePropertyChangeListener(propertyName, listener);
+         this.listeners.removePropertyChangeListener(propertyName, listener);
       }
       return true;
    }
@@ -135,17 +140,19 @@ public AssocRole setOther(AssocRole value)
 
    public String getName()
    {
-      return name;
+      return this.name;
    }
 
    public AssocRole setName(String value)
    {
-      if (value == null ? this.name != null : ! value.equals(this.name))
+      if (Objects.equals(value, this.name))
       {
-         String oldValue = this.name;
-         this.name = value;
-         firePropertyChange("name", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.name;
+      this.name = value;
+      this.firePropertyChange("name", oldValue, value);
       return this;
    }
 
@@ -155,17 +162,19 @@ public AssocRole setOther(AssocRole value)
 
    public int getCardinality()
    {
-      return cardinality;
+      return this.cardinality;
    }
 
    public AssocRole setCardinality(int value)
    {
-      if (value != this.cardinality)
+      if (value == this.cardinality)
       {
-         int oldValue = this.cardinality;
-         this.cardinality = value;
-         firePropertyChange("cardinality", oldValue, value);
+         return this;
       }
+
+      final int oldValue = this.cardinality;
+      this.cardinality = value;
+      this.firePropertyChange("cardinality", oldValue, value);
       return this;
    }
 
@@ -175,37 +184,41 @@ public AssocRole setOther(AssocRole value)
 
    public String getRoleType()
    {
-      return roleType;
+      return this.roleType;
    }
 
    public AssocRole setRoleType(String value)
    {
-      if (value == null ? this.roleType != null : ! value.equals(this.roleType))
+      if (Objects.equals(value, this.roleType))
       {
-         String oldValue = this.roleType;
-         this.roleType = value;
-         firePropertyChange("roleType", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.roleType;
+      this.roleType = value;
+      this.firePropertyChange("roleType", oldValue, value);
       return this;
    }
 
    public static final String PROPERTY_aggregation = "aggregation";
 
-   private boolean aggregation = false;
+   private boolean aggregation;
 
    public boolean getAggregation()
    {
-      return aggregation;
+      return this.aggregation;
    }
 
    public AssocRole setAggregation(boolean value)
    {
-      if (value != this.aggregation)
+      if (value == this.aggregation)
       {
-         boolean oldValue = this.aggregation;
-         this.aggregation = value;
-         firePropertyChange("aggregation", oldValue, value);
+         return this;
       }
+
+      final boolean oldValue = this.aggregation;
+      this.aggregation = value;
+      this.firePropertyChange("aggregation", oldValue, value);
       return this;
    }
 
@@ -215,48 +228,52 @@ public AssocRole setOther(AssocRole value)
 
    public String getPropertyStyle()
    {
-      return propertyStyle;
+      return this.propertyStyle;
    }
 
    public AssocRole setPropertyStyle(String value)
    {
-      if (value == null ? this.propertyStyle != null : ! value.equals(this.propertyStyle))
+      if (Objects.equals(value, this.propertyStyle))
       {
-         String oldValue = this.propertyStyle;
-         this.propertyStyle = value;
-         firePropertyChange("propertyStyle", oldValue, value);
+         return this;
       }
+
+      final String oldValue = this.propertyStyle;
+      this.propertyStyle = value;
+      this.firePropertyChange("propertyStyle", oldValue, value);
       return this;
    }
 
    public static final String PROPERTY_modified = "modified";
 
-   private boolean modified = false;
+   private boolean modified;
 
    public boolean getModified()
    {
-      return modified;
+      return this.modified;
    }
 
    public AssocRole setModified(boolean value)
    {
-      if (value != this.modified)
+      if (value == this.modified)
       {
-         boolean oldValue = this.modified;
-         this.modified = value;
-         firePropertyChange("modified", oldValue, value);
+         return this;
       }
+
+      final boolean oldValue = this.modified;
+      this.modified = value;
+      this.firePropertyChange("modified", oldValue, value);
       return this;
    }
 
    @Override
    public String toString()
    {
-      StringBuilder result = new StringBuilder();
+      final StringBuilder result = new StringBuilder();
 
-      result.append(" ").append(this.getName());
-      result.append(" ").append(this.getRoleType());
-      result.append(" ").append(this.getPropertyStyle());
+      result.append(' ').append(this.getName());
+      result.append(' ').append(this.getRoleType());
+      result.append(' ').append(this.getPropertyStyle());
 
 
       return result.substring(1);

@@ -115,7 +115,6 @@
 
 - modified16: 	Attribute
   clazz: 	clazz3
-  initialization: 	false
   modified: 	false
   name: 	modified
   propertyStyle: 	POJO
@@ -219,7 +218,6 @@
 
 - modified28: 	Attribute
   clazz: 	attribute4
-  initialization: 	false
   modified: 	false
   name: 	modified
   propertyStyle: 	POJO
@@ -258,7 +256,6 @@
 
 - aggregation33: 	Attribute
   clazz: 	assocRole5
-  initialization: 	false
   modified: 	false
   name: 	aggregation
   propertyStyle: 	POJO
@@ -273,7 +270,6 @@
 
 - modified35: 	Attribute
   clazz: 	assocRole5
-  initialization: 	false
   modified: 	false
   name: 	modified
   propertyStyle: 	POJO
@@ -325,7 +321,6 @@
 
 - modified41: 	Attribute
   clazz: 	fMethod6
-  initialization: 	false
   modified: 	false
   name: 	modified
   propertyStyle: 	POJO
