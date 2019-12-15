@@ -19,8 +19,24 @@ import java.util.logging.Logger;
 
 public class Generator4ClassFile
 {
+   // =============== Fields ===============
 
    private String customTemplatesFile;
+
+   // =============== Properties ===============
+
+   public String getCustomTemplatesFile()
+   {
+      return this.customTemplatesFile;
+   }
+
+   public Generator4ClassFile setCustomTemplatesFile(String customTemplateFile)
+   {
+      this.customTemplatesFile = customTemplateFile;
+      return this;
+   }
+
+   // =============== Methods ===============
 
    public void generate(Clazz clazz)
    {
@@ -575,17 +591,6 @@ public class Generator4ClassFile
       }
 
       fragmentMap.add(Parser.METHOD + ":removeYou()", st.render(), 2, modified);
-   }
-
-   public String getCustomTemplatesFile()
-   {
-      return this.customTemplatesFile;
-   }
-
-   public Generator4ClassFile setCustomTemplatesFile(String customTemplateFile)
-   {
-      this.customTemplatesFile = customTemplateFile;
-      return this;
    }
 
    private STGroup createSTGroup(String origFileName)
