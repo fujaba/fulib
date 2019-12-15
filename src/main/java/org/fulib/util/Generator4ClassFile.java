@@ -7,16 +7,12 @@ import org.fulib.builder.Type;
 import org.fulib.classmodel.*;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
-import org.stringtemplate.v4.StringRenderer;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class Generator4ClassFile extends AbstractGenerator
@@ -145,12 +141,9 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group;
-      ST attrTemplate;
-      String result;
-
       for (Attribute attr : clazz.getAttributes())
       {
+         final STGroup group;
          if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
          {
             group = this.getSTGroup("templates/JavaFXattributes.stg");
@@ -189,85 +182,72 @@ public class Generator4ClassFile extends AbstractGenerator
             }
             attrType = String.format("java.util.ArrayList<%s>", boxType);
          }
-         attrTemplate = group.getInstanceOf("propertyDecl");
-         attrTemplate.add("name", attr.getName());
-         result = attrTemplate.render();
-         fragmentMap.add(Parser.ATTRIBUTE + ":PROPERTY_" + attr.getName(), result, 2, attr.getModified());
 
-         attrTemplate = group.getInstanceOf("attrDecl");
-         attrTemplate.add("type", attrType);
-         attrTemplate.add("name", attr.getName());
-         attrTemplate.add("value", attr.getInitialization());
-         result = attrTemplate.render();
+         final String capAttrName = StrUtil.cap(attr.getName());
 
-         fragmentMap.add(Parser.ATTRIBUTE + ":" + attr.getName(), result, 2, attr.getModified());
+         final ST propertyDecl = group.getInstanceOf("propertyDecl");
+         propertyDecl.add("name", attr.getName());
+         fragmentMap.add(Parser.ATTRIBUTE + ":PROPERTY_" + attr.getName(), propertyDecl.render(), 2, attr.getModified());
+
+         final ST attrDecl = group.getInstanceOf("attrDecl");
+         attrDecl.add("type", attrType);
+         attrDecl.add("name", attr.getName());
+         attrDecl.add("value", attr.getInitialization());
+         fragmentMap.add(Parser.ATTRIBUTE + ":" + attr.getName(), attrDecl.render(), 2, attr.getModified());
 
          if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
          {
-            attrTemplate = group.getInstanceOf("initMethod");
-            attrTemplate.add("name", attr.getName());
-            attrTemplate.add("type", attrType);
-            result = attrTemplate.render();
-
+            final ST initMethod = group.getInstanceOf("initMethod");
+            initMethod.add("name", attr.getName());
+            initMethod.add("type", attrType);
             fragmentMap
-               .add(Parser.METHOD + ":_init" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
+               .add(Parser.METHOD + ":_init" + capAttrName + "()", initMethod.render(), 2, attr.getModified());
          }
          else
          {
-            fragmentMap.add(Parser.METHOD + ":_init" + StrUtil.cap(attr.getName()) + "()", "", 2, true);
+            fragmentMap.add(Parser.METHOD + ":_init" + capAttrName + "()", "", 2, true);
          }
 
-         attrTemplate = group.getInstanceOf("attrGet");
-         attrTemplate.add("type", attrType);
-         attrTemplate.add("name", attr.getName());
-         result = attrTemplate.render();
-
-         fragmentMap.add(Parser.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
+         final ST attrGet = group.getInstanceOf("attrGet");
+         attrGet.add("type", attrType);
+         attrGet.add("name", attr.getName());
+         fragmentMap.add(Parser.METHOD + ":get" + capAttrName + "()", attrGet.render(), 2, attr.getModified());
 
          if (attr.getType().endsWith(Type.__LIST))
          {
-            // attrWith(class, name, listType, baseType)
-            attrTemplate = group.getInstanceOf("attrWith");
-            attrTemplate.add("class", attr.getClazz().getName());
-            attrTemplate.add("listType", attrType);
-            attrTemplate.add("baseType", boxType);
-            attrTemplate.add("name", attr.getName());
-            result = attrTemplate.render();
-
-            fragmentMap.add(Parser.METHOD + ":with" + StrUtil.cap(attr.getName()) + "(Object...)", result, 3,
+            final ST attrWith = group.getInstanceOf("attrWith");
+            attrWith.add("class", attr.getClazz().getName());
+            attrWith.add("listType", attrType);
+            attrWith.add("baseType", boxType);
+            attrWith.add("name", attr.getName());
+            fragmentMap.add(Parser.METHOD + ":with" + capAttrName + "(Object...)", attrWith.render(), 3,
                             attr.getModified());
-            // attrWith(class, name, listType, baseType)
-            attrTemplate = group.getInstanceOf("attrWithout");
-            attrTemplate.add("class", attr.getClazz().getName());
-            attrTemplate.add("listType", attrType);
-            attrTemplate.add("baseType", boxType);
-            attrTemplate.add("name", attr.getName());
-            result = attrTemplate.render();
 
-            fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(attr.getName()) + "(Object...)", result, 3,
+            final ST attrWithout = group.getInstanceOf("attrWithout");
+            attrWithout.add("class", attr.getClazz().getName());
+            attrWithout.add("listType", attrType);
+            attrWithout.add("baseType", boxType);
+            attrWithout.add("name", attr.getName());
+            fragmentMap.add(Parser.METHOD + ":without" + capAttrName + "(Object...)", attrWithout.render(), 3,
                             attr.getModified());
          }
-         else
-         { // ususal attribute
-            attrTemplate = group.getInstanceOf("attrSet");
-            attrTemplate.add("class", attr.getClazz().getName());
-            attrTemplate.add("type", attr.getType());
-            attrTemplate.add("name", attr.getName());
-            result = attrTemplate.render();
-
+         else // usual attribute
+         {
+            final ST attrSet = group.getInstanceOf("attrSet");
+            attrSet.add("class", attr.getClazz().getName());
+            attrSet.add("type", attr.getType());
+            attrSet.add("name", attr.getName());
             fragmentMap
-               .add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3,
+               .add(Parser.METHOD + ":set" + capAttrName + "(" + attr.getType() + ")", attrSet.render(), 3,
                     attr.getModified());
          }
 
          if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
          {
-            attrTemplate = group.getInstanceOf("propertyGet");
-            attrTemplate.add("name", attr.getName());
-            attrTemplate.add("type", attrType);
-            result = attrTemplate.render();
-
-            fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", result, 3, attr.getModified());
+            final ST propertyGet = group.getInstanceOf("propertyGet");
+            propertyGet.add("name", attr.getName());
+            propertyGet.add("type", attrType);
+            fragmentMap.add(Parser.METHOD + ":" + attr.getName() + "Property()", propertyGet.render(), 3, attr.getModified());
          }
          else
          {
