@@ -39,7 +39,7 @@ setMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToM
          }
          if (item instanceof Collection)
          {
-            this.with<roleName; format="cap">(((Collection) item).toArray());
+            this.with<roleName; format="cap">(((Collection\<?>) item).toArray());
          }
          else if (item instanceof <otherClassName>)
          {
@@ -107,7 +107,7 @@ withoutMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, othe
          }
          if (item instanceof Collection)
          {
-            this.without<roleName; format="cap">(((Collection) item).toArray());
+            this.without<roleName; format="cap">(((Collection\<?>) item).toArray());
          }
          else if (item instanceof <otherClassName>)
          {

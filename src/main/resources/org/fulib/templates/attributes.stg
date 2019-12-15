@@ -60,7 +60,7 @@ attrWith(class, name, listType, baseType) ::= <<
          }
          if (item instanceof Collection)
          {
-            this.with<name; format="cap">(((Collection) item).toArray());
+            this.with<name; format="cap">(((Collection\<?>) item).toArray());
          }
          else if (item instanceof <baseType>)
          {
@@ -95,7 +95,7 @@ attrWithout(class, name, listType, baseType) ::= <<
          }
          if (item instanceof Collection)
          {
-            this.without<name; format="cap">(((Collection) item).toArray());
+            this.without<name; format="cap">(((Collection\<?>) item).toArray());
          }
          else if (item instanceof <baseType>)
          {
