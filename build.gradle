@@ -1,108 +1,114 @@
-buildscript {
-	// unfortunately we need to use the legacy buildscript block
-	// because the plugins {} DSL does not work when the plugin is compiled with a newer Java version
-	// (in this case, javafx-plugin is compiled against 11, while we want the build to work in 8)
+// --------------- Plugins ---------------
 
-	repositories {
-		maven {
-			url 'https://plugins.gradle.org/m2/'
-		}
-	}
-	dependencies {
-		classpath 'org.openjfx:javafx-plugin:0.0.8'
-	}
+buildscript {
+   // unfortunately we need to use the legacy buildscript block
+   // because the plugins {} DSL does not work when the plugin is compiled with a newer Java version
+   // (in this case, javafx-plugin is compiled against 11, while we want the build to work in 8)
+
+   repositories {
+      maven {
+         url 'https://plugins.gradle.org/m2/'
+      }
+   }
+   dependencies {
+      classpath 'org.openjfx:javafx-plugin:0.0.8'
+   }
 }
 
 plugins {
-	id 'java-library'
-	id 'maven-publish'
-	id 'com.jfrog.bintray' version '1.8.4'
-	id 'de.clashsoft.simple-publish' version '0.5.0'
-	// id 'org.fulib.fulibGradle' version '0.1.0'
+   id 'java-library'
+   id 'maven-publish'
+   id 'com.jfrog.bintray' version '1.8.4'
+   id 'de.clashsoft.simple-publish' version '0.5.0'
+   // id 'org.fulib.fulibGradle' version '0.1.0'
 }
 
 if (JavaVersion.current().java11Compatible) {
-	apply plugin: 'org.openjfx.javafxplugin'
+   apply plugin: 'org.openjfx.javafxplugin'
 }
+
+// --------------- General Settings ---------------
 
 group = 'org.fulib'
 version = 'git describe --tags'.execute().text[1..-2] // strip v and \n
 description = 'Fulib is a Java-code generating library.'
 
 publishInfo {
-    organization = 'fujaba'
-    githubRepo = 'fujaba/fulib'
-    labels = [ 'fulib', 'code-generator' ]
+   organization = 'fujaba'
+   githubRepo = 'fujaba/fulib'
+   labels = [ 'fulib', 'code-generator' ]
 
-    developer {
-        id = 'zuendorf'
-        name = 'Albert Zuendorf'
-    }
-    developer {
-        id = 'digitalhoax'
-        name = 'Tobias George'
-    }
-    developer {
-        id = 'eicke123'
-        name = 'Christoph Eickhoff'
-    }
+   developer {
+      id = 'zuendorf'
+      name = 'Albert Zuendorf'
+   }
+   developer {
+      id = 'digitalhoax'
+      name = 'Tobias George'
+   }
+   developer {
+      id = 'eicke123'
+      name = 'Christoph Eickhoff'
+   }
+   developer {
+      id = 'Clashsoft'
+      name = 'Adrian Kunz'
+   }
 
-    license {
-        name = 'MIT License'
-        url = 'http://www.opensource.org/licenses/mit-license.php'
-    }
+   license {
+      name = 'MIT License'
+      url = 'http://www.opensource.org/licenses/mit-license.php'
+   }
 }
-
-sourceCompatibility = 1.8
 
 // --------------- Dependencies ---------------
 
 repositories {
-	mavenLocal()
-	mavenCentral()
-	jcenter()
+   mavenLocal()
+   mavenCentral()
+   jcenter()
 }
 
 dependencies {
-	// https://mvnrepository.com/artifact/org.fulib/fulibYaml
-	api group: 'org.fulib', name: 'fulibYaml', version: '1.2.0-dev.1'
+   // https://mvnrepository.com/artifact/org.fulib/fulibYaml
+   api group: 'org.fulib', name: 'fulibYaml', version: '1.2.0-dev.1'
 
-	// https://mvnrepository.com/artifact/org.antlr/ST4
-	implementation group: 'org.antlr', name: 'ST4', version: '4.0.8'
+   // https://mvnrepository.com/artifact/org.antlr/ST4
+   implementation group: 'org.antlr', name: 'ST4', version: '4.0.8'
 
-	// https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library
-	testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: '2.1'
+   // https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library
+   testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: '2.1'
 
-	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
+   // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
 
-	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params
-	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.3.2'
+   // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params
+   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.3.2'
 
-	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
-	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.2'
+   // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+   testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.2'
 }
 
 if (JavaVersion.current().java11Compatible) {
-	javafx {
-		modules 'javafx.base'
-		configuration = 'testCompile'
-	}
+   javafx {
+      modules 'javafx.base'
+      configuration = 'testCompile'
+   }
 }
 
 // --------------- Misc. Settings ---------------
 
 test {
-	useJUnitPlatform()
+   useJUnitPlatform()
 
-	workingDir = temporaryDir
-	outputs.dir workingDir
+   workingDir = temporaryDir
+   outputs.dir workingDir
 
-	doFirst {
-		workingDir.mkdirs()
-	}
+   doFirst {
+      workingDir.mkdirs()
+   }
 }
 
 javadoc {
-	failOnError = false
+   failOnError = false
 }
