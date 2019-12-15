@@ -1,21 +1,31 @@
 package org.fulib;
 
+import org.fulib.builder.ClassModelDecorator;
 import org.fulib.builder.ClassModelManager;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
-import org.junit.jupiter.api.Test;
 
 import static org.fulib.builder.Type.*;
 
-class GenerateClassModel
+public class GenModel implements ClassModelDecorator
 {
-   @Test
-   void generateModel()
+   public static void main(String[] args)
    {
       final ClassModelManager mb = new ClassModelManager();
       mb.setSourceFolder("src/main/java");
       mb.setPackageName("org.fulib.classmodel");
 
+      new GenModel().decorate(mb);
+
+      // start_code_fragment: Fulib.createGenerator
+      ClassModel model = mb.getClassModel();
+      Fulib.generator().generate(model);
+      // end_code_fragment:
+   }
+
+   @Override
+   public void decorate(ClassModelManager mb)
+   {
       // Classes
       final Clazz ClassModel = mb.haveClass("ClassModel", c -> {
          c.attribute("packageName", STRING);
@@ -75,10 +85,5 @@ class GenerateClassModel
          c.attribute("key", STRING);
          c.attribute("text", STRING);
       });
-
-      // start_code_fragment: Fulib.createGenerator
-      ClassModel model = mb.getClassModel();
-      Fulib.generator().generate(model);
-      // end_code_fragment:
    }
 }

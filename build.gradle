@@ -63,6 +63,8 @@ publishInfo {
 
 // --------------- Dependencies ---------------
 
+sourceSets.register('gen')
+
 repositories {
    mavenLocal()
    mavenCentral()
@@ -87,6 +89,8 @@ dependencies {
 
    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.2'
+
+   genCompile sourceSets.main.output + sourceSets.main.runtimeClasspath
 }
 
 if (JavaVersion.current().java11Compatible) {
