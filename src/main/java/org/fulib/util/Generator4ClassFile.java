@@ -256,6 +256,8 @@ public class Generator4ClassFile extends AbstractGenerator
    {
       switch (attrType)
       {
+      case "boolean":
+         return "Boolean";
       case "byte":
          return "Byte";
       case "short":
