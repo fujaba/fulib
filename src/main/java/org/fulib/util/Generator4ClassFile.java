@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class Generator4ClassFile
@@ -22,6 +24,8 @@ public class Generator4ClassFile
    // =============== Fields ===============
 
    private String customTemplatesFile;
+
+   private Map<String, STGroup> stGroups = new HashMap<>();
 
    // =============== Properties ===============
 
@@ -140,7 +144,7 @@ public class Generator4ClassFile
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.createSTGroup("templates/classDecl.stg");
+      STGroup group = this.getSTGroup("templates/classDecl.stg");
       ST st = group.getInstanceOf("classDecl");
       st.add("name", clazz.getName());
       st.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() : null);
@@ -158,12 +162,12 @@ public class Generator4ClassFile
       {
          if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
          {
-            group = this.createSTGroup("templates/JavaFXattributes.stg");
+            group = this.getSTGroup("templates/JavaFXattributes.stg");
             fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
          }
          else
          {
-            group = this.createSTGroup("templates/attributes.stg");
+            group = this.getSTGroup("templates/attributes.stg");
          }
 
          String attrType = attr.getType();
@@ -296,12 +300,12 @@ public class Generator4ClassFile
 
          if (Type.JAVA_FX.equals(role.getPropertyStyle()))
          {
-            group = this.createSTGroup("templates/JavaFXassociations.stg");
+            group = this.getSTGroup("templates/JavaFXassociations.stg");
             fragmentMap.add(Parser.IMPORT + ":javafx.beans.property.*", "import javafx.beans.property.*;", 1);
          }
          else
          {
-            group = this.createSTGroup("templates/associations.stg");
+            group = this.getSTGroup("templates/associations.stg");
          }
 
          String roleType = role.getOther().getClazz().getName();
@@ -475,7 +479,7 @@ public class Generator4ClassFile
       fragmentMap
          .add(Parser.IMPORT + ":java.beans.PropertyChangeListener", "import java.beans.PropertyChangeListener;", 1);
 
-      STGroup group = this.createSTGroup("templates/propertyChangeSupport.stg");
+      STGroup group = this.getSTGroup("templates/propertyChangeSupport.stg");
 
       String result = "   protected PropertyChangeSupport listeners = null;";
       fragmentMap.add(Parser.ATTRIBUTE + ":listeners", result, 2, clazz.getModified());
@@ -525,7 +529,7 @@ public class Generator4ClassFile
       String result = "";
       if (!nameList.isEmpty())
       {
-         STGroup group = this.createSTGroup("templates/toString.stg");
+         STGroup group = this.getSTGroup("templates/toString.stg");
          ST st = group.getInstanceOf("toString");
          st.add("names", nameList.toArray(new String[0]));
          result = st.render();
@@ -577,7 +581,7 @@ public class Generator4ClassFile
          }
       }
 
-      STGroup group = this.createSTGroup("templates/removeYou.stg");
+      STGroup group = this.getSTGroup("templates/removeYou.stg");
       ST st = group.getInstanceOf("removeYou");
       st.add("toOneNames", toOneList.toArray(new String[0]));
       st.add("toManyNames", toManyList.toArray(new String[0]));
@@ -593,7 +597,12 @@ public class Generator4ClassFile
       fragmentMap.add(Parser.METHOD + ":removeYou()", st.render(), 2, modified);
    }
 
-   private STGroup createSTGroup(String origFileName)
+   private STGroup getSTGroup(String origFileName)
+   {
+      return this.stGroups.computeIfAbsent(origFileName, this::loadSTGroup);
+   }
+
+   private STGroup loadSTGroup(String origFileName)
    {
       STGroup group;
       try
