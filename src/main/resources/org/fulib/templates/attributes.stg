@@ -18,10 +18,29 @@ attrSet(class, name, type, useEquals) ::= <<
    {
       if (<condition(name, type, useEquals)>)
       {
-         final <type> oldValue = this.<name>;
-         this.<name> = value;
-         this.firePropertyChange("<name>", oldValue, value);
+         return this;
       }
+
+      final <type> oldValue = this.<name>;
+      this.<name> = value;
+      this.firePropertyChange("<name>", oldValue, value);
+      return this;
+   }
+>>
+
+condition(name, type, useEquals) ::=
+<%
+<if(useEquals)>
+Objects.equals(value, this.<name>)
+<else>
+value == this.<name>
+<endif>
+%>
+
+simpleAttrSet(class, name, type) ::= <<
+   public <class> set<name; format="cap">(<type> value)
+   {
+      this.<name> = value;
       return this;
    }
 >>
@@ -89,20 +108,3 @@ attrWithout(class, name, listType, baseType) ::= <<
       return this;
    }
 >>
-
-simpleAttrSet(class, name, type) ::= <<
-   public <class> set<name; format="cap">(<type> value)
-   {
-      this.<name> = value;
-      return this;
-   }
->>
-
-condition(name, type, useEquals) ::=
-<%
-<if(useEquals)>
-!Objects.equals(value, this.<name>)
-<else>
-value != this.<name>
-<endif>
-%>
