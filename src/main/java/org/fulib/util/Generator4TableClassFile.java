@@ -20,10 +20,18 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-public class Generator4TableClassFile
+public class Generator4TableClassFile extends AbstractGenerator
 {
+   // =============== Properties ===============
 
-   private String customTemplatesFile;
+   @Override
+   public Generator4TableClassFile setCustomTemplatesFile(String customTemplatesFile)
+   {
+      super.setCustomTemplatesFile(customTemplatesFile);
+      return this;
+   }
+
+   // =============== Methods ===============
 
    public void generate(Clazz clazz) {
       String classFileName = clazz.getModel().getPackageSrcFolder() + "/tables/" + clazz.getName() + "Table.java";
@@ -75,7 +83,7 @@ public class Generator4TableClassFile
 
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap) {
-      STGroup group = createSTGroup("templates/classDecl.stg");
+      STGroup group = getSTGroup("templates/classDecl.stg");
       ST st = group.getInstanceOf("classDecl");
       st.add("name", clazz.getName() + "Table");
       st.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() + "Table" : null);
@@ -86,7 +94,7 @@ public class Generator4TableClassFile
 
 
    private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap) {
-      STGroup group = createSTGroup("templates/tableConstructor.stg");
+      STGroup group = getSTGroup("templates/tableConstructor.stg");
       ST st = group.getInstanceOf("constructor");
       st.add("className", clazz.getName());
       String result = st.render();
@@ -95,7 +103,7 @@ public class Generator4TableClassFile
 
 
    private void generateStandardAttributes(Clazz clazz, FileFragmentMap fragmentMap) {
-      STGroup group = createSTGroup("templates/attributes.stg");
+      STGroup group = getSTGroup("templates/attributes.stg");
       ST attrTemplate;
       String result;
 
@@ -150,7 +158,7 @@ public class Generator4TableClassFile
 
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap) {
-      STGroup group = createSTGroup("templates/tablesAttributes.stg");
+      STGroup group = getSTGroup("templates/tablesAttributes.stg");
       ST attrTemplate;
       String result;
 
@@ -173,7 +181,7 @@ public class Generator4TableClassFile
       String fullClassName = clazz.getModel().getPackageName() + "." + clazz.getName();
       fragmentMap.add(Parser.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
 
-      STGroup group = createSTGroup("templates/tablesAssociations.stg");
+      STGroup group = getSTGroup("templates/tablesAssociations.stg");
       String result;
       ST st;
       for (AssocRole role : clazz.getRoles())
@@ -214,7 +222,7 @@ public class Generator4TableClassFile
       fragmentMap.add(Parser.IMPORT + ":java.util.Arrays", "import java.util.Arrays;", 1);
 
       String result;
-      STGroup group = createSTGroup("templates/tablesSelectColumns.stg");
+      STGroup group = getSTGroup("templates/tablesSelectColumns.stg");
       ST st = group.getInstanceOf("selectColumns");
       st.add("className", clazz.getName());
       result = st.render();
@@ -233,7 +241,7 @@ public class Generator4TableClassFile
    private void generateAddColumn(Clazz clazz, FileFragmentMap fragmentMap)
    {
       String result;
-      STGroup group = createSTGroup("templates/tablesSelectColumns.stg");
+      STGroup group = getSTGroup("templates/tablesSelectColumns.stg");
       ST st = group.getInstanceOf("addColumn");
       st.add("className", clazz.getName());
       result = st.render();
@@ -248,7 +256,7 @@ public class Generator4TableClassFile
       fragmentMap.add(Parser.IMPORT + ":java.util.function.Predicate", "import java.util.function.Predicate;", 1);
 
       String result = "";
-      STGroup group = createSTGroup("templates/tablesFilter.stg");
+      STGroup group = getSTGroup("templates/tablesFilter.stg");
       ST st = group.getInstanceOf("filter");
       st.add("className", clazz.getName());
       result = st.render();
@@ -275,7 +283,7 @@ public class Generator4TableClassFile
       fragmentMap.add(Parser.IMPORT + ":java.util.LinkedHashSet", "import java.util.LinkedHashSet;", 1);
 
       String result = "";
-      STGroup group = createSTGroup("templates/tablesToSet.stg");
+      STGroup group = getSTGroup("templates/tablesToSet.stg");
       ST st = group.getInstanceOf("toSet");
       st.add("className", clazz.getName());
       result = st.render();
@@ -293,40 +301,10 @@ public class Generator4TableClassFile
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap) {
       String result = "";
-      STGroup group = createSTGroup("templates/tablesToString.stg");
+      STGroup group = getSTGroup("templates/tablesToString.stg");
       ST st = group.getInstanceOf("toString");
       result = st.render();
 
       fragmentMap.add(Parser.METHOD + ":toString()", result, 2, clazz.getModified());
-   }
-
-
-
-   public String getCustomTemplatesFile()
-   {
-      return customTemplatesFile;
-   }
-
-   public Generator4TableClassFile setCustomTemplatesFile(String customTemplateFile)
-   {
-      this.customTemplatesFile = customTemplateFile;
-      return this;
-   }
-
-   public STGroup createSTGroup(String origFileName)
-   {
-      STGroup group;
-      try
-      {
-         group = new STGroupFile(this.customTemplatesFile);
-         STGroup origGroup = new STGroupFile(origFileName);
-         group.importTemplates(origGroup);
-      }
-      catch (Exception e)
-      {
-         group = new STGroupFile(origFileName);
-      }
-      group.registerRenderer(String.class, new StringRenderer());
-      return group;
    }
 }

@@ -20,15 +20,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 
-public class Generator4TypeScriptClassFile
+public class Generator4TypeScriptClassFile extends AbstractGenerator
 {
-   private String customTemplatesFile;
+   // =============== Properties ===============
 
+   @Override
    public Generator4TypeScriptClassFile setCustomTemplatesFile(String customTemplatesFile)
    {
-      this.customTemplatesFile = customTemplatesFile;
+      super.setCustomTemplatesFile(customTemplatesFile);
       return this;
    }
+
+   // =============== Methods ===============
 
    public void generate(Clazz clazz)
    {
@@ -64,7 +67,7 @@ public class Generator4TypeScriptClassFile
 
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap) {
-      STGroup group = createSTGroup("templates/typescript/tsClassDecl.stg");
+      STGroup group = getSTGroup("templates/typescript/tsClassDecl.stg");
       ST st = group.getInstanceOf("classDecl");
       st.add("name", clazz.getName());
       String result = st.render();
@@ -74,7 +77,7 @@ public class Generator4TypeScriptClassFile
 
 
    private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap) {
-      STGroup group = createSTGroup("templates/typescript/tsClassDecl.stg");
+      STGroup group = getSTGroup("templates/typescript/tsClassDecl.stg");
 
       StringBuilder buf = new StringBuilder();
 
@@ -114,7 +117,7 @@ public class Generator4TypeScriptClassFile
 
       for (Attribute attr : clazz.getAttributes())
       {
-         group = createSTGroup("templates/typescript/attributes.stg");
+         group = getSTGroup("templates/typescript/attributes.stg");
 
          String attrType = attr.getType();
 
@@ -148,7 +151,7 @@ public class Generator4TypeScriptClassFile
             continue; //=====================================
          }
 
-         group = createSTGroup("templates/typescript/associations.stg");
+         group = getSTGroup("templates/typescript/associations.stg");
 
          String roleType = role.getOther().getClazz().getName();
 
@@ -214,7 +217,7 @@ public class Generator4TypeScriptClassFile
 
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap) {
-      STGroup group = createSTGroup("templates/typescript/tsClassDecl.stg");
+      STGroup group = getSTGroup("templates/typescript/tsClassDecl.stg");
 
       StringBuilder buf = new StringBuilder();
 
@@ -236,24 +239,5 @@ public class Generator4TypeScriptClassFile
       st.add("body", buf.toString());
       String result = st.render();
       fragmentMap.add(Parser.METHOD + ":removeYou()", result, 2);
-   }
-
-
-
-   public STGroup createSTGroup(String origFileName)
-   {
-      STGroup group;
-      try
-      {
-         group = new STGroupFile(this.customTemplatesFile);
-         STGroup origGroup = new STGroupFile(origFileName);
-         group.importTemplates(origGroup);
-      }
-      catch (Exception e)
-      {
-         group = new STGroupFile(origFileName);
-      }
-      group.registerRenderer(String.class, new StringRenderer());
-      return group;
    }
 }
