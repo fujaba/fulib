@@ -34,7 +34,7 @@ toManyLine(name, javaFX) ::=
 this.get<cap(name)>().clear();
 
 <else>
-this.without<cap(name)>(this.get<cap(name)>().clone());
+this.without<cap(name)>(this.<name>.clone());
 
 <endif>
 >>
@@ -42,7 +42,7 @@ this.without<cap(name)>(this.get<cap(name)>().clone());
 
 toManyAggregationLine(name, type) ::=
 <<
-new java.util.ArrayList\< >(this.get<cap(name)>()).forEach(x -> x.removeYou());
+new java.util.ArrayList\< >(this.<name>).forEach(x -> x.removeYou());
 
 >>
 

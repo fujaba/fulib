@@ -282,6 +282,9 @@ public class Generator4ClassFile {
             st.add("roleName", role.getName());
             st.add("otherClassName", role.getOther().getClazz().getName());
             st.add("roleType", roleType);
+            if (roleType.startsWith("java.util.ArrayList")) {
+               st.add("unmodifiable", "yes");
+            }
             result = st.render();
 
             fragmentMap.add(Parser.ATTRIBUTE + ":EMPTY_" + role.getName(), result, 3, role.getModified());
@@ -334,6 +337,9 @@ public class Generator4ClassFile {
          st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("otherClassName", role.getOther().getClazz().getName());
          st.add("roleType", roleType);
+         if (roleType.startsWith("java.util.ArrayList")) {
+            st.add("unmodifiable", "yes");
+         }
          result = st.render();
 
          fragmentMap.add(Parser.METHOD + ":get" + StrUtil.cap(role.getName()) + "()", result, 2, role.getModified());

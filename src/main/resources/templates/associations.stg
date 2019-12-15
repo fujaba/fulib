@@ -1,9 +1,13 @@
 
 
-emptySetDecl(roleName,otherClassName,roleType) ::=
+emptySetDecl(roleName,otherClassName,roleType,unmodifiable) ::=
 <<
+   <if(unmodifiable)>
+   public static final java.util.List\<<otherClassName>\> EMPTY_<roleName> = java.util.Collections.unmodifiableList(new <roleType>());
+   <else>
    public static final <roleType> EMPTY_<roleName> = new <roleType>()
    { @Override public boolean add(<otherClassName> value){ throw new UnsupportedOperationException("No direct add! Use xy.with<cap(roleName)>(obj)"); }};
+   <endif>
 >>
 
 
@@ -15,8 +19,23 @@ roleAttrDecl(roleName,roleType,toMany,otherClassName) ::=
 propertyDecl(roleName) ::=
 <<   public static final String PROPERTY_<roleName> = "<roleName>";>>
 
-getMethod(roleName,toMany,otherClassName,roleType) ::=
+getMethod(roleName,toMany,otherClassName,roleType,unmodifiable) ::=
 <<
+   <if(unmodifiable)>
+   public java.util.List\<<otherClassName>\> get<cap(roleName)>()
+   {
+      <if(toMany)>
+      if (this.<roleName> == null)
+      {
+         return EMPTY_<roleName>;
+      }
+
+      return java.util.Collections.unmodifiableList(this.<roleName>);
+      <else>
+      return this.<roleName>;
+      <endif>
+   }
+   <else>
    public <roleType> get<cap(roleName)>()
    {
       <if(toMany)>
@@ -30,6 +49,7 @@ getMethod(roleName,toMany,otherClassName,roleType) ::=
       return this.<roleName>;
       <endif>
    }
+   <endif>
 >>
 
 
