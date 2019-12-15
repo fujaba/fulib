@@ -232,6 +232,7 @@ public class Generator4ClassFile extends AbstractGenerator
          attrSet.add("class", attr.getClazz().getName());
          attrSet.add("type", attr.getType());
          attrSet.add("name", attr.getName());
+         attrSet.add("useEquals", !isPrimitive(attr.getType()));
          fragmentMap
             .add(Parser.METHOD + ":set" + capAttrName + "(" + attr.getType() + ")", attrSet.render(), 3,
                  attr.getModified());
@@ -271,6 +272,11 @@ public class Generator4ClassFile extends AbstractGenerator
          return "Double";
       }
       return attrType;
+   }
+
+   private static boolean isPrimitive(String attrType)
+   {
+      return !attrType.equals(getBoxType(attrType));
    }
 
    // --------------- Associations ---------------
