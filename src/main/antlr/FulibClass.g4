@@ -120,7 +120,30 @@ DOC_COMMENT: '/**' .*? '*/';
 BLOCK_COMMENT: '/*' .*? '*/';
 LINE_COMMENT: '//' .*? '\n';
 
-IDENTIFIER: [a-zA-Z_$][a-zA-Z0-9_$]*; // TODO JavaIdentifier
+IDENTIFIER: JavaLetter JavaLetterOrDigit*;
+
+// from https://github.com/antlr/grammars-v4/blob/b47fc22a9853d1565d1d0f53b283d46c89fc30e5/java8/Java8Lexer.g4#L450
+fragment JavaLetter:
+// these are the "java letters" below 0xFF
+[a-zA-Z$_]
+|
+// covers all characters above 0xFF which are not a surrogate
+~[\u0000-\u00FF\uD800-\uDBFF] {Character.isJavaIdentifierStart(_input.LA(-1))}?
+|
+// covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
+[\uD800-\uDBFF] [\uDC00-\uDFFF] {Character.isJavaIdentifierStart(Character.toCodePoint((char) _input.LA(-2), (char) _input.LA(-1)))}?
+;
+
+fragment JavaLetterOrDigit:
+// these are the "java letters or digits" below 0xFF
+[a-zA-Z0-9$_]
+|
+// covers all characters above 0xFF which are not a surrogate
+~[\u0000-\u00FF\uD800-\uDBFF] {Character.isJavaIdentifierPart(_input.LA(-1))}?
+|
+// covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
+[\uD800-\uDBFF] [\uDC00-\uDFFF] {Character.isJavaIdentifierPart(Character.toCodePoint((char) _input.LA(-2), (char) _input.LA(-1)))}?
+;
 
 WS: [ \n\r\t\p{White_Space}] -> skip;
 
