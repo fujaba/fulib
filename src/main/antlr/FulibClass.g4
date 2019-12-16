@@ -4,6 +4,8 @@ grammar FulibClass;
 
 file: packageDecl importDecl*;
 
+// --------------- Top-Level Declarations ---------------
+
 packageDecl: PACKAGE qualifiedName SEMI;
 importDecl: IMPORT qualifiedName (DOT STAR) SEMI;
 
@@ -15,13 +17,14 @@ classDecl: (modifier | annotation)* (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
 
 classBody: LBRACE member* RBRACE;
 
-member: field | method | classDecl;
+// --------------- Members ---------------
 
-modifier: 'todo'; // TODO
-annotation: AT qualifiedName (LPAREN balanced RPAREN)?;
+member: field | method | classDecl;
 
 field: 'todo'; // TODO
 method: 'todo'; // TODO
+
+// --------------- Types ---------------
 
 typeParam: annotation* IDENTIFIER (EXTENDS type (AMP type)*)?;
 typeArg: QMARK (EXTENDS type | SUPER type)? | type;
@@ -30,6 +33,11 @@ type: annotation* (primitiveType | referenceType);
 
 primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
 referenceType: qualifiedName (RANGLE typeArg (COMMA typeArg)* LANGLE)?;
+
+// --------------- Misc. ---------------
+
+modifier: 'todo'; // TODO
+annotation: AT qualifiedName (LPAREN balanced RPAREN)?;
 
 qualifiedName: IDENTIFIER (DOT IDENTIFIER)*;
 
