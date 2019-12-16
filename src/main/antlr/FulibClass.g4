@@ -37,7 +37,7 @@ method: (modifier | annotation)* typeParamList? type IDENTIFIER
         parameterList
         (THROWS type (COMMA type)*)?
         (DEFAULT expr)?
-        balancedBraces;
+        (balancedBraces | SEMI);
 
 parameterList: LPAREN (parameter (COMMA parameter)*)? RPAREN;
 parameter: (modifier | annotation)* type IDENTIFIER;
