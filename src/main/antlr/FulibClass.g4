@@ -2,7 +2,7 @@ grammar FulibClass;
 
 // =============== Parser ===============
 
-file: packageDecl? importDecl* classDecl* EOF;
+file: packageDecl? (importDecl | SEMI)* (classDecl | SEMI)* EOF;
 
 // --------------- Top-Level Declarations ---------------
 
@@ -15,7 +15,7 @@ classDecl: (modifier | annotation)* (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            (IMPLEMENTS type (COMMA type)*)?
            classBody;
 
-classBody: LBRACE enumConstants? member* RBRACE;
+classBody: LBRACE (enumConstants (SEMI (member | SEMI)*)? | (member | SEMI)*) RBRACE;
 
 // --------------- Members ---------------
 
@@ -28,7 +28,7 @@ constructor: (modifier | annotation)* typeParamList? IDENTIFIER
              (THROWS type (COMMA type)*)?
              balancedBraces;
 
-enumConstants: enumConstant (COMMA enumConstant)* SEMI;
+enumConstants: enumConstant (COMMA enumConstant)*;
 enumConstant: annotation* IDENTIFIER balancedParens?;
 
 field: (modifier | annotation)* type IDENTIFIER arraySuffix* (EQ expr)? SEMI;
