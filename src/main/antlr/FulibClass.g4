@@ -29,7 +29,7 @@ constructor: (modifier | annotation)* typeParamList? IDENTIFIER
              balancedBraces;
 
 enumConstants: enumConstant (COMMA enumConstant)*;
-enumConstant: annotation* IDENTIFIER balancedParens?;
+enumConstant: annotation* IDENTIFIER balancedParens? balancedBraces?;
 
 field: (modifier | annotation)* type IDENTIFIER arraySuffix* (EQ expr)? SEMI;
 
