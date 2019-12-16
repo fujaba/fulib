@@ -2,12 +2,15 @@ package org.fulib;
 
 import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
+import org.fulib.parser.FragmentMapBuilder;
+
+import java.io.IOException;
 
 public class ViewFragments
 {
-   public static void main(String[] args)
+   public static void main(String[] args) throws IOException
    {
-      final FileFragmentMap map = Parser.parse(args[0]);
+      final FileFragmentMap map = FragmentMapBuilder.parse(args[0]);
 
       System.out.println("/////////////// " + map.getFileName() + " ///////////////");
 
