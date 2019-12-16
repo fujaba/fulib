@@ -55,7 +55,7 @@ referenceType: qualifiedName (LANGLE (typeArg (COMMA typeArg)*)? RANGLE)?;
 
 // --------------- Misc. ---------------
 
-modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT | VOLATILE | SYNCHRONIZED | NATIVE | STRICTFP;
+modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT | VOLATILE | SYNCHRONIZED | NATIVE | STRICTFP | DEFAULT;
 annotation: AT qualifiedName balancedParens?;
 
 expr: (balancedBraces | ~SEMI)*;
