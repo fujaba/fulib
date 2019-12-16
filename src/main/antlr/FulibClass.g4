@@ -1,3 +1,8 @@
+// tested against
+// https://github.com/antlr/grammars-v4/blob/b47fc22a9853d1565d1d0f53b283d46c89fc30e5/java/examples/AllInOne7.java
+// and
+// https://github.com/antlr/grammars-v4/blob/b47fc22a9853d1565d1d0f53b283d46c89fc30e5/java/examples/AllInOne8.java
+
 grammar FulibClass;
 
 // =============== Parser ===============
