@@ -1,11 +1,9 @@
 package org.fulib.parser;
 
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.antlr.v4.runtime.tree.SyntaxTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.fulib.Parser;
 import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
@@ -48,9 +46,19 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    // =============== Methods ===============
 
-   private void addCodeFragment(String key, SyntaxTree ctx)
+   private void addCodeFragment(String key, ParserRuleContext ctx)
    {
-      this.addCodeFragment(key, ctx.getSourceInterval());
+      this.addCodeFragment(key, ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex());
+   }
+
+   private void addCodeFragment(String key, TerminalNode node)
+   {
+      this.addCodeFragment(key, node.getSymbol());
+   }
+
+   private void addCodeFragment(String key, Token symbol)
+   {
+      this.addCodeFragment(key, symbol.getStartIndex(), symbol.getStopIndex());
    }
 
    private void addCodeFragment(String key, int startPos, int endPos)
