@@ -112,6 +112,14 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    }
 
    @Override
+   public void enterFieldMember(FieldMemberContext ctx)
+   {
+      final MemberContext memberCtx = (MemberContext) ctx.parent;
+      final String fieldName = ctx.IDENTIFIER().getText();
+      this.addCodeFragment(Parser.ATTRIBUTE + ":" + fieldName, memberCtx);
+   }
+
+   @Override
    public void exitClassDecl(ClassDeclContext ctx)
    {
       this.addCodeFragment(Parser.CLASS_END, ctx.classMember().classBody().RBRACE());
