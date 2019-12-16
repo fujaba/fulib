@@ -25,8 +25,9 @@ method: 'todo'; // TODO
 
 typeParam: IDENTIFIER (EXTENDS type (AMP type)*)?;
 
-type: referenceType; // TODO primitive
+type: primitiveType | referenceType;
 
+primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
 referenceType: qualifiedName (RANGLE type (COMMA type)* LANGLE)?;
 
 qualifiedName: IDENTIFIER (DOT IDENTIFIER)*;
@@ -59,6 +60,16 @@ ENUM: 'enum';
 INTERFACE: 'interface';
 EXTENDS: 'extends';
 IMPLEMENTS: 'implements';
+
+VOID: 'void';
+BOOLEAN: 'boolean';
+BYTE: 'byte';
+SHORT: 'short';
+CHAR: 'char';
+INT: 'int';
+LONG: 'long';
+FLOAT: 'float';
+DOUBLE: 'double';
 
 IDENTIFIER: [a-zA-Z_$][a-zA-Z0-9_$]*; // TODO JavaIdentifier
 
