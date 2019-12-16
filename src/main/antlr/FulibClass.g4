@@ -7,7 +7,7 @@ file: packageDecl importDecl*;
 packageDecl: PACKAGE qualifiedName SEMI;
 importDecl: IMPORT qualifiedName (DOT STAR) SEMI;
 
-classDecl: (modifier | attribute)* (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
+classDecl: (modifier | annotation)* (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            (LANGLE typeParam (COMMA typeParam)* RANGLE)?
            (EXTENDS type)?
            (IMPLEMENTS type (COMMA type)*)?
@@ -18,14 +18,14 @@ classBody: LBRACE member* RBRACE;
 member: field | method | classDecl;
 
 modifier: 'todo'; // TODO
-attribute: AT qualifiedName (LPAREN balanced RPAREN)?;
+annotation: AT qualifiedName (LPAREN balanced RPAREN)?;
 
 field: 'todo'; // TODO
 method: 'todo'; // TODO
 
-typeParam: IDENTIFIER (EXTENDS type (AMP type)*)?;
+typeParam: annotation* IDENTIFIER (EXTENDS type (AMP type)*)?;
 
-type: primitiveType | referenceType;
+type: annotation* (primitiveType | referenceType);
 
 primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
 referenceType: qualifiedName (RANGLE type (COMMA type)* LANGLE)?;
