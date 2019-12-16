@@ -24,11 +24,12 @@ field: 'todo'; // TODO
 method: 'todo'; // TODO
 
 typeParam: annotation* IDENTIFIER (EXTENDS type (AMP type)*)?;
+typeArg: QMARK (EXTENDS type | SUPER type)? | type;
 
 type: annotation* (primitiveType | referenceType);
 
 primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
-referenceType: qualifiedName (RANGLE type (COMMA type)* LANGLE)?;
+referenceType: qualifiedName (RANGLE typeArg (COMMA typeArg)* LANGLE)?;
 
 qualifiedName: IDENTIFIER (DOT IDENTIFIER)*;
 
@@ -44,6 +45,7 @@ COMMA: ',';
 SEMI: ';';
 AT: '@';
 AMP: '&';
+QMARK: '?';
 LPAREN: '(';
 RPAREN: ')';
 LBRACE: '{';
@@ -60,6 +62,7 @@ ENUM: 'enum';
 INTERFACE: 'interface';
 EXTENDS: 'extends';
 IMPLEMENTS: 'implements';
+SUPER: 'super';
 
 VOID: 'void';
 BOOLEAN: 'boolean';
