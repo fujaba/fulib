@@ -7,7 +7,7 @@ file: packageDecl? importDecl* classDecl* EOF;
 // --------------- Top-Level Declarations ---------------
 
 packageDecl: PACKAGE qualifiedName SEMI;
-importDecl: IMPORT qualifiedName (DOT STAR)? SEMI;
+importDecl: IMPORT STATIC? qualifiedName (DOT STAR)? SEMI;
 
 classDecl: (modifier | annotation)* (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            typeParamList?
