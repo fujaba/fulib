@@ -20,6 +20,6 @@ public class ViewFragments
          System.out.print(fragment.getText());
       }
 
-      System.out.println();
+      System.out.println("/////////////// EOF ///////////////");
    }
 }
