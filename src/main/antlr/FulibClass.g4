@@ -85,3 +85,5 @@ DOUBLE: 'double';
 IDENTIFIER: [a-zA-Z_$][a-zA-Z0-9_$]*; // TODO JavaIdentifier
 
 WS: [ \n\r\t\p{White_Space}] -> skip;
+
+OTHER: .+?;
