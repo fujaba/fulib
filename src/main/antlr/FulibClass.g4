@@ -21,11 +21,12 @@ classBody: LBRACE member* RBRACE;
 
 member: field | method | classDecl;
 
-field: 'todo'; // TODO
+field: (modifier | annotation)* type IDENTIFIER (EQ expr)? SEMI;
 
 method: (modifier | annotation)* typeParamList? type IDENTIFIER
         parameterList
         (THROWS type (COMMA type)*)?
+        (DEFAULT expr)?
         balancedBraces;
 
 parameterList: LPAREN parameter (COMMA parameter)* RPAREN;
@@ -47,6 +48,8 @@ referenceType: qualifiedName (RANGLE typeArg (COMMA typeArg)* LANGLE)?;
 modifier: 'todo'; // TODO
 annotation: AT qualifiedName balancedParens?;
 
+expr: (balancedBraces | ~SEMI)*;
+
 qualifiedName: IDENTIFIER (DOT IDENTIFIER)*;
 
 balancedParens: LPAREN (~RPAREN | balancedParens)* RPAREN;
@@ -63,6 +66,7 @@ SEMI: ';';
 AT: '@';
 AMP: '&';
 QMARK: '?';
+EQ: '=';
 LPAREN: '(';
 RPAREN: ')';
 LBRACE: '{';
@@ -81,6 +85,7 @@ EXTENDS: 'extends';
 IMPLEMENTS: 'implements';
 SUPER: 'super';
 THROWS: 'throws';
+DEFAULT: 'default';
 
 VOID: 'void';
 BOOLEAN: 'boolean';
