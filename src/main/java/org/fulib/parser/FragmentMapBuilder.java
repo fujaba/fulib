@@ -10,6 +10,8 @@ import org.fulib.classmodel.FileFragmentMap;
 
 import java.io.IOException;
 
+import static org.fulib.parser.FulibClassParser.*;
+
 public class FragmentMapBuilder extends FulibClassBaseListener
 {
    // =============== Fields ===============
@@ -36,7 +38,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final FulibClassLexer lexer = new FulibClassLexer(input);
       final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
 
-      final FulibClassParser.FileContext context = parser.file();
+      final FileContext context = parser.file();
 
       final FileFragmentMap map = new FileFragmentMap(fileName);
       final FragmentMapBuilder builder = new FragmentMapBuilder(input, map);
@@ -85,13 +87,13 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    }
 
    @Override
-   public void enterPackageDecl(FulibClassParser.PackageDeclContext ctx)
+   public void enterPackageDecl(PackageDeclContext ctx)
    {
       this.addCodeFragment(Parser.PACKAGE, ctx);
    }
 
    @Override
-   public void enterImportDecl(FulibClassParser.ImportDeclContext ctx)
+   public void enterImportDecl(ImportDeclContext ctx)
    {
       String typeName = ctx.qualifiedName().getText();
       if (ctx.STAR() != null)
@@ -103,14 +105,14 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    }
 
    @Override
-   public void enterClassDecl(FulibClassParser.ClassDeclContext ctx)
+   public void enterClassDecl(ClassDeclContext ctx)
    {
       this.addCodeFragment(Parser.CLASS, ctx.getStart().getStartIndex(),
                            ctx.classMember().classBody().LBRACE().getSymbol().getStopIndex());
    }
 
    @Override
-   public void exitClassDecl(FulibClassParser.ClassDeclContext ctx)
+   public void exitClassDecl(ClassDeclContext ctx)
    {
       this.addCodeFragment(Parser.CLASS_END, ctx.classMember().classBody().RBRACE());
    }
