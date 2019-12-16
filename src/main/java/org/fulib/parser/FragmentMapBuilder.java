@@ -3,9 +3,9 @@ package org.fulib.parser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.antlr.v4.runtime.tree.SyntaxTree;
 import org.fulib.Parser;
 import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
@@ -48,13 +48,20 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    // =============== Methods ===============
 
-   private void addCodeFragment(String key, ParserRuleContext ctx)
+   private void addCodeFragment(String key, SyntaxTree ctx)
    {
-      this.addCodeFragment(key, ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex());
+      this.addCodeFragment(key, ctx.getSourceInterval());
    }
 
    private void addCodeFragment(String key, int startPos, int endPos)
    {
+      this.addCodeFragment(key, Interval.of(startPos, endPos));
+   }
+
+   private void addCodeFragment(String key, Interval pos)
+   {
+      final int startPos = pos.a;
+      final int endPos = pos.b;
       if (startPos - this.lastFragmentEndPos > 1)
       {
          final String gapText = this.input.getText(Interval.of(this.lastFragmentEndPos + 1, startPos - 1));
@@ -62,8 +69,8 @@ public class FragmentMapBuilder extends FulibClassBaseListener
          this.map.add(gap);
       }
 
-      final String text = this.input.getText(Interval.of(startPos, endPos));
-      CodeFragment codeFragment = new CodeFragment().setKey(key).setText(text);
+      final String text = this.input.getText(pos);
+      final CodeFragment codeFragment = new CodeFragment().setKey(key).setText(text);
       this.map.add(codeFragment);
 
       this.lastFragmentEndPos = endPos;
