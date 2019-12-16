@@ -15,7 +15,7 @@ classDecl: (modifier | annotation)* (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            (IMPLEMENTS type (COMMA type)*)?
            classBody;
 
-classBody: LBRACE member* RBRACE;
+classBody: LBRACE enumConstants? member* RBRACE;
 
 // --------------- Members ---------------
 
@@ -27,6 +27,9 @@ constructor: (modifier | annotation)* typeParamList? IDENTIFIER
              parameterList
              (THROWS type (COMMA type)*)?
              balancedBraces;
+
+enumConstants: enumConstant (COMMA enumConstant)* SEMI;
+enumConstant: annotation* IDENTIFIER balancedParens?;
 
 field: (modifier | annotation)* type IDENTIFIER (EQ expr)? SEMI;
 
