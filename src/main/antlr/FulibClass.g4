@@ -40,7 +40,7 @@ method: (modifier | annotation)* typeParamList? type IDENTIFIER
         (balancedBraces | SEMI);
 
 parameterList: LPAREN (parameter (COMMA parameter)*)? RPAREN;
-parameter: (modifier | annotation)* type IDENTIFIER;
+parameter: (modifier | annotation)* type ELLIPSIS? IDENTIFIER;
 
 // --------------- Types ---------------
 
@@ -77,6 +77,7 @@ AT: '@';
 AMP: '&';
 QMARK: '?';
 EQ: '=';
+ELLIPSIS: '...';
 LPAREN: '(';
 RPAREN: ')';
 LBRACE: '{';
