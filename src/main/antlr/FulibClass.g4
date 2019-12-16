@@ -51,7 +51,7 @@ typeArg: QMARK (EXTENDS type | SUPER type)? | type;
 type: annotation* (primitiveType | referenceType);
 
 primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
-referenceType: qualifiedName (RANGLE (typeArg (COMMA typeArg)*)? LANGLE)?;
+referenceType: qualifiedName (LANGLE (typeArg (COMMA typeArg)*)? RANGLE)?;
 
 // --------------- Misc. ---------------
 
@@ -81,8 +81,8 @@ LPAREN: '(';
 RPAREN: ')';
 LBRACE: '{';
 RBRACE: '}';
-RANGLE: '<';
-LANGLE: '>';
+LANGLE: '<';
+RANGLE: '>';
 
 // --------------- Keywords ---------------
 
