@@ -19,7 +19,14 @@ classBody: LBRACE member* RBRACE;
 
 // --------------- Members ---------------
 
-member: field | method | classDecl;
+member: initializer | constructor | field | method | classDecl;
+
+initializer: STATIC? balancedBraces;
+
+constructor: (modifier | annotation)* typeParamList? IDENTIFIER
+             parameterList
+             (THROWS type (COMMA type)*)?
+             balancedBraces;
 
 field: (modifier | annotation)* type IDENTIFIER (EQ expr)? SEMI;
 
@@ -86,6 +93,8 @@ IMPLEMENTS: 'implements';
 SUPER: 'super';
 THROWS: 'throws';
 DEFAULT: 'default';
+
+STATIC: 'static';
 
 VOID: 'void';
 BOOLEAN: 'boolean';
