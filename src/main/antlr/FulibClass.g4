@@ -37,11 +37,12 @@ referenceType: qualifiedName (RANGLE typeArg (COMMA typeArg)* LANGLE)?;
 // --------------- Misc. ---------------
 
 modifier: 'todo'; // TODO
-annotation: AT qualifiedName (LPAREN balanced RPAREN)?;
+annotation: AT qualifiedName balancedParens?;
 
 qualifiedName: IDENTIFIER (DOT IDENTIFIER)*;
 
-balanced: 'todo'; // TODO
+balancedParens: LPAREN (~RPAREN | balancedParens)* RPAREN;
+balancedBraces: LBRACE (~RBRACE | balancedBraces)* RBRACE;
 
 // =============== Lexer ===============
 
