@@ -41,7 +41,7 @@ method: (modifier | annotation)* typeParamList? type IDENTIFIER
         (balancedBraces | SEMI);
 
 parameterList: LPAREN (parameter (COMMA parameter)*)? RPAREN;
-parameter: (modifier | annotation)* type ELLIPSIS? IDENTIFIER;
+parameter: (modifier | annotation)* type ELLIPSIS? (IDENTIFIER | THIS);
 
 // --------------- Types ---------------
 
@@ -123,6 +123,8 @@ INT: 'int';
 LONG: 'long';
 FLOAT: 'float';
 DOUBLE: 'double';
+
+THIS: 'this';
 
 DOC_COMMENT: '/**' .*? '*/' -> channel(2);
 BLOCK_COMMENT: '/*' .*? '*/' -> channel(2);
