@@ -116,9 +116,9 @@ LONG: 'long';
 FLOAT: 'float';
 DOUBLE: 'double';
 
-DOC_COMMENT: '/**' .*? '*/';
-BLOCK_COMMENT: '/*' .*? '*/';
-LINE_COMMENT: '//' .*? '\n';
+DOC_COMMENT: '/**' .*? '*/' -> channel(2);
+BLOCK_COMMENT: '/*' .*? '*/' -> channel(2);
+LINE_COMMENT: '//' .*? '\n' -> channel(2);
 
 IDENTIFIER: JavaLetter JavaLetterOrDigit*;
 
