@@ -59,8 +59,8 @@ expr: (balancedBraces | ~SEMI)*;
 
 qualifiedName: IDENTIFIER (DOT IDENTIFIER)*;
 
-balancedParens: LPAREN (~RPAREN | balancedParens)* RPAREN;
-balancedBraces: LBRACE (~RBRACE | balancedBraces)* RBRACE;
+balancedParens: LPAREN (~(LPAREN | RPAREN) | balancedParens)* RPAREN;
+balancedBraces: LBRACE (~(LBRACE | RBRACE) | balancedBraces)* RBRACE;
 
 // =============== Lexer ===============
 
