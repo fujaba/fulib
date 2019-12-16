@@ -150,23 +150,38 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       this.addCodeFragment(signature.toString(), memberCtx);
    }
 
-   private static void writeParams(StringBuilder signature, ParameterListContext paramCtx)
+   private static void writeParams(StringBuilder signature, ParameterListContext paramsCtx)
    {
-      final List<ParameterContext> params = paramCtx.parameter();
-      if (params.isEmpty())
+      signature.append('(');
+      for (final ParameterContext paramCtx : paramsCtx.parameter())
       {
-         signature.append("()");
-         return;
+         writeType(paramCtx, signature);
+         signature.append(',');
       }
 
-      signature.append('(');
-      writeType(params.get(0).type(), signature);
-      for (int i = 1; i < params.size(); i++)
+      final int lastIndex = signature.length() - 1;
+      if (signature.charAt(lastIndex) == ',')
       {
-         signature.append(',');
-         writeType(params.get(i).type(), signature);
+         signature.setCharAt(lastIndex, ')');
       }
-      signature.append(')');
+      else
+      {
+         signature.append(')');
+      }
+   }
+
+   private static void writeType(ParameterContext paramCtx, StringBuilder builder)
+   {
+      if (paramCtx.THIS() != null)
+      {
+         // don't include annotated receiver type in signature
+         return;
+      }
+      writeType(paramCtx.type(), builder);
+      if (paramCtx.ELLIPSIS() != null)
+      {
+         builder.append("...");
+      }
    }
 
    private static void writeType(TypeContext typeCtx, StringBuilder builder)
@@ -190,8 +205,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    private static String getType(ReferenceTypeContext referenceTypeCtx)
    {
-      // TODO should use the fully qualified name?
-      return referenceTypeCtx.qualifiedName().getStop().getText();
+      return referenceTypeCtx.getText();
    }
 
    @Override
