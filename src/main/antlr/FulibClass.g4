@@ -10,7 +10,7 @@ packageDecl: PACKAGE qualifiedName SEMI;
 importDecl: IMPORT qualifiedName (DOT STAR) SEMI;
 
 classDecl: (modifier | annotation)* (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
-           (LANGLE typeParam (COMMA typeParam)* RANGLE)?
+           typeParamList?
            (EXTENDS type)?
            (IMPLEMENTS type (COMMA type)*)?
            classBody;
@@ -22,10 +22,18 @@ classBody: LBRACE member* RBRACE;
 member: field | method | classDecl;
 
 field: 'todo'; // TODO
-method: 'todo'; // TODO
+
+method: (modifier | annotation)* typeParamList? type IDENTIFIER
+        parameterList
+        (THROWS type (COMMA type)*)?
+        balancedBraces;
+
+parameterList: LPAREN parameter (COMMA parameter)* RPAREN;
+parameter: (modifier | annotation)* type IDENTIFIER;
 
 // --------------- Types ---------------
 
+typeParamList: LANGLE typeParam (COMMA typeParam)* RANGLE;
 typeParam: annotation* IDENTIFIER (EXTENDS type (AMP type)*)?;
 typeArg: QMARK (EXTENDS type | SUPER type)? | type;
 
@@ -72,6 +80,7 @@ INTERFACE: 'interface';
 EXTENDS: 'extends';
 IMPLEMENTS: 'implements';
 SUPER: 'super';
+THROWS: 'throws';
 
 VOID: 'void';
 BOOLEAN: 'boolean';
