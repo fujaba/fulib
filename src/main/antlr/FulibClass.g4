@@ -2,7 +2,7 @@ grammar FulibClass;
 
 // =============== Parser ===============
 
-file: packageDecl importDecl* classDecl*;
+file: packageDecl? importDecl* classDecl* EOF;
 
 // --------------- Top-Level Declarations ---------------
 
