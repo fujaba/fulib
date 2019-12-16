@@ -48,7 +48,7 @@ typeParamList: LANGLE (typeParam (COMMA typeParam)*)? RANGLE;
 typeParam: annotation* IDENTIFIER (EXTENDS type (AMP type)*)?;
 typeArg: QMARK (EXTENDS type | SUPER type)? | type;
 
-type: annotation* (primitiveType | referenceType);
+type: annotation* (primitiveType | referenceType) (annotation* LBRACKET RBRACKET)*;
 
 primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
 referenceType: qualifiedName (LANGLE (typeArg (COMMA typeArg)*)? RANGLE)?;
@@ -83,6 +83,8 @@ LBRACE: '{';
 RBRACE: '}';
 LANGLE: '<';
 RANGLE: '>';
+LBRACKET: '[';
+RBRACKET: ']';
 
 // --------------- Keywords ---------------
 
