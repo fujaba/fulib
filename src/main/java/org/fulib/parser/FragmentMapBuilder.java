@@ -9,6 +9,7 @@ import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.fulib.parser.FulibClassParser.*;
 
@@ -117,6 +118,80 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final MemberContext memberCtx = (MemberContext) ctx.parent;
       final String fieldName = ctx.IDENTIFIER().getText();
       this.addCodeFragment(Parser.ATTRIBUTE + ":" + fieldName, memberCtx);
+   }
+
+   @Override
+   public void enterConstructorMember(ConstructorMemberContext ctx)
+   {
+      final MemberContext memberCtx = (MemberContext) ctx.parent;
+      final String className = "\"FOO\"";
+
+      final StringBuilder signature = new StringBuilder();
+      signature.append(Parser.CONSTRUCTOR);
+      signature.append(':');
+      signature.append(className);
+      writeParams(signature, ctx.parameterList());
+
+      this.addCodeFragment(signature.toString(), memberCtx);
+   }
+
+   @Override
+   public void enterMethodMember(MethodMemberContext ctx)
+   {
+      final MemberContext memberCtx = (MemberContext) ctx.parent;
+      final String methodName = ctx.IDENTIFIER().getText();
+
+      final StringBuilder signature = new StringBuilder();
+      signature.append(Parser.METHOD);
+      signature.append(':');
+      signature.append(methodName);
+      writeParams(signature, ctx.parameterList());
+
+      this.addCodeFragment(signature.toString(), memberCtx);
+   }
+
+   private static void writeParams(StringBuilder signature, ParameterListContext paramCtx)
+   {
+      final List<ParameterContext> params = paramCtx.parameter();
+      if (params.isEmpty())
+      {
+         signature.append("()");
+         return;
+      }
+
+      signature.append('(');
+      writeType(params.get(0).type(), signature);
+      for (int i = 1; i < params.size(); i++)
+      {
+         signature.append(',');
+         writeType(params.get(i).type(), signature);
+      }
+      signature.append(')');
+   }
+
+   private static void writeType(TypeContext typeCtx, StringBuilder builder)
+   {
+      final String baseType =
+         typeCtx.primitiveType() != null ? getType(typeCtx.primitiveType()) : getType(typeCtx.referenceType());
+
+      builder.append(baseType);
+
+      final int arrayDimensions = typeCtx.arraySuffix().size();
+      for (int i = 0; i < arrayDimensions; i++)
+      {
+         builder.append("[]");
+      }
+   }
+
+   private static String getType(PrimitiveTypeContext primitiveTypeCtx)
+   {
+      return primitiveTypeCtx.getText();
+   }
+
+   private static String getType(ReferenceTypeContext referenceTypeCtx)
+   {
+      // TODO should use the fully qualified name?
+      return referenceTypeCtx.qualifiedName().getStop().getText();
    }
 
    @Override
