@@ -14,7 +14,8 @@ file: packageDecl? (importDecl | SEMI)* (classDecl | SEMI)* EOF;
 packageDecl: PACKAGE qualifiedName SEMI;
 importDecl: IMPORT STATIC? qualifiedName (DOT STAR)? SEMI;
 
-classDecl: (modifier | annotation)* (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
+classDecl: (modifier | annotation)* classMember;
+classMember: (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            typeParamList?
            (EXTENDS type)?
            (IMPLEMENTS type (COMMA type)*)?
@@ -24,11 +25,12 @@ classBody: LBRACE (enumConstants (SEMI (member | SEMI)*)? | (member | SEMI)*) RB
 
 // --------------- Members ---------------
 
-member: initializer | constructor | field | method | classDecl;
+member: initializer | (modifier | annotation)* (constructorMember | fieldMember | methodMember | classMember);
 
 initializer: STATIC? balancedBraces;
 
-constructor: (modifier | annotation)* typeParamList? IDENTIFIER
+// constructor: (modifier | annotation)* constructorMember;
+constructorMember: typeParamList? IDENTIFIER
              parameterList
              (THROWS type (COMMA type)*)?
              balancedBraces;
@@ -36,9 +38,11 @@ constructor: (modifier | annotation)* typeParamList? IDENTIFIER
 enumConstants: enumConstant (COMMA enumConstant)*;
 enumConstant: annotation* IDENTIFIER balancedParens? balancedBraces?;
 
-field: (modifier | annotation)* type IDENTIFIER arraySuffix* (EQ expr)? SEMI;
+// field: (modifier | annotation)* fieldMember;
+fieldMember: type IDENTIFIER arraySuffix* (EQ expr)? SEMI;
 
-method: (modifier | annotation)* typeParamList? type IDENTIFIER
+// method: (modifier | annotation)* methodMember;
+methodMember: typeParamList? type IDENTIFIER
         parameterList
         arraySuffix*
         (THROWS type (COMMA type)*)?
