@@ -82,6 +82,10 @@ LONG: 'long';
 FLOAT: 'float';
 DOUBLE: 'double';
 
+DOC_COMMENT: '/**' .*? '*/';
+BLOCK_COMMENT: '/*' .*? '*/';
+LINE_COMMENT: '//' .*? '\n';
+
 IDENTIFIER: [a-zA-Z_$][a-zA-Z0-9_$]*; // TODO JavaIdentifier
 
 WS: [ \n\r\t\p{White_Space}] -> skip;
