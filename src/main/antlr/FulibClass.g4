@@ -36,19 +36,19 @@ method: (modifier | annotation)* typeParamList? type IDENTIFIER
         (DEFAULT expr)?
         balancedBraces;
 
-parameterList: LPAREN parameter (COMMA parameter)* RPAREN;
+parameterList: LPAREN (parameter (COMMA parameter)*)? RPAREN;
 parameter: (modifier | annotation)* type IDENTIFIER;
 
 // --------------- Types ---------------
 
-typeParamList: LANGLE typeParam (COMMA typeParam)* RANGLE;
+typeParamList: LANGLE (typeParam (COMMA typeParam)*)? RANGLE;
 typeParam: annotation* IDENTIFIER (EXTENDS type (AMP type)*)?;
 typeArg: QMARK (EXTENDS type | SUPER type)? | type;
 
 type: annotation* (primitiveType | referenceType);
 
 primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
-referenceType: qualifiedName (RANGLE typeArg (COMMA typeArg)* LANGLE)?;
+referenceType: qualifiedName (RANGLE (typeArg (COMMA typeArg)*)? LANGLE)?;
 
 // --------------- Misc. ---------------
 
