@@ -93,4 +93,17 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
       this.addCodeFragment(Parser.IMPORT + ":" + typeName, ctx);
    }
+
+   @Override
+   public void enterClassDecl(FulibClassParser.ClassDeclContext ctx)
+   {
+      this.addCodeFragment(Parser.CLASS, ctx.getStart().getStartIndex(),
+                           ctx.classMember().classBody().LBRACE().getSymbol().getStopIndex());
+   }
+
+   @Override
+   public void exitClassDecl(FulibClassParser.ClassDeclContext ctx)
+   {
+      this.addCodeFragment(Parser.CLASS_END, ctx.classMember().classBody().RBRACE());
+   }
 }
