@@ -17,8 +17,8 @@ importDecl: IMPORT STATIC? qualifiedName (DOT STAR)? SEMI;
 classDecl: (modifier | annotation)* classMember;
 classMember: (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            typeParamList?
-           (EXTENDS type)?
-           (IMPLEMENTS type (COMMA type)*)?
+           (EXTENDS annotatedType)?
+           (IMPLEMENTS annotatedType (COMMA annotatedType)*)?
            classBody;
 
 classBody: LBRACE (enumConstants (SEMI (member | SEMI)*)? | (member | SEMI)*) RBRACE;
@@ -32,7 +32,7 @@ initializer: STATIC? balancedBraces;
 // constructor: (modifier | annotation)* constructorMember;
 constructorMember: typeParamList? IDENTIFIER
              parameterList
-             (THROWS type (COMMA type)*)?
+             (THROWS annotatedType (COMMA annotatedType)*)?
              balancedBraces;
 
 enumConstants: enumConstant (COMMA enumConstant)*;
@@ -42,10 +42,10 @@ enumConstant: annotation* IDENTIFIER balancedParens? balancedBraces?;
 fieldMember: type IDENTIFIER arraySuffix* (EQ expr)? SEMI;
 
 // method: (modifier | annotation)* methodMember;
-methodMember: typeParamList? type IDENTIFIER
+methodMember: (typeParamList annotatedType | type) IDENTIFIER
         parameterList
         arraySuffix*
-        (THROWS type (COMMA type)*)?
+        (THROWS annotatedType (COMMA annotatedType)*)?
         (DEFAULT expr)?
         (balancedBraces | SEMI);
 
@@ -55,10 +55,11 @@ parameter: (modifier | annotation)* type ELLIPSIS? (IDENTIFIER | THIS);
 // --------------- Types ---------------
 
 typeParamList: LANGLE (typeParam (COMMA typeParam)*)? RANGLE;
-typeParam: annotation* IDENTIFIER (EXTENDS type (AMP type)*)?;
-typeArg: QMARK (EXTENDS type | SUPER type)? | type;
+typeParam: annotation* IDENTIFIER (EXTENDS annotatedType (AMP annotatedType)*)?;
+typeArg: annotation* (QMARK (EXTENDS annotatedType | SUPER annotatedType)? | type);
 
-type: annotation* (primitiveType | referenceType) arraySuffix*;
+type: (primitiveType | referenceType) arraySuffix*;
+annotatedType: annotation* type;
 arraySuffix: annotation* LBRACKET RBRACKET;
 
 primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
