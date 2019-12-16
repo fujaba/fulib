@@ -2,12 +2,12 @@ grammar FulibClass;
 
 // =============== Parser ===============
 
-file: packageDecl importDecl*;
+file: packageDecl importDecl* classDecl*;
 
 // --------------- Top-Level Declarations ---------------
 
 packageDecl: PACKAGE qualifiedName SEMI;
-importDecl: IMPORT qualifiedName (DOT STAR) SEMI;
+importDecl: IMPORT qualifiedName (DOT STAR)? SEMI;
 
 classDecl: (modifier | annotation)* (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            typeParamList?
