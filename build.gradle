@@ -104,6 +104,7 @@ if (JavaVersion.current().java11Compatible) {
 
 test {
    useJUnitPlatform()
+   testLogging.showStandardStreams = true
 
    workingDir = temporaryDir
    outputs.dir workingDir
