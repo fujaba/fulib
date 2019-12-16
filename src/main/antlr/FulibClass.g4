@@ -52,7 +52,7 @@ referenceType: qualifiedName (RANGLE typeArg (COMMA typeArg)* LANGLE)?;
 
 // --------------- Misc. ---------------
 
-modifier: 'todo'; // TODO
+modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT | VOLATILE | SYNCHRONIZED | NATIVE | STRICTFP;
 annotation: AT qualifiedName balancedParens?;
 
 expr: (balancedBraces | ~SEMI)*;
@@ -94,7 +94,17 @@ SUPER: 'super';
 THROWS: 'throws';
 DEFAULT: 'default';
 
+PUBLIC: 'public';
+PROTECTED: 'protected';
+PRIVATE: 'private';
+ABSTRACT: 'abstract';
 STATIC: 'static';
+FINAL: 'final';
+TRANSIENT: 'transient';
+VOLATILE: 'volatile';
+SYNCHRONIZED: 'synchronized';
+NATIVE: 'native';
+STRICTFP: 'strictfp';
 
 VOID: 'void';
 BOOLEAN: 'boolean';
