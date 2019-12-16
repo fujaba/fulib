@@ -108,3 +108,63 @@ attrWithout(class, name, listType, baseType) ::= <<
       return this;
    }
 >>
+
+attrSetAllArray(class, name, listType, baseType) ::= <<
+   public <class> set<name; format="cap">(<baseType>... value)
+   {
+      return this.set<name; format="cap">(Arrays.asList(value));
+   }
+>>
+
+attrSetAllColl(class, name, listType, baseType) ::= <<
+   public <class> set<name; format="cap">(Collection\<? extends <baseType>\> value)
+   {
+      if (value == null)
+      {
+         if (this.<name> != null)
+         {
+            for (final <baseType> oldItem : this.<name>)
+            {
+               this.firePropertyChange(PROPERTY_<name>, oldItem, null);
+            }
+         }
+         this.<name> = null;
+         return this;
+      }
+
+      if (this.<name> == null)
+      {
+         this.<name> = new <listType>\<>(value);
+         for (final <baseType> newItem : value)
+         {
+            this.firePropertyChange(PROPERTY_<name>, null, newItem);
+         }
+         return this;
+      }
+
+      if (value.equals(this.<name>))
+      {
+         return this;
+      }
+
+      for (final <baseType> oldItem : this.<name>)
+      {
+         if (!value.contains(oldItem))
+         {
+            this.firePropertyChange(PROPERTY_methods, oldItem, null);
+         }
+      }
+
+      for (final <baseType> newItem : value)
+      {
+         if (!this.<name>.contains(newItem))
+         {
+            this.firePropertyChange(PROPERTY_<name>, null, newItem);
+         }
+      }
+
+      this.<name>.clear();
+      this.<name>.addAll(value);
+      return this;
+   }
+>>
