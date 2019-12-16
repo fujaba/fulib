@@ -9,7 +9,6 @@ import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.fulib.parser.FulibClassParser.*;
 
@@ -193,6 +192,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       builder.append(baseType);
 
       final int arrayDimensions = typeCtx.arraySuffix().size();
+      // noinspection StringRepeatCanBeUsed // for JDK 8 compatibility
       for (int i = 0; i < arrayDimensions; i++)
       {
          builder.append("[]");
