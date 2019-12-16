@@ -68,4 +68,22 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
       this.lastFragmentEndPos = endPos;
    }
+
+   @Override
+   public void enterPackageDecl(FulibClassParser.PackageDeclContext ctx)
+   {
+      this.addCodeFragment(Parser.PACKAGE, ctx);
+   }
+
+   @Override
+   public void enterImportDecl(FulibClassParser.ImportDeclContext ctx)
+   {
+      String typeName = ctx.qualifiedName().getText();
+      if (ctx.STAR() != null)
+      {
+         typeName += ".*";
+      }
+
+      this.addCodeFragment(Parser.IMPORT + ":" + typeName, ctx);
+   }
 }
