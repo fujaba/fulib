@@ -114,28 +114,6 @@ class TestGenerator
    }
 
    @Test
-   public void testForbiddenClasses()
-   {
-      ClassModelBuilder mb = new ClassModelBuilder("org.testFulib");
-      this.genClass(mb, "Object");
-      this.genClass(mb, "String");
-      this.genClass(mb, "Integer");
-   }
-
-   private void genClass(ClassModelBuilder mb, String className)
-   {
-      try
-      {
-         ClassBuilder objectClass = mb.buildClass(className);
-         fail();
-      }
-      catch (Exception e)
-      {
-         // e.printStackTrace();
-      }
-   }
-
-   @Test
    public void testFMethods()
       throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException,
       InvocationTargetException
@@ -434,51 +412,6 @@ class TestGenerator
       assertThat("compiler return code: ", returnCode, is(0));
 
       this.runTableTests(outFolder, model);
-   }
-
-   @ParameterizedTest
-   @ValueSource(strings = { "org.extends.tools", // keyword
-      "org.fulib.", ".org.fulib", "org fulib",
-      // "org$fulib", // valid Java identifier
-   })
-   void testValidPackageNames(String packageName)
-   {
-      assertThrows(IllegalArgumentException.class, () -> Fulib.classModelBuilder(packageName));
-   }
-
-   @Test
-   void testValidClassNames()
-   {
-
-      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib");
-
-      assertThrows(IllegalArgumentException.class, () -> mb.buildClass(null));
-      assertThrows(IllegalArgumentException.class, () -> mb.buildClass(""));
-   }
-
-   @Test
-   void testValidIdentifiers()
-   {
-
-      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib");
-      ClassBuilder c1 = mb.buildClass("C1");
-
-      assertThrows(IllegalArgumentException.class, () -> mb.buildClass("C1"));
-
-      assertThrows(IllegalArgumentException.class, () -> c1.buildAttribute("42", Type.STRING));
-
-      c1.buildAttribute("a42", Type.STRING);
-      assertThrows(IllegalArgumentException.class, () -> c1.buildAttribute("a42", Type.STRING));
-
-      Function<String, Boolean> f;
-      c1.buildAttribute("myFunction", "java.util.function.Function<String,Boolean>");
-
-      ClassBuilder c2 = mb.buildClass("C2");
-      assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c2, "a42", Type.MANY, "b", Type.MANY));
-
-      assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c1, "x", Type.MANY, "x", Type.ONE));
-
-      c1.buildAssociation(c1, "x", Type.MANY, "x", Type.MANY);
    }
 
    @Test
