@@ -302,14 +302,12 @@ public class Generator4ClassFile extends AbstractGenerator
 
          final ST attrWithArray = group.getInstanceOf("attrWithArray");
          attrWithArray.add("class", className);
-         attrWithArray.add("listType", attrType);
          attrWithArray.add("baseType", boxType);
          attrWithArray.add("name", attrName);
          fragmentMap.add(METHOD + ":with" + capAttrName + "(" + baseType + "...)", attrWithArray.render(), 3, modified);
 
          final ST attrWithColl = group.getInstanceOf("attrWithColl");
          attrWithColl.add("class", className);
-         attrWithColl.add("listType", attrType);
          attrWithColl.add("baseType", boxType);
          attrWithColl.add("name", attrName);
          fragmentMap
@@ -318,21 +316,18 @@ public class Generator4ClassFile extends AbstractGenerator
 
          final ST attrWithoutItem = group.getInstanceOf("attrWithoutItem");
          attrWithoutItem.add("class", className);
-         attrWithoutItem.add("listType", attrType);
          attrWithoutItem.add("baseType", boxType);
          attrWithoutItem.add("name", attrName);
          fragmentMap.add(METHOD + ":without" + capAttrName + "(" + baseType + ")", attrWithoutItem.render(), 3, modified);
 
          final ST attrWithoutArray = group.getInstanceOf("attrWithoutArray");
          attrWithoutArray.add("class", className);
-         attrWithoutArray.add("listType", attrType);
          attrWithoutArray.add("baseType", boxType);
          attrWithoutArray.add("name", attrName);
          fragmentMap.add(METHOD + ":without" + capAttrName + "(" + baseType + "...)", attrWithoutArray.render(), 3, modified);
 
          final ST attrWithoutColl = group.getInstanceOf("attrWithoutColl");
          attrWithoutColl.add("class", className);
-         attrWithoutColl.add("listType", attrType);
          attrWithoutColl.add("baseType", boxType);
          attrWithoutColl.add("name", attrName);
          fragmentMap
