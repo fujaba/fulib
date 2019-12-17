@@ -8,6 +8,7 @@ import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.fulib.parser.FulibClassParser.*;
 
@@ -30,9 +31,19 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    // =============== Static Methods ===============
 
-   public static FileFragmentMap parse(String fileName) throws IOException
+   public static FileFragmentMap parse(String fileName)
    {
-      final CharStream input = CharStreams.fromFileName(fileName);
+      final CharStream input;
+      try
+      {
+         input = CharStreams.fromFileName(fileName);
+      }
+      catch (IOException e)
+      {
+         // TODO better error handling
+         // e.printStackTrace();
+         return new FileFragmentMap(fileName);
+      }
 
       final FulibClassLexer lexer = new FulibClassLexer(input);
       final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
@@ -123,7 +134,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    public void enterConstructorMember(ConstructorMemberContext ctx)
    {
       final MemberContext memberCtx = (MemberContext) ctx.parent;
-      final String className = "\"FOO\"";
+      final String className = ctx.IDENTIFIER().getText();
 
       final StringBuilder signature = new StringBuilder();
       signature.append(FileFragmentMap.CONSTRUCTOR);
@@ -185,10 +196,14 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    private static void writeType(TypeContext typeCtx, StringBuilder builder)
    {
-      final String baseType =
-         typeCtx.primitiveType() != null ? getType(typeCtx.primitiveType()) : getType(typeCtx.referenceType());
-
-      builder.append(baseType);
+      if (typeCtx.primitiveType() != null)
+      {
+         writeType(typeCtx.primitiveType(), builder);
+      }
+      else
+      {
+         writeType(typeCtx.referenceType(), builder);
+      }
 
       final int arrayDimensions = typeCtx.arraySuffix().size();
       // noinspection StringRepeatCanBeUsed // for JDK 8 compatibility
@@ -198,14 +213,49 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       }
    }
 
-   private static String getType(PrimitiveTypeContext primitiveTypeCtx)
+   private static void writeType(PrimitiveTypeContext primitiveTypeCtx, StringBuilder builder)
    {
-      return primitiveTypeCtx.getText();
+      builder.append(primitiveTypeCtx.getText());
    }
 
-   private static String getType(ReferenceTypeContext referenceTypeCtx)
+   private static void writeType(ReferenceTypeContext referenceTypeCtx, StringBuilder builder)
    {
-      return referenceTypeCtx.getText();
+      builder.append(referenceTypeCtx.qualifiedName().getText());
+
+      final List<TypeArgContext> typeArgCtxs = referenceTypeCtx.typeArg();
+      if (typeArgCtxs.isEmpty())
+      {
+         return;
+      }
+
+      builder.append('<');
+      writeType(typeArgCtxs.get(0), builder);
+      for (int i = 1; i < typeArgCtxs.size(); i++)
+      {
+         builder.append(',');
+         writeType(typeArgCtxs.get(i), builder);
+      }
+      builder.append('>');
+   }
+
+   private static void writeType(TypeArgContext typeArgCtx, StringBuilder builder)
+   {
+      final TypeContext type = typeArgCtx.type();
+      if (type != null)
+      {
+         writeType(type, builder);
+         return;
+      }
+
+      final AnnotatedTypeContext annotatedType = typeArgCtx.annotatedType();
+      if (annotatedType == null)
+      {
+         builder.append('?');
+         return;
+      }
+
+      builder.append(typeArgCtx.EXTENDS() != null ? "? extends " : "? super ");
+      writeType(annotatedType.type(), builder);
    }
 
    @Override

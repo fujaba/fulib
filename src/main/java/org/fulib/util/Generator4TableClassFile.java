@@ -34,18 +34,7 @@ public class Generator4TableClassFile extends AbstractGenerator
    public void generate(Clazz clazz)
    {
       String classFileName = clazz.getModel().getPackageSrcFolder() + "/tables/" + clazz.getName() + "Table.java";
-      FileFragmentMap fragmentMap;
-      try
-      {
-         fragmentMap = FragmentMapBuilder.parse(classFileName);
-      }
-      catch (IOException e)
-      {
-         // file probably doesn't exist
-         // TODO better error handling
-         e.printStackTrace();
-         fragmentMap = new FileFragmentMap();
-      }
+      FileFragmentMap fragmentMap = FragmentMapBuilder.parse(classFileName);
 
       // doGenerate code for class
       this.generatePackageDecl(clazz, fragmentMap);
@@ -113,8 +102,9 @@ public class Generator4TableClassFile extends AbstractGenerator
       ST st = group.getInstanceOf("constructor");
       st.add("className", clazz.getName());
       String result = st.render();
-      fragmentMap.add(FileFragmentMap.CONSTRUCTOR + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)", result, 2,
-                      clazz.getModified());
+      fragmentMap
+         .add(FileFragmentMap.CONSTRUCTOR + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)", result, 2,
+              clazz.getModified());
    }
 
    private void generateStandardAttributes(Clazz clazz, FileFragmentMap fragmentMap)
@@ -151,7 +141,8 @@ public class Generator4TableClassFile extends AbstractGenerator
          attrTemplate.add("name", attr.getName());
          result = attrTemplate.render();
 
-         fragmentMap.add(FileFragmentMap.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
+         fragmentMap
+            .add(FileFragmentMap.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
 
          attrTemplate = group.getInstanceOf("simpleAttrSet");
          attrTemplate.add("class", clazz.getName() + "Table");
@@ -159,8 +150,9 @@ public class Generator4TableClassFile extends AbstractGenerator
          attrTemplate.add("name", attr.getName());
          result = attrTemplate.render();
 
-         fragmentMap.add(FileFragmentMap.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3,
-                         attr.getModified());
+         fragmentMap.add(
+            FileFragmentMap.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType().replace(" ", "") + ")",
+            result, 3, attr.getModified());
       }
    }
 
@@ -218,8 +210,8 @@ public class Generator4TableClassFile extends AbstractGenerator
          st.add("otherClassName", otherClassName);
          result = st.render();
          fragmentMap
-            .add(FileFragmentMap.METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)", result, 2,
-                 role.getModified());
+            .add(FileFragmentMap.METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)",
+                 result, 2, role.getModified());
 
          fullClassName = clazz.getModel().getPackageName() + "." + otherClassName;
          fragmentMap.add(FileFragmentMap.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
@@ -260,7 +252,8 @@ public class Generator4TableClassFile extends AbstractGenerator
 
    private void generateFilter(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.function.Predicate", "import java.util.function.Predicate;", 1);
+      fragmentMap
+         .add(FileFragmentMap.IMPORT + ":java.util.function.Predicate", "import java.util.function.Predicate;", 1);
 
       STGroup group = this.getSTGroup("org/fulib/templates/tables/filter.stg");
       ST st = group.getInstanceOf("filter");
@@ -272,12 +265,12 @@ public class Generator4TableClassFile extends AbstractGenerator
          // do not generate filter method
          modified = true;
       }
-      fragmentMap.add(FileFragmentMap.METHOD + ":filter(Predicate< " + clazz.getName() + " >)", st.render(), 2, modified);
+      fragmentMap.add(FileFragmentMap.METHOD + ":filter(Predicate<" + clazz.getName() + ">)", st.render(), 2, modified);
 
       st = group.getInstanceOf("filterRow");
       st.add("className", clazz.getName());
 
-      fragmentMap.add(FileFragmentMap.METHOD + ":filterRow(Predicate<LinkedHashMap<String,Object> >)", st.render(), 2,
+      fragmentMap.add(FileFragmentMap.METHOD + ":filterRow(Predicate<LinkedHashMap<String,Object>>)", st.render(), 2,
                       clazz.getModified());
    }
 

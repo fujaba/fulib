@@ -36,18 +36,7 @@ public class Generator4ClassFile extends AbstractGenerator
    public void generate(Clazz clazz)
    {
       String classFileName = clazz.getModel().getPackageSrcFolder() + "/" + clazz.getName() + ".java";
-      FileFragmentMap fragmentMap;
-      try
-      {
-         fragmentMap = FragmentMapBuilder.parse(classFileName);
-      }
-      catch (IOException e)
-      {
-         // file probably doesn't exist
-         // TODO better error handling
-         e.printStackTrace();
-         fragmentMap = new FileFragmentMap();
-      }
+      FileFragmentMap fragmentMap = FragmentMapBuilder.parse(classFileName);
 
       // doGenerate code for class
       this.generatePackageDecl(clazz, fragmentMap);
@@ -139,17 +128,36 @@ public class Generator4ClassFile extends AbstractGenerator
    {
       final Set<String> qualifiedNames = new TreeSet<>();
 
+      // static imports are collected separately.
+      // we could just stuff them in qualifiedNames with "static " at the beginning,
+      // but that doesn't work for the fragment keys and it doesn't sort nicely.
+      final Set<String> staticImports = new TreeSet<>();
+
       // parse user-supplied imports
       for (String importItem : clazz.getImportList())
       {
-         final int spaceIndex = importItem.lastIndexOf(' ');
-         if (spaceIndex > 0)
+         if (importItem.startsWith("import "))
          {
-            // assuming format 'import <qualifiedName>;'
-            qualifiedNames.add(importItem.substring(spaceIndex + 1, importItem.length() - 1));
+            final int end = importItem.length() - (importItem.endsWith(";") ? 1 : 0);
+            if (importItem.startsWith("import static "))
+            {
+               // import static org.foo.Bar.baz;
+               staticImports.add(importItem.substring("import static ".length(), end));
+            }
+            else
+            {
+               // import org.foo.Bar;
+               qualifiedNames.add(importItem.substring("import ".length(), end));
+            }
+         }
+         else if (importItem.startsWith("static "))
+         {
+            // static org.foo.Bar.baz
+            staticImports.add(importItem.substring("static ".length()));
          }
          else
          {
+            // org.foo.Bar
             qualifiedNames.add(importItem);
          }
       }
@@ -163,6 +171,14 @@ public class Generator4ClassFile extends AbstractGenerator
       {
          final ST importDecl = group.getInstanceOf("importDecl");
          importDecl.add("qualifiedName", qualifiedName);
+         fragmentMap.add(FileFragmentMap.IMPORT + ":" + qualifiedName, importDecl.render(), 1);
+      }
+
+      for (final String qualifiedName : staticImports)
+      {
+         final ST importDecl = group.getInstanceOf("importDecl");
+         importDecl.add("qualifiedName", qualifiedName);
+         importDecl.add("static", true);
          fragmentMap.add(FileFragmentMap.IMPORT + ":" + qualifiedName, importDecl.render(), 1);
       }
    }
