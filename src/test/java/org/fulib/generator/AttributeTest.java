@@ -19,28 +19,33 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 
 public class AttributeTest
 {
+   protected String getTargetFolder()
+   {
+      return "tmp/attributes";
+   }
+
    @Test
    void testAttributeGenerator() throws Exception
    {
-      String targetFolder = "tmp";
-      String packageName = "org.fulib.test.studyright";
+      final String targetFolder = this.getTargetFolder();
+      final String srcFolder = targetFolder + "/src";
+      final String outFolder = targetFolder + "/out";
+      final String packageName = "org.fulib.test.studyright";
 
       Tools.removeDirAndFiles(targetFolder);
 
-      ClassModel model = this.getAttributesModel(targetFolder, packageName);
+      ClassModel model = this.getAttributesModel(srcFolder, packageName);
 
       TestGenerator.createPreexistingUniFile(packageName, model);
 
       String uniFileName = model.getPackageSrcFolder() + "/University.java";
       assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
 
-      String outFolder = model.getMainJavaDir() + "/../out";
       int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       assertThat("compiler return code: ", returnCode, is(0));
 
@@ -54,15 +59,19 @@ public class AttributeTest
       returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       assertThat("compiler return code: ", returnCode, is(0));
 
-      this.runAttributeReadWriteTests(outFolder, model);
+      try (final URLClassLoader classLoader = URLClassLoader
+         .newInstance(new URL[] { new File(outFolder).toURI().toURL() }))
+      {
+         this.runAttributeReadWriteTests(classLoader, packageName);
+      }
    }
 
-   ClassModel getAttributesModel(String targetFolder, String packageName)
+   protected ClassModel getAttributesModel(String srcFolder, String packageName)
    {
-      return this.getAttributesModel(Fulib.classModelBuilder(packageName, targetFolder + "/src"));
+      return this.getAttributesModel(Fulib.classModelBuilder(packageName, srcFolder));
    }
 
-   final ClassModel getAttributesModel(ClassModelBuilder mb)
+   protected final ClassModel getAttributesModel(ClassModelBuilder mb)
    {
       mb.buildClass("University").buildAttribute("name", Type.STRING);
 
@@ -72,19 +81,13 @@ public class AttributeTest
       return mb.getClassModel();
    }
 
-   private void runAttributeReadWriteTests(String outFolder, ClassModel model) throws Exception
+   private void runAttributeReadWriteTests(ClassLoader classLoader, String packageName) throws Exception
    {
       final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
 
       // run self test
-      File classesDir = new File(outFolder);
 
-      // Load and instantiate compiled class.
-      URLClassLoader classLoader;
-      // Loading the class
-      classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
-
-      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
+      Class<?> uniClass = Class.forName(packageName + ".University", true, classLoader);
 
       Object studyRight = uniClass.newInstance();
 
@@ -99,7 +102,7 @@ public class AttributeTest
 
       Object setNameReturn = setName.invoke(studyRight, "StudyRight");
       assertThat("setName returned this", setNameReturn, is(sameInstance(studyRight)));
-      assertThat("got property change", eventList.size() > 0);
+      assertThat("got property change", !eventList.isEmpty());
 
       PropertyChangeEvent evt = eventList.get(0);
       assertThat(evt.getPropertyName(), is(equalTo("name")));
@@ -121,7 +124,7 @@ public class AttributeTest
       // testing int attr
       eventList.clear();
 
-      Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
+      Class<?> studClass = Class.forName(packageName + ".Student", true, classLoader);
 
       Object karli = studClass.newInstance();
       Method setStudentName = studClass.getMethod("setName", String.class);
