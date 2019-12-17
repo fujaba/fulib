@@ -284,12 +284,58 @@ public class Generator4ClassFile extends AbstractGenerator
          attrWith.add("name", attrName);
          fragmentMap.add(METHOD + ":with" + capAttrName + "(Object...)", attrWith.render(), 3, modified);
 
+         final ST attrWithItem = group.getInstanceOf("attrWithItem");
+         attrWithItem.add("class", className);
+         attrWithItem.add("listType", attrType);
+         attrWithItem.add("baseType", boxType);
+         attrWithItem.add("name", attrName);
+         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + baseType + ")", attrWithItem.render(), 3, modified);
+
+         final ST attrWithArray = group.getInstanceOf("attrWithArray");
+         attrWithArray.add("class", className);
+         attrWithArray.add("listType", attrType);
+         attrWithArray.add("baseType", boxType);
+         attrWithArray.add("name", attrName);
+         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + baseType + "...)", attrWithArray.render(), 3, modified);
+
+         final ST attrWithColl = group.getInstanceOf("attrWithColl");
+         attrWithColl.add("class", className);
+         attrWithColl.add("listType", attrType);
+         attrWithColl.add("baseType", boxType);
+         attrWithColl.add("name", attrName);
+         fragmentMap
+            .add(METHOD + ":with" + capAttrName + "(Collection<? extends " + baseType + ">)", attrWithColl.render(), 3,
+                 modified);
+
          final ST attrWithout = group.getInstanceOf("attrWithout");
          attrWithout.add("class", className);
          attrWithout.add("listType", attrType);
          attrWithout.add("baseType", boxType);
          attrWithout.add("name", attrName);
          fragmentMap.add(METHOD + ":without" + capAttrName + "(Object...)", attrWithout.render(), 3, modified);
+
+         final ST attrWithoutItem = group.getInstanceOf("attrWithoutItem");
+         attrWithoutItem.add("class", className);
+         attrWithoutItem.add("listType", attrType);
+         attrWithoutItem.add("baseType", boxType);
+         attrWithoutItem.add("name", attrName);
+         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + baseType + ")", attrWithoutItem.render(), 3, modified);
+
+         final ST attrWithoutArray = group.getInstanceOf("attrWithoutArray");
+         attrWithoutArray.add("class", className);
+         attrWithoutArray.add("listType", attrType);
+         attrWithoutArray.add("baseType", boxType);
+         attrWithoutArray.add("name", attrName);
+         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + baseType + "...)", attrWithoutArray.render(), 3, modified);
+
+         final ST attrWithoutColl = group.getInstanceOf("attrWithoutColl");
+         attrWithoutColl.add("class", className);
+         attrWithoutColl.add("listType", attrType);
+         attrWithoutColl.add("baseType", boxType);
+         attrWithoutColl.add("name", attrName);
+         fragmentMap
+            .add(METHOD + ":without" + capAttrName + "(Collection<? extends " + baseType + ">)", attrWithoutColl.render(), 3,
+                 modified);
       }
       else // usual attribute
       {
