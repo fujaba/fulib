@@ -83,7 +83,7 @@ public class Attribute
       return true;
    }
 
-   public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
+   public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
       if (this.listeners != null)
       {
@@ -100,7 +100,6 @@ public class Attribute
    public void removeYou()
    {
       this.setClazz(null);
-
    }
 
    public static final String PROPERTY_name = "name";
@@ -217,13 +216,10 @@ public class Attribute
    public String toString()
    {
       final StringBuilder result = new StringBuilder();
-
       result.append(' ').append(this.getName());
       result.append(' ').append(this.getType());
       result.append(' ').append(this.getInitialization());
       result.append(' ').append(this.getPropertyStyle());
-
-
       return result.substring(1);
    }
 

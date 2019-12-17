@@ -11,27 +11,27 @@ public class AssocRole
 {
    // =============== Constants ===============
 
-   public static final String PROPERTY_name          = "name";
-   public static final String PROPERTY_cardinality   = "cardinality";
-   public static final String PROPERTY_roleType      = "roleType";
-   public static final String PROPERTY_aggregation   = "aggregation";
+   public static final String PROPERTY_name = "name";
+   public static final String PROPERTY_cardinality = "cardinality";
+   public static final String PROPERTY_roleType = "roleType";
+   public static final String PROPERTY_aggregation = "aggregation";
    public static final String PROPERTY_propertyStyle = "propertyStyle";
-   public static final String PROPERTY_modified      = "modified";
-   public static final String PROPERTY_clazz         = "clazz";
-   public static final String PROPERTY_other         = "other";
+   public static final String PROPERTY_modified = "modified";
+   public static final String PROPERTY_clazz = "clazz";
+   public static final String PROPERTY_other = "other";
 
    // =============== Fields ===============
 
    protected PropertyChangeSupport listeners = null;
 
-   private Clazz     clazz = null;
+   private Clazz clazz = null;
    private AssocRole other = null;
-   private String    name;
-   private int       cardinality;
-   private String    roleType;
-   private boolean   aggregation;
-   private String    propertyStyle;
-   private boolean   modified;
+   private String name;
+   private int cardinality;
+   private String roleType;
+   private boolean aggregation;
+   private String propertyStyle;
+   private boolean modified;
 
    // =============== Properties ===============
 
@@ -263,11 +263,9 @@ public class AssocRole
    public String toString()
    {
       final StringBuilder result = new StringBuilder();
-
       result.append(' ').append(this.getName());
       result.append(' ').append(this.getRoleType());
       result.append(' ').append(this.getPropertyStyle());
-
       return result.substring(1);
    }
 }

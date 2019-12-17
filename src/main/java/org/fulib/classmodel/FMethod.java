@@ -84,7 +84,7 @@ public class FMethod
       return true;
    }
 
-   public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
+   public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
       if (this.listeners != null)
       {
@@ -96,7 +96,6 @@ public class FMethod
    public void removeYou()
    {
       this.setClazz(null);
-
    }
 
    private String name;
@@ -255,12 +254,9 @@ public class FMethod
    public String toString()
    {
       final StringBuilder result = new StringBuilder();
-
       result.append(' ').append(this.getDeclaration());
       result.append(' ').append(this.getMethodBody());
       result.append(' ').append(this.getAnnotations());
-
-
       return result.substring(1);
    }
 

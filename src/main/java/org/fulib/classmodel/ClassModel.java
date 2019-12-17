@@ -147,7 +147,7 @@ public class ClassModel
       return true;
    }
 
-   public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
+   public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
       if (this.listeners != null)
       {
@@ -159,7 +159,6 @@ public class ClassModel
    public void removeYou()
    {
       this.withoutClasses(this.getClasses().clone());
-
 
    }
 
@@ -255,13 +254,10 @@ public class ClassModel
    public String toString()
    {
       final StringBuilder result = new StringBuilder();
-
       result.append(' ').append(this.getPackageName());
       result.append(' ').append(this.getMainJavaDir());
       result.append(' ').append(this.getDefaultRoleType());
       result.append(' ').append(this.getDefaultPropertyStyle());
-
-
       return result.substring(1);
    }
 

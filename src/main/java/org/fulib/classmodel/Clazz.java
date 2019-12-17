@@ -256,7 +256,7 @@ public class Clazz
       return true;
    }
 
-   public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
+   public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
       if (this.listeners != null)
       {
@@ -378,7 +378,6 @@ public class Clazz
    {
       this.setModel(null);
       this.setSuperClass(null);
-
       this.withoutAttributes(this.getAttributes().clone());
 
 
@@ -389,7 +388,6 @@ public class Clazz
 
 
       this.withoutSubClasses(this.getSubClasses().clone());
-
 
    }
 
@@ -572,11 +570,8 @@ public class Clazz
    public String toString()
    {
       final StringBuilder result = new StringBuilder();
-
       result.append(' ').append(this.getName());
       result.append(' ').append(this.getPropertyStyle());
-
-
       return result.substring(1);
    }
 
