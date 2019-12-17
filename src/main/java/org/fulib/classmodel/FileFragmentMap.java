@@ -166,29 +166,7 @@ public class FileFragmentMap
          }
          else if (key.equals(CLASS))
          {
-            // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
-            Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
-            Matcher match = pattern.matcher(newText);
-            boolean b = match.find();
-            String className = match.group(1);
-            String extendsClause = match.group(2);
-            extendsClause = extendsClause == null ? "" : extendsClause + " ";
-
-            int resultClassNamePos = result.getText().indexOf("class " + className);
-            if (resultClassNamePos >= 0)
-            {
-               String prefix = result.getText().substring(0, resultClassNamePos);
-               String middle = "class " + className + " " + extendsClause;
-               String suffix = " \n{";
-
-               int implementsPos = result.getText().indexOf("implements");
-               if (implementsPos >= 0)
-               {
-                  suffix = " " + result.getText().substring(implementsPos);
-               }
-
-               newText = prefix + middle + suffix;
-            }
+            newText = mergeClassDecl(result.getText(), newText);
          }
          else if (key.startsWith(ATTRIBUTE))
          {
@@ -255,6 +233,34 @@ public class FileFragmentMap
       add(gap, CLASS_END);
 
       return result;
+   }
+
+   public static String mergeClassDecl(String oldText, String newText)
+   {
+      // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
+      Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
+      Matcher match = pattern.matcher(newText);
+      boolean b = match.find();
+      String className = match.group(1);
+      String extendsClause = match.group(2);
+      extendsClause = extendsClause == null ? "" : extendsClause + " ";
+
+      int resultClassNamePos = oldText.indexOf("class " + className);
+      if (resultClassNamePos >= 0)
+      {
+         String prefix = oldText.substring(0, resultClassNamePos);
+         String middle = "class " + className + " " + extendsClause;
+         String suffix = " \n{";
+
+         int implementsPos = oldText.indexOf("implements");
+         if (implementsPos >= 0)
+         {
+            suffix = " " + oldText.substring(implementsPos);
+         }
+
+         newText = prefix + middle + suffix;
+      }
+      return newText;
    }
 
    private CodeFragment getNewLineGapFragment(int newLines)
