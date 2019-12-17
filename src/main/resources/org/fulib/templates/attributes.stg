@@ -49,9 +49,9 @@ attrWithItem(class, name, listType, baseType) ::= <<
       {
          this.<name> = new <listType>();
       }
-      if (this.<name>.add((<baseType>) item))<! the collection could be a set, in which case we don't want a PCE!>
+      if (this.<name>.add(value))<! the collection could be a set, in which case we don't want a PCE!>
       {
-         this.firePropertyChange("<name>", null, item);
+         this.firePropertyChange("<name>", null, value);
       }
       return this;
    }
@@ -84,9 +84,9 @@ attrWithColl(class, name, baseType) ::= <<
 attrWithoutItem(class, name, baseType) ::= <<
    public <class> without<name; format="cap">(<baseType> value)
    {
-      if (this.<name> != null && this.<name>.remove(item))
+      if (this.<name> != null && this.<name>.remove(value))
       {
-         this.firePropertyChange("<name>", item, null);
+         this.firePropertyChange("<name>", value, null);
       }
       return this;
    }
