@@ -62,19 +62,55 @@ attrWith(class, name, listType, baseType) ::= <<
          {
             this.with<name; format="cap">(((Collection\<?>) item).toArray());
          }
+         else if (item instanceof <baseType>[])
+         {
+            this.with<name; format="cap">((<baseType>[]) item));
+         }
          else if (item instanceof <baseType>)
          {
-            if (this.<name> == null)
-            {
-               this.<name> = new <listType>();
-            }
-            this.<name>.add((<baseType>) item);
-            this.firePropertyChange("<name>", null, item);
+            this.with<name; format="cap">(item);
          }
          else
          {
             throw new IllegalArgumentException();
          }
+      }
+      return this;
+   }
+>>
+
+attrWithItem(class, name, baseType) ::= <<
+   public <class> with<name; format="cap">(<baseType> value)
+   {
+      if (this.<name> == null)
+      {
+         this.<name> = new <listType>();
+      }
+      if (this.<name>.add((<baseType>) item))
+      {
+         this.firePropertyChange("<name>", null, item);
+      }
+      return this;
+   }
+>>
+
+attrWithArray(class, name, baseType) ::= <<
+   public <class> with<name; format="cap">(<baseType>... value)
+   {
+      for (final <baseType> item : value)
+      {
+         this.with<name; format="cap">(item);
+      }
+      return this;
+   }
+>>
+
+attrWithColl(class, name, baseType) ::= <<
+   public <class> with<name; format="cap">(Collection\<? extends <baseType>\> value)
+   {
+      for (final <baseType> item : value)
+      {
+         this.with<name; format="cap">(item);
       }
       return this;
    }
