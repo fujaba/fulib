@@ -1,26 +1,62 @@
 package org.fulib.classmodel;
 
-import java.util.ArrayList;
-
-import java.beans.PropertyChangeSupport;
-
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 
 public class CodeFragment  
 {
+   // =============== Constants ===============
+
+   public static final String PROPERTY_key = "key";
+   public static final String PROPERTY_text = "text";
+
+   // =============== Fields ===============
 
    protected PropertyChangeSupport listeners = null;
 
-   public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
+   private String key;
+   private String text;
+
+   // =============== Properties ===============
+
+   public String getKey()
    {
-      if (this.listeners != null)
-      {
-         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
-         return true;
-      }
-      return false;
+      return this.key;
    }
+
+   public CodeFragment setKey(String value)
+   {
+      if (Objects.equals(value, this.key))
+      {
+         return this;
+      }
+
+      final String oldValue = this.key;
+      this.key = value;
+      this.firePropertyChange("key", oldValue, value);
+      return this;
+   }
+
+   public String getText()
+   {
+      return this.text;
+   }
+
+   public CodeFragment setText(String value)
+   {
+      if (Objects.equals(value, this.text))
+      {
+         return this;
+      }
+
+      final String oldValue = this.text;
+      this.text = value;
+      this.firePropertyChange("text", oldValue, value);
+      return this;
+   }
+
+   // =============== Methods ===============
 
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {
@@ -51,7 +87,7 @@ public class CodeFragment
       return true;
    }
 
-   public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
+   public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
       if (this.listeners != null)
       {
@@ -60,64 +96,26 @@ public class CodeFragment
       return true;
    }
 
+   public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
+   {
+      if (this.listeners != null)
+      {
+         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
+         return true;
+      }
+      return false;
+   }
+
    public void removeYou()
    {
-   }
-
-   public static final String PROPERTY_key = "key";
-
-   private String key;
-
-   public String getKey()
-   {
-      return this.key;
-   }
-
-   public CodeFragment setKey(String value)
-   {
-      if (Objects.equals(value, this.key))
-      {
-         return this;
-      }
-
-      final String oldValue = this.key;
-      this.key = value;
-      this.firePropertyChange("key", oldValue, value);
-      return this;
-   }
-
-   public static final String PROPERTY_text = "text";
-
-   private String text;
-
-   public String getText()
-   {
-      return this.text;
-   }
-
-   public CodeFragment setText(String value)
-   {
-      if (Objects.equals(value, this.text))
-      {
-         return this;
-      }
-
-      final String oldValue = this.text;
-      this.text = value;
-      this.firePropertyChange("text", oldValue, value);
-      return this;
    }
 
    @Override
    public String toString()
    {
       final StringBuilder result = new StringBuilder();
-
       result.append(' ').append(this.getKey());
       result.append(' ').append(this.getText());
-
-
       return result.substring(1);
    }
-
 }
