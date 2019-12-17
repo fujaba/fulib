@@ -124,6 +124,42 @@ withoutMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, othe
    }
 >>
 
+withoutItem(roleName, myClassName, otherClassName, otherRoleName, otherToMany) ::= <<
+   public <myClassName> without<roleName; format="cap">(<otherClassName> value)
+   {
+      if (this.<roleName>.remove(item))
+      {
+<if(otherRoleName)>
+         ((<otherClassName>) item).<withoutThis(otherToMany, otherRoleName)>;
+<endif>
+         this.firePropertyChange("<roleName>", item, null);
+      }
+      return this;
+   }
+>>
+
+withoutArray(roleName, myClassName, otherClassName) ::= <<
+   public <myClassName> without<roleName; format="cap">(<otherClassName>... value)
+   {
+      for (final <otherClassName> item : value)
+      {
+         this.without<roleName; format="cap">(item);
+      }
+      return this;
+   }
+>>
+
+withoutColl(roleName, myClassName, otherClassName) ::= <<
+   public <myClassName> without<roleName; format="cap">(Collection\<? extends <otherClassName>\> value)
+   {
+      for (final <otherClassName> item : value)
+      {
+         this.without<roleName; format="cap">(item);
+      }
+      return this;
+   }
+>>
+
 withoutThis(toMany, otherRoleName) ::= <%
 <if(toMany)>
    without<otherRoleName; format="cap">(this)
