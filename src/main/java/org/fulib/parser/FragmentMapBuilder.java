@@ -8,6 +8,7 @@ import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.fulib.parser.FulibClassParser.*;
 
@@ -220,6 +221,41 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    private static void writeType(ReferenceTypeContext referenceTypeCtx, StringBuilder builder)
    {
       builder.append(referenceTypeCtx.qualifiedName().getText());
+
+      final List<TypeArgContext> typeArgCtxs = referenceTypeCtx.typeArg();
+      if (typeArgCtxs.isEmpty())
+      {
+         return;
+      }
+
+      builder.append('<');
+      writeType(typeArgCtxs.get(0), builder);
+      for (int i = 1; i < typeArgCtxs.size(); i++)
+      {
+         builder.append(',');
+         writeType(typeArgCtxs.get(i), builder);
+      }
+      builder.append('>');
+   }
+
+   private static void writeType(TypeArgContext typeArgCtx, StringBuilder builder)
+   {
+      final TypeContext type = typeArgCtx.type();
+      if (type != null)
+      {
+         writeType(type, builder);
+         return;
+      }
+
+      final AnnotatedTypeContext annotatedType = typeArgCtx.annotatedType();
+      if (annotatedType == null)
+      {
+         builder.append('?');
+         return;
+      }
+
+      builder.append(typeArgCtx.EXTENDS() != null ? "? extends " : "? super ");
+      writeType(annotatedType.type(), builder);
    }
 
    @Override
