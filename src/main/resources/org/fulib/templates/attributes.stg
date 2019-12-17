@@ -133,15 +133,50 @@ attrWithout(class, name, listType, baseType) ::= <<
          {
             this.without<name; format="cap">(((Collection\<?>) item).toArray());
          }
+         else if (item instanceof <baseType>[])
+         {
+            this.without<name; format="cap">((<baseType>[]) item));
+         }
          else if (item instanceof <baseType>)
          {
-            if (this.<name>.remove(item))
-            {
-               this.firePropertyChange("<name>", item, null);
-            }
+            this.without<name; format="cap">(item);
          }
       }
       return this;
+   }
+>>
+
+attrWithoutItem(class, name, baseType) ::= <<
+   public <class> without<name; format="cap">(<baseType> value)
+   {
+      if (this.<name> == null)
+      {
+         return this;
+      }
+      if (this.<name>.remove(item))
+      {
+         this.firePropertyChange("<name>", item, null);
+      }
+   }
+>>
+
+attrWithoutArray(class, name, baseType) ::= <<
+   public <class> without<name; format="cap">(<baseType>... value)
+   {
+      for (final <baseType> item : value)
+      {
+         this.without<name; format="cap">(item);
+      }
+   }
+>>
+
+attrWithoutColl(class, name, baseType) ::= <<
+   public <class> without<name; format="cap">(Collection\<? extends <baseType>\> value)
+   {
+      for (final <baseType> item : value)
+      {
+         this.with<name; format="cap">(item);
+      }
    }
 >>
 
