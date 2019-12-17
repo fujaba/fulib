@@ -298,40 +298,40 @@ public class Generator4ClassFile extends AbstractGenerator
          attrWithItem.add("listType", attrType);
          attrWithItem.add("baseType", boxType);
          attrWithItem.add("name", attrName);
-         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + baseType + ")", attrWithItem.render(), 3, modified);
+         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + ")", attrWithItem.render(), 3, modified);
 
          final ST attrWithArray = group.getInstanceOf("attrWithArray");
          attrWithArray.add("class", className);
          attrWithArray.add("baseType", boxType);
          attrWithArray.add("name", attrName);
-         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + baseType + "...)", attrWithArray.render(), 3, modified);
+         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + "...)", attrWithArray.render(), 3, modified);
 
          final ST attrWithColl = group.getInstanceOf("attrWithColl");
          attrWithColl.add("class", className);
          attrWithColl.add("baseType", boxType);
          attrWithColl.add("name", attrName);
          fragmentMap
-            .add(METHOD + ":with" + capAttrName + "(Collection<? extends " + baseType + ">)", attrWithColl.render(), 3,
+            .add(METHOD + ":with" + capAttrName + "(Collection<? extends " + boxType + ">)", attrWithColl.render(), 3,
                  modified);
 
          final ST attrWithoutItem = group.getInstanceOf("attrWithoutItem");
          attrWithoutItem.add("class", className);
          attrWithoutItem.add("baseType", boxType);
          attrWithoutItem.add("name", attrName);
-         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + baseType + ")", attrWithoutItem.render(), 3, modified);
+         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + boxType + ")", attrWithoutItem.render(), 3, modified);
 
          final ST attrWithoutArray = group.getInstanceOf("attrWithoutArray");
          attrWithoutArray.add("class", className);
          attrWithoutArray.add("baseType", boxType);
          attrWithoutArray.add("name", attrName);
-         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + baseType + "...)", attrWithoutArray.render(), 3, modified);
+         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + boxType + "...)", attrWithoutArray.render(), 3, modified);
 
          final ST attrWithoutColl = group.getInstanceOf("attrWithoutColl");
          attrWithoutColl.add("class", className);
          attrWithoutColl.add("baseType", boxType);
          attrWithoutColl.add("name", attrName);
          fragmentMap
-            .add(METHOD + ":without" + capAttrName + "(Collection<? extends " + baseType + ">)", attrWithoutColl.render(), 3,
+            .add(METHOD + ":without" + capAttrName + "(Collection<? extends " + boxType + ">)", attrWithoutColl.render(), 3,
                  modified);
 
          // remove "set" method
@@ -349,12 +349,12 @@ public class Generator4ClassFile extends AbstractGenerator
                  modified);
 
          // remove "with" and "without" methods
-         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + baseType + ")", "", 3, true);
-         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + baseType + "...)", "", 3, true);
-         fragmentMap.add(METHOD + ":with" + capAttrName + "(Collection<? extends " + baseType + ">)", "", 3, true);
-         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + baseType + ")", "", 3, true);
-         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + baseType + "...)", "", 3, true);
-         fragmentMap.add(METHOD + ":without" + capAttrName + "(Collection<? extends " + baseType + ">)", "", 3, true);
+         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + ")", "", 3, true);
+         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + "...)", "", 3, true);
+         fragmentMap.add(METHOD + ":with" + capAttrName + "(Collection<? extends " + boxType + ">)", "", 3, true);
+         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + boxType + ")", "", 3, true);
+         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + boxType + "...)", "", 3, true);
+         fragmentMap.add(METHOD + ":without" + capAttrName + "(Collection<? extends " + boxType + ">)", "", 3, true);
       }
 
       if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
