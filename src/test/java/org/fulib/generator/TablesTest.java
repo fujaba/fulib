@@ -39,11 +39,14 @@ public class TablesTest
    @Test
    void testTables() throws Exception
    {
-      String targetFolder = "tmp";
+      final String targetFolder = "tmp/tables";
+      final String srcFolder = targetFolder + "/src";
+      final String outFolder = targetFolder + "/out";
+      final String packageName = "org.fulib.studyright";
 
       Tools.removeDirAndFiles(targetFolder);
 
-      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
 
       ClassBuilder uni = mb.buildClass("University").buildAttribute("name", Type.STRING);
 
@@ -81,10 +84,7 @@ public class TablesTest
       String uniFileName = model.getPackageSrcFolder() + "/tables/UniversityTable.java";
       assertThat("UniversityTable.java exists", Files.exists(Paths.get(uniFileName)));
 
-      String outFolder = model.getMainJavaDir() + "/../out";
       int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-      assertThat("compiler return code: ", returnCode, is(0));
-      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder() + "/tables");
       assertThat("compiler return code: ", returnCode, is(0));
 
       this.runTableTests(outFolder, model);
