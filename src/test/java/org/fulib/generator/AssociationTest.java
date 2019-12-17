@@ -30,22 +30,28 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AssociationTest
 {
+   protected String getTargetFolder()
+   {
+      return "tmp/associations";
+   }
+
    @Test
    void testAssociationGenerator() throws Exception
    {
-      String targetFolder = "tmp";
-      String packageName = "org.fulib.test.studyright";
+      final String targetFolder = this.getTargetFolder();
+      final String srcFolder = targetFolder + "/src";
+      final String outFolder = targetFolder + "/out";
+      final String packageName = "org.fulib.test.studyright";
 
       Tools.removeDirAndFiles(targetFolder);
 
-      ClassModel model = this.getClassModelWithAssociations(targetFolder, packageName);
+      ClassModel model = this.getClassModel(srcFolder, packageName);
 
       TestGenerator.createPreexistingUniFile(packageName, model);
 
       String uniFileName = model.getPackageSrcFolder() + "/University.java";
       assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
 
-      String outFolder = model.getMainJavaDir() + "/../out";
       int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       assertThat("compiler return code: ", returnCode, is(0));
 
@@ -59,20 +65,22 @@ public class AssociationTest
       returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       assertThat("compiler return code: ", returnCode, is(0));
 
-      this.runAssociationReadWriteTests(outFolder, model);
+      try (final URLClassLoader classLoader = URLClassLoader
+         .newInstance(new URL[] { new File(outFolder).toURI().toURL() }))
+      {
+         this.runDataTests(classLoader, packageName);
+      }
    }
 
-   ClassModel getClassModelWithAssociations(String targetFolder, String packageName)
+   protected ClassModel getClassModel(String srcFolder, String packageName)
    {
-      return this.getClassModelWithAssociations(targetFolder, Fulib.classModelBuilder(packageName, "src/main/java"));
+      return this.getClassModel(Fulib.classModelBuilder(packageName, srcFolder));
    }
 
-   final ClassModel getClassModelWithAssociations(String targetFolder, ClassModelBuilder mb)
+   protected final ClassModel getClassModel(ClassModelBuilder mb)
    {
       ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
       // end_code_fragment:
-
-      mb.getClassModel().setMainJavaDir(targetFolder + "/src");
 
       ClassBuilder studi = mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"");
 
@@ -93,20 +101,14 @@ public class AssociationTest
       return mb.getClassModel();
    }
 
-   void runAssociationReadWriteTests(String outFolder, ClassModel model) throws Exception
+   protected void runDataTests(ClassLoader classLoader, String packageName) throws Exception
    {
       final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
       PropertyChangeListener listener = eventList::add;
 
-      // run self test
-      File classesDir = new File(outFolder);
-
-      // Load and instantiate compiled class.
-      URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
-
-      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
-      Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
-      Class<?> roomClass = Class.forName(model.getPackageName() + ".Room", true, classLoader);
+      Class<?> uniClass = Class.forName(packageName + ".University", true, classLoader);
+      Class<?> studClass = Class.forName(packageName + ".Student", true, classLoader);
+      Class<?> roomClass = Class.forName(packageName + ".Room", true, classLoader);
 
       Object studyRight = uniClass.newInstance();
       Object studyFuture = uniClass.newInstance();

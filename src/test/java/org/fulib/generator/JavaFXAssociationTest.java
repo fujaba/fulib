@@ -5,10 +5,7 @@ import org.fulib.classmodel.ClassModel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -20,27 +17,26 @@ import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInA
 public class JavaFXAssociationTest extends AssociationTest
 {
    @Override
-   ClassModel getClassModelWithAssociations(String targetFolder, String packageName)
+   protected String getTargetFolder()
    {
-      return this.getClassModelWithAssociations(targetFolder, Fulib.classModelBuilder(packageName, "src/main/java")
-                                                                   .setJavaFXPropertyStyle());
+      return "tmp/javafx/associations";
    }
 
    @Override
-   void runAssociationReadWriteTests(String outFolder, ClassModel model) throws Exception
+   protected ClassModel getClassModel(String srcFolder, String packageName)
+   {
+      return this.getClassModel(Fulib.classModelBuilder(packageName, srcFolder).setJavaFXPropertyStyle());
+   }
+
+   @Override
+   protected void runDataTests(ClassLoader classLoader, String packageName) throws Exception
    {
       final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
       PropertyChangeListener listener = eventList::add;
 
-      // run self test
-      File classesDir = new File(outFolder);
-
-      // Load and instantiate compiled class.
-      URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
-
-      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
-      Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
-      Class<?> roomClass = Class.forName(model.getPackageName() + ".Room", true, classLoader);
+      Class<?> uniClass = Class.forName(packageName + ".University", true, classLoader);
+      Class<?> studClass = Class.forName(packageName + ".Student", true, classLoader);
+      Class<?> roomClass = Class.forName(packageName + ".Room", true, classLoader);
 
       Object studyRight = uniClass.newInstance();
       Object studyFuture = uniClass.newInstance();
