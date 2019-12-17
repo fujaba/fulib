@@ -73,25 +73,58 @@ withMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany, ro
          {
             this.with<roleName; format="cap">(((Collection\<?>) item).toArray());
          }
+         else if (item instanceof <otherClassName>[])
+         {
+            this.with<roleName; format="cap">((<otherClassName>[]) item);
+         }
          else if (item instanceof <otherClassName>)
          {
-            if (this.<roleName> == null)
-            {
-               this.<roleName> = new <roleType>();
-            }
-            if (!this.<roleName>.contains(item))
-            {
-               this.<roleName>.add((<otherClassName>)item);
-<if(otherRoleName)>
-               ((<otherClassName>) item).<prefix(otherToMany)><otherRoleName; format="cap">(this);
-<endif>
-               this.firePropertyChange("<roleName>", null, item);
-            }
+            this.with<roleName; format="cap">((<otherClassName>) item);
          }
          else
          {
             throw new IllegalArgumentException();
          }
+      }
+      return this;
+   }
+>>
+
+withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
+   public <myClassName> with<roleName; format="cap">(<otherClassName> value)
+   {
+      if (this.<roleName> == null)
+      {
+         this.<roleName> = new <roleType>();
+      }
+      if (!this.<roleName>.contains(item))
+      {
+         this.<roleName>.add((<otherClassName>)item);
+<if(otherRoleName)>
+         ((<otherClassName>) item).<prefix(otherToMany)><otherRoleName; format="cap">(this);
+<endif>
+         this.firePropertyChange("<roleName>", null, item);
+      }
+   }
+>>
+
+withArray(roleName, myClassName, otherClassName) ::= <<
+   public <myClassName> with<roleName; format="cap">(<otherClassName>... value)
+   {
+      for (final <otherClassName> item : value)
+      {
+         this.with<roleName; format="cap">(item);
+      }
+      return this;
+   }
+>>
+
+withColl(roleName, myClassName, otherClassName) ::= <<
+   public <myClassName> with<roleName; format="cap">(Collection\<? extends <otherClassName>\> value)
+   {
+      for (final <otherClassName> item : value)
+      {
+         this.with<roleName; format="cap">(item);
       }
       return this;
    }
