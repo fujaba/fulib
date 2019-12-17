@@ -21,7 +21,6 @@ import java.nio.file.Paths;
 import java.util.LinkedHashSet;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -32,12 +31,14 @@ public class ExtendsTest
    @Test
    void testExtendsGenerator() throws Exception
    {
-      String targetFolder = "tmp";
-      String packageName = "org.fulib.test.studyright";
+      final String targetFolder = "tmp/extends";
+      final String srcFolder = targetFolder + "/out";
+      final String outFolder = targetFolder + "/out";
+      final String packageName = "org.fulib.test.studyright";
 
       Tools.removeDirAndFiles(targetFolder);
 
-      ClassModel model = this.getClassModelWithExtends(targetFolder, packageName);
+      ClassModel model = this.getClassModel(srcFolder, packageName);
 
       TestGenerator.createPreexistingUniFile(packageName, model);
 
@@ -62,22 +63,23 @@ public class ExtendsTest
       String studFileName = model.getPackageSrcFolder() + "/Student.java";
       assertThat("Student.java exists", Files.exists(Paths.get(studFileName)));
 
-      String outFolder = model.getMainJavaDir() + "/../out";
       int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       assertThat("compiler return code: ", returnCode, is(0));
 
-      this.runExtendsReadWriteTests(outFolder, model);
+      try (final URLClassLoader classLoader = URLClassLoader
+         .newInstance(new URL[] { new File(outFolder).toURI().toURL() }))
+      {
+         this.runDataTests(classLoader, packageName);
+      }
    }
 
-   private ClassModel getClassModelWithExtends(String targetFolder, String packageName)
+   private ClassModel getClassModel(String srcFolder, String packageName)
    {
       // start_code_fragment: ClassModelBuilder
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
 
       ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
       // end_code_fragment:
-
-      mb.getClassModel().setMainJavaDir(targetFolder + "/src");
 
       // start_code_fragment: ClassBuilder.buildAttribute_init
       ClassBuilder student = mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"");
@@ -101,16 +103,10 @@ public class ExtendsTest
       return mb.getClassModel();
    }
 
-   void runExtendsReadWriteTests(String outFolder, ClassModel model) throws Exception
+   private void runDataTests(ClassLoader classLoader, String packageName) throws Exception
    {
-      // run self test
-      File classesDir = new File(outFolder);
-
-      // Load and instantiate compiled class.
-      URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
-
-      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
-      Class<?> taClass = Class.forName(model.getPackageName() + ".TeachingAssistent", true, classLoader);
+      Class<?> uniClass = Class.forName(packageName + ".University", true, classLoader);
+      Class<?> taClass = Class.forName(packageName + ".TeachingAssistent", true, classLoader);
 
       Object studyRight = uniClass.newInstance();
       Object studyFuture = uniClass.newInstance();
