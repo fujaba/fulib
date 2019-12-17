@@ -23,8 +23,35 @@ getMethod(roleName, toMany, otherClassName, roleType) ::= <<
    }
 >>
 
-setMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
-<if(toMany)>
+setMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
+   public <myClassName> set<roleName; format="cap">(<otherClassName> value)
+   {
+      if (this.<roleName> == value)
+      {
+         return this;
+      }
+
+      final <otherClassName> oldValue = this.<roleName>;
+<if(otherRoleName)>
+      if (this.<roleName> != null)
+      {
+         this.<roleName> = null;
+         oldValue.<withoutThis(otherToMany, otherRoleName)>;
+      }
+<endif>
+      this.<roleName> = value;
+<if(otherRoleName)>
+      if (value != null)
+      {
+         value.<prefix(otherToMany)><otherRoleName; format="cap">(this);
+      }
+<endif>
+      this.firePropertyChange("<roleName>", oldValue, value);
+      return this;
+   }
+>>
+
+withMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
    public <myClassName> with<roleName; format="cap">(Object... value)
    {
       if (value == null)
@@ -51,7 +78,7 @@ setMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToM
             {
                this.<roleName>.add((<otherClassName>)item);
 <if(otherRoleName)>
-               ((<otherClassName>)item).<prefix(otherToMany)><otherRoleName; format="cap">(this);
+               ((<otherClassName>) item).<prefix(otherToMany)><otherRoleName; format="cap">(this);
 <endif>
                this.firePropertyChange("<roleName>", null, item);
             }
@@ -63,33 +90,6 @@ setMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToM
       }
       return this;
    }
-<else>
-   public <myClassName> set<roleName; format="cap">(<otherClassName> value)
-   {
-      if (this.<roleName> == value)
-      {
-         return this;
-      }
-
-      final <otherClassName> oldValue = this.<roleName>;
-<if(otherRoleName)>
-      if (this.<roleName> != null)
-      {
-         this.<roleName> = null;
-         oldValue.<withoutThis(otherToMany, otherRoleName)>;
-      }
-<endif>
-      this.<roleName> = value;
-<if(otherRoleName)>
-      if (value != null)
-      {
-         value.<prefix(otherToMany)><otherRoleName; format="cap">(this);
-      }
-<endif>
-      this.firePropertyChange("<roleName>", oldValue, value);
-      return this;
-   }
-<endif>
 >>
 
 // TODO deprecated, remove

@@ -462,14 +462,26 @@ public class Generator4ClassFile extends AbstractGenerator
       getMethod.add("roleType", roleType);
       fragmentMap.add(METHOD + ":get" + capRoleName + "()", getMethod.render(), 2, role.getModified());
 
-      final ST setMethod = group.getInstanceOf("setMethod");
-      setMethod.add("roleName", role.getName());
-      setMethod.add("toMany", role.getCardinality() != Type.ONE);
-      setMethod.add("myClassName", clazz.getName());
-      setMethod.add("otherClassName", role.getOther().getClazz().getName());
-      setMethod.add("otherRoleName", role.getOther().getName());
-      setMethod.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
-      setMethod.add("roleType", roleType);
+      final ST setMethod;
+      if (role.getCardinality() != Type.ONE)
+      {
+         setMethod = group.getInstanceOf("withMethod");
+         setMethod.add("myClassName", clazz.getName());
+         setMethod.add("roleName", role.getName());
+         setMethod.add("otherClassName", role.getOther().getClazz().getName());
+         setMethod.add("otherRoleName", role.getOther().getName());
+         setMethod.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
+         setMethod.add("roleType", roleType);
+      }
+      else
+      {
+         setMethod = group.getInstanceOf("setMethod");
+         setMethod.add("myClassName", clazz.getName());
+         setMethod.add("roleName", role.getName());
+         setMethod.add("otherClassName", role.getOther().getClazz().getName());
+         setMethod.add("otherRoleName", role.getOther().getName());
+         setMethod.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
+      }
 
       String signature = "set";
       String paramType = role.getOther().getClazz().getName();
