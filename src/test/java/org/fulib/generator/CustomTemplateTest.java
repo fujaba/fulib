@@ -20,9 +20,12 @@ public class CustomTemplateTest
    @Test
    void testCustomTemplates() throws IOException
    {
-      Tools.removeDirAndFiles("tmp");
+      final String targetFolder = "tmp";
+      final String srcFolder = targetFolder + "/src";
 
-      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
+      Tools.removeDirAndFiles(targetFolder);
+
+      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", srcFolder);
       mb.buildClass("University").buildAttribute("name", Type.STRING);
       mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"")
         .buildAttribute("matrNo", Type.LONG, "0");
