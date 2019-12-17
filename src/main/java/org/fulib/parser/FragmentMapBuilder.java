@@ -30,9 +30,19 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    // =============== Static Methods ===============
 
-   public static FileFragmentMap parse(String fileName) throws IOException
+   public static FileFragmentMap parse(String fileName)
    {
-      final CharStream input = CharStreams.fromFileName(fileName);
+      final CharStream input;
+      try
+      {
+         input = CharStreams.fromFileName(fileName);
+      }
+      catch (IOException e)
+      {
+         // TODO better error handling
+         // e.printStackTrace();
+         return new FileFragmentMap(fileName);
+      }
 
       final FulibClassLexer lexer = new FulibClassLexer(input);
       final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
