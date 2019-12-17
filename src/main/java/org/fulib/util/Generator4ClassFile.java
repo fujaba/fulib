@@ -241,25 +241,27 @@ public class Generator4ClassFile extends AbstractGenerator
          attrType = String.format("java.util.ArrayList<%s>", boxType);
       }
 
-      final String capAttrName = StrUtil.cap(attr.getName());
+      final String className = attr.getClazz().getName();
+      final String attrName = attr.getName();
+      final String capAttrName = StrUtil.cap(attrName);
+      final boolean modified = attr.getModified();
 
       final ST propertyDecl = group.getInstanceOf("propertyDecl");
-      propertyDecl.add("name", attr.getName());
-      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":PROPERTY_" + attr.getName(), propertyDecl.render(), 2, attr.getModified());
+      propertyDecl.add("name", attrName);
+      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":PROPERTY_" + attrName, propertyDecl.render(), 2, modified);
 
       final ST attrDecl = group.getInstanceOf("attrDecl");
       attrDecl.add("type", attrType);
-      attrDecl.add("name", attr.getName());
+      attrDecl.add("name", attrName);
       attrDecl.add("value", attr.getInitialization());
-      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attr.getName(), attrDecl.render(), 2, attr.getModified());
+      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attrName, attrDecl.render(), 2, modified);
 
       if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
       {
          final ST initMethod = group.getInstanceOf("initMethod");
-         initMethod.add("name", attr.getName());
+         initMethod.add("name", attrName);
          initMethod.add("type", attrType);
-         fragmentMap
-            .add(FileFragmentMap.METHOD + ":_init" + capAttrName + "()", initMethod.render(), 2, attr.getModified());
+         fragmentMap.add(FileFragmentMap.METHOD + ":_init" + capAttrName + "()", initMethod.render(), 2, modified);
       }
       else
       {
@@ -268,50 +270,50 @@ public class Generator4ClassFile extends AbstractGenerator
 
       final ST attrGet = group.getInstanceOf("attrGet");
       attrGet.add("type", attrType);
-      attrGet.add("name", attr.getName());
-      fragmentMap.add(FileFragmentMap.METHOD + ":get" + capAttrName + "()", attrGet.render(), 2, attr.getModified());
+      attrGet.add("name", attrName);
+      fragmentMap.add(FileFragmentMap.METHOD + ":get" + capAttrName + "()", attrGet.render(), 2, modified);
 
       if (attr.getType().endsWith(Type.__LIST))
       {
          final ST attrWith = group.getInstanceOf("attrWith");
-         attrWith.add("class", attr.getClazz().getName());
+         attrWith.add("class", className);
          attrWith.add("listType", attrType);
          attrWith.add("baseType", boxType);
-         attrWith.add("name", attr.getName());
-         fragmentMap.add(FileFragmentMap.METHOD + ":with" + capAttrName + "(Object...)", attrWith.render(), 3,
-                         attr.getModified());
+         attrWith.add("name", attrName);
+         fragmentMap
+            .add(FileFragmentMap.METHOD + ":" + "with" + capAttrName + "(" + "Object..." + ")", attrWith.render(), 3,
+                 modified);
 
          final ST attrWithout = group.getInstanceOf("attrWithout");
-         attrWithout.add("class", attr.getClazz().getName());
+         attrWithout.add("class", className);
          attrWithout.add("listType", attrType);
          attrWithout.add("baseType", boxType);
-         attrWithout.add("name", attr.getName());
-         fragmentMap.add(FileFragmentMap.METHOD + ":without" + capAttrName + "(Object...)", attrWithout.render(), 3,
-                         attr.getModified());
+         attrWithout.add("name", attrName);
+         fragmentMap.add(FileFragmentMap.METHOD + ":" + "with" + "out" + capAttrName + "(" + "Object..." + ")",
+                         attrWithout.render(), 3, modified);
       }
       else // usual attribute
       {
          final ST attrSet = group.getInstanceOf("attrSet");
-         attrSet.add("class", attr.getClazz().getName());
+         attrSet.add("class", className);
          attrSet.add("type", attr.getType());
-         attrSet.add("name", attr.getName());
+         attrSet.add("name", attrName);
          attrSet.add("useEquals", !isPrimitive(attr.getType()));
          fragmentMap
             .add(FileFragmentMap.METHOD + ":set" + capAttrName + "(" + attr.getType() + ")", attrSet.render(), 3,
-                 attr.getModified());
+                 modified);
       }
 
       if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
       {
          final ST propertyGet = group.getInstanceOf("propertyGet");
-         propertyGet.add("name", attr.getName());
+         propertyGet.add("name", attrName);
          propertyGet.add("type", attrType);
-         fragmentMap
-            .add(FileFragmentMap.METHOD + ":" + attr.getName() + "Property()", propertyGet.render(), 3, attr.getModified());
+         fragmentMap.add(FileFragmentMap.METHOD + ":" + attrName + "Property()", propertyGet.render(), 3, modified);
       }
       else
       {
-         fragmentMap.add(FileFragmentMap.METHOD + ":" + attr.getName() + "Property()", "", 3, true);
+         fragmentMap.add(FileFragmentMap.METHOD + ":" + attrName + "Property()", "", 3, true);
       }
    }
 
@@ -383,12 +385,14 @@ public class Generator4ClassFile extends AbstractGenerator
          emptySetDecl.add("roleName", role.getName());
          emptySetDecl.add("otherClassName", role.getOther().getClazz().getName());
          emptySetDecl.add("roleType", roleType);
-         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":EMPTY_" + role.getName(), emptySetDecl.render(), 3, role.getModified());
+         fragmentMap
+            .add(FileFragmentMap.ATTRIBUTE + ":EMPTY_" + role.getName(), emptySetDecl.render(), 3, role.getModified());
       }
 
       final ST propertyDecl = group.getInstanceOf("propertyDecl");
       propertyDecl.add("roleName", role.getName());
-      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":PROPERTY_" + role.getName(), propertyDecl.render(), 2, role.getModified());
+      fragmentMap
+         .add(FileFragmentMap.ATTRIBUTE + ":PROPERTY_" + role.getName(), propertyDecl.render(), 2, role.getModified());
 
       final ST roleAttrDecl = group.getInstanceOf("roleAttrDecl");
       roleAttrDecl.add("roleName", role.getName());
@@ -411,7 +415,8 @@ public class Generator4ClassFile extends AbstractGenerator
          initMethod.add("otherClassName", role.getOther().getClazz().getName());
          initMethod.add("otherRoleName", role.getOther().getName());
          initMethod.add("otherToMany", role.getOther().getCardinality() != Type.ONE);
-         fragmentMap.add(FileFragmentMap.METHOD + ":_init" + capRoleName + "()", initMethod.render(), 2, role.getModified());
+         fragmentMap
+            .add(FileFragmentMap.METHOD + ":_init" + capRoleName + "()", initMethod.render(), 2, role.getModified());
       }
       else
       {
@@ -479,8 +484,9 @@ public class Generator4ClassFile extends AbstractGenerator
          {
             paramType = role.getOther().getClazz().getName();
          }
-         fragmentMap.add(FileFragmentMap.METHOD + ":without" + capRoleName + "(" + paramType + ")", withoutMethod.render(), 3,
-                         role.getModified());
+         fragmentMap
+            .add(FileFragmentMap.METHOD + ":without" + capRoleName + "(" + paramType + ")", withoutMethod.render(), 3,
+                 role.getModified());
       }
 
       if (Type.JAVA_FX.equals(role.getPropertyStyle()) && role.getCardinality() == Type.ONE)
@@ -488,8 +494,8 @@ public class Generator4ClassFile extends AbstractGenerator
          final ST propertyMethod = group.getInstanceOf("propertyMethod");
          propertyMethod.add("roleName", role.getName());
          propertyMethod.add("otherClassName", role.getOther().getClazz().getName());
-         fragmentMap
-            .add(FileFragmentMap.METHOD + ":" + role.getName() + "Property()", propertyMethod.render(), 3, role.getModified());
+         fragmentMap.add(FileFragmentMap.METHOD + ":" + role.getName() + "Property()", propertyMethod.render(), 3,
+                         role.getModified());
       }
       else
       {
@@ -536,25 +542,28 @@ public class Generator4ClassFile extends AbstractGenerator
       fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":listeners", listeners, 2, clazz.getModified());
 
       final ST firePropertyChange = group.getInstanceOf("firePropertyChange");
-      fragmentMap.add(FileFragmentMap.METHOD + ":firePropertyChange(String,Object,Object)", firePropertyChange.render(), 2,
-                      clazz.getModified());
+      fragmentMap
+         .add(FileFragmentMap.METHOD + ":firePropertyChange(String,Object,Object)", firePropertyChange.render(), 2,
+              clazz.getModified());
 
       final ST addPCL1 = group.getInstanceOf("addPropertyChangeListener1");
-      fragmentMap.add(FileFragmentMap.METHOD + ":addPropertyChangeListener(PropertyChangeListener)", addPCL1.render(), 2,
-                      clazz.getModified());
+      fragmentMap
+         .add(FileFragmentMap.METHOD + ":addPropertyChangeListener(PropertyChangeListener)", addPCL1.render(), 2,
+              clazz.getModified());
 
       final ST addPCL2 = group.getInstanceOf("addPropertyChangeListener2");
-      fragmentMap.add(FileFragmentMap.METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", addPCL2.render(), 2,
-                      clazz.getModified());
+      fragmentMap
+         .add(FileFragmentMap.METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", addPCL2.render(), 2,
+              clazz.getModified());
 
       final ST removePCL1 = group.getInstanceOf("removePropertyChangeListener1");
-      fragmentMap.add(FileFragmentMap.METHOD + ":removePropertyChangeListener(PropertyChangeListener)", removePCL1.render(), 2,
-                      clazz.getModified());
+      fragmentMap
+         .add(FileFragmentMap.METHOD + ":removePropertyChangeListener(PropertyChangeListener)", removePCL1.render(), 2,
+              clazz.getModified());
 
       final ST removePCL2 = group.getInstanceOf("removePropertyChangeListener2");
-      fragmentMap
-         .add(FileFragmentMap.METHOD + ":removePropertyChangeListener(String,PropertyChangeListener)", removePCL2.render(), 2,
-              clazz.getModified());
+      fragmentMap.add(FileFragmentMap.METHOD + ":removePropertyChangeListener(String,PropertyChangeListener)",
+                      removePCL2.render(), 2, clazz.getModified());
    }
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
