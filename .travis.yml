@@ -9,6 +9,11 @@ matrix:
     - dist: xenial
       jdk: openjdk11
 
+# without this, the build errors after ~50 commits since the last release,
+# because the latest tag is no longer available and the version cannot be determined
+git:
+  depth: false
+
 # --------------- Gradle Cache ---------------
 
 before_cache:
