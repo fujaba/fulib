@@ -5,6 +5,7 @@ import org.fulib.builder.ClassModelBuilder;
 import org.fulib.builder.ClassModelManager;
 import org.fulib.builder.Type;
 import org.fulib.classmodel.*;
+import org.fulib.parser.FragmentMapBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -356,11 +357,11 @@ class TestGenerator {
         Fulib.generator().generate(model);
 
         // add implements clause to TeachingAssistant
-        FileFragmentMap fragmentMap = Parser.parse(model.getPackageSrcFolder() + "/TeachingAssistent.java");
-        CodeFragment fragment = fragmentMap.getFragment(Parser.CLASS);
+        FileFragmentMap fragmentMap = FragmentMapBuilder.parse(model.getPackageSrcFolder() + "/TeachingAssistent.java");
+        CodeFragment fragment = fragmentMap.getFragment(FileFragmentMap.CLASS);
         fragment.setText("@Deprecated \npublic class TeachingAssistent extends Student implements java.io.Serializable \n{");
         fragmentMap.writeFile();
-        fragmentMap.add(Parser.CLASS, "public class TeachingAssistent extends Student \n{", 1);
+        fragmentMap.add(FileFragmentMap.CLASS, "public class TeachingAssistent extends Student \n{", 1);
         assertThat(fragment.getText(), containsString("@Deprecated"));
         assertThat(fragment.getText(), containsString("implements java.io.Serializable"));
         assertThat(fragment.getText(), containsString("{"));

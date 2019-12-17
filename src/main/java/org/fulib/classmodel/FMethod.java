@@ -1,7 +1,5 @@
 package org.fulib.classmodel;
 
-import org.fulib.Parser;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -116,9 +114,9 @@ public class FMethod
    {
       this.readParams().remove("this");
       String paramTypes = String.join(",", this.readParams().values());
-      String result = String.format(Parser.METHOD + ":%s(%s)",
-            this.readName(),
-            paramTypes);
+      String result = String.format(FileFragmentMap.METHOD + ":%s(%s)",
+                                    this.readName(),
+                                    paramTypes);
       return result;
    }
 

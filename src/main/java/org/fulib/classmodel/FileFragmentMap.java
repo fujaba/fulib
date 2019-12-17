@@ -1,7 +1,5 @@
 package org.fulib.classmodel;
 
-import org.fulib.Parser;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -17,6 +15,15 @@ import java.util.regex.Pattern;
 
 public class FileFragmentMap  
 {
+   public static final String CLASS       = "class";
+   public static final String PACKAGE     = "package";
+   public static final String CONSTRUCTOR = "constructor";
+   public static final String ATTRIBUTE   = "attribute";
+   public static final String METHOD      = "method";
+   public static final String IMPORT      = "import";
+   public static final String CLASS_BODY  = "classBody";
+   public static final String CLASS_END   = "classEnd";
+   public static final String GAP         = "gap:";
 
    protected PropertyChangeSupport listeners = null;
 
@@ -144,7 +151,7 @@ public class FileFragmentMap
             int pos = fragmentList.indexOf(result);
             fragmentList.remove(pos);
             CodeFragment gap = fragmentList.get(pos - 1);
-	         if (Objects.equals(gap.getKey(), Parser.GAP))
+	         if (Objects.equals(gap.getKey(), GAP))
             {
                fragmentList.remove(pos - 1);
             }
@@ -157,7 +164,7 @@ public class FileFragmentMap
             // newtext contains annotations, thus it overrides annotations in the code
             // do not modify newtext
          }
-         else if (key.equals(Parser.CLASS))
+         else if (key.equals(CLASS))
          {
             // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
             Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
@@ -183,7 +190,7 @@ public class FileFragmentMap
                newText = prefix + middle + suffix;
             }
          }
-         else if (key.startsWith(Parser.ATTRIBUTE))
+         else if (key.startsWith(ATTRIBUTE))
          {
             // keep everything before public
             int newTextPublicPos = newText.indexOf("public");
@@ -193,7 +200,7 @@ public class FileFragmentMap
                newText = result.getText().substring(0, resultPublicPos) + newText.substring(newTextPublicPos);
             }
          }
-         else if (key.startsWith(Parser.ATTRIBUTE)) // ToDo: this looks wrong, remove it?
+         else if (key.startsWith(ATTRIBUTE)) // ToDo: this looks wrong, remove it?
          {
             // keep everything before private
             int newTextPrivatePos = newText.indexOf("private");
@@ -216,18 +223,18 @@ public class FileFragmentMap
       CodeFragment gap = getNewLineGapFragment(newLines);
 
 
-      if (key.startsWith(Parser.ATTRIBUTE) || key.startsWith(Parser.METHOD) || key.startsWith(Parser.CONSTRUCTOR))
+      if (key.startsWith(ATTRIBUTE) || key.startsWith(METHOD) || key.startsWith(CONSTRUCTOR))
       {
-         add(result, Parser.CLASS_END);
+         add(result, CLASS_END);
 
-         add(gap, Parser.CLASS_END);
+         add(gap, CLASS_END);
 
          return result;
       }
 
-      if (key.startsWith(Parser.IMPORT))
+      if (key.startsWith(IMPORT))
       {
-         CodeFragment oldFragment = codeMap.get(Parser.CLASS);
+         CodeFragment oldFragment = codeMap.get(CLASS);
          int pos = fragmentList.indexOf(oldFragment);
 
          // go to the gap before this
@@ -245,7 +252,7 @@ public class FileFragmentMap
       }
 
       add(result);
-      add(gap, Parser.CLASS_END);
+      add(gap, CLASS_END);
 
       return result;
    }
@@ -302,8 +309,8 @@ public class FileFragmentMap
 
    public boolean classBodyIsEmpty(FileFragmentMap fragmentMap)
    {
-      CodeFragment startFragment = codeMap.get(Parser.CLASS);
-      CodeFragment endFragment = codeMap.get(Parser.CLASS_END);
+      CodeFragment startFragment = codeMap.get(CLASS);
+      CodeFragment endFragment = codeMap.get(CLASS_END);
 
       if (startFragment == null || endFragment == null) return true;
       int endPos = fragmentList.indexOf(endFragment);
@@ -311,7 +318,7 @@ public class FileFragmentMap
       for (int i = fragmentList.indexOf(startFragment) + 1; i < endPos; i++)
       {
          CodeFragment fragment = fragmentList.get(i);
-	      if ( !Objects.equals(fragment.getKey(), Parser.GAP))
+	      if ( !Objects.equals(fragment.getKey(), GAP))
          {
             return false;
          }
