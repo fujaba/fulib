@@ -41,1134 +41,1136 @@ import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInA
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
+class TestGenerator
+{
+
+   private Class<?>       uniClass;
+   private URLClassLoader classLoader;
+   private Object         studyRight;
+   private Class<?>       assignClass;
+   private Class<?>       studClass;
+
+   @Test
+   public void testAttrList()
+      throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException,
+      InvocationTargetException, MalformedURLException
+   {
+      ClassModelBuilder mb = Fulib.classModelBuilder("org.testAttrList", "tmp/src");
+      ClassBuilder root = mb.buildClass("Root");
+      root.buildAttribute("resultList", Type.INT + Type.__LIST);
+      ClassBuilder kid = mb.buildClass("Kid").setSuperClass(root);
+      ClassModel model = mb.getClassModel();
+      Fulib.generator().generate(model);
+
+      String outFolder = model.getMainJavaDir() + "/../out";
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
+
+      // Load and instantiate compiled class.
+      File classesDir = new File(outFolder);
+      URLClassLoader classLoader;
+      // Loading the class
+      classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
+
+      Class<?> rootClass = Class.forName(model.getPackageName() + ".Root", true, classLoader);
+
+      Object theRoot = rootClass.newInstance();
+
+      Method withMethod = rootClass.getMethod("withResultList", Object[].class);
+
+      Object answer = withMethod.invoke(theRoot, new Object[] { new Object[] { 23 } });
+      assertThat(answer, equalTo(theRoot));
+
+      Method getMethod = rootClass.getMethod("getResultList");
+      ArrayList theList = (ArrayList) getMethod.invoke(theRoot);
+      assertThat(theList.size(), equalTo(1));
+
+      withMethod.invoke(theRoot, new Object[] { new Object[] { 42 } });
+      withMethod.invoke(theRoot, new Object[] { new Object[] { 23 } });
+      assertThat(theList.size(), equalTo(3));
+
+      Method withoutMethod = rootClass.getMethod("withoutResultList", Object[].class);
+      withoutMethod.invoke(theRoot, new Object[] { new Object[] { 23 } });
+      assertThat(theList.size(), equalTo(2));
+
+      // change to simple attribute
+      Clazz modelRoot = model.getClazz("Root");
+      Attribute modelResultList = modelRoot.getAttribute("resultList");
+      modelResultList.setType(Type.INT);
 
-class TestGenerator {
+      Fulib.generator().generate(model);
+
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
+
+      modelResultList.setType(Type.INT + Type.__LIST);
+
+      Fulib.generator().generate(model);
+
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-    private Class<?> uniClass;
-    private URLClassLoader classLoader;
-    private Object studyRight;
-    private Class<?> assignClass;
-    private Class<?> studClass;
+      System.out.println();
+   }
 
-    @Test
-    public void testAttrList() throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, MalformedURLException
-    {
-        ClassModelBuilder mb = Fulib.classModelBuilder("org.testAttrList", "tmp/src");
-        ClassBuilder root = mb.buildClass("Root");
-        root.buildAttribute("resultList", Type.INT + Type.__LIST);
-        ClassBuilder kid = mb.buildClass("Kid").setSuperClass(root);
-        ClassModel model = mb.getClassModel();
-        Fulib.generator().generate(model);
+   @Test
+   public void testForbiddenClasses()
+   {
+      ClassModelBuilder mb = new ClassModelBuilder("org.testFulib");
+      this.genClass(mb, "Object");
+      this.genClass(mb, "String");
+      this.genClass(mb, "Integer");
+   }
 
-        String outFolder = model.getMainJavaDir() + "/../out";
-        int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+   private void genClass(ClassModelBuilder mb, String className)
+   {
+      try
+      {
+         ClassBuilder objectClass = mb.buildClass(className);
+         fail();
+      }
+      catch (Exception e)
+      {
+         // e.printStackTrace();
+      }
+   }
 
-        // Load and instantiate compiled class.
-        File classesDir = new File(outFolder);
-        URLClassLoader classLoader;
-        // Loading the class
-        classLoader = URLClassLoader.newInstance(new URL[]{classesDir.toURI().toURL()});
+   @Test
+   public void testFMethods()
+      throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException,
+      InvocationTargetException
+   {
+      String targetFolder = "tmp";
+      String packageName = "party.partyApp";
 
-        Class<?> rootClass = Class.forName(model.getPackageName() + ".Root", true, classLoader);
+      Tools.removeDirAndFiles(targetFolder);
 
-        Object theRoot = rootClass.newInstance();
+      ClassModelManager mm = new ClassModelManager().havePackageName(packageName).haveMainJavaDir(targetFolder);
 
-        Method withMethod = rootClass.getMethod("withResultList", Object[].class);
+      Clazz party = mm.haveClass("Party");
+      // mm.haveAttribute(party, "name", "String");
 
-        Object answer = withMethod.invoke(theRoot, new Object[]{new Object[]{23}});
-        assertThat(answer, equalTo(theRoot));
+      FMethod method = mm.haveMethod(party, "public void hello()", "      System.out.println(\"World!\");\n");
 
-        Method getMethod = rootClass.getMethod("getResultList");
-        ArrayList theList = (ArrayList) getMethod.invoke(theRoot);
-        assertThat(theList.size(), equalTo(1));
+      ClassModel model = mm.getClassModel();
+      Fulib.generator().generate(model);
 
-        withMethod.invoke(theRoot, new Object[]{new Object[]{42}});
-        withMethod.invoke(theRoot, new Object[]{new Object[]{23}});
-        assertThat(theList.size(), equalTo(3));
+      String outFolder = model.getMainJavaDir() + "/../out";
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-        Method withoutMethod = rootClass.getMethod("withoutResultList", Object[].class);
-        withoutMethod.invoke(theRoot, new Object[]{new Object[]{23}});
-        assertThat(theList.size(), equalTo(2));
+      // does removal work?
+      party.withoutMethods(method);
+      Fulib.generator().generate(model);
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-        // change to simple attribute
-        Clazz modelRoot = model.getClazz("Root");
-        Attribute modelResultList = modelRoot.getAttribute("resultList");
-        modelResultList.setType(Type.INT);
+      method = mm.haveMethod(party, "public int theAnswer()", "      return 42;\n");
+      Fulib.generator().generate(model);
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-        Fulib.generator().generate(model);
+      // add a parameter
+      method.readParams().put("question", "int");
+      method.setMethodBody("      return question * 2;\n");
 
-        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      Fulib.generator().generate(model);
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-        modelResultList.setType(Type.INT + Type.__LIST);
+      party.getImportList().add("import org.junit.jupiter.api.Test;");
+      party.getImportList().add("import static org.hamcrest.CoreMatchers.*;");
+      party.getImportList().add("import static org.hamcrest.MatcherAssert.assertThat;");
 
-        Fulib.generator().generate(model);
+      FMethod testMethod = mm.haveMethod(party, "" + "@Test\n" + "public void testQuestion()",
+                                         "" + "      assertThat(theAnswer(21), equalTo(42));\n");
 
-        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      Fulib.generator().generate(model);
 
-        System.out.println();
-    }
+      mm.haveMethod(party, "public int theAnswer()", "      return 42;\n");
+      Fulib.generator().generate(model);
 
+      Fulib.generator().generate(model);
 
-    @Test
-    public void testForbiddenClasses()
-    {
-        ClassModelBuilder mb = new ClassModelBuilder("org.testFulib");
-        genClass(mb, "Object");
-        genClass(mb, "String");
-        genClass(mb, "Integer");
-    }
+      Fulib.generator().generate(model);
 
-    private void genClass(ClassModelBuilder mb, String className)
-    {
-        try {
-            ClassBuilder objectClass = mb.buildClass(className);
-            fail();
-        } catch (Exception e) {
-            // e.printStackTrace();
-        }
-    }
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-    @Test
-    public void testFMethods() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException
-    {
-        String targetFolder = "tmp";
-        String packageName = "party.partyApp";
+      // Load and instantiate compiled class.
+      File classesDir = new File(outFolder);
+      URLClassLoader classLoader;
+      // Loading the class
+      classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
 
-        Tools.removeDirAndFiles(targetFolder);
+      Class<?> partyClass = Class.forName(model.getPackageName() + ".Party", true, classLoader);
 
-        ClassModelManager mm = new ClassModelManager()
-              .havePackageName(packageName)
-              .haveMainJavaDir(targetFolder);
+      Object theParty = partyClass.newInstance();
 
-        Clazz party = mm.haveClass("Party");
-        // mm.haveAttribute(party, "name", "String");
+      Method answerMethod = partyClass.getMethod("theAnswer", int.class);
 
-        FMethod method = mm.haveMethod(party, "public void hello()", "      System.out.println(\"World!\");\n");
+      Object answer = answerMethod.invoke(theParty, 23);
+      assertThat(answer, equalTo(46));
 
-        ClassModel model = mm.getClassModel();
-        Fulib.generator().generate(model);
+      Method secondMethod = partyClass.getMethod("testQuestion");
+      secondMethod.invoke(theParty);
+   }
 
-        String outFolder = model.getMainJavaDir() + "/../out";
-        int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+   @Test
+   void testAttributeGenerator() throws Exception
+   {
+      String targetFolder = "tmp";
+      String packageName = "org.fulib.test.studyright";
 
-        // does removal work?
-        party.withoutMethods(method);
-        Fulib.generator().generate(model);
-        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      Tools.removeDirAndFiles(targetFolder);
 
-        method = mm.haveMethod(party, "public int theAnswer()", "      return 42;\n");
-        Fulib.generator().generate(model);
-        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      ClassModel model = this.getClassModelUniStudWithAttributes(targetFolder, packageName);
 
-        // add a parameter
-        method.readParams().put("question", "int");
-        method.setMethodBody("      return question * 2;\n");
+      this.createPreexistingUniFile(packageName, model);
 
-        Fulib.generator().generate(model);
-        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      String uniFileName = model.getPackageSrcFolder() + "/University.java";
+      assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
 
+      String outFolder = model.getMainJavaDir() + "/../out";
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
+      Fulib.generator().generate(model);
 
-        party.getImportList().add("import org.junit.jupiter.api.Test;");
-        party.getImportList().add("import static org.hamcrest.CoreMatchers.*;");
-        party.getImportList().add("import static org.hamcrest.MatcherAssert.assertThat;");
+      assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
 
-        FMethod testMethod = mm.haveMethod(party, "" +
-              "@Test\n" +
-              "public void testQuestion()", "" +
-              "      assertThat(theAnswer(21), equalTo(42));\n");
+      String studFileName = model.getPackageSrcFolder() + "/Student.java";
+      assertThat("Student.java exists", Files.exists(Paths.get(studFileName)));
 
-        Fulib.generator().generate(model);
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-        mm.haveMethod(party, "public int theAnswer()", "      return 42;\n");
-        Fulib.generator().generate(model);
+      this.runAttributeReadWriteTests(outFolder, model);
+   }
 
-        Fulib.generator().generate(model);
+   @Test
+   void testAssociationGenerator() throws Exception
+   {
+      String targetFolder = "tmp";
+      String packageName = "org.fulib.test.studyright";
 
-        Fulib.generator().generate(model);
+      Tools.removeDirAndFiles(targetFolder);
 
+      ClassModel model = this.getClassModelWithAssociations(targetFolder, packageName);
 
-        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      this.createPreexistingUniFile(packageName, model);
 
-        // Load and instantiate compiled class.
-        File classesDir = new File(outFolder);
-        URLClassLoader classLoader;
-        // Loading the class
-        classLoader = URLClassLoader.newInstance(new URL[]{classesDir.toURI().toURL()});
+      String uniFileName = model.getPackageSrcFolder() + "/University.java";
+      assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
 
-        Class<?> partyClass = Class.forName(model.getPackageName() + ".Party", true, classLoader);
+      String outFolder = model.getMainJavaDir() + "/../out";
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-        Object theParty = partyClass.newInstance();
+      Fulib.generator().generate(model);
 
-        Method answerMethod = partyClass.getMethod("theAnswer", int.class);
+      assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
 
-        Object answer = answerMethod.invoke(theParty, 23);
-        assertThat(answer, equalTo(46));
+      String studFileName = model.getPackageSrcFolder() + "/Student.java";
+      assertThat("Student.java exists", Files.exists(Paths.get(studFileName)));
 
-        Method secondMethod = partyClass.getMethod("testQuestion");
-        secondMethod.invoke(theParty);
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-    }
+      this.runAssociationReadWriteTests(outFolder, model);
+   }
 
+   @Test
+   void testUnidirectionalAssociations() throws Exception
+   {
+      String targetFolder = "tmp";
+      String packageName = "org.fulib.test.studyright";
 
+      Tools.removeDirAndFiles(targetFolder);
 
-    @Test
-    void testAttributeGenerator() throws Exception {
-        String targetFolder = "tmp";
-        String packageName = "org.fulib.test.studyright";
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, targetFolder);
 
-        Tools.removeDirAndFiles(targetFolder);
+      ClassBuilder university = mb.buildClass("University");
+      ClassBuilder prof = mb.buildClass("Prof");
 
-        ClassModel model = getClassModelUniStudWithAttributes(targetFolder, packageName);
+      university.buildAssociation(prof, "head", Type.ONE, null, 0);
+      university.buildAssociation(prof, "staff", Type.MANY, null, 0);
 
-        createPreexistingUniFile(packageName, model);
+      ClassModel model = mb.getClassModel();
+      Fulib.generator().generate(model);
 
-        String uniFileName = model.getPackageSrcFolder() + "/University.java";
-        assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
+      String outFolder = model.getMainJavaDir() + "/../out";
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-        String outFolder = model.getMainJavaDir() + "/../out";
-        int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      ArrayList<AssocRole> clone = (ArrayList<AssocRole>) university.getClazz().getRoles().clone();
+      for (AssocRole r : clone)
+      {
+         r.setClazz(null);
+      }
+      clone = (ArrayList<AssocRole>) prof.getClazz().getRoles().clone();
+      for (AssocRole r : clone)
+      {
+         r.setClazz(null);
+      }
 
-        Fulib.generator().generate(model);
+      university.buildAssociation(prof, "head", Type.ONE, "uni", Type.ONE);
+      university.buildAssociation(prof, "staff", Type.MANY, "employer", Type.ONE);
 
-        assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
+      Fulib.generator().generate(model);
 
-        String studFileName = model.getPackageSrcFolder() + "/Student.java";
-        assertThat("Student.java exists", Files.exists(Paths.get(studFileName)));
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      clone = (ArrayList<AssocRole>) university.getClazz().getRoles().clone();
+      for (AssocRole r : clone)
+      {
+         r.setClazz(null);
+      }
+      clone = (ArrayList<AssocRole>) prof.getClazz().getRoles().clone();
+      for (AssocRole r : clone)
+      {
+         r.setClazz(null);
+      }
 
-        runAttributeReadWriteTests(outFolder, model);
-    }
+      university.buildAssociation(prof, "head", Type.ONE, null, 0);
+      university.buildAssociation(prof, "staff", Type.MANY, null, 0);
 
-    @Test
-    void testAssociationGenerator() throws Exception {
-        String targetFolder = "tmp";
-        String packageName = "org.fulib.test.studyright";
+      Fulib.generator().generate(model);
 
-        Tools.removeDirAndFiles(targetFolder);
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
+   }
 
-        ClassModel model = getClassModelWithAssociations(targetFolder, packageName);
+   @Test
+   void testExtendsGenerator() throws Exception
+   {
+      String targetFolder = "tmp";
+      String packageName = "org.fulib.test.studyright";
 
-        createPreexistingUniFile(packageName, model);
+      Tools.removeDirAndFiles(targetFolder);
 
-        String uniFileName = model.getPackageSrcFolder() + "/University.java";
-        assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
+      ClassModel model = this.getClassModelWithExtends(targetFolder, packageName);
 
-        String outFolder = model.getMainJavaDir() + "/../out";
-        int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      this.createPreexistingUniFile(packageName, model);
 
-        Fulib.generator().generate(model);
+      Fulib.generator().generate(model);
 
-        assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
+      // add implements clause to TeachingAssistant
+      FileFragmentMap fragmentMap = Parser.parse(model.getPackageSrcFolder() + "/TeachingAssistent.java");
+      CodeFragment fragment = fragmentMap.getFragment(Parser.CLASS);
+      fragment
+         .setText("@Deprecated \npublic class TeachingAssistent extends Student implements java.io.Serializable \n{");
+      fragmentMap.writeFile();
+      fragmentMap.add(Parser.CLASS, "public class TeachingAssistent extends Student \n{", 1);
+      assertThat(fragment.getText(), containsString("@Deprecated"));
+      assertThat(fragment.getText(), containsString("implements java.io.Serializable"));
+      assertThat(fragment.getText(), containsString("{"));
 
-        String studFileName = model.getPackageSrcFolder() + "/Student.java";
-        assertThat("Student.java exists", Files.exists(Paths.get(studFileName)));
+      Fulib.generator().generate(model);
 
-        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      String uniFileName = model.getPackageSrcFolder() + "/University.java";
+      assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
 
-        runAssociationReadWriteTests(outFolder, model);
+      String studFileName = model.getPackageSrcFolder() + "/Student.java";
+      assertThat("Student.java exists", Files.exists(Paths.get(studFileName)));
 
-    }
+      String outFolder = model.getMainJavaDir() + "/../out";
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
 
-    @Test
-    void testUnidirectionalAssociations() throws Exception {
-        String targetFolder = "tmp";
-        String packageName = "org.fulib.test.studyright";
+      this.runExtendsReadWriteTests(outFolder, model);
+   }
 
-        Tools.removeDirAndFiles(targetFolder);
+   @Test
+   void testTables() throws Exception
+   {
+      String targetFolder = "tmp";
 
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName, targetFolder);
+      Tools.removeDirAndFiles(targetFolder);
 
-        ClassBuilder university = mb.buildClass("University");
-        ClassBuilder prof = mb.buildClass("Prof");
+      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
 
-        university.buildAssociation(prof, "head", Type.ONE, null, 0);
-        university.buildAssociation(prof, "staff", Type.MANY, null, 0);
+      ClassBuilder uni = mb.buildClass("University").buildAttribute("name", Type.STRING);
 
-        ClassModel model = mb.getClassModel();
-        Fulib.generator().generate(model);
+      ClassBuilder student = mb.buildClass("Student").buildAttribute("name", Type.STRING)
+                               .buildAttribute("studentId", Type.STRING).buildAttribute("credits", Type.INT);
 
-        String outFolder = model.getMainJavaDir() + "/../out";
-        int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      student.buildAssociation(student, "friends", Type.MANY, "friends", Type.MANY);
+      uni.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
 
-        ArrayList<AssocRole> clone = (ArrayList<AssocRole>) university.getClazz().getRoles().clone();
-        for (AssocRole r : clone) {
-            r.setClazz(null);
-        }
-        clone = (ArrayList<AssocRole>) prof.getClazz().getRoles().clone();
-        for (AssocRole r : clone) {
-            r.setClazz(null);
-        }
+      ClassBuilder ta = mb.buildClass("Tutor").setSuperClass(student);
 
+      ClassBuilder room = mb.buildClass("Room").buildAttribute("roomNo", Type.STRING)
+                            .buildAttribute("topic", Type.STRING);
 
-        university.buildAssociation(prof, "head", Type.ONE, "uni", Type.ONE);
-        university.buildAssociation(prof, "staff", Type.MANY, "employer", Type.ONE);
+      uni.buildAssociation(room, "rooms", Type.MANY, "uni", Type.ONE);
+      student.buildAssociation(room, "in", Type.ONE, "students", Type.MANY);
 
-        Fulib.generator().generate(model);
+      ClassBuilder assignment = mb.buildClass("Assignment").buildAttribute("topic", Type.STRING)
+                                  .buildAttribute("points", Type.INT);
 
-        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      room.buildAssociation(assignment, "assignments", Type.MANY, "room", Type.ONE);
+      student.buildAssociation(assignment, "done", Type.MANY, "students", Type.MANY);
 
+      ClassModel model = mb.getClassModel();
 
-        clone = (ArrayList<AssocRole>) university.getClazz().getRoles().clone();
-        for (AssocRole r : clone) {
-            r.setClazz(null);
-        }
-        clone = (ArrayList<AssocRole>) prof.getClazz().getRoles().clone();
-        for (AssocRole r : clone) {
-            r.setClazz(null);
-        }
+      Fulib.generator().generate(model);
 
-        university.buildAssociation(prof, "head", Type.ONE, null, 0);
-        university.buildAssociation(prof, "staff", Type.MANY, null, 0);
+      Fulib.tablesGenerator().generate(model);
 
-        Fulib.generator().generate(model);
+      // generate again to test recognition of existing fragments
+      Fulib.generator().generate(model);
 
-        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
-    }
+      Fulib.tablesGenerator().generate(model);
 
-    @Test
-    void testExtendsGenerator() throws Exception {
-        String targetFolder = "tmp";
-        String packageName = "org.fulib.test.studyright";
+      String uniFileName = model.getPackageSrcFolder() + "/tables/UniversityTable.java";
+      assertThat("UniversityTable.java exists", Files.exists(Paths.get(uniFileName)));
 
-        Tools.removeDirAndFiles(targetFolder);
+      String outFolder = model.getMainJavaDir() + "/../out";
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder() + "/tables");
+      assertThat("compiler return code: ", returnCode, is(0));
 
-        ClassModel model = getClassModelWithExtends(targetFolder, packageName);
+      this.runTableTests(outFolder, model);
+   }
 
-        createPreexistingUniFile(packageName, model);
+   @ParameterizedTest
+   @ValueSource(strings = { "org.extends.tools", // keyword
+      "org.fulib.", ".org.fulib", "org fulib",
+      // "org$fulib", // valid Java identifier
+   })
+   void testValidPackageNames(String packageName)
+   {
+      assertThrows(IllegalArgumentException.class, () -> Fulib.classModelBuilder(packageName));
+   }
 
-        Fulib.generator().generate(model);
+   @Test
+   void testValidClassNames()
+   {
 
-        // add implements clause to TeachingAssistant
-        FileFragmentMap fragmentMap = Parser.parse(model.getPackageSrcFolder() + "/TeachingAssistent.java");
-        CodeFragment fragment = fragmentMap.getFragment(Parser.CLASS);
-        fragment.setText("@Deprecated \npublic class TeachingAssistent extends Student implements java.io.Serializable \n{");
-        fragmentMap.writeFile();
-        fragmentMap.add(Parser.CLASS, "public class TeachingAssistent extends Student \n{", 1);
-        assertThat(fragment.getText(), containsString("@Deprecated"));
-        assertThat(fragment.getText(), containsString("implements java.io.Serializable"));
-        assertThat(fragment.getText(), containsString("{"));
+      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib");
 
-        Fulib.generator().generate(model);
+      assertThrows(IllegalArgumentException.class, () -> mb.buildClass(null));
+      assertThrows(IllegalArgumentException.class, () -> mb.buildClass(""));
+   }
 
-        String uniFileName = model.getPackageSrcFolder() + "/University.java";
-        assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));
+   @Test
+   void testValidIdentifiers()
+   {
 
-        String studFileName = model.getPackageSrcFolder() + "/Student.java";
-        assertThat("Student.java exists", Files.exists(Paths.get(studFileName)));
+      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib");
+      ClassBuilder c1 = mb.buildClass("C1");
 
-        String outFolder = model.getMainJavaDir() + "/../out";
-        int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
+      assertThrows(IllegalArgumentException.class, () -> mb.buildClass("C1"));
 
-        runExtendsReadWriteTests(outFolder, model);
+      assertThrows(IllegalArgumentException.class, () -> c1.buildAttribute("42", Type.STRING));
 
-    }
+      c1.buildAttribute("a42", Type.STRING);
+      assertThrows(IllegalArgumentException.class, () -> c1.buildAttribute("a42", Type.STRING));
 
-    @Test
-    void testTables() throws Exception {
-        String targetFolder = "tmp";
+      Function<String, Boolean> f;
+      c1.buildAttribute("myFunction", "java.util.function.Function<String,Boolean>");
 
-        Tools.removeDirAndFiles(targetFolder);
+      ClassBuilder c2 = mb.buildClass("C2");
+      assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c2, "a42", Type.MANY, "b", Type.MANY));
 
-        ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
+      assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c1, "x", Type.MANY, "x", Type.ONE));
 
-        ClassBuilder uni = mb.buildClass("University")
-                .buildAttribute("name", Type.STRING);
+      c1.buildAssociation(c1, "x", Type.MANY, "x", Type.MANY);
+   }
 
-        ClassBuilder student = mb.buildClass("Student")
-                .buildAttribute("name", Type.STRING)
-                .buildAttribute("studentId", Type.STRING)
-                .buildAttribute("credits", Type.INT);
+   @Test
+   void testModelEvolution() throws IOException
+   {
+      Tools.removeDirAndFiles("tmp");
 
-        student.buildAssociation(student, "friends", Type.MANY, "friends", Type.MANY);
-        uni.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
+      // first simple model
+      ClassModelBuilder mb = Fulib.classModelBuilder("org.evolve", "tmp/src");
+      ClassBuilder uni = mb.buildClass("University").buildAttribute("uniName", Type.STRING);
+      ClassBuilder stud = mb.buildClass("Student").buildAttribute("matNo", Type.STRING)
+                            .buildAttribute("startYear", Type.INT);
+      uni.buildAssociation(stud, "students", Type.MANY, "uni", Type.ONE);
+      ClassBuilder room = mb.buildClass("Room").buildAttribute("roomNo", Type.STRING);
 
-        ClassBuilder ta = mb.buildClass("Tutor").setSuperClass(student);
+      ClassModel firstModel = mb.getClassModel();
 
-        ClassBuilder room = mb.buildClass("Room")
-                .buildAttribute("roomNo", Type.STRING)
-                .buildAttribute("topic", Type.STRING);
+      this.createPreexistingUniFile("org.evolve", firstModel);
 
-        uni.buildAssociation(room, "rooms", Type.MANY, "uni", Type.ONE);
-        student.buildAssociation(room, "in", Type.ONE, "students", Type.MANY);
+      Fulib.generator().generate(firstModel);
 
-        ClassBuilder assignment = mb.buildClass("Assignment")
-                .buildAttribute("topic", Type.STRING)
-                .buildAttribute("points", Type.INT);
+      int compileResult = Tools.javac("tmp/out", firstModel.getPackageSrcFolder());
+      assertThat(compileResult, equalTo(0));
+      assertThat(Files.exists(Paths.get(firstModel.getPackageSrcFolder() + "/University.java")), is(true));
 
-        room.buildAssociation(assignment, "assignments", Type.MANY, "room", Type.ONE);
-        student.buildAssociation(assignment, "done", Type.MANY, "students", Type.MANY);
+      // rename an attribute
+      uni.getClazz().setName("Institute");
+      room.getClazz().setName("LectureHall");
+      stud.getClazz().getAttribute("matNo").setName("studentId");
+      stud.getClazz().getAttribute("startYear").setType(Type.STRING);
 
-        ClassModel model = mb.getClassModel();
+      // prepare logger
+      Logger logger = Logger.getLogger(Generator.class.getName());
+      final ArrayList<LogRecord> logRecordList = new ArrayList<>();
+      Handler handler = new Handler()
+      {
+         @Override
+         public void publish(LogRecord record)
+         {
+            logRecordList.add(record);
+         }
 
-        Fulib.generator().generate(model);
+         @Override
+         public void flush()
+         {
+         }
 
-        Fulib.tablesGenerator().generate(model);
+         @Override
+         public void close() throws SecurityException
+         {
+         }
+      };
+      logger.setUseParentHandlers(false);
+      logger.addHandler(handler);
+      logger.setLevel(Level.INFO);
 
-        // generate again to test recognition of existing fragments
-        Fulib.generator().generate(model);
+      Fulib.generator().generate(firstModel);
+      assertThat(logRecordList.size(), not(equalTo(0)));
 
-        Fulib.tablesGenerator().generate(model);
+      compileResult = Tools.javac("tmp/out", firstModel.getPackageSrcFolder());
+      assertThat(compileResult, equalTo(0));
 
-        String uniFileName = model.getPackageSrcFolder() + "/tables/UniversityTable.java";
-        assertThat("UniversityTable.java exists", Files.exists(Paths.get(uniFileName)));
+      // rename a class
+      uni.getClazz().setName("Institute");
 
-        String outFolder = model.getMainJavaDir() + "/../out";
-        int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-        assertThat("compiler return code: ", returnCode, is(0));
-        returnCode = Tools.javac(outFolder, model.getPackageSrcFolder() + "/tables");
-        assertThat("compiler return code: ", returnCode, is(0));
+      // rename an association
 
-        runTableTests(outFolder, model);
-    }
+   }
 
-    @ParameterizedTest
-    @ValueSource (strings = {
-            "org.extends.tools", // keyword
-            "org.fulib.",
-            ".org.fulib",
-            "org fulib",
-            // "org$fulib", // valid Java identifier
-    })
-    void testValidPackageNames(String packageName) {
-        assertThrows(IllegalArgumentException.class, () -> Fulib.classModelBuilder(packageName));
-    }
+   @Test
+   void testCustomTemplates() throws IOException
+   {
+      Tools.removeDirAndFiles("tmp");
 
-    @Test
-    void testValidClassNames() {
+      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
+      mb.buildClass("University").buildAttribute("name", Type.STRING);
+      mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"")
+        .buildAttribute("matrNo", Type.LONG, "0");
 
-        ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib");
+      ClassModel model = mb.getClassModel();
 
-        assertThrows(IllegalArgumentException.class, () -> mb.buildClass(null));
-        assertThrows(IllegalArgumentException.class, () -> mb.buildClass(""));
-    }
+      // generate normal
+      Fulib.generator().generate(model);
 
-    @Test
-    void testValidIdentifiers() {
+      byte[] bytes = Files.readAllBytes(Paths.get(model.getPackageSrcFolder() + "/Student.java"));
+      String content = new String(bytes);
+      assertThat(content, not(containsString("/* custom attribute comment */")));
 
-        ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib");
-        ClassBuilder c1 = mb.buildClass("C1");
+      // generate custom
+      // start_code_fragment: testCustomTemplates
+      Fulib.generator().setCustomTemplatesFile("templates/custom.stg").generate(model);
+      // end_code_fragment:
 
-        assertThrows(IllegalArgumentException.class, () -> mb.buildClass("C1"));
+      bytes = Files.readAllBytes(Paths.get(model.getPackageSrcFolder() + "/Student.java"));
+      content = new String(bytes);
+      assertThat(content, containsString("/* custom attribute comment */"));
+   }
 
-        assertThrows(IllegalArgumentException.class, () -> c1.buildAttribute("42", Type.STRING));
+   private void createPreexistingUniFile(String packageName, ClassModel model) throws IOException
+   {
+      // create pre existing University class with extra elements
+      STGroup group = new STGroupFile("templates/university.stg");
+      ST uniTemplate = group.getInstanceOf("university");
+      uniTemplate.add("packageName", packageName);
+      String uniText = uniTemplate.render();
 
-        c1.buildAttribute("a42", Type.STRING);
-        assertThrows(IllegalArgumentException.class, () -> c1.buildAttribute("a42", Type.STRING));
+      Files.createDirectories(Paths.get(model.getPackageSrcFolder()));
+      Files.write(Paths.get(model.getPackageSrcFolder() + "/University.java"), uniText.getBytes());
+   }
 
-        Function<String,Boolean> f;
-        c1.buildAttribute("myFunction", "java.util.function.Function<String,Boolean>");
+   final ClassModel getClassModelUniStudWithAttributes(ClassModelBuilder mb)
+   {
+      mb.buildClass("University").buildAttribute("name", Type.STRING);
 
-        ClassBuilder c2 = mb.buildClass("C2");
-        assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c2, "a42", Type.MANY,
-                "b", Type.MANY));
+      mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"")
+        .buildAttribute("matrNo", Type.LONG, "0");
 
-        assertThrows(IllegalArgumentException.class, () -> c1.buildAssociation(c1, "x", Type.MANY,
-                "x", Type.ONE));
+      return mb.getClassModel();
+   }
 
-        c1.buildAssociation(c1, "x", Type.MANY, "x", Type.MANY);
-    }
+   ClassModel getClassModelUniStudWithAttributes(String targetFolder, String packageName)
+   {
+      return this.getClassModelUniStudWithAttributes(Fulib.classModelBuilder(packageName, targetFolder + "/src"));
+   }
 
-    @Test
-    void testModelEvolution() throws IOException {
-        Tools.removeDirAndFiles("tmp");
+   final ClassModel getClassModelWithAssociations(String targetFolder, ClassModelBuilder mb)
+   {
+      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+      // end_code_fragment:
 
+      mb.getClassModel().setMainJavaDir(targetFolder + "/src");
 
-        // first simple model
-        ClassModelBuilder mb = Fulib.classModelBuilder("org.evolve", "tmp/src");
-        ClassBuilder uni = mb.buildClass("University")
-                .buildAttribute("uniName", Type.STRING);
-        ClassBuilder stud = mb.buildClass("Student")
-                .buildAttribute("matNo", Type.STRING)
-                .buildAttribute("startYear", Type.INT);
-        uni.buildAssociation(stud, "students", Type.MANY, "uni", Type.ONE);
-        ClassBuilder room = mb.buildClass("Room")
-                .buildAttribute("roomNo", Type.STRING);
+      ClassBuilder studi = mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"");
 
-        ClassModel firstModel = mb.getClassModel();
+      universitiy.buildAssociation(studi, "students", Type.MANY, "uni", Type.ONE);
 
-        createPreexistingUniFile("org.evolve", firstModel);
+      ClassBuilder room = mb.buildClass("Room").buildAttribute("no", Type.STRING);
 
-        Fulib.generator().generate(firstModel);
+      universitiy.buildAssociation(room, "rooms", Type.MANY, "uni", Type.ONE)
+                 .setSourceRoleCollection(LinkedHashSet.class).setAggregation();
 
-        int compileResult = Tools.javac("tmp/out", firstModel.getPackageSrcFolder());
-        assertThat(compileResult, equalTo(0));
-        assertThat(Files.exists(Paths.get(firstModel.getPackageSrcFolder() + "/University.java")), is(true));
+      studi.buildAssociation(room, "condo", Type.ONE, "owner", Type.ONE);
 
-        // rename an attribute
-        uni.getClazz().setName("Institute");
-        room.getClazz().setName("LectureHall");
-        stud.getClazz().getAttribute("matNo").setName("studentId");
-        stud.getClazz().getAttribute("startYear").setType(Type.STRING);
+      studi.buildAssociation(room, "in", Type.MANY, "students", Type.MANY);
 
-        // prepare logger
-        Logger logger = Logger.getLogger(Generator.class.getName());
-        final ArrayList<LogRecord> logRecordList = new ArrayList<>();
-        Handler handler = new Handler() {
-            @Override
-            public void publish(LogRecord record) {
-                logRecordList.add(record);
-            }
+      ClassBuilder assignment = mb.buildClass("Assignment").buildAttribute("topic", Type.STRING);
+      studi.buildAssociation(assignment, "done", Type.MANY, "students", Type.MANY);
 
-            @Override
-            public void flush() {
-            }
+      return mb.getClassModel();
+   }
 
-            @Override
-            public void close() throws SecurityException {
-            }
-        };
-        logger.setUseParentHandlers(false);
-        logger.addHandler(handler);
-        logger.setLevel(Level.INFO);
+   ClassModel getClassModelWithAssociations(String targetFolder, String packageName)
+   {
+      return this.getClassModelWithAssociations(targetFolder, Fulib.classModelBuilder(packageName, "src/main/java"));
+   }
 
-        Fulib.generator().generate(firstModel);
-        assertThat(logRecordList.size(), not(equalTo(0)));
+   private ClassModel getClassModelWithExtends(String targetFolder, String packageName)
+   {
+      // start_code_fragment: ClassModelBuilder
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
 
-        compileResult = Tools.javac("tmp/out", firstModel.getPackageSrcFolder());
-        assertThat(compileResult, equalTo(0));
+      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+      // end_code_fragment:
 
-        // rename a class
-        uni.getClazz().setName("Institute");
+      mb.getClassModel().setMainJavaDir(targetFolder + "/src");
 
-        // rename an association
+      // start_code_fragment: ClassBuilder.buildAttribute_init
+      ClassBuilder student = mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"");
+      // end_code_fragment:
 
-    }
+      // start_code_fragment: ClassBuilder.buildAssociation
+      universitiy.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
+      // end_code_fragment:
 
-    @Test
-    void testCustomTemplates() throws IOException {
-        Tools.removeDirAndFiles("tmp");
+      ClassBuilder room = mb.buildClass("Room").buildAttribute("no", Type.STRING);
 
-        ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
-        mb.buildClass("University").buildAttribute("name", Type.STRING);
-        mb.buildClass("Student")
-                .buildAttribute("name", Type.STRING, "\"Karli\"")
-                .buildAttribute("matrNo", Type.LONG, "0");
+      universitiy.buildAssociation(room, "rooms", Type.MANY, "uni", Type.ONE)
+                 .setSourceRoleCollection(LinkedHashSet.class);
 
-        ClassModel model = mb.getClassModel();
+      student.buildAssociation(room, "condo", Type.ONE, "owner", Type.ONE);
 
-        // generate normal
-        Fulib.generator().generate(model);
+      student.buildAssociation(room, "in", Type.MANY, "students", Type.MANY);
 
-        byte[] bytes = Files.readAllBytes(Paths.get(model.getPackageSrcFolder() + "/Student.java"));
-        String content = new String(bytes);
-        assertThat(content, not(containsString("/* custom attribute comment */")));
+      ClassBuilder ta = mb.buildClass("TeachingAssistent").setSuperClass(student).buildAttribute("level", Type.STRING);
 
-        // generate custom
-        // start_code_fragment: testCustomTemplates
-        Fulib.generator()
-                .setCustomTemplatesFile("templates/custom.stg")
-                .generate(model);
-        // end_code_fragment:
+      return mb.getClassModel();
+   }
 
-        bytes = Files.readAllBytes(Paths.get(model.getPackageSrcFolder() + "/Student.java"));
-        content = new String(bytes);
-        assertThat(content, containsString("/* custom attribute comment */"));
-    }
+   private void runAttributeReadWriteTests(String outFolder, ClassModel model) throws Exception
+   {
+      final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
 
-    private void createPreexistingUniFile(String packageName, ClassModel model) throws IOException {
-        // create pre existing University class with extra elements
-        STGroup group = new STGroupFile("templates/university.stg");
-        ST uniTemplate = group.getInstanceOf("university");
-        uniTemplate.add("packageName", packageName);
-        String uniText = uniTemplate.render();
+      // run self test
+      File classesDir = new File(outFolder);
 
-        Files.createDirectories(Paths.get(model.getPackageSrcFolder()));
-        Files.write(Paths.get(model.getPackageSrcFolder() + "/University.java"), uniText.getBytes());
-    }
+      // Load and instantiate compiled class.
+      URLClassLoader classLoader;
+      // Loading the class
+      classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
 
-    final ClassModel getClassModelUniStudWithAttributes(ClassModelBuilder mb) {
-        mb.buildClass("University").buildAttribute("name", Type.STRING);
+      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
 
-        mb.buildClass("Student")
-                .buildAttribute("name", Type.STRING, "\"Karli\"")
-                .buildAttribute("matrNo", Type.LONG, "0");
+      Object studyRight = uniClass.newInstance();
 
-        return mb.getClassModel();
-    }
+      Method addPropertyChangeListener = uniClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
 
-    ClassModel getClassModelUniStudWithAttributes(String targetFolder, String packageName) {
-        return getClassModelUniStudWithAttributes(Fulib.classModelBuilder(packageName, targetFolder + "/src"));
-    }
+      PropertyChangeListener listener = eventList::add;
+      addPropertyChangeListener.invoke(studyRight, listener);
 
-    final ClassModel getClassModelWithAssociations(String targetFolder, ClassModelBuilder mb) {
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
-        // end_code_fragment:
+      assertThat(studyRight, hasProperty("name", nullValue()));
 
-        mb.getClassModel().setMainJavaDir(targetFolder + "/src");
+      Method setName = uniClass.getMethod("setName", String.class);
 
-        ClassBuilder studi = mb.buildClass("Student")
-                .buildAttribute("name", Type.STRING, "\"Karli\"");
+      Object setNameReturn = setName.invoke(studyRight, "StudyRight");
+      assertThat("setName returned this", setNameReturn, is(sameInstance(studyRight)));
+      assertThat("got property change", eventList.size() > 0);
 
-        universitiy.buildAssociation(studi, "students", Type.MANY, "uni", Type.ONE);
+      PropertyChangeEvent evt = eventList.get(0);
+      assertThat(evt.getPropertyName(), is(equalTo("name")));
+      assertThat("event new value", evt.getNewValue(), is(equalTo("StudyRight")));
 
-        ClassBuilder room = mb.buildClass("Room")
-                .buildAttribute("no", Type.STRING);
+      // set name with same value again --> no propertyChange
+      setName.invoke(studyRight, "StudyRight");
+      assertThat("no property change", eventList.size() == 1);
+      assertThat(studyRight, hasProperty("name", equalTo("StudyRight")));
 
-        universitiy.buildAssociation(room, "rooms", Type.MANY, "uni", Type.ONE)
-                .setSourceRoleCollection(LinkedHashSet.class)
-                .setAggregation();
+      // change name
+      setName.invoke(studyRight, "StudyFuture");
+      assertThat(studyRight, hasProperty("name", equalTo("StudyFuture")));
+      assertThat("got property change", eventList.size() == 2);
+      evt = eventList.get(1);
+      assertThat("event property", evt.getPropertyName(), is(equalTo("name")));
+      assertThat("event new value", evt.getNewValue(), is(equalTo("StudyFuture")));
 
-        studi.buildAssociation(room, "condo", Type.ONE, "owner", Type.ONE);
+      // testing int attr
+      eventList.clear();
 
-        studi.buildAssociation(room, "in", Type.MANY, "students", Type.MANY);
+      Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
 
-        ClassBuilder assignment = mb.buildClass("Assignment").buildAttribute("topic", Type.STRING);
-        studi.buildAssociation(assignment, "done", Type.MANY, "students", Type.MANY);
+      Object karli = studClass.newInstance();
+      Method setStudentName = studClass.getMethod("setName", String.class);
+      setStudentName.invoke(karli, "Karli");
 
-        return mb.getClassModel();
-    }
+      Method setMatrNo = studClass.getMethod("setMatrNo", long.class);
+      addPropertyChangeListener = studClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
+      addPropertyChangeListener.invoke(karli, listener);
 
-    ClassModel getClassModelWithAssociations(String targetFolder, String packageName) {
-        return getClassModelWithAssociations(targetFolder, Fulib.classModelBuilder(packageName, "src/main/java"));
-    }
+      assertThat(karli, hasProperty("matrNo", equalTo(0L)));
 
-    private ClassModel getClassModelWithExtends(String targetFolder, String packageName) {
-        // start_code_fragment: ClassModelBuilder
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+      Object setMatrNoReturn = setMatrNo.invoke(karli, 42);
 
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
-        // end_code_fragment:
+      assertThat("set method returned this", setMatrNoReturn, is(sameInstance(karli)));
+      assertThat(karli, hasProperty("matrNo", equalTo(42L)));
+      assertThat("got property change", eventList.size() == 1);
+      evt = eventList.get(0);
+      assertThat("event property", evt.getPropertyName(), is(equalTo("matrNo")));
+      assertThat("event new value", evt.getNewValue(), is(42L));
 
-        mb.getClassModel().setMainJavaDir(targetFolder + "/src");
+      setMatrNoReturn = setMatrNo.invoke(karli, 42);
 
-        // start_code_fragment: ClassBuilder.buildAttribute_init
-        ClassBuilder student = mb.buildClass("Student")
-                .buildAttribute("name", Type.STRING, "\"Karli\"");
-        // end_code_fragment:
+      assertThat("set method returned this", setMatrNoReturn, is(sameInstance(karli)));
+      assertThat("no property change", eventList.size() == 1);
 
-        // start_code_fragment: ClassBuilder.buildAssociation
-        universitiy.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
-        // end_code_fragment:
+      setMatrNo.invoke(karli, 23);
+      assertThat("got property change", eventList.size() == 2);
 
-        ClassBuilder room = mb.buildClass("Room")
-                .buildAttribute("no", Type.STRING);
+      // test toString()
+      Method toString = studClass.getMethod("toString");
+      Object txt = toString.invoke(karli);
+      assertThat("toString", txt, is(equalTo("Karli")));
 
-        universitiy.buildAssociation(room, "rooms", Type.MANY, "uni", Type.ONE)
-                .setSourceRoleCollection(LinkedHashSet.class);
+      toString = uniClass.getMethod("toString");
+      txt = toString.invoke(studyRight);
+      assertThat("toString", txt, is(equalTo("Hello")));
+   }
 
-        student.buildAssociation(room, "condo", Type.ONE, "owner", Type.ONE);
+   void runAssociationReadWriteTests(String outFolder, ClassModel model) throws Exception
+   {
+      final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
+      PropertyChangeListener listener = eventList::add;
 
-        student.buildAssociation(room, "in", Type.MANY, "students", Type.MANY);
+      // run self test
+      File classesDir = new File(outFolder);
 
-        ClassBuilder ta = mb.buildClass("TeachingAssistent")
-                .setSuperClass(student)
-                .buildAttribute("level", Type.STRING);
+      // Load and instantiate compiled class.
+      URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
 
-        return mb.getClassModel();
-    }
+      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
+      Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
+      Class<?> roomClass = Class.forName(model.getPackageName() + ".Room", true, classLoader);
 
-    private void runAttributeReadWriteTests(String outFolder, ClassModel model) throws Exception {
-        final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
+      Object studyRight = uniClass.newInstance();
+      Object studyFuture = uniClass.newInstance();
 
-        // run self test
-        File classesDir = new File(outFolder);
+      Method setName = uniClass.getMethod("setName", String.class);
+      Method addPropertyChangeListener = uniClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
+      setName.invoke(studyRight, "Study Right");
+      setName.invoke(studyFuture, "Study Future");
+      addPropertyChangeListener.invoke(studyRight, listener);
+      addPropertyChangeListener.invoke(studyFuture, listener);
 
-        // Load and instantiate compiled class.
-        URLClassLoader classLoader;
-        // Loading the class
-        classLoader = URLClassLoader.newInstance(new URL[]{classesDir.toURI().toURL()});
+      Object karli = studClass.newInstance();
+      Object lee = studClass.newInstance();
 
-        Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
+      setName = studClass.getMethod("setName", String.class);
+      addPropertyChangeListener = studClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
+      setName.invoke(karli, "Karli");
+      setName.invoke(lee, "Lee");
+      addPropertyChangeListener.invoke(karli, listener);
+      addPropertyChangeListener.invoke(lee, listener);
 
-        Object studyRight = uniClass.newInstance();
+      // do not add to students directly
+      Method getStudents = uniClass.getMethod("getStudents");
+      Collection studentSet = (Collection) getStudents.invoke(studyRight);
+      assertThrows(UnsupportedOperationException.class, () -> studentSet.add(karli),
+                   "should not be possible to add an object to a role set directly");
 
-        Method addPropertyChangeListener = uniClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
+      // ok, create a link
+      assertThat(studyRight, hasProperty("students", is(empty())));
+      assertThat(karli, hasProperty("uni", nullValue()));
 
-        PropertyChangeListener listener = eventList::add;
-        addPropertyChangeListener.invoke(studyRight, listener);
+      Method withStudents = uniClass.getMethod("withStudents", Object[].class);
+      Object withResult = withStudents.invoke(studyRight, new Object[] { new Object[] { karli } });
+      assertThat(withResult, is(equalTo(studyRight)));
+      assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
+      assertThat(karli, hasProperty("uni", equalTo(studyRight)));
 
-        assertThat(studyRight, hasProperty("name", nullValue()));
+      Method setUni = studClass.getMethod("setUni", uniClass);
+      Object setUniResult = setUni.invoke(karli, studyFuture);
+      assertThat(setUniResult, is(equalTo(karli)));
+      assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
+      assertThat(studyRight, hasProperty("students", is(empty())));
+      assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli)));
 
-        Method setName = uniClass.getMethod("setName", String.class);
+      setUni.invoke(karli, new Object[] { null });
+      assertThat(karli, hasProperty("uni", nullValue()));
+      assertThat(studyFuture, hasProperty("students", is(empty())));
 
-        Object setNameReturn = setName.invoke(studyRight, "StudyRight");
-        assertThat("setName returned this", setNameReturn, is(sameInstance(studyRight)));
-        assertThat("got property change", eventList.size() > 0);
+      withStudents.invoke(studyRight, new Object[] { new Object[] { karli, lee } });
+      assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli, lee)));
+      assertThat(karli, hasProperty("uni", equalTo(studyRight)));
+      assertThat(lee, hasProperty("uni", equalTo(studyRight)));
 
-        PropertyChangeEvent evt = eventList.get(0);
-        assertThat(evt.getPropertyName(), is(equalTo("name")));
-        assertThat("event new value", evt.getNewValue(), is(equalTo("StudyRight")));
+      assertThrows(Exception.class,
+                   () -> withStudents.invoke(studyFuture, new Object[] { new Object[] { karli, lee, studyRight } }));
 
-        // set name with same value again --> no propertyChange
-        setName.invoke(studyRight, "StudyRight");
-        assertThat("no property change", eventList.size() == 1);
-        assertThat(studyRight, hasProperty("name", equalTo("StudyRight")));
+      assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli, lee)));
+      assertThat(studyFuture, hasProperty("students", not(containsInAnyOrder(studyRight))));
+      assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
+      assertThat(lee, hasProperty("uni", equalTo(studyFuture)));
 
-        // change name
-        setName.invoke(studyRight, "StudyFuture");
-        assertThat(studyRight, hasProperty("name", equalTo("StudyFuture")));
-        assertThat("got property change", eventList.size() == 2);
-        evt = eventList.get(1);
-        assertThat("event property", evt.getPropertyName(), is(equalTo("name")));
-        assertThat("event new value", evt.getNewValue(), is(equalTo("StudyFuture")));
+      Method withoutStudents = uniClass.getMethod("withoutStudents", Object[].class);
+      withoutStudents.invoke(studyFuture, new Object[] { new Object[] { karli, lee, studyRight } });
+      assertThat(studyFuture, hasProperty("students", is(empty())));
+      assertThat(karli, hasProperty("uni", nullValue()));
+      assertThat(lee, hasProperty("uni", nullValue()));
 
-        // testing int attr
-        eventList.clear();
+      withStudents.invoke(studyRight, new Object[] { new Object[] { karli, lee } });
+      withStudents.invoke(studyFuture, new Object[] { new Object[] { lee } });
+      assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
+      assertThat(studyFuture, hasProperty("students", containsInAnyOrder(lee)));
+      assertThat(karli, hasProperty("uni", equalTo(studyRight)));
+      assertThat(lee, hasProperty("uni", equalTo(studyFuture)));
 
-        Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
+      // test LinkedHashSet role
+      Object wa1337 = roomClass.newInstance();
+      Object wa1342 = roomClass.newInstance();
 
-        Object karli = studClass.newInstance();
-        Method setStudentName = studClass.getMethod("setName", String.class);
-        setStudentName.invoke(karli, "Karli");
+      Method withRooms = uniClass.getMethod("withRooms", Object[].class);
+      Method setUni4Room = roomClass.getMethod("setUni", uniClass);
 
-        Method setMatrNo = studClass.getMethod("setMatrNo", long.class);
-        addPropertyChangeListener = studClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
-        addPropertyChangeListener.invoke(karli, listener);
+      Object withRoomsResult = withRooms.invoke(studyRight, new Object[] { new Object[] { wa1337, wa1342 } });
+      assertThat(withRoomsResult, equalTo(studyRight));
+      assertThat(studyRight, hasProperty("rooms", containsInAnyOrder(wa1337, wa1342)));
+      assertThat(wa1337, hasProperty("uni", equalTo(studyRight)));
+      assertThat(wa1342, hasProperty("uni", equalTo(studyRight)));
 
-        assertThat(karli, hasProperty("matrNo", equalTo(0L)));
+      withRooms.invoke(studyFuture, new Object[] { new Object[] { wa1342 } });
+      assertThat(studyRight, hasProperty("rooms", not(containsInAnyOrder(wa1342))));
+      assertThat(studyFuture, hasProperty("rooms", containsInAnyOrder(wa1342)));
+      assertThat(wa1342, hasProperty("uni", equalTo(studyFuture)));
 
-        Object setMatrNoReturn = setMatrNo.invoke(karli, 42);
+      // test 1 to 1
+      Method setCondo = studClass.getMethod("setCondo", roomClass);
+      Object setCondoResult = setCondo.invoke(karli, wa1337);
+      assertThat(setCondoResult, equalTo(karli));
+      assertThat(karli, hasProperty("condo", equalTo(wa1337)));
+      assertThat(wa1337, hasProperty("owner", equalTo(karli)));
 
-        assertThat("set method returned this", setMatrNoReturn, is(sameInstance(karli)));
-        assertThat(karli, hasProperty("matrNo", equalTo(42L)));
-        assertThat("got property change", eventList.size() == 1);
-        evt = eventList.get(0);
-        assertThat("event property", evt.getPropertyName(), is(equalTo("matrNo")));
-        assertThat("event new value", evt.getNewValue(), is(42L));
+      setCondo.invoke(lee, wa1337);
+      assertThat(karli, hasProperty("condo", nullValue()));
+      assertThat(lee, hasProperty("condo", equalTo(wa1337)));
+      assertThat(wa1337, hasProperty("owner", equalTo(lee)));
 
-        setMatrNoReturn = setMatrNo.invoke(karli, 42);
+      // test n to m
+      Method withIn = studClass.getMethod("withIn", Object[].class);
 
-        assertThat("set method returned this", setMatrNoReturn, is(sameInstance(karli)));
-        assertThat("no property change", eventList.size() == 1);
+      Object withInResult = withIn.invoke(karli, new Object[] { new Object[] { wa1337, wa1342 } });
+      withIn.invoke(lee, new Object[] { new Object[] { wa1337, wa1342 } });
+      assertThat(withInResult, equalTo(karli));
+      assertThat(karli, hasProperty("in", containsInAnyOrder(wa1337, wa1342)));
+      assertThat(lee, hasProperty("in", containsInAnyOrder(wa1337, wa1342)));
+      assertThat(wa1337, hasProperty("students", containsInAnyOrder(karli, lee)));
+      assertThat(wa1342, hasProperty("students", containsInAnyOrder(karli, lee)));
 
-        setMatrNo.invoke(karli, 23);
-        assertThat("got property change", eventList.size() == 2);
+      Method withoutStudents4Room = roomClass.getMethod("withoutStudents", Object[].class);
+      withoutStudents4Room.invoke(wa1337, new Object[] { new Object[] { lee } });
+      assertThat(wa1337, hasProperty("students", not(containsInAnyOrder(lee))));
+      assertThat(lee, hasProperty("in", not(containsInAnyOrder(wa1337))));
 
-        // test toString()
-        Method toString = studClass.getMethod("toString");
-        Object txt = toString.invoke(karli);
-        assertThat("toString", txt, is(equalTo("Karli")));
+      Method removeYou = uniClass.getMethod("removeYou");
+      removeYou.invoke(studyRight);
+      assertThat(karli, hasProperty("uni", nullValue()));
+      assertThat(wa1337, hasProperty("uni", nullValue()));
+      assertThat(wa1337, hasProperty("students", not(containsInAnyOrder(karli))));
+   }
 
-        toString = uniClass.getMethod("toString");
-        txt = toString.invoke(studyRight);
-        assertThat("toString", txt, is(equalTo("Hello")));
-    }
+   void runExtendsReadWriteTests(String outFolder, ClassModel model) throws Exception
+   {
+      // run self test
+      File classesDir = new File(outFolder);
 
-    void runAssociationReadWriteTests(String outFolder, ClassModel model) throws Exception {
-        final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
-        PropertyChangeListener listener = eventList::add;
+      // Load and instantiate compiled class.
+      URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
 
-        // run self test
-        File classesDir = new File(outFolder);
+      Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
+      Class<?> taClass = Class.forName(model.getPackageName() + ".TeachingAssistent", true, classLoader);
 
-        // Load and instantiate compiled class.
-        URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{classesDir.toURI().toURL()});
+      Object studyRight = uniClass.newInstance();
+      Object studyFuture = uniClass.newInstance();
 
-        Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
-        Class<?> studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
-        Class<?> roomClass = Class.forName(model.getPackageName() + ".Room", true, classLoader);
+      Method setName = uniClass.getMethod("setName", String.class);
+      setName.invoke(studyRight, "Study Right");
+      setName.invoke(studyRight, "Study Future");
 
-        Object studyRight = uniClass.newInstance();
-        Object studyFuture = uniClass.newInstance();
+      Object karli = taClass.newInstance();
 
-        Method setName = uniClass.getMethod("setName", String.class);
-        Method addPropertyChangeListener = uniClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
-        setName.invoke(studyRight, "Study Right");
-        setName.invoke(studyFuture, "Study Future");
-        addPropertyChangeListener.invoke(studyRight, listener);
-        addPropertyChangeListener.invoke(studyFuture, listener);
+      setName = taClass.getMethod("setName", String.class);
+      setName.invoke(karli, "Karli");
 
-        Object karli = studClass.newInstance();
-        Object lee = studClass.newInstance();
+      // ok, create a link
+      assertThat(karli, hasProperty("uni", nullValue()));
 
-        setName = studClass.getMethod("setName", String.class);
-        addPropertyChangeListener = studClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
-        setName.invoke(karli, "Karli");
-        setName.invoke(lee, "Lee");
-        addPropertyChangeListener.invoke(karli, listener);
-        addPropertyChangeListener.invoke(lee, listener);
+      Method withStudents = uniClass.getMethod("withStudents", Object[].class);
+      Object withResult = withStudents.invoke(studyRight, new Object[] { new Object[] { karli } });
+      assertThat(withResult, is(equalTo(studyRight)));
+      assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
+      assertThat(karli, hasProperty("uni", equalTo(studyRight)));
 
-        // do not add to students directly
-        Method getStudents = uniClass.getMethod("getStudents");
-        Collection studentSet = (Collection) getStudents.invoke(studyRight);
-        assertThrows(UnsupportedOperationException.class, () -> studentSet.add(karli),
-                "should not be possible to add an object to a role set directly");
+      Method setUni = taClass.getMethod("setUni", uniClass);
+      Object setUniResult = setUni.invoke(karli, studyFuture);
+      assertThat(setUniResult, is(equalTo(karli)));
+      assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
+      assertThat(studyRight, hasProperty("students", is(empty())));
+      assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli)));
 
-        // ok, create a link
-        assertThat(studyRight, hasProperty("students", is(empty())));
-        assertThat(karli, hasProperty("uni", nullValue()));
+      Method setLevel = taClass.getMethod("setLevel", String.class);
+      setLevel.invoke(karli, "master");
+      assertThat(karli, hasProperty("level", equalTo("master")));
+   }
 
-        Method withStudents = uniClass.getMethod("withStudents", Object[].class);
-        Object withResult = withStudents.invoke(studyRight, new Object[]{new Object[]{karli}});
-        assertThat(withResult, is(equalTo(studyRight)));
-        assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
-        assertThat(karli, hasProperty("uni", equalTo(studyRight)));
+   void runTableTests(String outFolder, ClassModel model) throws Exception
+   {
+      this.getTableExampleObjects(outFolder, model);
 
-        Method setUni = studClass.getMethod("setUni", uniClass);
-        Object setUniResult = setUni.invoke(karli, studyFuture);
-        assertThat(setUniResult, is(equalTo(karli)));
-        assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
-        assertThat(studyRight, hasProperty("students", is(empty())));
-        assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli)));
+      // simple table
+      Class<?> uniTableClass = Class
+         .forName(model.getPackageName() + ".tables.UniversityTable", true, this.classLoader);
+      Class<?> roomsTableClass = Class.forName(model.getPackageName() + ".tables.RoomTable", true, this.classLoader);
+      Class<?> studentsTableClass = Class
+         .forName(model.getPackageName() + ".tables.StudentTable", true, this.classLoader);
+      Class<?> assignmentsTableClass = Class
+         .forName(model.getPackageName() + ".tables.AssignmentTable", true, this.classLoader);
+      Class<?> intTableClass = Class.forName(model.getPackageName() + ".tables.intTable", true, this.classLoader);
 
-        setUni.invoke(karli, new Object[]{null});
-        assertThat(karli, hasProperty("uni", nullValue()));
-        assertThat(studyFuture, hasProperty("students", is(empty())));
+      Constructor<?> declaredConstructors = uniTableClass.getDeclaredConstructors()[0];
+      Method uniExpandRooms = uniTableClass.getMethod("expandRooms", String[].class);
+      Method uniExpandStudents = uniTableClass.getMethod("expandStudents", String[].class);
+      Method roomsExpandAssignments = roomsTableClass.getMethod("expandAssignments", String[].class);
+      Method roomsExpandStudents = roomsTableClass.getMethod("expandStudents", String[].class);
+      Method studentTablehasDone = studentsTableClass.getMethod("hasDone", assignmentsTableClass);
+      Method studentTableSelectColumns = studentsTableClass.getMethod("selectColumns", String[].class);
+      Method studentTableDropColumns = studentsTableClass.getMethod("dropColumns", String[].class);
+      Method studentTableAddColumn = studentsTableClass.getMethod("addColumn", String.class, Function.class);
+      Method assignmentsToSet = assignmentsTableClass.getMethod("toSet");
+      Method assignmentsExpandPoints = assignmentsTableClass.getMethod("expandPoints", String[].class);
+      Method assignmentsFilter = assignmentsTableClass.getMethod("filter", Predicate.class);
+      Method assignmentsFilterRow = assignmentsTableClass.getMethod("filterRow", Predicate.class);
+      Method intTableToList = intTableClass.getMethod("toList");
+      Method intTableSum = intTableClass.getMethod("sum");
+      final Method assignmentGetPoints = this.assignClass.getMethod("getPoints");
+      final Method studentGetDone = this.studClass.getMethod("getDone");
 
-        withStudents.invoke(studyRight, new Object[]{new Object[]{karli, lee}});
-        assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli, lee)));
-        assertThat(karli, hasProperty("uni", equalTo(studyRight)));
-        assertThat(lee, hasProperty("uni", equalTo(studyRight)));
+      Object uniArray = Array.newInstance(this.uniClass, 1);
+      Array.set(uniArray, 0, this.studyRight);
 
-        assertThrows(Exception.class, () -> withStudents.invoke(studyFuture, new Object[]{new Object[]{karli, lee, studyRight}}));
+      Object uniTable = declaredConstructors.newInstance(uniArray);
+      assertThat(uniTable, notNullValue());
 
-        assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli, lee)));
-        assertThat(studyFuture, hasProperty("students", not(containsInAnyOrder(studyRight))));
-        assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
-        assertThat(lee, hasProperty("uni", equalTo(studyFuture)));
+      Object roomsTable = uniExpandRooms.invoke(uniTable, new Object[] { new String[] { "Rooms" } });
+      assertThat(roomsTable.toString(), containsString("wa1337"));
+      assertThat(roomsTable.toString(), containsString("wa1338"));
+      assertThat(roomsTable.toString(), containsString("wa1339"));
 
-        Method withoutStudents = uniClass.getMethod("withoutStudents", Object[].class);
-        withoutStudents.invoke(studyFuture, new Object[]{new Object[]{karli, lee, studyRight}});
-        assertThat(studyFuture, hasProperty("students", is(empty())));
-        assertThat(karli, hasProperty("uni", nullValue()));
-        assertThat(lee, hasProperty("uni", nullValue()));
+      Object assignmentsTable = roomsExpandAssignments
+         .invoke(roomsTable, new Object[] { new String[] { "Assignments" } });
+      assertThat(assignmentsTable.toString(), containsString("integrals"));
 
-        withStudents.invoke(studyRight, new Object[]{new Object[]{karli, lee}});
-        withStudents.invoke(studyFuture, new Object[]{new Object[]{lee}});
-        assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
-        assertThat(studyFuture, hasProperty("students", containsInAnyOrder(lee)));
-        assertThat(karli, hasProperty("uni", equalTo(studyRight)));
-        assertThat(lee, hasProperty("uni", equalTo(studyFuture)));
+      Set assignmentsSet = (Set) assignmentsToSet.invoke(assignmentsTable);
+      assertThat(assignmentsSet.size(), equalTo(4));
 
-        // test LinkedHashSet role
-        Object wa1337 = roomClass.newInstance();
-        Object wa1342 = roomClass.newInstance();
+      Object pointsTable = assignmentsExpandPoints.invoke(assignmentsTable, new Object[] { new String[] { "Points" } });
+      List pointsList = (List) intTableToList.invoke(pointsTable);
+      assertThat(pointsList.size(), equalTo(4));
 
-        Method withRooms = uniClass.getMethod("withRooms", Object[].class);
-        Method setUni4Room = roomClass.getMethod("setUni", uniClass);
+      Object sum = intTableSum.invoke(pointsTable);
+      assertThat(sum, equalTo(89));
 
-        Object withRoomsResult = withRooms.invoke(studyRight, new Object[]{new Object[]{wa1337, wa1342}});
-        assertThat(withRoomsResult, equalTo(studyRight));
-        assertThat(studyRight, hasProperty("rooms", containsInAnyOrder(wa1337, wa1342)));
-        assertThat(wa1337, hasProperty("uni", equalTo(studyRight)));
-        assertThat(wa1342, hasProperty("uni", equalTo(studyRight)));
+      Object studentsTable = roomsExpandStudents.invoke(roomsTable, new Object[] { new String[] { "Students" } });
+      assertThat(studentsTable.toString(), containsString("Alice"));
 
-        withRooms.invoke(studyFuture, new Object[]{new Object[]{wa1342}});
-        assertThat(studyRight, hasProperty("rooms", not(containsInAnyOrder(wa1342))));
-        assertThat(studyFuture, hasProperty("rooms", containsInAnyOrder(wa1342)));
-        assertThat(wa1342, hasProperty("uni", equalTo(studyFuture)));
+      Predicate<Object> predicate = o -> {
+         try
+         {
+            int points = (Integer) assignmentGetPoints.invoke(o);
+            return points <= 20;
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+         }
+         return false;
+      };
 
-        // test 1 to 1
-        Method setCondo = studClass.getMethod("setCondo", roomClass);
-        Object setCondoResult = setCondo.invoke(karli, wa1337);
-        assertThat(setCondoResult, equalTo(karli));
-        assertThat(karli, hasProperty("condo", equalTo(wa1337)));
-        assertThat(wa1337, hasProperty("owner", equalTo(karli)));
+      assignmentsFilter.invoke(assignmentsTable, predicate);
+      assertThat(assignmentsTable.toString(), not(containsString("integrals")));
+      assertThat(assignmentsTable.toString(), containsString("sculptures"));
 
-        setCondo.invoke(lee, wa1337);
-        assertThat(karli, hasProperty("condo", nullValue()));
-        assertThat(lee, hasProperty("condo", equalTo(wa1337)));
-        assertThat(wa1337, hasProperty("owner", equalTo(lee)));
+      // filter row
+      uniTable = declaredConstructors.newInstance(uniArray);
+      uniExpandStudents.invoke(uniTable, new Object[] { new String[] { "Students" } });
+      roomsTable = uniExpandRooms.invoke(uniTable, new Object[] { new String[] { "Rooms" } });
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[] { new String[] { "Assignments" } });
 
-        // test n to m
-        Method withIn = studClass.getMethod("withIn", Object[].class);
+      Predicate<Object> rowPredicate = o -> {
+         try
+         {
+            LinkedHashMap<String, Object> row = (LinkedHashMap<String, Object>) o;
+            Object stud = row.get("Students");
+            Object assign = row.get("Assignments");
+            Collection doneSet = (Collection) studentGetDone.invoke(stud);
+            return !doneSet.contains(assign);
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+         }
+         return false;
+      };
 
-        Object withInResult = withIn.invoke(karli, new Object[]{new Object[]{wa1337, wa1342}});
-        withIn.invoke(lee, new Object[]{new Object[]{wa1337, wa1342}});
-        assertThat(withInResult, equalTo(karli));
-        assertThat(karli, hasProperty("in", containsInAnyOrder(wa1337, wa1342)));
-        assertThat(lee, hasProperty("in", containsInAnyOrder(wa1337, wa1342)));
-        assertThat(wa1337, hasProperty("students", containsInAnyOrder(karli, lee)));
-        assertThat(wa1342, hasProperty("students", containsInAnyOrder(karli, lee)));
+      assignmentsFilterRow.invoke(assignmentsTable, rowPredicate);
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math \tmatrices"));
 
-        Method withoutStudents4Room = roomClass.getMethod("withoutStudents", Object[].class);
-        withoutStudents4Room.invoke(wa1337, new Object[]{new Object[]{lee}});
-        assertThat(wa1337, hasProperty("students", not(containsInAnyOrder(lee))));
-        assertThat(lee, hasProperty("in", not(containsInAnyOrder(wa1337))));
+      // has done
+      uniTable = declaredConstructors.newInstance(uniArray);
+      studentsTable = uniExpandStudents.invoke(uniTable, new Object[] { new String[] { "Students" } });
+      roomsTable = uniExpandRooms.invoke(uniTable, new Object[] { new String[] { "Rooms" } });
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[] { new String[] { "Assignments" } });
 
-        Method removeYou = uniClass.getMethod("removeYou");
-        removeYou.invoke(studyRight);
-        assertThat(karli, hasProperty("uni", nullValue()));
-        assertThat(wa1337, hasProperty("uni", nullValue()));
-        assertThat(wa1337, hasProperty("students", not(containsInAnyOrder(karli))));
-    }
+      studentTablehasDone.invoke(studentsTable, assignmentsTable);
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math \tintegrals"));
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tmatrices")));
 
-    void runExtendsReadWriteTests(String outFolder, ClassModel model) throws Exception {
-        // run self test
-        File classesDir = new File(outFolder);
+      // select columns
+      uniTable = declaredConstructors.newInstance(uniArray);
+      studentsTable = uniExpandStudents.invoke(uniTable, new Object[] { new String[] { "Students" } });
+      roomsTable = uniExpandRooms.invoke(uniTable, new Object[] { new String[] { "Rooms" } });
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[] { new String[] { "Assignments" } });
 
-        // Load and instantiate compiled class.
-        URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{classesDir.toURI().toURL()});
+      studentTableSelectColumns.invoke(studentsTable, new Object[] { new String[] { "Students", "Rooms" } });
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math"));
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
 
-        Class<?> uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
-        Class<?> taClass = Class.forName(model.getPackageName() + ".TeachingAssistent", true, classLoader);
+      // drop columns
+      uniTable = declaredConstructors.newInstance(uniArray);
+      studentsTable = uniExpandStudents.invoke(uniTable, new Object[] { new String[] { "Students" } });
+      roomsTable = uniExpandRooms.invoke(uniTable, new Object[] { new String[] { "Rooms" } });
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[] { new String[] { "Assignments" } });
 
-        Object studyRight = uniClass.newInstance();
-        Object studyFuture = uniClass.newInstance();
+      studentTableDropColumns.invoke(studentsTable, new Object[] { new String[] { "Assignments" } });
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math"));
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
 
-        Method setName = uniClass.getMethod("setName", String.class);
-        setName.invoke(studyRight, "Study Right");
-        setName.invoke(studyRight, "Study Future");
+      // add column
+      uniTable = declaredConstructors.newInstance(uniArray);
+      studentsTable = uniExpandStudents.invoke(uniTable, new Object[] { new String[] { "Students" } });
 
-        Object karli = taClass.newInstance();
+      Function<LinkedHashMap<String, Object>, Object> function = row -> {
+         Object student = row.get("Students");
+         return 42;
+      };
 
-        setName = taClass.getMethod("setName", String.class);
-        setName.invoke(karli, "Karli");
+      studentTableAddColumn.invoke(studentsTable, "Credits", function);
+      assertThat(studentsTable.toString(), containsString("Credits"));
+      assertThat(studentsTable.toString(), containsString("42"));
+   }
 
+   private void getTableExampleObjects(String outFolder, ClassModel model)
+      throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, InstantiationException,
+      IllegalAccessException, InvocationTargetException
+   {
 
-        // ok, create a link
-        assertThat(karli, hasProperty("uni", nullValue()));
+      // create example objects
+      File classesDir = new File(outFolder);
 
-        Method withStudents = uniClass.getMethod("withStudents", Object[].class);
-        Object withResult = withStudents.invoke(studyRight, new Object[]{new Object[]{karli}});
-        assertThat(withResult, is(equalTo(studyRight)));
-        assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
-        assertThat(karli, hasProperty("uni", equalTo(studyRight)));
+      // Load and instantiate compiled class.
+      this.classLoader = URLClassLoader.newInstance(new URL[] { classesDir.toURI().toURL() });
 
-        Method setUni = taClass.getMethod("setUni", uniClass);
-        Object setUniResult = setUni.invoke(karli, studyFuture);
-        assertThat(setUniResult, is(equalTo(karli)));
-        assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
-        assertThat(studyRight, hasProperty("students", is(empty())));
-        assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli)));
+      this.uniClass = Class.forName(model.getPackageName() + ".University", true, this.classLoader);
+      this.studClass = Class.forName(model.getPackageName() + ".Student", true, this.classLoader);
+      Class<?> roomClass = Class.forName(model.getPackageName() + ".Room", true, this.classLoader);
+      this.assignClass = Class.forName(model.getPackageName() + ".Assignment", true, this.classLoader);
 
+      Method uniSetName = this.uniClass.getMethod("setName", String.class);
+      Method roomSetRoomNo = roomClass.getMethod("setRoomNo", String.class);
+      Method roomSetTopic = roomClass.getMethod("setTopic", String.class);
+      Method roomSetUni = roomClass.getMethod("setUni", this.uniClass);
+      Method assignmentSetTopic = this.assignClass.getMethod("setTopic", String.class);
+      Method assignmentSetPoints = this.assignClass.getMethod("setPoints", int.class);
+      Method assignmentSetRoom = this.assignClass.getMethod("setRoom", roomClass);
+      Method studStudentId = this.studClass.getMethod("setStudentId", String.class);
+      Method studSetName = this.studClass.getMethod("setName", String.class);
+      Method studSetUni = this.studClass.getMethod("setUni", this.uniClass);
+      Method studSetIn = this.studClass.getMethod("setIn", roomClass);
+      Method studWithDone = this.studClass.getMethod("withDone", Object[].class);
 
-        Method setLevel = taClass.getMethod("setLevel", String.class);
-        setLevel.invoke(karli, "master");
-        assertThat(karli, hasProperty("level", equalTo("master")));
+      this.studyRight = this.uniClass.newInstance();
+      uniSetName.invoke(this.studyRight, "Study Right");
 
-    }
+      Object mathRoom = roomClass.newInstance();
+      roomSetRoomNo.invoke(mathRoom, "wa1337");
+      roomSetTopic.invoke(mathRoom, "Math");
+      roomSetUni.invoke(mathRoom, this.studyRight);
 
-    void runTableTests(String outFolder, ClassModel model) throws Exception {
-        getTableExampleObjects(outFolder, model);
+      Object artsRoom = roomClass.newInstance();
+      roomSetRoomNo.invoke(artsRoom, "wa1338");
+      roomSetTopic.invoke(artsRoom, "Arts");
+      roomSetUni.invoke(artsRoom, this.studyRight);
 
-        // simple table
-        Class<?> uniTableClass = Class.forName(model.getPackageName() + ".tables.UniversityTable", true, classLoader);
-        Class<?> roomsTableClass = Class.forName(model.getPackageName() + ".tables.RoomTable", true, classLoader);
-        Class<?> studentsTableClass = Class.forName(model.getPackageName() + ".tables.StudentTable", true, classLoader);
-        Class<?> assignmentsTableClass = Class.forName(model.getPackageName() + ".tables.AssignmentTable", true, classLoader);
-        Class<?> intTableClass = Class.forName(model.getPackageName() + ".tables.intTable", true, classLoader);
+      Object sportsRoom = roomClass.newInstance();
+      roomSetRoomNo.invoke(sportsRoom, "wa1339");
+      roomSetTopic.invoke(sportsRoom, "Football");
+      roomSetUni.invoke(sportsRoom, this.studyRight);
 
-        Constructor<?> declaredConstructors = uniTableClass.getDeclaredConstructors()[0];
-        Method uniExpandRooms = uniTableClass.getMethod("expandRooms", String[].class);
-        Method uniExpandStudents = uniTableClass.getMethod("expandStudents", String[].class);
-        Method roomsExpandAssignments = roomsTableClass.getMethod("expandAssignments", String[].class);
-        Method roomsExpandStudents = roomsTableClass.getMethod("expandStudents", String[].class);
-        Method studentTablehasDone = studentsTableClass.getMethod("hasDone", assignmentsTableClass);
-        Method studentTableSelectColumns = studentsTableClass.getMethod("selectColumns", String[].class);
-        Method studentTableDropColumns = studentsTableClass.getMethod("dropColumns", String[].class);
-        Method studentTableAddColumn = studentsTableClass.getMethod("addColumn", String.class, Function.class);
-        Method assignmentsToSet = assignmentsTableClass.getMethod("toSet");
-        Method assignmentsExpandPoints = assignmentsTableClass.getMethod("expandPoints", String[].class);
-        Method assignmentsFilter = assignmentsTableClass.getMethod("filter", Predicate.class);
-        Method assignmentsFilterRow = assignmentsTableClass.getMethod("filterRow", Predicate.class);
-        Method intTableToList = intTableClass.getMethod("toList");
-        Method intTableSum = intTableClass.getMethod("sum");
-        final Method assignmentGetPoints = assignClass.getMethod("getPoints");
-        final Method studentGetDone = studClass.getMethod("getDone");
+      Object integrals = this.assignClass.newInstance();
+      assignmentSetTopic.invoke(integrals, "integrals");
+      assignmentSetPoints.invoke(integrals, 42);
+      assignmentSetRoom.invoke(integrals, mathRoom);
 
-        Object uniArray = Array.newInstance(uniClass, 1);
-        Array.set(uniArray, 0, studyRight);
+      Object matrix = this.assignClass.newInstance();
+      assignmentSetTopic.invoke(matrix, "matrices");
+      assignmentSetPoints.invoke(matrix, 23);
+      assignmentSetRoom.invoke(matrix, mathRoom);
 
-        Object uniTable = declaredConstructors.newInstance(uniArray);
-        assertThat(uniTable, notNullValue());
+      Object drawings = this.assignClass.newInstance();
+      assignmentSetTopic.invoke(drawings, "drawings");
+      assignmentSetPoints.invoke(drawings, 12);
+      assignmentSetRoom.invoke(drawings, artsRoom);
 
-        Object roomsTable = uniExpandRooms.invoke(uniTable, new Object[]{new String[]{"Rooms"}});
-        assertThat(roomsTable.toString(), containsString("wa1337"));
-        assertThat(roomsTable.toString(), containsString("wa1338"));
-        assertThat(roomsTable.toString(), containsString("wa1339"));
+      Object sculptures = this.assignClass.newInstance();
+      assignmentSetTopic.invoke(sculptures, "sculptures");
+      assignmentSetPoints.invoke(sculptures, 12);
+      assignmentSetRoom.invoke(sculptures, artsRoom);
 
-        Object assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[]{new String[]{"Assignments"}});
-        assertThat(assignmentsTable.toString(), containsString("integrals"));
+      Object alice = this.studClass.newInstance();
+      studStudentId.invoke(alice, "m4242");
+      studSetName.invoke(alice, "Alice");
+      studSetUni.invoke(alice, this.studyRight);
+      studSetIn.invoke(alice, artsRoom);
+      studWithDone.invoke(alice, new Object[] { new Object[] { integrals } });
 
-        Set assignmentsSet = (Set) assignmentsToSet.invoke(assignmentsTable);
-        assertThat(assignmentsSet.size(), equalTo(4));
+      Object bob = this.studClass.newInstance();
+      studStudentId.invoke(bob, "m2323");
+      studSetName.invoke(bob, "Bobby");
+      studSetUni.invoke(bob, this.studyRight);
+      studSetIn.invoke(bob, artsRoom);
 
-        Object pointsTable = assignmentsExpandPoints.invoke(assignmentsTable, new Object[]{new String[]{"Points"}});
-        List pointsList = (List) intTableToList.invoke(pointsTable);
-        assertThat(pointsList.size(), equalTo(4));
-
-        Object sum = intTableSum.invoke(pointsTable);
-        assertThat(sum, equalTo(89));
-
-        Object studentsTable = roomsExpandStudents.invoke(roomsTable, new Object[]{new String[]{"Students"}});
-        assertThat(studentsTable.toString(), containsString("Alice"));
-
-        Predicate<Object> predicate = o -> {
-            try {
-                int points = (Integer) assignmentGetPoints.invoke(o);
-                return points <= 20;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return false;
-        };
-
-        assignmentsFilter.invoke(assignmentsTable, predicate);
-        assertThat(assignmentsTable.toString(), not(containsString("integrals")));
-        assertThat(assignmentsTable.toString(), containsString("sculptures"));
-
-        // filter row
-        uniTable = declaredConstructors.newInstance(uniArray);
-        uniExpandStudents.invoke(uniTable, new Object[]{new String[]{"Students"}});
-        roomsTable = uniExpandRooms.invoke(uniTable, new Object[]{new String[]{"Rooms"}});
-        assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[]{new String[]{"Assignments"}});
-
-
-        Predicate<Object> rowPredicate = o -> {
-            try {
-                LinkedHashMap<String, Object> row = (LinkedHashMap<String, Object>) o;
-                Object stud = row.get("Students");
-                Object assign = row.get("Assignments");
-                Collection doneSet = (Collection) studentGetDone.invoke(stud);
-                return !doneSet.contains(assign);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return false;
-        };
-
-        assignmentsFilterRow.invoke(assignmentsTable, rowPredicate);
-        assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
-        assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math \tmatrices"));
-
-
-        // has done
-        uniTable = declaredConstructors.newInstance(uniArray);
-        studentsTable = uniExpandStudents.invoke(uniTable, new Object[]{new String[]{"Students"}});
-        roomsTable = uniExpandRooms.invoke(uniTable, new Object[]{new String[]{"Rooms"}});
-        assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[]{new String[]{"Assignments"}});
-
-        studentTablehasDone.invoke(studentsTable, assignmentsTable);
-        assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math \tintegrals"));
-        assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tmatrices")));
-
-        // select columns
-        uniTable = declaredConstructors.newInstance(uniArray);
-        studentsTable = uniExpandStudents.invoke(uniTable, new Object[]{new String[]{"Students"}});
-        roomsTable = uniExpandRooms.invoke(uniTable, new Object[]{new String[]{"Rooms"}});
-        assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[]{new String[]{"Assignments"}});
-
-        studentTableSelectColumns.invoke(studentsTable, new Object[]{new String[]{"Students", "Rooms"}});
-        assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math"));
-        assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
-
-        // drop columns
-        uniTable = declaredConstructors.newInstance(uniArray);
-        studentsTable = uniExpandStudents.invoke(uniTable, new Object[]{new String[]{"Students"}});
-        roomsTable = uniExpandRooms.invoke(uniTable, new Object[]{new String[]{"Rooms"}});
-        assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[]{new String[]{"Assignments"}});
-
-        studentTableDropColumns.invoke(studentsTable, new Object[]{new String[]{"Assignments"}});
-        assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math"));
-        assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
-
-        // add column
-        uniTable = declaredConstructors.newInstance(uniArray);
-        studentsTable = uniExpandStudents.invoke(uniTable, new Object[]{new String[]{"Students"}});
-
-        Function<LinkedHashMap<String, Object>, Object> function = row -> {
-            Object student = row.get("Students");
-            return 42;
-        };
-
-        studentTableAddColumn.invoke(studentsTable, "Credits", function);
-        assertThat(studentsTable.toString(), containsString("Credits"));
-        assertThat(studentsTable.toString(), containsString("42"));
-    }
-
-    private void getTableExampleObjects(String outFolder, ClassModel model)
-            throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, InstantiationException,
-            IllegalAccessException, InvocationTargetException {
-
-        // create example objects
-        File classesDir = new File(outFolder);
-
-        // Load and instantiate compiled class.
-        classLoader = URLClassLoader.newInstance(new URL[]{classesDir.toURI().toURL()});
-
-        uniClass = Class.forName(model.getPackageName() + ".University", true, classLoader);
-        studClass = Class.forName(model.getPackageName() + ".Student", true, classLoader);
-        Class<?> roomClass = Class.forName(model.getPackageName() + ".Room", true, classLoader);
-        assignClass = Class.forName(model.getPackageName() + ".Assignment", true, classLoader);
-
-        Method uniSetName = uniClass.getMethod("setName", String.class);
-        Method roomSetRoomNo = roomClass.getMethod("setRoomNo", String.class);
-        Method roomSetTopic = roomClass.getMethod("setTopic", String.class);
-        Method roomSetUni = roomClass.getMethod("setUni", uniClass);
-        Method assignmentSetTopic = assignClass.getMethod("setTopic", String.class);
-        Method assignmentSetPoints = assignClass.getMethod("setPoints", int.class);
-        Method assignmentSetRoom = assignClass.getMethod("setRoom", roomClass);
-        Method studStudentId = studClass.getMethod("setStudentId", String.class);
-        Method studSetName = studClass.getMethod("setName", String.class);
-        Method studSetUni = studClass.getMethod("setUni", uniClass);
-        Method studSetIn = studClass.getMethod("setIn", roomClass);
-        Method studWithDone = studClass.getMethod("withDone", Object[].class);
-
-
-        studyRight = uniClass.newInstance();
-        uniSetName.invoke(studyRight, "Study Right");
-
-        Object mathRoom = roomClass.newInstance();
-        roomSetRoomNo.invoke(mathRoom, "wa1337");
-        roomSetTopic.invoke(mathRoom, "Math");
-        roomSetUni.invoke(mathRoom, studyRight);
-
-        Object artsRoom = roomClass.newInstance();
-        roomSetRoomNo.invoke(artsRoom, "wa1338");
-        roomSetTopic.invoke(artsRoom, "Arts");
-        roomSetUni.invoke(artsRoom, studyRight);
-
-        Object sportsRoom = roomClass.newInstance();
-        roomSetRoomNo.invoke(sportsRoom, "wa1339");
-        roomSetTopic.invoke(sportsRoom, "Football");
-        roomSetUni.invoke(sportsRoom, studyRight);
-
-        Object integrals = assignClass.newInstance();
-        assignmentSetTopic.invoke(integrals, "integrals");
-        assignmentSetPoints.invoke(integrals, 42);
-        assignmentSetRoom.invoke(integrals, mathRoom);
-
-        Object matrix = assignClass.newInstance();
-        assignmentSetTopic.invoke(matrix, "matrices");
-        assignmentSetPoints.invoke(matrix, 23);
-        assignmentSetRoom.invoke(matrix, mathRoom);
-
-        Object drawings = assignClass.newInstance();
-        assignmentSetTopic.invoke(drawings, "drawings");
-        assignmentSetPoints.invoke(drawings, 12);
-        assignmentSetRoom.invoke(drawings, artsRoom);
-
-        Object sculptures = assignClass.newInstance();
-        assignmentSetTopic.invoke(sculptures, "sculptures");
-        assignmentSetPoints.invoke(sculptures, 12);
-        assignmentSetRoom.invoke(sculptures, artsRoom);
-
-        Object alice = studClass.newInstance();
-        studStudentId.invoke(alice, "m4242");
-        studSetName.invoke(alice, "Alice");
-        studSetUni.invoke(alice, studyRight);
-        studSetIn.invoke(alice, artsRoom);
-        studWithDone.invoke(alice, new Object[]{new Object[]{integrals}});
-
-        Object bob = studClass.newInstance();
-        studStudentId.invoke(bob, "m2323");
-        studSetName.invoke(bob, "Bobby");
-        studSetUni.invoke(bob, studyRight);
-        studSetIn.invoke(bob, artsRoom);
-
-        Object carli = studClass.newInstance();
-        studStudentId.invoke(carli, "m2323");
-        studSetName.invoke(carli, "Carli");
-        studSetUni.invoke(carli, studyRight);
-        studSetIn.invoke(carli, mathRoom);
-    }
+      Object carli = this.studClass.newInstance();
+      studStudentId.invoke(carli, "m2323");
+      studSetName.invoke(carli, "Carli");
+      studSetUni.invoke(carli, this.studyRight);
+      studSetIn.invoke(carli, mathRoom);
+   }
 }
