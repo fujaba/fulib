@@ -73,12 +73,12 @@ public class Tools {
 
 
 
-    static int javac(String outFolder, String sourceFolder) {
+    public static int javac(String outFolder, String sourceFolder) {
         final String classPath = System.getProperty("java.class.path");
         return javac(classPath, outFolder, sourceFolder);
     }
 
-    static void removeDirAndFiles(String toBeDeletedDir) throws IOException {
+    public static void removeDirAndFiles(String toBeDeletedDir) throws IOException {
         Path rootPath = Paths.get(toBeDeletedDir);
 
         if (!Files.exists(rootPath)) {
