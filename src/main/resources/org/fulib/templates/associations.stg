@@ -1,8 +1,9 @@
+// --------------- Declarations ---------------
+
 emptySetDecl(roleName, otherClassName, roleType) ::= <<
    public static final <roleType> EMPTY_<roleName> = new <roleType>()
    { @Override public boolean add(<otherClassName> value){ throw new UnsupportedOperationException("No direct add! Use xy.with<roleName; format="cap">(obj)"); }};
 >>
-
 
 roleAttrDecl(roleName, roleType, toMany, otherClassName) ::= <<
    private <roleType> <roleName> = null;
@@ -11,6 +12,8 @@ roleAttrDecl(roleName, roleType, toMany, otherClassName) ::= <<
 propertyDecl(roleName) ::= <<
    public static final String PROPERTY_<roleName> = "<roleName>";
 >>
+
+// --------------- Simple Accessors ---------------
 
 getMethod(roleName, toMany, otherClassName, roleType) ::= <<
    public <roleType> get<roleName; format="cap">()
@@ -50,6 +53,8 @@ setMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::=
       return this;
    }
 >>
+
+// --------------- With ---------------
 
 withMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
    public <myClassName> with<roleName; format="cap">(Object... value)
@@ -91,6 +96,8 @@ withMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany, ro
       return this;
    }
 >>
+
+// --------------- Without ---------------
 
 // TODO deprecated, remove
 withoutMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
@@ -158,6 +165,8 @@ withoutColl(roleName, myClassName, otherClassName) ::= <<
       return this;
    }
 >>
+
+// --------------- Helpers ---------------
 
 withoutThis(toMany, otherRoleName) ::= <%
 <if(toMany)>
