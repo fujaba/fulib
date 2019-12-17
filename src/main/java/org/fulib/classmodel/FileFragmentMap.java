@@ -238,29 +238,49 @@ public class FileFragmentMap
    public static String mergeClassDecl(String oldText, String newText)
    {
       // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
-      Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
-      Matcher match = pattern.matcher(newText);
-      boolean b = match.find();
-      String className = match.group(1);
-      String extendsClause = match.group(2);
-      extendsClause = extendsClause == null ? "" : extendsClause + " ";
+      final Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
+      final Matcher match = pattern.matcher(newText);
 
-      int resultClassNamePos = oldText.indexOf("class " + className);
-      if (resultClassNamePos >= 0)
+      if (!match.find())
       {
-         String prefix = oldText.substring(0, resultClassNamePos);
-         String middle = "class " + className + " " + extendsClause;
-         String suffix = " \n{";
-
-         int implementsPos = oldText.indexOf("implements");
-         if (implementsPos >= 0)
-         {
-            suffix = " " + oldText.substring(implementsPos);
-         }
-
-         newText = prefix + middle + suffix;
+         // TODO error?
+         return newText;
       }
-      return newText;
+
+      final String className = match.group(1);
+      final String extendsClause = match.group(2);
+
+      final int oldClassNamePos = oldText.indexOf("class " + className);
+      if (oldClassNamePos < 0)
+      {
+         // TODO error?
+         return newText;
+      }
+
+      final StringBuilder newTextBuilder = new StringBuilder();
+
+      // prefix
+      newTextBuilder.append(oldText, 0, oldClassNamePos);
+
+      // middle
+      newTextBuilder.append("class ").append(className);
+      if (extendsClause != null)
+      {
+         newTextBuilder.append(" ").append(extendsClause);
+      }
+
+      // suffix
+      final int implementsPos = oldText.indexOf("implements");
+      if (implementsPos >= 0)
+      {
+         newTextBuilder.append(" ").append(oldText, implementsPos, oldText.length());
+      }
+      else
+      {
+         newTextBuilder.append("\n{");
+      }
+
+      return newTextBuilder.toString();
    }
 
    private CodeFragment getNewLineGapFragment(int newLines)
