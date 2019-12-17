@@ -17,8 +17,8 @@ importDecl: IMPORT STATIC? qualifiedName (DOT STAR)? SEMI;
 classDecl: (modifier | annotation)* classMember;
 classMember: (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            typeParamList?
-           (EXTENDS annotatedType)?
-           (IMPLEMENTS annotatedType (COMMA annotatedType)*)?
+           (EXTENDS annotatedTypeList)?
+           (IMPLEMENTS annotatedTypeList)?
            classBody;
 
 classBody: LBRACE (enumConstants (SEMI (member | SEMI)*)? | (member | SEMI)*) RBRACE;
@@ -32,7 +32,7 @@ initializer: STATIC? balancedBraces;
 // constructor: (modifier | annotation)* constructorMember;
 constructorMember: typeParamList? IDENTIFIER
              parameterList
-             (THROWS annotatedType (COMMA annotatedType)*)?
+             (THROWS annotatedTypeList)?
              balancedBraces;
 
 enumConstants: enumConstant (COMMA enumConstant)*;
@@ -59,8 +59,9 @@ typeParam: annotation* IDENTIFIER (EXTENDS annotatedType (AMP annotatedType)*)?;
 typeArg: annotation* (QMARK (EXTENDS annotatedType | SUPER annotatedType)? | type);
 
 type: (primitiveType | referenceType) arraySuffix*;
-annotatedType: annotation* type;
 arraySuffix: annotation* LBRACKET RBRACKET;
+annotatedType: annotation* type;
+annotatedTypeList: annotatedType (COMMA annotatedType)*;
 
 primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
 referenceType: qualifiedName (LANGLE (typeArg (COMMA typeArg)*)? RANGLE)?;
