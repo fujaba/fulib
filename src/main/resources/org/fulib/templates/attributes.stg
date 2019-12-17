@@ -1,3 +1,5 @@
+// --------------- Declarations ---------------
+
 attrDecl(type, name, value) ::= <<
    private <type> <name><if(value)> = <value><endif>;
 >>
@@ -5,6 +7,8 @@ attrDecl(type, name, value) ::= <<
 propertyDecl(name) ::= <<
    public static final String PROPERTY_<name> = "<name>";
 >>
+
+// --------------- Simple Accessors ---------------
 
 attrGet(name, type) ::= <<
    public <type> get<name; format="cap">()
@@ -16,7 +20,7 @@ attrGet(name, type) ::= <<
 attrSet(class, name, type, useEquals) ::= <<
    public <class> set<name; format="cap">(<type> value)
    {
-      if (<condition(name, type, useEquals)>)
+      if (<if(useEquals)>Objects.equals(value, this.<name>)<else>value == this.<name><endif>)
       {
          return this;
       }
@@ -28,15 +32,6 @@ attrSet(class, name, type, useEquals) ::= <<
    }
 >>
 
-condition(name, type, useEquals) ::=
-<%
-<if(useEquals)>
-Objects.equals(value, this.<name>)
-<else>
-value == this.<name>
-<endif>
-%>
-
 simpleAttrSet(class, name, type) ::= <<
    public <class> set<name; format="cap">(<type> value)
    {
@@ -45,40 +40,7 @@ simpleAttrSet(class, name, type) ::= <<
    }
 >>
 
-// TODO deprecated, remove
-attrWith(class, name, listType, baseType) ::= <<
-   public <class> with<name; format="cap">(Object... value)
-   {
-      if (value == null)
-      {
-         return this;
-      }
-      for (Object item : value)
-      {
-         if (item == null)
-         {
-            continue;
-         }
-         if (item instanceof Collection)
-         {
-            this.with<name; format="cap">(((Collection\<?>) item).toArray());
-         }
-         else if (item instanceof <baseType>[])
-         {
-            this.with<name; format="cap">((<baseType>[]) item));
-         }
-         else if (item instanceof <baseType>)
-         {
-            this.with<name; format="cap">(item);
-         }
-         else
-         {
-            throw new IllegalArgumentException();
-         }
-      }
-      return this;
-   }
->>
+// --------------- With ---------------
 
 attrWithItem(class, name, listType, baseType) ::= <<
    public <class> with<name; format="cap">(<baseType> value)
@@ -117,36 +79,7 @@ attrWithColl(class, name, baseType) ::= <<
    }
 >>
 
-// TODO deprecated, remove
-attrWithout(class, name, listType, baseType) ::= <<
-   public <class> without<name; format="cap">(Object... value)
-   {
-      if (this.<name> == null || value == null)
-      {
-         return this;
-      }
-      for (Object item : value)
-      {
-         if (item == null)
-         {
-            continue;
-         }
-         if (item instanceof Collection)
-         {
-            this.without<name; format="cap">(((Collection\<?>) item).toArray());
-         }
-         else if (item instanceof <baseType>[])
-         {
-            this.without<name; format="cap">((<baseType>[]) item));
-         }
-         else if (item instanceof <baseType>)
-         {
-            this.without<name; format="cap">(item);
-         }
-      }
-      return this;
-   }
->>
+// --------------- Without ---------------
 
 attrWithoutItem(class, name, baseType) ::= <<
    public <class> without<name; format="cap">(<baseType> value)
@@ -181,6 +114,8 @@ attrWithoutColl(class, name, baseType) ::= <<
       }
    }
 >>
+
+// --------------- Set All ---------------
 
 attrSetAllArray(class, name, listType, baseType) ::= <<
    public <class> set<name; format="cap">(<baseType>... value)

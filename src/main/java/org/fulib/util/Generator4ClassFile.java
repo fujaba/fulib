@@ -277,13 +277,6 @@ public class Generator4ClassFile extends AbstractGenerator
 
       if (attr.getType().endsWith(Type.__LIST))
       {
-         final ST attrWith = group.getInstanceOf("attrWith");
-         attrWith.add("class", className);
-         attrWith.add("listType", attrType);
-         attrWith.add("baseType", boxType);
-         attrWith.add("name", attrName);
-         fragmentMap.add(METHOD + ":with" + capAttrName + "(Object...)", attrWith.render(), 3, modified);
-
          final ST attrWithItem = group.getInstanceOf("attrWithItem");
          attrWithItem.add("class", className);
          attrWithItem.add("listType", attrType);
@@ -306,13 +299,6 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap
             .add(METHOD + ":with" + capAttrName + "(Collection<? extends " + baseType + ">)", attrWithColl.render(), 3,
                  modified);
-
-         final ST attrWithout = group.getInstanceOf("attrWithout");
-         attrWithout.add("class", className);
-         attrWithout.add("listType", attrType);
-         attrWithout.add("baseType", boxType);
-         attrWithout.add("name", attrName);
-         fragmentMap.add(METHOD + ":without" + capAttrName + "(Object...)", attrWithout.render(), 3, modified);
 
          final ST attrWithoutItem = group.getInstanceOf("attrWithoutItem");
          attrWithoutItem.add("class", className);
