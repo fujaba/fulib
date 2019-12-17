@@ -2,8 +2,8 @@ packageDecl(packageName) ::= <<
 package <packageName>;
 >>
 
-importDecl(qualifiedName) ::= <<
-import <qualifiedName>;
+importDecl(qualifiedName, static) ::= <<
+import <if(static)>static <endif><qualifiedName>;
 >>
 
 classDecl(name, superClass) ::= <<
