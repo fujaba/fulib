@@ -333,6 +333,9 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap
             .add(METHOD + ":without" + capAttrName + "(Collection<? extends " + baseType + ">)", attrWithoutColl.render(), 3,
                  modified);
+
+         // remove "set" method
+         fragmentMap.add(METHOD + ":set" + capAttrName + "(" + baseType + ")", "", 3, true);
       }
       else // usual attribute
       {
