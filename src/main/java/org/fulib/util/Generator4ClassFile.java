@@ -188,7 +188,7 @@ public class Generator4ClassFile extends AbstractGenerator
          final ST importDecl = group.getInstanceOf("importDecl");
          importDecl.add("qualifiedName", qualifiedName);
          importDecl.add("static", true);
-         fragmentMap.add(Parser.IMPORT + ":" + qualifiedName, importDecl.render(), 1);
+         fragmentMap.add(FileFragmentMap.IMPORT + ":" + qualifiedName, importDecl.render(), 1);
       }
    }
 
