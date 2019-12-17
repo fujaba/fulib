@@ -4,7 +4,6 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.fulib.Parser;
 import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
 
@@ -76,7 +75,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       // if (startPos - this.lastFragmentEndPos > 1)
       {
          final String gapText = this.input.getText(Interval.of(this.lastFragmentEndPos + 1, startPos - 1));
-         final CodeFragment gap = new CodeFragment().setKey(Parser.GAP).setText(gapText);
+         final CodeFragment gap = new CodeFragment().setKey(FileFragmentMap.GAP).setText(gapText);
          this.map.add(gap);
       }
 
@@ -90,7 +89,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    @Override
    public void enterPackageDecl(PackageDeclContext ctx)
    {
-      this.addCodeFragment(Parser.PACKAGE, ctx);
+      this.addCodeFragment(FileFragmentMap.PACKAGE, ctx);
    }
 
    @Override
@@ -102,13 +101,13 @@ public class FragmentMapBuilder extends FulibClassBaseListener
          typeName += ".*";
       }
 
-      this.addCodeFragment(Parser.IMPORT + ":" + typeName, ctx);
+      this.addCodeFragment(FileFragmentMap.IMPORT + ":" + typeName, ctx);
    }
 
    @Override
    public void enterClassDecl(ClassDeclContext ctx)
    {
-      this.addCodeFragment(Parser.CLASS, ctx.getStart().getStartIndex(),
+      this.addCodeFragment(FileFragmentMap.CLASS, ctx.getStart().getStartIndex(),
                            ctx.classMember().classBody().LBRACE().getSymbol().getStopIndex());
    }
 
@@ -117,7 +116,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    {
       final MemberContext memberCtx = (MemberContext) ctx.parent;
       final String fieldName = ctx.IDENTIFIER().getText();
-      this.addCodeFragment(Parser.ATTRIBUTE + ":" + fieldName, memberCtx);
+      this.addCodeFragment(FileFragmentMap.ATTRIBUTE + ":" + fieldName, memberCtx);
    }
 
    @Override
@@ -127,7 +126,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final String className = "\"FOO\"";
 
       final StringBuilder signature = new StringBuilder();
-      signature.append(Parser.CONSTRUCTOR);
+      signature.append(FileFragmentMap.CONSTRUCTOR);
       signature.append(':');
       signature.append(className);
       writeParams(signature, ctx.parameterList());
@@ -142,7 +141,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final String methodName = ctx.IDENTIFIER().getText();
 
       final StringBuilder signature = new StringBuilder();
-      signature.append(Parser.METHOD);
+      signature.append(FileFragmentMap.METHOD);
       signature.append(':');
       signature.append(methodName);
       writeParams(signature, ctx.parameterList());
@@ -212,13 +211,13 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    @Override
    public void exitClassDecl(ClassDeclContext ctx)
    {
-      this.addCodeFragment(Parser.CLASS_END, ctx.classMember().classBody().RBRACE());
+      this.addCodeFragment(FileFragmentMap.CLASS_END, ctx.classMember().classBody().RBRACE());
    }
 
    @Override
    public void exitFile(FileContext ctx)
    {
       // TODO this adds two gaps. Not sure if FileFragmentMap can handle only one, so leaving it at that for now.
-      this.addCodeFragment(Parser.GAP, this.lastFragmentEndPos + 1, this.input.size());
+      this.addCodeFragment(FileFragmentMap.GAP, this.lastFragmentEndPos + 1, this.input.size());
    }
 }

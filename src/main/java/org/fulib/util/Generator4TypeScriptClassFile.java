@@ -1,7 +1,6 @@
 package org.fulib.util;
 
 import org.fulib.Generator;
-import org.fulib.Parser;
 import org.fulib.StrUtil;
 import org.fulib.TypeScriptParser;
 import org.fulib.builder.Type;
@@ -46,7 +45,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
 
       this.generateRemoveYou(clazz, fragmentMap);
 
-      fragmentMap.add(Parser.CLASS_END, "}", 1);
+      fragmentMap.add(FileFragmentMap.CLASS_END, "}", 1);
 
       if (clazz.getModified() && fragmentMap.classBodyIsEmpty(fragmentMap))
       {
@@ -73,7 +72,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
       ST st = group.getInstanceOf("classDecl");
       st.add("name", clazz.getName());
       String result = st.render();
-      fragmentMap.add(Parser.CLASS, result, 1);
+      fragmentMap.add(FileFragmentMap.CLASS, result, 1);
    }
 
    private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap)
@@ -106,7 +105,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
       ST st = group.getInstanceOf("constructor");
       st.add("body", buf.toString());
       String result = st.render();
-      fragmentMap.add(Parser.METHOD + ":constructor()", result, 2);
+      fragmentMap.add(FileFragmentMap.METHOD + ":constructor()", result, 2);
    }
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
@@ -133,7 +132,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
          attrTemplate.add("name", attr.getName());
          result = attrTemplate.render();
 
-         fragmentMap.add(Parser.ATTRIBUTE + ":" + attr.getName(), result, 2, attr.getModified());
+         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attr.getName(), result, 2, attr.getModified());
       }
    }
 
@@ -157,7 +156,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
          if (!roleType.equals(clazz.getName()))
          {
             String importText = String.format("import %s from \"./%s\";\n\n", roleType, roleType);
-            fragmentMap.add(Parser.IMPORT + ":" + roleType, importText, 0);
+            fragmentMap.add(FileFragmentMap.IMPORT + ":" + roleType, importText, 0);
          }
 
          if (role.getCardinality() != Type.ONE)
@@ -168,7 +167,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
          st.add("roleType", roleType);
          result = st.render();
 
-         fragmentMap.add(Parser.ATTRIBUTE + ":_" + role.getName(), result, 2, role.getModified());
+         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":_" + role.getName(), result, 2, role.getModified());
 
          st = group.getInstanceOf("getMethod");
 
@@ -176,7 +175,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
          st.add("roleType", roleType);
          result = st.render();
 
-         fragmentMap.add(Parser.METHOD + ":get " + role.getName() + "()", result, 2, role.getModified());
+         fragmentMap.add(FileFragmentMap.METHOD + ":get " + role.getName() + "()", result, 2, role.getModified());
 
          st = group.getInstanceOf("setMethod");
          st.add("roleName", role.getName());
@@ -194,7 +193,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
             signature = "with" + StrUtil.cap(role.getName()) + "(any[])";
          }
 
-         fragmentMap.add(Parser.METHOD + ":" + signature, result, 3, role.getModified());
+         fragmentMap.add(FileFragmentMap.METHOD + ":" + signature, result, 3, role.getModified());
 
          if (role.getCardinality() != Type.ONE)
          {
@@ -209,7 +208,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
             st.add("roleType", roleType);
             result = st.render();
 
-            fragmentMap.add(Parser.METHOD + ":without" + StrUtil.cap(role.getName()) + "(any[])", result, 3,
+            fragmentMap.add(FileFragmentMap.METHOD + ":without" + StrUtil.cap(role.getName()) + "(any[])", result, 3,
                             role.getModified());
          }
       }
@@ -237,6 +236,6 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
       ST st = group.getInstanceOf("removeYou");
       st.add("body", buf.toString());
       String result = st.render();
-      fragmentMap.add(Parser.METHOD + ":removeYou()", result, 2);
+      fragmentMap.add(FileFragmentMap.METHOD + ":removeYou()", result, 2);
    }
 }

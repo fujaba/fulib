@@ -59,7 +59,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       this.generateToString(clazz, fragmentMap);
 
-      fragmentMap.add(Parser.CLASS_END, "}", 1);
+      fragmentMap.add(FileFragmentMap.CLASS_END, "}", 1);
 
       if (clazz.getModified() && fragmentMap.classBodyIsEmpty(fragmentMap))
       {
@@ -83,7 +83,7 @@ public class Generator4TableClassFile extends AbstractGenerator
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
       String result = String.format("package %s;", clazz.getModel().getPackageName() + ".tables");
-      fragmentMap.add(Parser.PACKAGE, result, 2);
+      fragmentMap.add(FileFragmentMap.PACKAGE, result, 2);
    }
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
@@ -93,7 +93,7 @@ public class Generator4TableClassFile extends AbstractGenerator
       st.add("name", clazz.getName() + "Table");
       st.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() + "Table" : null);
       String result = st.render();
-      fragmentMap.add(Parser.CLASS, result, 2);
+      fragmentMap.add(FileFragmentMap.CLASS, result, 2);
    }
 
    private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap)
@@ -102,7 +102,7 @@ public class Generator4TableClassFile extends AbstractGenerator
       ST st = group.getInstanceOf("constructor");
       st.add("className", clazz.getName());
       String result = st.render();
-      fragmentMap.add(Parser.CONSTRUCTOR + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)", result, 2,
+      fragmentMap.add(FileFragmentMap.CONSTRUCTOR + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)", result, 2,
                       clazz.getModified());
    }
 
@@ -112,8 +112,8 @@ public class Generator4TableClassFile extends AbstractGenerator
       ST attrTemplate;
       String result;
 
-      fragmentMap.add(Parser.IMPORT + ":java.util.ArrayList", "import java.util.ArrayList;", 1);
-      fragmentMap.add(Parser.IMPORT + ":java.util.LinkedHashMap", "import java.util.LinkedHashMap;", 1);
+      fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.ArrayList", "import java.util.ArrayList;", 1);
+      fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.LinkedHashMap", "import java.util.LinkedHashMap;", 1);
 
       ArrayList<Attribute> standardAttributes = new ArrayList<>();
 
@@ -133,14 +133,14 @@ public class Generator4TableClassFile extends AbstractGenerator
          attrTemplate.add("value", attr.getInitialization());
          result = attrTemplate.render();
 
-         fragmentMap.add(Parser.ATTRIBUTE + ":" + attr.getName(), result, 2, clazz.getModified());
+         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attr.getName(), result, 2, clazz.getModified());
 
          attrTemplate = group.getInstanceOf("attrGet");
          attrTemplate.add("type", attr.getType());
          attrTemplate.add("name", attr.getName());
          result = attrTemplate.render();
 
-         fragmentMap.add(Parser.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
+         fragmentMap.add(FileFragmentMap.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
 
          attrTemplate = group.getInstanceOf("simpleAttrSet");
          attrTemplate.add("class", clazz.getName() + "Table");
@@ -148,7 +148,7 @@ public class Generator4TableClassFile extends AbstractGenerator
          attrTemplate.add("name", attr.getName());
          result = attrTemplate.render();
 
-         fragmentMap.add(Parser.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3,
+         fragmentMap.add(FileFragmentMap.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType() + ")", result, 3,
                          attr.getModified());
       }
    }
@@ -167,7 +167,7 @@ public class Generator4TableClassFile extends AbstractGenerator
          attrTemplate.add("className", clazz.getName());
          result = attrTemplate.render();
 
-         fragmentMap.add(Parser.METHOD + ":expand" + StrUtil.cap(attr.getName()) + "(String...)", result, 2,
+         fragmentMap.add(FileFragmentMap.METHOD + ":expand" + StrUtil.cap(attr.getName()) + "(String...)", result, 2,
                          attr.getModified());
       }
    }
@@ -175,7 +175,7 @@ public class Generator4TableClassFile extends AbstractGenerator
    private void generateAssociations(Clazz clazz, FileFragmentMap fragmentMap)
    {
       String fullClassName = clazz.getModel().getPackageName() + "." + clazz.getName();
-      fragmentMap.add(Parser.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
+      fragmentMap.add(FileFragmentMap.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
 
       STGroup group = this.getSTGroup("org/fulib/templates/tables/associations.stg");
       String result;
@@ -196,7 +196,7 @@ public class Generator4TableClassFile extends AbstractGenerator
          st.add("className", clazz.getName());
          st.add("otherClassName", otherClassName);
          result = st.render();
-         fragmentMap.add(Parser.METHOD + ":expand" + StrUtil.cap(role.getName()) + "(String...)", result, 2,
+         fragmentMap.add(FileFragmentMap.METHOD + ":expand" + StrUtil.cap(role.getName()) + "(String...)", result, 2,
                          role.getModified());
 
          // hasMethod(roleName,toMany,className,otherClassName) ::=
@@ -207,17 +207,17 @@ public class Generator4TableClassFile extends AbstractGenerator
          st.add("otherClassName", otherClassName);
          result = st.render();
          fragmentMap
-            .add(Parser.METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)", result, 2,
+            .add(FileFragmentMap.METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)", result, 2,
                  role.getModified());
 
          fullClassName = clazz.getModel().getPackageName() + "." + otherClassName;
-         fragmentMap.add(Parser.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
+         fragmentMap.add(FileFragmentMap.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
       }
    }
 
    private void generateSelectColumns(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      fragmentMap.add(Parser.IMPORT + ":java.util.Arrays", "import java.util.Arrays;", 1);
+      fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.Arrays", "import java.util.Arrays;", 1);
 
       String result;
       STGroup group = this.getSTGroup("org/fulib/templates/tables/selectColumns.stg");
@@ -225,13 +225,13 @@ public class Generator4TableClassFile extends AbstractGenerator
       st.add("className", clazz.getName());
       result = st.render();
 
-      fragmentMap.add(Parser.METHOD + ":selectColumns(String...)", result, 2, clazz.getModified());
+      fragmentMap.add(FileFragmentMap.METHOD + ":selectColumns(String...)", result, 2, clazz.getModified());
 
       st = group.getInstanceOf("dropColumns");
       st.add("className", clazz.getName());
       result = st.render();
 
-      fragmentMap.add(Parser.METHOD + ":dropColumns(String...)", result, 2, clazz.getModified());
+      fragmentMap.add(FileFragmentMap.METHOD + ":dropColumns(String...)", result, 2, clazz.getModified());
    }
 
    private void generateAddColumn(Clazz clazz, FileFragmentMap fragmentMap)
@@ -242,14 +242,14 @@ public class Generator4TableClassFile extends AbstractGenerator
       st.add("className", clazz.getName());
       result = st.render();
 
-      fragmentMap.add(Parser.METHOD
+      fragmentMap.add(FileFragmentMap.METHOD
                       + ":addColumn(String,java.util.function.Function<java.util.LinkedHashMap<String,Object>,Object>)",
                       result, 2, clazz.getModified());
    }
 
    private void generateFilter(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      fragmentMap.add(Parser.IMPORT + ":java.util.function.Predicate", "import java.util.function.Predicate;", 1);
+      fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.function.Predicate", "import java.util.function.Predicate;", 1);
 
       STGroup group = this.getSTGroup("org/fulib/templates/tables/filter.stg");
       ST st = group.getInstanceOf("filter");
@@ -261,18 +261,18 @@ public class Generator4TableClassFile extends AbstractGenerator
          // do not generate filter method
          modified = true;
       }
-      fragmentMap.add(Parser.METHOD + ":filter(Predicate< " + clazz.getName() + " >)", st.render(), 2, modified);
+      fragmentMap.add(FileFragmentMap.METHOD + ":filter(Predicate< " + clazz.getName() + " >)", st.render(), 2, modified);
 
       st = group.getInstanceOf("filterRow");
       st.add("className", clazz.getName());
 
-      fragmentMap.add(Parser.METHOD + ":filterRow(Predicate<LinkedHashMap<String,Object> >)", st.render(), 2,
+      fragmentMap.add(FileFragmentMap.METHOD + ":filterRow(Predicate<LinkedHashMap<String,Object> >)", st.render(), 2,
                       clazz.getModified());
    }
 
    private void generateToSet(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      fragmentMap.add(Parser.IMPORT + ":java.util.LinkedHashSet", "import java.util.LinkedHashSet;", 1);
+      fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.LinkedHashSet", "import java.util.LinkedHashSet;", 1);
 
       STGroup group = this.getSTGroup("org/fulib/templates/tables/toSet.stg");
       ST st = group.getInstanceOf("toSet");
@@ -285,7 +285,7 @@ public class Generator4TableClassFile extends AbstractGenerator
          modified = true;
       }
 
-      fragmentMap.add(Parser.METHOD + ":toSet()", st.render(), 2, modified);
+      fragmentMap.add(FileFragmentMap.METHOD + ":toSet()", st.render(), 2, modified);
    }
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
@@ -293,6 +293,6 @@ public class Generator4TableClassFile extends AbstractGenerator
       STGroup group = this.getSTGroup("org/fulib/templates/tables/toString.stg");
       ST st = group.getInstanceOf("toString");
 
-      fragmentMap.add(Parser.METHOD + ":toString()", st.render(), 2, clazz.getModified());
+      fragmentMap.add(FileFragmentMap.METHOD + ":toString()", st.render(), 2, clazz.getModified());
    }
 }
