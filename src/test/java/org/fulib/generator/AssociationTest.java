@@ -1,7 +1,6 @@
 package org.fulib.generator;
 
 import org.fulib.Fulib;
-import org.fulib.TestGenerator;
 import org.fulib.Tools;
 import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
@@ -47,7 +46,7 @@ public class AssociationTest
 
       ClassModel model = this.getClassModel(srcFolder, packageName);
 
-      TestGenerator.createPreexistingUniFile(packageName, model);
+      UniversityFileHelper.create(packageName, model);
 
       String uniFileName = model.getPackageSrcFolder() + "/University.java";
       assertThat("University.java exists", Files.exists(Paths.get(uniFileName)));

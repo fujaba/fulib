@@ -2,7 +2,6 @@ package org.fulib.generator;
 
 import org.fulib.Fulib;
 import org.fulib.Parser;
-import org.fulib.TestGenerator;
 import org.fulib.Tools;
 import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
@@ -40,7 +39,7 @@ public class ExtendsTest
 
       ClassModel model = this.getClassModel(srcFolder, packageName);
 
-      TestGenerator.createPreexistingUniFile(packageName, model);
+      UniversityFileHelper.create(packageName, model);
 
       Fulib.generator().generate(model);
 

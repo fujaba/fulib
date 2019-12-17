@@ -2,7 +2,6 @@ package org.fulib.generator;
 
 import org.fulib.Fulib;
 import org.fulib.Generator;
-import org.fulib.TestGenerator;
 import org.fulib.Tools;
 import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
@@ -44,7 +43,7 @@ public class ModelEvolutionTest
 
       ClassModel firstModel = mb.getClassModel();
 
-      TestGenerator.createPreexistingUniFile(packageName, firstModel);
+      UniversityFileHelper.create(packageName, firstModel);
 
       Fulib.generator().generate(firstModel);
 

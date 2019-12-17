@@ -1,4 +1,4 @@
-package org.fulib;
+package org.fulib.generator;
 
 import org.fulib.classmodel.ClassModel;
 import org.stringtemplate.v4.ST;
@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class TestGenerator
+public class UniversityFileHelper
 {
-   public static void createPreexistingUniFile(String packageName, ClassModel model) throws IOException
+   public static void create(String packageName, ClassModel model) throws IOException
    {
       // create pre existing University class with extra elements
       STGroup group = new STGroupFile("templates/university.stg");
