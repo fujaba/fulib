@@ -344,6 +344,14 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap
             .add(METHOD + ":set" + capAttrName + "(" + attr.getType() + ")", attrSet.render(), 3,
                  modified);
+
+         // remove "with" and "without" methods
+         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + baseType + ")", "", 3, true);
+         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + baseType + "...)", "", 3, true);
+         fragmentMap.add(METHOD + ":with" + capAttrName + "(Collection<? extends " + baseType + ">)", "", 3, true);
+         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + baseType + ")", "", 3, true);
+         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + baseType + "...)", "", 3, true);
+         fragmentMap.add(METHOD + ":without" + capAttrName + "(Collection<? extends " + baseType + ">)", "", 3, true);
       }
 
       if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
