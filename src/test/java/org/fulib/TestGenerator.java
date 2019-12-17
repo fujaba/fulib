@@ -170,35 +170,6 @@ public class TestGenerator
 
    }
 
-   @Test
-   void testCustomTemplates() throws IOException
-   {
-      Tools.removeDirAndFiles("tmp");
-
-      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
-      mb.buildClass("University").buildAttribute("name", Type.STRING);
-      mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"")
-        .buildAttribute("matrNo", Type.LONG, "0");
-
-      ClassModel model = mb.getClassModel();
-
-      // generate normal
-      Fulib.generator().generate(model);
-
-      byte[] bytes = Files.readAllBytes(Paths.get(model.getPackageSrcFolder() + "/Student.java"));
-      String content = new String(bytes);
-      assertThat(content, not(containsString("/* custom attribute comment */")));
-
-      // generate custom
-      // start_code_fragment: testCustomTemplates
-      Fulib.generator().setCustomTemplatesFile("templates/custom.stg").generate(model);
-      // end_code_fragment:
-
-      bytes = Files.readAllBytes(Paths.get(model.getPackageSrcFolder() + "/Student.java"));
-      content = new String(bytes);
-      assertThat(content, containsString("/* custom attribute comment */"));
-   }
-
    public static void createPreexistingUniFile(String packageName, ClassModel model) throws IOException
    {
       // create pre existing University class with extra elements
