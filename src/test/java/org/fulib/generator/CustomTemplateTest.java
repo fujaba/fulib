@@ -20,7 +20,7 @@ public class CustomTemplateTest
    @Test
    void testCustomTemplates() throws IOException
    {
-      final String targetFolder = "tmp";
+      final String targetFolder = "tmp/custom-templates";
       final String srcFolder = targetFolder + "/src";
 
       Tools.removeDirAndFiles(targetFolder);
