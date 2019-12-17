@@ -195,10 +195,14 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    private static void writeType(TypeContext typeCtx, StringBuilder builder)
    {
-      final String baseType =
-         typeCtx.primitiveType() != null ? getType(typeCtx.primitiveType()) : getType(typeCtx.referenceType());
-
-      builder.append(baseType);
+      if (typeCtx.primitiveType() != null)
+      {
+         writeType(typeCtx.primitiveType(), builder);
+      }
+      else
+      {
+         writeType(typeCtx.referenceType(), builder);
+      }
 
       final int arrayDimensions = typeCtx.arraySuffix().size();
       // noinspection StringRepeatCanBeUsed // for JDK 8 compatibility
@@ -208,14 +212,14 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       }
    }
 
-   private static String getType(PrimitiveTypeContext primitiveTypeCtx)
+   private static void writeType(PrimitiveTypeContext primitiveTypeCtx, StringBuilder builder)
    {
-      return primitiveTypeCtx.getText();
+      builder.append(primitiveTypeCtx.getText());
    }
 
-   private static String getType(ReferenceTypeContext referenceTypeCtx)
+   private static void writeType(ReferenceTypeContext referenceTypeCtx, StringBuilder builder)
    {
-      return referenceTypeCtx.getText();
+      builder.append(referenceTypeCtx.qualifiedName().getText());
    }
 
    @Override
