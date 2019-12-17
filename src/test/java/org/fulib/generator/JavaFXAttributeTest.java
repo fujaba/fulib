@@ -12,8 +12,8 @@ public class JavaFXAttributeTest extends AttributeTest
    }
 
    @Override
-   protected ClassModel getAttributesModel(String srcFolder, String packageName)
+   protected ClassModel getClassModel(String srcFolder, String packageName)
    {
-      return this.getAttributesModel(Fulib.classModelBuilder(packageName, srcFolder).setJavaFXPropertyStyle());
+      return this.getClassModel(Fulib.classModelBuilder(packageName, srcFolder).setJavaFXPropertyStyle());
    }
 }

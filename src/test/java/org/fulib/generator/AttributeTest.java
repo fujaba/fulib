@@ -39,7 +39,7 @@ public class AttributeTest
 
       Tools.removeDirAndFiles(targetFolder);
 
-      ClassModel model = this.getAttributesModel(srcFolder, packageName);
+      ClassModel model = this.getClassModel(srcFolder, packageName);
 
       TestGenerator.createPreexistingUniFile(packageName, model);
 
@@ -62,16 +62,16 @@ public class AttributeTest
       try (final URLClassLoader classLoader = URLClassLoader
          .newInstance(new URL[] { new File(outFolder).toURI().toURL() }))
       {
-         this.runAttributeReadWriteTests(classLoader, packageName);
+         this.runDataTests(classLoader, packageName);
       }
    }
 
-   protected ClassModel getAttributesModel(String srcFolder, String packageName)
+   protected ClassModel getClassModel(String srcFolder, String packageName)
    {
-      return this.getAttributesModel(Fulib.classModelBuilder(packageName, srcFolder));
+      return this.getClassModel(Fulib.classModelBuilder(packageName, srcFolder));
    }
 
-   protected final ClassModel getAttributesModel(ClassModelBuilder mb)
+   protected final ClassModel getClassModel(ClassModelBuilder mb)
    {
       mb.buildClass("University").buildAttribute("name", Type.STRING);
 
@@ -81,7 +81,7 @@ public class AttributeTest
       return mb.getClassModel();
    }
 
-   private void runAttributeReadWriteTests(ClassLoader classLoader, String packageName) throws Exception
+   private void runDataTests(ClassLoader classLoader, String packageName) throws Exception
    {
       final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
 
