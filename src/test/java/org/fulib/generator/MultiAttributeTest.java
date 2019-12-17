@@ -50,23 +50,25 @@ public class MultiAttributeTest
       {
          final Class<?> rootClass = Class.forName(packageName + ".Root", true, classLoader);
          final Method getMethod = rootClass.getMethod("getResultList");
-         final Method withMethod = rootClass.getMethod("withResultList", Object[].class);
-         final Method withoutMethod = rootClass.getMethod("withoutResultList", Object[].class);
+         final Method withItemMethod = rootClass.getMethod("withResultList", Integer.class);
+         final Method withoutItemMethod = rootClass.getMethod("withoutResultList", Integer.class);
 
          final Object theRoot = rootClass.newInstance();
 
-         final Object answer = withMethod.invoke(theRoot, new Object[] { new Object[] { 23 } });
+         final Object answer = withItemMethod.invoke(theRoot, 23);
          assertThat(answer, equalTo(theRoot));
 
          final List<?> theList = (List<?>) getMethod.invoke(theRoot);
          assertThat(theList.size(), equalTo(1));
 
-         withMethod.invoke(theRoot, new Object[] { new Object[] { 42 } });
-         withMethod.invoke(theRoot, new Object[] { new Object[] { 23 } });
+         withItemMethod.invoke(theRoot, 42);
+         withItemMethod.invoke(theRoot, 23);
          assertThat(theList.size(), equalTo(3));
 
-         withoutMethod.invoke(theRoot, new Object[] { new Object[] { 23 } });
+         withoutItemMethod.invoke(theRoot, 23);
          assertThat(theList.size(), equalTo(2));
+
+         // TODO test other "with" and "without" overloads
       }
 
       // change to simple attribute
@@ -79,6 +81,7 @@ public class MultiAttributeTest
       returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       assertThat("compiler return code: ", returnCode, is(0));
 
+      // change back to multi attribute
       modelResultList.setType(Type.INT + Type.__LIST);
 
       Fulib.generator().generate(model);
