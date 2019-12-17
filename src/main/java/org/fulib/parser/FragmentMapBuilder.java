@@ -133,7 +133,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    public void enterConstructorMember(ConstructorMemberContext ctx)
    {
       final MemberContext memberCtx = (MemberContext) ctx.parent;
-      final String className = "\"FOO\"";
+      final String className = ctx.IDENTIFIER().getText();
 
       final StringBuilder signature = new StringBuilder();
       signature.append(FileFragmentMap.CONSTRUCTOR);
