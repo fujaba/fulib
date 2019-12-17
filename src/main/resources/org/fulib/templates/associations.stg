@@ -166,7 +166,7 @@ withoutMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, othe
 withoutItem(roleName, myClassName, otherClassName, otherRoleName, otherToMany) ::= <<
    public <myClassName> without<roleName; format="cap">(<otherClassName> value)
    {
-      if (this.<roleName>.remove(item))
+      if (this.<roleName> != null && this.<roleName>.remove(item))
       {
 <if(otherRoleName)>
          ((<otherClassName>) item).<withoutThis(otherToMany, otherRoleName)>;
