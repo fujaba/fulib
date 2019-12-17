@@ -1,10 +1,10 @@
 package org.fulib.util;
 
 import org.fulib.Generator;
-import org.fulib.Parser;
 import org.fulib.StrUtil;
 import org.fulib.builder.Type;
 import org.fulib.classmodel.*;
+import org.fulib.parser.FragmentMapBuilder;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
@@ -34,7 +34,18 @@ public class Generator4ClassFile extends AbstractGenerator
    public void generate(Clazz clazz)
    {
       String classFileName = clazz.getModel().getPackageSrcFolder() + "/" + clazz.getName() + ".java";
-      FileFragmentMap fragmentMap = Parser.parse(classFileName);
+      FileFragmentMap fragmentMap;
+      try
+      {
+         fragmentMap = FragmentMapBuilder.parse(classFileName);
+      }
+      catch (IOException e)
+      {
+         // file probably doesn't exist
+         // TODO better error handling
+         e.printStackTrace();
+         fragmentMap = new FileFragmentMap();
+      }
 
       // doGenerate code for class
       this.generatePackageDecl(clazz, fragmentMap);
