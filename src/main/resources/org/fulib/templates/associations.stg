@@ -92,6 +92,7 @@ setMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToM
 <endif>
 >>
 
+// TODO deprecated, remove
 withoutMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
    public <myClassName> without<roleName; format="cap">(Object... value)
    {
@@ -109,15 +110,13 @@ withoutMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, othe
          {
             this.without<roleName; format="cap">(((Collection\<?>) item).toArray());
          }
+         else if (item instanceof <otherClassName>[])
+         {
+            this.without<roleName; format="cap">((<otherClassName>[]) item);
+         }
          else if (item instanceof <otherClassName>)
          {
-            if (this.<roleName>.remove(item))
-            {
-<if(otherRoleName)>
-               ((<otherClassName>)item).<withoutThis(otherToMany, otherRoleName)>;
-<endif>
-               this.firePropertyChange("<roleName>", item, null);
-            }
+            this.without<roleName; format="cap">((<otherClassName>) item);
          }
       }
       return this;
