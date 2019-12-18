@@ -61,7 +61,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       fragmentMap.add(FileFragmentMap.CLASS_END, "}", 1);
 
-      if (clazz.getModified() && fragmentMap.classBodyIsEmpty(fragmentMap))
+	   if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
       {
          Path path = Paths.get(classFileName);
          try

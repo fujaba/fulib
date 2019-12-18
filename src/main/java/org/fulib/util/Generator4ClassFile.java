@@ -57,7 +57,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
       this.generateImports(clazz, fragmentMap);
 
-      if (clazz.getModified() && fragmentMap.classBodyIsEmpty(fragmentMap))
+      if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
       {
          Path path = Paths.get(classFileName);
          try

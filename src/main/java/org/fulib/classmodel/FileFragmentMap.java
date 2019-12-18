@@ -308,18 +308,27 @@ public class FileFragmentMap
       }
    }
 
+   @Deprecated
+   @SuppressWarnings("unused")
    public boolean classBodyIsEmpty(FileFragmentMap fragmentMap)
    {
-      CodeFragment startFragment = this.codeMap.get(CLASS);
-      CodeFragment endFragment = this.codeMap.get(CLASS_END);
+      return this.isClassBodyEmpty();
+   }
+
+   public boolean isClassBodyEmpty()
+   {
+      final CodeFragment startFragment = this.codeMap.get(CLASS);
+      final CodeFragment endFragment = this.codeMap.get(CLASS_END);
 
       if (startFragment == null || endFragment == null)
       {
          return true;
       }
-      int endPos = this.fragmentList.indexOf(endFragment);
 
-      for (int i = this.fragmentList.indexOf(startFragment) + 1; i < endPos; i++)
+      final int startPos = this.fragmentList.indexOf(startFragment) + 1;
+      final int endPos = this.fragmentList.lastIndexOf(endFragment);
+
+      for (int i = startPos; i < endPos; i++)
       {
          CodeFragment fragment = this.fragmentList.get(i);
          if (!Objects.equals(fragment.getKey(), GAP))
