@@ -170,7 +170,7 @@ public class FMethod
 
    public String getParamsString()
    {
-      return this.getParams().entrySet().stream().map(e -> e.getKey() + " " + e.getValue())
+      return this.getParams().entrySet().stream().map(e -> e.getValue() + " " + e.getKey())
                  .collect(Collectors.joining(", "));
    }
 
