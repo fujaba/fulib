@@ -8,9 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,6 +71,12 @@ public class FileFragmentMap
       return this;
    }
 
+   public List<CodeFragment> getFragments()
+   {
+      return Collections.unmodifiableList(this.fragmentList);
+   }
+
+   @Deprecated
    public ArrayList<CodeFragment> getFragmentList()
    {
       return this.fragmentList;
@@ -81,6 +85,31 @@ public class FileFragmentMap
    public CodeFragment getFragment(String key)
    {
       return this.codeMap.get(key);
+   }
+
+   public boolean isClassBodyEmpty()
+   {
+      final CodeFragment startFragment = this.codeMap.get(CLASS);
+      final CodeFragment endFragment = this.codeMap.get(CLASS_END);
+
+      if (startFragment == null || endFragment == null)
+      {
+         return true;
+      }
+
+      final int startPos = this.fragmentList.indexOf(startFragment) + 1;
+      final int endPos = this.fragmentList.lastIndexOf(endFragment);
+
+      for (int i = startPos; i < endPos; i++)
+      {
+         CodeFragment fragment = this.fragmentList.get(i);
+         if (!Objects.equals(fragment.getKey(), GAP))
+         {
+            return false;
+         }
+      }
+
+      return true;
    }
 
    // =============== Static Methods ===============
@@ -315,31 +344,6 @@ public class FileFragmentMap
    public boolean classBodyIsEmpty(FileFragmentMap fragmentMap)
    {
       return this.isClassBodyEmpty();
-   }
-
-   public boolean isClassBodyEmpty()
-   {
-      final CodeFragment startFragment = this.codeMap.get(CLASS);
-      final CodeFragment endFragment = this.codeMap.get(CLASS_END);
-
-      if (startFragment == null || endFragment == null)
-      {
-         return true;
-      }
-
-      final int startPos = this.fragmentList.indexOf(startFragment) + 1;
-      final int endPos = this.fragmentList.lastIndexOf(endFragment);
-
-      for (int i = startPos; i < endPos; i++)
-      {
-         CodeFragment fragment = this.fragmentList.get(i);
-         if (!Objects.equals(fragment.getKey(), GAP))
-         {
-            return false;
-         }
-      }
-
-      return true;
    }
 
    // --------------- Property Change Support ---------------

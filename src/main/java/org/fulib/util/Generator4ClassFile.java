@@ -79,7 +79,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void compressBlankLines(FileFragmentMap fragmentMap)
    {
-      ArrayList<CodeFragment> fragmentList = fragmentMap.getFragmentList();
+      List<CodeFragment> fragmentList = fragmentMap.getFragments();
       int noOfBlankLines = 0;
 
       for (CodeFragment firstFragment : fragmentList)
