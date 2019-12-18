@@ -60,7 +60,7 @@ public class FMethodTest
       assertThat("compiler return code: ", returnCode, is(0));
 
       // add a parameter
-      method.readParams().put("question", "int");
+      method.getParams().put("question", "int");
       method.setMethodBody("      return question * 2;\n");
 
       Fulib.generator().generate(model);

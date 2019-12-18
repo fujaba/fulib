@@ -22,11 +22,11 @@ public class FMethod
    protected PropertyChangeSupport listeners = null;
 
    private Clazz clazz = null;
-   private String                        name;
+   private String name;
    private String declaration;
    private String annotations;
    private LinkedHashMap<String, String> params;
-   private String                        returnType;
+   private String returnType;
    private String methodBody;
 
    private boolean modified;
@@ -60,12 +60,12 @@ public class FMethod
       return this;
    }
 
-   public String readName()
+   public String getName()
    {
       return this.name;
    }
 
-   public FMethod writeName(String newName)
+   public FMethod setName(String newName)
    {
       this.name = newName;
       return this;
@@ -79,7 +79,7 @@ public class FMethod
          return null;
       }
 
-      String declaration = String.format("public %s %s(%s)", this.returnType, this.name, this.readFullParamsString());
+      String declaration = String.format("public %s %s(%s)", this.returnType, this.name, this.getParamsString());
 
       if (this.annotations != null)
       {
@@ -103,7 +103,7 @@ public class FMethod
          {
             this.name = null;
             this.returnType = "void";
-            this.readParams().clear();
+            this.getParams().clear();
          }
       }
 
@@ -125,7 +125,7 @@ public class FMethod
          this.name = newName;
          String newReturnType = split[1];
          this.returnType = newReturnType;
-         this.setParamsByString(params);
+         this.setParamsString(params);
          firePropertyChange("declaration", oldValue, value);
       }
       return this;
@@ -149,7 +149,7 @@ public class FMethod
       return this;
    }
 
-   public LinkedHashMap<String, String> readParams()
+   public LinkedHashMap<String, String> getParams()
    {
       if (this.params == null)
       {
@@ -158,10 +158,10 @@ public class FMethod
       return this.params;
    }
 
-   public String readFullParamsString()
+   public String getParamsString()
    {
       ArrayList<String> paramList = new ArrayList<>();
-      for (Map.Entry<String, String> entry : this.readParams().entrySet())
+      for (Map.Entry<String, String> entry : this.getParams().entrySet())
       {
          String paramName = entry.getKey();
          String paramType = entry.getValue();
@@ -173,10 +173,10 @@ public class FMethod
       return result;
    }
 
-   public FMethod setParamsByString(String params)
+   public FMethod setParamsString(String params)
    {
       String[] split = params.split(", ");
-      this.readParams().clear();
+      this.getParams().clear();
       for (String s : split)
       {
          if (s.equals(""))
@@ -184,26 +184,25 @@ public class FMethod
             break;
          }
          String[] pair = s.split(" ");
-         this.readParams().put(pair[1], pair[0]);
+         this.getParams().put(pair[1], pair[0]);
       }
 
       return this;
    }
 
-   public String readSignature()
+   public String getSignature()
    {
-      this.readParams().remove("this");
-      String paramTypes = String.join(",", this.readParams().values());
-      String result = String.format(FileFragmentMap.METHOD + ":%s(%s)", this.readName(), paramTypes);
-      return result;
+      this.getParams().remove("this");
+      String paramTypes = String.join(",", this.getParams().values());
+      return String.format(FileFragmentMap.METHOD + ":%s(%s)", this.getName(), paramTypes);
    }
 
-   public String readReturnType()
+   public String getReturnType()
    {
       return this.returnType;
    }
 
-   public FMethod writeReturnType(String value)
+   public FMethod setReturnType(String value)
    {
       this.returnType = value;
       return this;
@@ -246,6 +245,54 @@ public class FMethod
    }
 
    // =============== Methods ===============
+
+   @Deprecated
+   public String readName()
+   {
+      return this.getName();
+   }
+   
+   @Deprecated
+   public FMethod writeName(String newName)
+   {
+      return this.setName(newName);
+   }
+
+   @Deprecated
+   public String readSignature()
+   {
+      return this.getSignature();
+   }
+
+   @Deprecated
+   public String readReturnType()
+   {
+      return this.getReturnType();
+   }
+
+   @Deprecated
+   public FMethod writeReturnType(String newReturnType)
+   {
+      return this.setReturnType(newReturnType);
+   }
+
+   @Deprecated
+   public LinkedHashMap<String, String> readParams()
+   {
+      return this.getParams();
+   }
+
+   @Deprecated
+   public String readFullParamsString()
+   {
+      return this.getParamsString();
+   }
+
+   @Deprecated
+   public FMethod setParamsByString(String params)
+   {
+      return this.setParamsString(params);
+   }
 
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {

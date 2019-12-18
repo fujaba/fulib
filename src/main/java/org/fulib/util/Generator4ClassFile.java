@@ -525,7 +525,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateMethod(FileFragmentMap fragmentMap, FMethod method)
    {
-      final String signature = method.readSignature();
+      final String signature = method.getSignature();
       String methodBody = method.getMethodBody();
       if (methodBody == null)
       {
