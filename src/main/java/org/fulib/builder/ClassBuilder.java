@@ -13,17 +13,19 @@ import org.fulib.util.Validator;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+ * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+ *
+ * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
- *
  */
 public class ClassBuilder
 {
+   // =============== Fields ===============
 
    private Clazz clazz;
+
+   // =============== Constructors ===============
 
    /**
     * Builds a class builder for the given classname and connects it to the model
@@ -41,7 +43,7 @@ public class ClassBuilder
       String javaLangName = "java.lang." + className;
       try
       {
-         Class<?> javaLangClass = this.getClass().getClassLoader().loadClass(javaLangName);
+         this.getClass().getClassLoader().loadClass(javaLangName);
          // that is no good
          throw new IllegalArgumentException("name clash with " + javaLangName);
       }
@@ -50,7 +52,10 @@ public class ClassBuilder
          // that is good
       }
 
-      if (classModel.getClazz(className) != null) throw new IllegalArgumentException("duplicate class name" + className);
+      if (classModel.getClazz(className) != null)
+      {
+         throw new IllegalArgumentException("duplicate class name" + className);
+      }
 
       Clazz clazz = new Clazz();
       clazz.setModel(classModel);
@@ -59,24 +64,34 @@ public class ClassBuilder
       this.setClazz(clazz);
    }
 
+   // =============== Properties ===============
 
    /**
-    * @param clazz
-    */
-   private void setClazz(Clazz clazz)
-   {
-      this.clazz = clazz;
-   }
-
-
-   /**
-    * @return the clazz this builder is responsible for 
+    * @return the clazz this builder is responsible for
     */
    public Clazz getClazz()
    {
       return this.clazz;
    }
 
+   private void setClazz(Clazz clazz)
+   {
+      this.clazz = clazz;
+   }
+
+   public ClassBuilder setSuperClass(ClassBuilder superClass)
+   {
+      this.clazz.setSuperClass(superClass.getClazz());
+      return this;
+   }
+
+   public ClassBuilder setJavaFXPropertyStyle()
+   {
+      this.clazz.setPropertyStyle(Type.JAVA_FX);
+      return this;
+   }
+
+   // =============== Methods ===============
 
    /**
     * ClassModelbuilder is used to create fulib class models that are input for
@@ -84,9 +99,9 @@ public class ClassBuilder
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+    *
+    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -99,17 +114,15 @@ public class ClassBuilder
     */
    public ClassBuilder buildAttribute(String name, String type)
    {
-      buildAttribute(name, type, null);
-
+      this.buildAttribute(name, type, null);
       return this;
    }
-
 
    /**
     * <pre>
     * <!-- insert_code_fragment: ClassBuilder.buildAttribute_init -->
-        ClassBuilder student = mb.buildClass("Student")
-                .buildAttribute("name", Type.STRING, "\"Karli\"");
+    * ClassBuilder student = mb.buildClass("Student")
+    * .buildAttribute("name", Type.STRING, "\"Karli\"");
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -125,15 +138,16 @@ public class ClassBuilder
    public ClassBuilder buildAttribute(String name, String type, String initialValue)
    {
       Validator.checkSimpleName(name);
-      if (clazz.getAttribute(name) != null
-      || clazz.getRole(name) != null)
+      if (this.clazz.getAttribute(name) != null || this.clazz.getRole(name) != null)
+      {
          throw new IllegalArgumentException("duplicate attribute / role name");
+      }
 
       Attribute attribute = new Attribute();
       attribute.setClazz(this.clazz);
       attribute.setName(name);
       attribute.setType(type);
-      attribute.setPropertyStyle(clazz.getPropertyStyle());
+      attribute.setPropertyStyle(this.clazz.getPropertyStyle());
       attribute.setInitialization(initialValue);
 
       return this;
@@ -142,7 +156,7 @@ public class ClassBuilder
    /**
     * <pre>
     * <!-- insert_code_fragment: ClassBuilder.buildAssociation -->
-        universitiy.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
+    * universitiy.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -159,53 +173,37 @@ public class ClassBuilder
     *
     * @return an AssociationBuilder that allows further customization of the association
     */
-   public AssociationBuilder buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality, String otherRoleName, int otherCardinality)
+   public AssociationBuilder buildAssociation(ClassBuilder otherClass, String myRoleName, int myCardinality,
+      String otherRoleName, int otherCardinality)
    {
       Validator.checkSimpleName(myRoleName);
 
-      if (otherRoleName != null) {
+      if (otherRoleName != null)
+      {
          Validator.checkSimpleName(otherRoleName);
       }
 
-      if (clazz.getAttribute(myRoleName) != null
-            || clazz.getRole(myRoleName) != null)
+      if (this.clazz.getAttribute(myRoleName) != null || this.clazz.getRole(myRoleName) != null)
+      {
          throw new IllegalArgumentException("duplicate attribute / role name");
+      }
 
       if (myRoleName.equals(otherRoleName) && myCardinality != otherCardinality)
+      {
          throw new IllegalArgumentException("duplicate attribute / role name");
+      }
 
+      AssocRole myRole = new AssocRole().setClazz(this.getClazz()).setName(myRoleName).setCardinality(myCardinality)
+                                        .setPropertyStyle(this.clazz.getPropertyStyle())
+                                        .setRoleType(this.clazz.getModel().getDefaultRoleType());
 
-      AssocRole myRole = new AssocRole()
-            .setClazz(this.getClazz())
-            .setName(myRoleName)
-            .setCardinality(myCardinality)
-            .setPropertyStyle(clazz.getPropertyStyle())
-            .setRoleType(this.clazz.getModel().getDefaultRoleType());
-
-      AssocRole otherRole = new AssocRole()
-            .setClazz(otherClass.getClazz())
-            .setName(otherRoleName)
-            .setCardinality(otherCardinality)
-            .setPropertyStyle(clazz.getPropertyStyle())
-            .setRoleType(this.clazz.getModel().getDefaultRoleType());
+      AssocRole otherRole = new AssocRole().setClazz(otherClass.getClazz()).setName(otherRoleName)
+                                           .setCardinality(otherCardinality)
+                                           .setPropertyStyle(this.clazz.getPropertyStyle())
+                                           .setRoleType(this.clazz.getModel().getDefaultRoleType());
 
       myRole.setOther(otherRole);
 
       return new AssociationBuilder(myRole);
    }
-
-
-   public ClassBuilder setSuperClass(ClassBuilder superClass)
-   {
-      this.clazz.setSuperClass(superClass.getClazz());
-      return this;
-   }
-
-
-   public ClassBuilder setJavaFXPropertyStyle()
-   {
-      clazz.setPropertyStyle(Type.JAVA_FX);
-      return this;
-   }
-
 }
