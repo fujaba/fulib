@@ -34,7 +34,7 @@ removePropertyChangeListener1() ::= <<
 >>
 
 removePropertyChangeListener2() ::= <<
-   public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
+   public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
       if (this.listeners != null)
       {

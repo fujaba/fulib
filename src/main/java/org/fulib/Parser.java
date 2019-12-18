@@ -12,6 +12,10 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
+/**
+ * @deprecated since 1.2; use {@link org.fulib.parser.FragmentMapBuilder} instead
+ */
+@Deprecated
 public class Parser
 {
 

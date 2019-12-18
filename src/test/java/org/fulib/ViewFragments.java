@@ -14,7 +14,7 @@ public class ViewFragments
 
       System.out.println("/////////////// " + map.getFileName() + " ///////////////");
 
-      for (final CodeFragment fragment : map.getFragmentList())
+      for (final CodeFragment fragment : map.getFragments())
       {
          System.out.println("// --------------- " + fragment.getKey() + " ---------------");
          System.out.print(fragment.getText());

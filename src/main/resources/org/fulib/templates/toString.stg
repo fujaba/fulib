@@ -3,14 +3,11 @@ toString(names) ::= <<
    public String toString()
    {
       final StringBuilder result = new StringBuilder();
-
-      <names:attrLine()>
-
+      <names:attrLine(); separator="\n">
       return result.substring(1);
    }
 >>
 
 attrLine(name) ::= <<
 result.append(' ').append(this.get<name; format="cap">());
-
 >>

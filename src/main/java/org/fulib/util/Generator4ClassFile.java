@@ -59,7 +59,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
       this.generateImports(clazz, fragmentMap);
 
-      if (clazz.getModified() && fragmentMap.classBodyIsEmpty(fragmentMap))
+      if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
       {
          Path path = Paths.get(classFileName);
          try
@@ -74,43 +74,8 @@ public class Generator4ClassFile extends AbstractGenerator
       }
       else
       {
-         this.compressBlankLines(fragmentMap);
+         fragmentMap.compressBlankLines();
          fragmentMap.writeFile();
-      }
-   }
-
-   private void compressBlankLines(FileFragmentMap fragmentMap)
-   {
-      ArrayList<CodeFragment> fragmentList = fragmentMap.getFragmentList();
-      int noOfBlankLines = 0;
-
-      for (CodeFragment firstFragment : fragmentList)
-      {
-         if (!firstFragment.getText().matches("\\s*"))
-         {
-            noOfBlankLines = 0;
-            continue;
-         }
-
-         for (int pos = firstFragment.getText().length() - 1; pos >= 0; pos--)
-         {
-            if (firstFragment.getText().charAt(pos) != '\n')
-            {
-               continue;
-            }
-
-            noOfBlankLines++;
-            if (noOfBlankLines == 2)
-            {
-               firstFragment.setText(firstFragment.getText().substring(pos));
-               break;
-            }
-            if (noOfBlankLines > 2)
-            {
-               firstFragment.setText(firstFragment.getText().substring(pos + 1));
-               break;
-            }
-         }
       }
    }
 
@@ -580,7 +545,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateMethod(FileFragmentMap fragmentMap, FMethod method)
    {
-      final String signature = method.readSignature();
+      final String signature = method.getSignature();
       String methodBody = method.getMethodBody();
       if (methodBody == null)
       {

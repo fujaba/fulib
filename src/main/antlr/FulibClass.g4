@@ -166,6 +166,28 @@ fragment JavaLetterOrDigit:
 [\uD800-\uDBFF] [\uDC00-\uDFFF] {Character.isJavaIdentifierPart(Character.toCodePoint((char) _input.LA(-2), (char) _input.LA(-1)))}?
 ;
 
+// --------------- Char and String Literals ---------------
+
+// the main reason for them being here is that we properly handle cases like '{' or "  )  " in code blocks.
+
+CharacterLiteral: '\'' SingleCharacter '\'' | '\'' EscapeSequence '\'';
+
+fragment SingleCharacter: ~['\\\r\n];
+
+StringLiteral:	'"' StringCharacters? '"';
+fragment StringCharacters:	StringCharacter+;
+fragment StringCharacter: ~["\\\r\n] | EscapeSequence;
+fragment EscapeSequence: '\\' [btnfr"'\\] | OctalEscape | UnicodeEscape;
+
+fragment OctalEscape: '\\' OctalDigit | '\\' OctalDigit OctalDigit | '\\' ZeroToThree OctalDigit OctalDigit;
+fragment OctalDigit: [0-7];
+fragment ZeroToThree: [0-3];
+
+fragment UnicodeEscape: '\\' 'u'+ HexDigit HexDigit HexDigit HexDigit;
+fragment HexDigit: [0-9a-fA-F];
+
+// --------------- Whitespace ---------------
+
 WS: [ \n\r\t\p{White_Space}] -> skip;
 
 OTHER: .+?;

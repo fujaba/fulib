@@ -4,34 +4,29 @@ removeYou(toOneNames, toManyNames, toOneAggregations, toManyAggregations, toMany
       <if(superClass)>
       super.removeYou();
       <endif>
-      <toOneNames:toOneLine()>
-      <toOneAggregations:toOneAggregationLine()>
-      <toManyNames, javaFXStyles : {name, javaFX | <toManyLine(name, javaFX)>}>
-      <toManyAggregations, toManyTypes : {name, type | <toManyAggregationLine(name, type)>}>
+      <toOneNames:toOneLine(); separator="\n">
+      <toOneAggregations:toOneAggregationLine(); separator="\n">
+      <toManyNames, javaFXStyles : {name, javaFX | <toManyLine(name, javaFX)>}; separator="\n">
+      <toManyAggregations, toManyTypes : {name, type | <toManyAggregationLine(name, type)>}; separator="\n">
    }
 >>
 
 toOneLine(name) ::= <<
 this.set<name; format="cap">(null);
-
 >>
 
 toOneAggregationLine(name) ::= <<
 this.get<name; format="cap">().removeYou();
-
 >>
 
 toManyLine(name, javaFX) ::= <<
 <if(javaFX)>
 this.get<name; format="cap">().clear();
-
 <else>
 this.without<name; format="cap">(this.get<name; format="cap">().clone());
-
 <endif>
 >>
 
 toManyAggregationLine(name, type) ::= <<
 new java.util.ArrayList\<>(this.get<name; format="cap">()).forEach(x -> x.removeYou());
-
 >>

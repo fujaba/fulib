@@ -1,18 +1,53 @@
 package org.fulib.classmodel;
 
-import java.beans.PropertyChangeSupport;
-
 import java.beans.PropertyChangeListener;
-import java.util.Objects;
+import java.beans.PropertyChangeSupport;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
  */
-public class Clazz  
+public class Clazz
 {
+   // =============== Constants ===============
+
+   public static final java.util.ArrayList<Attribute> EMPTY_attributes = new java.util.ArrayList<Attribute>()
+   { @Override public boolean add(Attribute value){ throw new UnsupportedOperationException("No direct add! Use xy.withAttributes(obj)"); }};
+   public static final java.util.ArrayList<AssocRole> EMPTY_roles = new java.util.ArrayList<AssocRole>()
+   { @Override public boolean add(AssocRole value){ throw new UnsupportedOperationException("No direct add! Use xy.withRoles(obj)"); }};
+   public static final java.util.ArrayList<Clazz> EMPTY_subClasses = new java.util.ArrayList<Clazz>()
+   { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withSubClasses(obj)"); }};
+   public static final java.util.ArrayList<FMethod> EMPTY_methods = new java.util.ArrayList<FMethod>()
+   { @Override public boolean add(FMethod value){ throw new UnsupportedOperationException("No direct add! Use xy.withMethods(obj)"); }};
+
+   public static final String PROPERTY_name = "name";
+   public static final String PROPERTY_propertyStyle = "propertyStyle";
+   public static final String PROPERTY_modified = "modified";
+   public static final String PROPERTY_model = "model";
+   public static final String PROPERTY_attributes = "attributes";
+   public static final String PROPERTY_roles = "roles";
+   public static final String PROPERTY_superClass = "superClass";
+   public static final String PROPERTY_subClasses = "subClasses";
+   public static final String PROPERTY_methods = "methods";
+   public static final String PROPERTY_importList = "importList";
+
+   // =============== Fields ===============
+
+   protected PropertyChangeSupport listeners = null;
 
    private ClassModel model = null;
+   private String name;
+   private Clazz superClass = null;
+   private java.util.ArrayList<Clazz> subClasses = null;
+   private java.util.ArrayList<Attribute> attributes = null;
+   private java.util.ArrayList<AssocRole> roles = null;
+   private java.util.ArrayList<FMethod> methods = null;
+   private java.util.LinkedHashSet<String> importList = new java.util.LinkedHashSet<>();
+   private String propertyStyle;
+   private boolean modified;
+
+   // =============== Properties ===============
 
    public ClassModel getModel()
    {
@@ -41,239 +76,50 @@ public class Clazz
       return this;
    }
 
-   public static final java.util.ArrayList<Attribute> EMPTY_attributes = new java.util.ArrayList<Attribute>()
-   { @Override public boolean add(Attribute value){ throw new UnsupportedOperationException("No direct add! Use xy.withAttributes(obj)"); }};
-
-   private java.util.ArrayList<Attribute> attributes = null;
-
-   public java.util.ArrayList<Attribute> getAttributes()
+   public String getName()
    {
-      return this.attributes != null ? this.attributes : EMPTY_attributes;
+      return this.name;
    }
 
-   public Attribute getAttribute(String name)
+   public Clazz setName(String value)
    {
-      for (Attribute attr : this.getAttributes())
-      {
-	      if (Objects.equals(attr.getName(), name))
-         {
-            return attr;
-         }
-      }
-      return null;
-   }
-
-   public Clazz withAttributes(Object... value)
-   {
-      if (value == null)
+      if (Objects.equals(value, this.name))
       {
          return this;
       }
-      for (Object item : value)
-      {
-         if (item == null)
-         {
-            continue;
-         }
-         if (item instanceof Collection)
-         {
-            this.withAttributes(((Collection<?>) item).toArray());
-         }
-         else if (item instanceof Attribute)
-         {
-            if (this.attributes == null)
-            {
-               this.attributes = new java.util.ArrayList<Attribute>();
-            }
-            if (!this.attributes.contains(item))
-            {
-               this.attributes.add((Attribute)item);
-               ((Attribute)item).setClazz(this);
-               this.firePropertyChange("attributes", null, item);
-            }
-         }
-         else
-         {
-            throw new IllegalArgumentException();
-         }
-      }
+
+      final String oldValue = this.name;
+      this.name = value;
+      this.firePropertyChange("name", oldValue, value);
       return this;
    }
 
-   public Clazz withoutAttributes(Object... value)
+   public Clazz getSuperClass()
    {
-      if (this.attributes == null || value == null)
+      return this.superClass;
+   }
+
+   public Clazz setSuperClass(Clazz value)
+   {
+      if (this.superClass == value)
       {
          return this;
       }
-      for (Object item : value)
+
+      final Clazz oldValue = this.superClass;
+      if (this.superClass != null)
       {
-         if (item == null)
-         {
-            continue;
-         }
-         if (item instanceof Collection)
-         {
-            this.withoutAttributes(((Collection<?>) item).toArray());
-         }
-         else if (item instanceof Attribute)
-         {
-            if (this.attributes.remove(item))
-            {
-               ((Attribute)item).setClazz(null);
-               this.firePropertyChange("attributes", item, null);
-            }
-         }
+         this.superClass = null;
+         oldValue.withoutSubClasses(this);
       }
+      this.superClass = value;
+      if (value != null)
+      {
+         value.withSubClasses(this);
+      }
+      this.firePropertyChange("superClass", oldValue, value);
       return this;
    }
-
-   public static final java.util.ArrayList<AssocRole> EMPTY_roles = new java.util.ArrayList<AssocRole>()
-   { @Override public boolean add(AssocRole value){ throw new UnsupportedOperationException("No direct add! Use xy.withRoles(obj)"); }};
-
-   private java.util.ArrayList<AssocRole> roles = null;
-
-   public java.util.ArrayList<AssocRole> getRoles()
-   {
-      return this.roles != null ? this.roles : EMPTY_roles;
-   }
-
-   public AssocRole getRole(String name)
-   {
-      for (AssocRole role : this.getRoles())
-      {
-	      if (Objects.equals(role.getName(), name))
-         {
-            return role;
-         }
-      }
-      return null;
-   }
-
-   public Clazz withRoles(Object... value)
-   {
-      if (value == null)
-      {
-         return this;
-      }
-      for (Object item : value)
-      {
-         if (item == null)
-         {
-            continue;
-         }
-         if (item instanceof Collection)
-         {
-            this.withRoles(((Collection<?>) item).toArray());
-         }
-         else if (item instanceof AssocRole)
-         {
-            if (this.roles == null)
-            {
-               this.roles = new java.util.ArrayList<AssocRole>();
-            }
-            if (!this.roles.contains(item))
-            {
-               this.roles.add((AssocRole)item);
-               ((AssocRole)item).setClazz(this);
-               this.firePropertyChange("roles", null, item);
-            }
-         }
-         else
-         {
-            throw new IllegalArgumentException();
-         }
-      }
-      return this;
-   }
-
-   public Clazz withoutRoles(Object... value)
-   {
-      if (this.roles == null || value == null)
-      {
-         return this;
-      }
-      for (Object item : value)
-      {
-         if (item == null)
-         {
-            continue;
-         }
-         if (item instanceof Collection)
-         {
-            this.withoutRoles(((Collection<?>) item).toArray());
-         }
-         else if (item instanceof AssocRole)
-         {
-            if (this.roles.remove(item))
-            {
-               ((AssocRole)item).setClazz(null);
-               this.firePropertyChange("roles", item, null);
-            }
-         }
-      }
-      return this;
-   }
-
-   protected PropertyChangeSupport listeners = null;
-
-   public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
-   {
-      if (this.listeners != null)
-      {
-         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
-         return true;
-      }
-      return false;
-   }
-
-   public boolean addPropertyChangeListener(PropertyChangeListener listener)
-   {
-      if (this.listeners == null)
-      {
-         this.listeners = new PropertyChangeSupport(this);
-      }
-      this.listeners.addPropertyChangeListener(listener);
-      return true;
-   }
-
-   public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
-   {
-      if (this.listeners == null)
-      {
-         this.listeners = new PropertyChangeSupport(this);
-      }
-      this.listeners.addPropertyChangeListener(propertyName, listener);
-      return true;
-   }
-
-   public boolean removePropertyChangeListener(PropertyChangeListener listener)
-   {
-      if (this.listeners != null)
-      {
-         this.listeners.removePropertyChangeListener(listener);
-      }
-      return true;
-   }
-
-   public boolean removePropertyChangeListener(String propertyName,PropertyChangeListener listener)
-   {
-      if (this.listeners != null)
-      {
-         this.listeners.removePropertyChangeListener(propertyName, listener);
-      }
-      return true;
-   }
-
-   public Clazz markAsModified()
-   {
-      return this.setModified(true);
-   }
-
-   public static final java.util.ArrayList<Clazz> EMPTY_subClasses = new java.util.ArrayList<Clazz>()
-   { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withSubClasses(obj)"); }};
-
-   private java.util.ArrayList<Clazz> subClasses = null;
 
    public java.util.ArrayList<Clazz> getSubClasses()
    {
@@ -345,136 +191,169 @@ public class Clazz
       return this;
    }
 
-   private Clazz superClass = null;
-
-   public Clazz getSuperClass()
+   public Attribute getAttribute(String name)
    {
-      return this.superClass;
+      for (Attribute attr : this.getAttributes())
+      {
+         if (Objects.equals(attr.getName(), name))
+         {
+            return attr;
+         }
+      }
+      return null;
    }
 
-   public Clazz setSuperClass(Clazz value)
+   public java.util.ArrayList<Attribute> getAttributes()
    {
-      if (this.superClass == value)
+      return this.attributes != null ? this.attributes : EMPTY_attributes;
+   }
+
+   public Clazz withAttributes(Object... value)
+   {
+      if (value == null)
       {
          return this;
       }
-
-      final Clazz oldValue = this.superClass;
-      if (this.superClass != null)
+      for (Object item : value)
       {
-         this.superClass = null;
-         oldValue.withoutSubClasses(this);
+         if (item == null)
+         {
+            continue;
+         }
+         if (item instanceof Collection)
+         {
+            this.withAttributes(((Collection<?>) item).toArray());
+         }
+         else if (item instanceof Attribute)
+         {
+            if (this.attributes == null)
+            {
+               this.attributes = new java.util.ArrayList<Attribute>();
+            }
+            if (!this.attributes.contains(item))
+            {
+               this.attributes.add((Attribute)item);
+               ((Attribute)item).setClazz(this);
+               this.firePropertyChange("attributes", null, item);
+            }
+         }
+         else
+         {
+            throw new IllegalArgumentException();
+         }
       }
-      this.superClass = value;
-      if (value != null)
-      {
-         value.withSubClasses(this);
-      }
-      this.firePropertyChange("superClass", oldValue, value);
       return this;
    }
 
-   public void removeYou()
+   public Clazz withoutAttributes(Object... value)
    {
-      this.setModel(null);
-      this.setSuperClass(null);
-
-      this.withoutAttributes(this.getAttributes().clone());
-
-
-      this.withoutRoles(this.getRoles().clone());
-
-
-      this.withoutMethods(this.getMethods().clone());
-
-
-      this.withoutSubClasses(this.getSubClasses().clone());
-
-
-   }
-
-   public static final String PROPERTY_name = "name";
-
-   private String name;
-
-   public String getName()
-   {
-      return this.name;
-   }
-
-   public Clazz setName(String value)
-   {
-      if (Objects.equals(value, this.name))
+      if (this.attributes == null || value == null)
       {
          return this;
       }
-
-      final String oldValue = this.name;
-      this.name = value;
-      this.firePropertyChange("name", oldValue, value);
+      for (Object item : value)
+      {
+         if (item == null)
+         {
+            continue;
+         }
+         if (item instanceof Collection)
+         {
+            this.withoutAttributes(((Collection<?>) item).toArray());
+         }
+         else if (item instanceof Attribute)
+         {
+            if (this.attributes.remove(item))
+            {
+               ((Attribute)item).setClazz(null);
+               this.firePropertyChange("attributes", item, null);
+            }
+         }
+      }
       return this;
    }
 
-   public static final String PROPERTY_propertyStyle = "propertyStyle";
-
-   private String propertyStyle;
-
-   public String getPropertyStyle()
+   public AssocRole getRole(String name)
    {
-      return this.propertyStyle;
+      for (AssocRole role : this.getRoles())
+      {
+         if (Objects.equals(role.getName(), name))
+         {
+            return role;
+         }
+      }
+      return null;
    }
 
-   public Clazz setPropertyStyle(String value)
+   public java.util.ArrayList<AssocRole> getRoles()
    {
-      if (Objects.equals(value, this.propertyStyle))
+      return this.roles != null ? this.roles : EMPTY_roles;
+   }
+
+   public Clazz withRoles(Object... value)
+   {
+      if (value == null)
       {
          return this;
       }
-
-      final String oldValue = this.propertyStyle;
-      this.propertyStyle = value;
-      this.firePropertyChange("propertyStyle", oldValue, value);
+      for (Object item : value)
+      {
+         if (item == null)
+         {
+            continue;
+         }
+         if (item instanceof Collection)
+         {
+            this.withRoles(((Collection<?>) item).toArray());
+         }
+         else if (item instanceof AssocRole)
+         {
+            if (this.roles == null)
+            {
+               this.roles = new java.util.ArrayList<AssocRole>();
+            }
+            if (!this.roles.contains(item))
+            {
+               this.roles.add((AssocRole)item);
+               ((AssocRole)item).setClazz(this);
+               this.firePropertyChange("roles", null, item);
+            }
+         }
+         else
+         {
+            throw new IllegalArgumentException();
+         }
+      }
       return this;
    }
 
-   public static final String PROPERTY_modified = "modified";
-
-   private boolean modified;
-
-   public boolean getModified()
+   public Clazz withoutRoles(Object... value)
    {
-      return this.modified;
-   }
-
-   public Clazz setModified(boolean value)
-   {
-      if (value == this.modified)
+      if (this.roles == null || value == null)
       {
          return this;
       }
-
-      final boolean oldValue = this.modified;
-      this.modified = value;
-      this.firePropertyChange("modified", oldValue, value);
+      for (Object item : value)
+      {
+         if (item == null)
+         {
+            continue;
+         }
+         if (item instanceof Collection)
+         {
+            this.withoutRoles(((Collection<?>) item).toArray());
+         }
+         else if (item instanceof AssocRole)
+         {
+            if (this.roles.remove(item))
+            {
+               ((AssocRole)item).setClazz(null);
+               this.firePropertyChange("roles", item, null);
+            }
+         }
+      }
       return this;
    }
-
-   public static final String PROPERTY_model = "model";
-
-   public static final String PROPERTY_attributes = "attributes";
-
-   public static final String PROPERTY_roles = "roles";
-
-   public static final String PROPERTY_superClass = "superClass";
-
-   public static final String PROPERTY_subClasses = "subClasses";
-
-   public static final java.util.ArrayList<FMethod> EMPTY_methods = new java.util.ArrayList<FMethod>()
-   { @Override public boolean add(FMethod value){ throw new UnsupportedOperationException("No direct add! Use xy.withMethods(obj)"); }};
-
-   public static final String PROPERTY_methods = "methods";
-
-   private java.util.ArrayList<FMethod> methods = null;
 
    public java.util.ArrayList<FMethod> getMethods()
    {
@@ -546,10 +425,6 @@ public class Clazz
       return this;
    }
 
-   public static final String PROPERTY_importList = "importList";
-
-   private java.util.LinkedHashSet<String> importList = new java.util.LinkedHashSet<>();
-
    public java.util.LinkedHashSet<String> getImportList()
    {
       return this.importList;
@@ -568,16 +443,120 @@ public class Clazz
       return this;
    }
 
+   public String getPropertyStyle()
+   {
+      return this.propertyStyle;
+   }
+
+   public Clazz setPropertyStyle(String value)
+   {
+      if (Objects.equals(value, this.propertyStyle))
+      {
+         return this;
+      }
+
+      final String oldValue = this.propertyStyle;
+      this.propertyStyle = value;
+      this.firePropertyChange("propertyStyle", oldValue, value);
+      return this;
+   }
+
+   public boolean getModified()
+   {
+      return this.modified;
+   }
+
+   public Clazz setModified(boolean value)
+   {
+      if (value == this.modified)
+      {
+         return this;
+      }
+
+      final boolean oldValue = this.modified;
+      this.modified = value;
+      this.firePropertyChange("modified", oldValue, value);
+      return this;
+   }
+
+   // =============== Methods ===============
+
+   public Clazz markAsModified()
+   {
+      return this.setModified(true);
+   }
+
+   public boolean addPropertyChangeListener(PropertyChangeListener listener)
+   {
+      if (this.listeners == null)
+      {
+         this.listeners = new PropertyChangeSupport(this);
+      }
+      this.listeners.addPropertyChangeListener(listener);
+      return true;
+   }
+
+   public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+   {
+      if (this.listeners == null)
+      {
+         this.listeners = new PropertyChangeSupport(this);
+      }
+      this.listeners.addPropertyChangeListener(propertyName, listener);
+      return true;
+   }
+
+   public boolean removePropertyChangeListener(PropertyChangeListener listener)
+   {
+      if (this.listeners != null)
+      {
+         this.listeners.removePropertyChangeListener(listener);
+      }
+      return true;
+   }
+
+   public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+   {
+      if (this.listeners != null)
+      {
+         this.listeners.removePropertyChangeListener(propertyName, listener);
+      }
+      return true;
+   }
+
+   public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
+   {
+      if (this.listeners != null)
+      {
+         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
+         return true;
+      }
+      return false;
+   }
+
+   public void removeYou()
+   {
+      this.setModel(null);
+      this.setSuperClass(null);
+      this.withoutAttributes(this.getAttributes().clone());
+
+
+      this.withoutRoles(this.getRoles().clone());
+
+
+      this.withoutMethods(this.getMethods().clone());
+
+
+      this.withoutSubClasses(this.getSubClasses().clone());
+
+   }
+
    @Override
    public String toString()
    {
       final StringBuilder result = new StringBuilder();
-
       result.append(' ').append(this.getName());
       result.append(' ').append(this.getPropertyStyle());
-
-
       return result.substring(1);
    }
-
 }
