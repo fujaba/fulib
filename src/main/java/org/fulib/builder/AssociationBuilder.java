@@ -13,17 +13,19 @@ import java.util.Objects;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+ * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+ *
+ * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
- *
  */
 public class AssociationBuilder
 {
+   // =============== Fields ===============
 
    private AssocRole srcRole;
+
+   // =============== Constructors ===============
 
    /**
     * Allows to define additional properties for associations, e.g. aggregation or Collection to be used
@@ -36,63 +38,41 @@ public class AssociationBuilder
       this.srcRole = myRole;
    }
 
+   // =============== Methods ===============
+
    public AssociationBuilder setAggregation()
    {
       this.srcRole.setAggregation(true);
       return this;
    }
 
-   public AssociationBuilder setSourceRoleCollection(Class collectionClass)
-   {
-      Objects.requireNonNull(collectionClass);
-
-      if (Collection.class.isAssignableFrom(collectionClass))
-      {
-         String roleType = deriveRoleType(collectionClass);
-
-         srcRole.setRoleType(roleType);
-      }
-
-      return this;
-   }
-
-   public AssociationBuilder setTargetRoleCollection(Class collectionClass)
-   {
-      Objects.requireNonNull(collectionClass);
-
-      if (Collection.class.isAssignableFrom(collectionClass))
-      {
-         String roleType = deriveRoleType(collectionClass);
-
-         srcRole.getOther().setRoleType(roleType);
-      }
-
-      return this;
-   }
-
-
    public AssociationBuilder setJavaFXPropertyStyle()
    {
-      srcRole.setPropertyStyle(Type.JAVA_FX);
-      srcRole.getOther().setPropertyStyle(Type.JAVA_FX);
+      this.srcRole.setPropertyStyle(Type.JAVA_FX);
+      this.srcRole.getOther().setPropertyStyle(Type.JAVA_FX);
       return this;
    }
 
-
-   private String deriveRoleType(Class collectionClass1)
+   public AssociationBuilder setSourceRoleCollection(Class<?> collectionClass)
    {
-      Class collectionClass = collectionClass1;
-      if ( ! Collection.class.isAssignableFrom(collectionClass))
+      this.srcRole.setRoleType(deriveRoleType(collectionClass));
+      return this;
+   }
+
+   public AssociationBuilder setTargetRoleCollection(Class<?> collectionClass)
+   {
+      this.srcRole.getOther().setRoleType(deriveRoleType(collectionClass));
+      return this;
+   }
+
+   private static String deriveRoleType(Class<?> collectionClass)
+   {
+      if (!Collection.class.isAssignableFrom(collectionClass))
       {
-         throw new IllegalArgumentException("class is no collection");
+         throw new IllegalArgumentException("class is not a sub-type of java.util.Collection");
       }
 
-      String roleType = collectionClass.getName();
-      TypeVariable[] typeParameters = collectionClass.getTypeParameters();
-      if (typeParameters.length == 1)
-      {
-         roleType += "<%s>";
-      }
-      return roleType;
+      final String roleType = collectionClass.getName();
+      return collectionClass.getTypeParameters().length == 1 ? roleType + "<%s>" : roleType;
    }
 }
