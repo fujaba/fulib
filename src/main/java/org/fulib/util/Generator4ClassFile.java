@@ -406,6 +406,11 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap
             .add(FileFragmentMap.ATTRIBUTE + ":EMPTY_" + role.getName(), emptySetDecl.render(), 3, role.getModified());
       }
+      else
+      {
+         // remove empty set decl
+         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":EMPTY_" + role.getName(), "", 3, true);
+      }
 
       final ST propertyDecl = group.getInstanceOf("propertyDecl");
       propertyDecl.add("roleName", role.getName());
@@ -422,9 +427,6 @@ public class Generator4ClassFile extends AbstractGenerator
       final String capRoleName = StrUtil.cap(role.getName());
       if (Type.JAVA_FX.equals(role.getPropertyStyle()))
       {
-         // remove empty set decl
-         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":EMPTY_" + role.getName(), "", 3, true);
-
          // add _init method
          final ST initMethod = group.getInstanceOf("initMethod");
          initMethod.add("roleName", role.getName());
