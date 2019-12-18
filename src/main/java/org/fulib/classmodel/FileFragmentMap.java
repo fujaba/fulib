@@ -162,6 +162,27 @@ public class FileFragmentMap
       return newTextBuilder.toString();
    }
 
+   private static String mergeAttributeDecl(String oldText, String newText)
+   {
+      // keep everything before public
+      final int oldPublicPos = oldText.indexOf("public");
+      final int newPublicPos = newText.indexOf("public");
+      if (oldPublicPos >= 0 && newPublicPos >= 0)
+      {
+         return oldText.substring(0, oldPublicPos) + newText.substring(newPublicPos);
+      }
+
+      // keep everything before private
+      final int newPrivatePos = newText.indexOf("private");
+      final int oldPrivatePos = oldText.indexOf("private");
+      if (oldPrivatePos >= 0 && newPrivatePos >= 0)
+      {
+         return oldText.substring(0, oldPrivatePos) + newText.substring(newPrivatePos);
+      }
+
+      return newText;
+   }
+
    // =============== Methods ===============
 
    public CodeFragment add(String key, String newText, int newLines)
@@ -208,23 +229,7 @@ public class FileFragmentMap
          }
          else if (key.startsWith(ATTRIBUTE))
          {
-            // keep everything before public
-            int newTextPublicPos = newText.indexOf("public");
-            int resultPublicPos = result.getText().indexOf("public");
-            if (newTextPublicPos >= 0 && resultPublicPos >= 0)
-            {
-               newText = result.getText().substring(0, resultPublicPos) + newText.substring(newTextPublicPos);
-            }
-         }
-         else if (key.startsWith(ATTRIBUTE)) // ToDo: this looks wrong, remove it?
-         {
-            // keep everything before private
-            int newTextPrivatePos = newText.indexOf("private");
-            int resultPrivatePos = result.getText().indexOf("private");
-            if (newTextPrivatePos >= 0 && resultPrivatePos >= 0)
-            {
-               newText = result.getText().substring(0, resultPrivatePos) + newText.substring(newTextPrivatePos);
-            }
+            newText = mergeAttributeDecl(result.getText(), newText);
          }
 
          result.setText(newText.trim());
