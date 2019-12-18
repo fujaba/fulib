@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import static org.fulib.Parser.CLASS_END;
 
+@Deprecated
 public class TypeScriptParser
 {
    public static final char EOF = Character.MIN_VALUE;
