@@ -13,15 +13,21 @@ import java.util.Collection;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
-      * <!-- end_code_fragment:  -->
- * </pre>
+ * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
  *
+ * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+ * <!-- end_code_fragment:  -->
+ * </pre>
  */
 public class ClassModelBuilder
 {
+   // =============== Constants ===============
+
+   public static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
+
+   // replacements for the deprecated constants below can be found in org.fulib.builder.Type.
+
+   // @formatter:off
    @Deprecated public static final String STRING = "String";
    @Deprecated public static final String LONG = "long";
    @Deprecated public static final String INT = "int";
@@ -35,8 +41,13 @@ public class ClassModelBuilder
    @Deprecated public static final String COLLECTION_LINKED_HASH_SET = "java.util.LinkedHashSet<%s>";
    @Deprecated public static final String POJO = "POJO";
    @Deprecated public static final String JAVA_FX = "JavaFX";
+   // @formatter:on
+
+   // =============== Fields ===============
 
    private ClassModel classModel;
+
+   // =============== Constructors ===============
 
    /**
     * ClassModelbuilder is used to create fulib class models that are input for
@@ -44,9 +55,9 @@ public class ClassModelBuilder
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+    *
+    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -55,9 +66,8 @@ public class ClassModelBuilder
     */
    public ClassModelBuilder(String packagename)
    {
-      this(packagename, "src/main/java");
+      this(packagename, DEFAULT_SOURCE_FOLDER);
    }
-
 
    /**
     * ClassModelbuilder is used to create fulib class models that are input for
@@ -65,9 +75,9 @@ public class ClassModelBuilder
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+    *
+    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -80,14 +90,16 @@ public class ClassModelBuilder
    {
       Validator.checkQualifiedName(packagename);
 
-      ClassModel classModel = new ClassModel()
-            .setPackageName(packagename)
-            .setMainJavaDir(sourceFolder)
-            .setDefaultPropertyStyle(Type.POJO)
-            .setDefaultRoleType(Type.COLLECTION_ARRAY_LIST);
+      final ClassModel classModel = new ClassModel();
+      classModel.setPackageName(packagename);
+      classModel.setMainJavaDir(sourceFolder);
+      classModel.setDefaultPropertyStyle(Type.POJO);
+      classModel.setDefaultRoleType(Type.COLLECTION_ARRAY_LIST);
 
       this.setClassModel(classModel);
    }
+
+   // =============== Static Methods ===============
 
    /**
     * Checks whether the string is a valid Java identifier, and throws an {@link IllegalArgumentException} if not.
@@ -105,19 +117,19 @@ public class ClassModelBuilder
       Validator.checkQualifiedName(string);
    }
 
+   // =============== Properties ===============
+
+   /**
+    * @return the class model this builder is responsible for
+    */
+   public ClassModel getClassModel()
+   {
+      return this.classModel;
+   }
 
    private void setClassModel(ClassModel classModel)
    {
       this.classModel = classModel;
-   }
-
-
-   /**
-    * @return the class model this builder is responsible for 
-    */
-   public ClassModel getClassModel()
-   {
-      return classModel;
    }
 
    /**
@@ -127,18 +139,20 @@ public class ClassModelBuilder
     *
     * @param collectionClass
     *    the collection class
-    * @return
-    *    this instance, to allow call chaining
+    *
+    * @return this instance, to allow call chaining
     */
-   public ClassModelBuilder setDefaultCollectionClass(Class collectionClass)
+   public ClassModelBuilder setDefaultCollectionClass(Class<?> collectionClass)
    {
+      // TODO use implementation from AssociationBuilder
+
       if ( ! Collection.class.isAssignableFrom(collectionClass))
       {
          throw new IllegalArgumentException("class is no collection");
       }
 
       String defaultRoleType = collectionClass.getName();
-      TypeVariable[] typeParameters = collectionClass.getTypeParameters();
+      TypeVariable<?>[] typeParameters = collectionClass.getTypeParameters();
       if (typeParameters.length == 1)
       {
          defaultRoleType += "<%s>";
@@ -147,22 +161,22 @@ public class ClassModelBuilder
       return this;
    }
 
-
    public ClassModelBuilder setJavaFXPropertyStyle()
    {
-      classModel.setDefaultPropertyStyle(Type.JAVA_FX);
+      this.classModel.setDefaultPropertyStyle(Type.JAVA_FX);
       return this;
    }
 
+   // =============== Methods ===============
 
    /**
     * Builds and returns a class builder for the given classname and connects it to the model
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder.twoParams -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java")
-            .setJavaFXPropertyStyle();
-
-      ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", Type.STRING);
+    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java")
+    * .setJavaFXPropertyStyle();
+    *
+    * ClassBuilder universitiy = mb.buildClass( "University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
