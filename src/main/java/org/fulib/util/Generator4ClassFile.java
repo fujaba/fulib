@@ -458,73 +458,94 @@ public class Generator4ClassFile extends AbstractGenerator
       getMethod.add("roleType", roleType);
       fragmentMap.add(METHOD + ":get" + capRoleName + "()", getMethod.render(), 2, modified);
 
-      final ST setMethod;
       if (cardinality != Type.ONE)
       {
-         setMethod = group.getInstanceOf("withMethod");
-         setMethod.add("myClassName", className);
-         setMethod.add("roleName", roleName);
-         setMethod.add("otherClassName", otherClassName);
-         setMethod.add("otherRoleName", otherRoleName);
-         setMethod.add("otherToMany", otherCardinality != Type.ONE);
-         setMethod.add("roleType", roleType);
-      }
-      else
-      {
-         setMethod = group.getInstanceOf("setMethod");
-         setMethod.add("myClassName", className);
-         setMethod.add("roleName", roleName);
-         setMethod.add("otherClassName", otherClassName);
-         setMethod.add("otherRoleName", otherRoleName);
-         setMethod.add("otherToMany", otherCardinality != Type.ONE);
-      }
+         final ST withMethod = group.getInstanceOf("withMethod");
+         withMethod.add("myClassName", className);
+         withMethod.add("roleName", roleName);
+         withMethod.add("otherClassName", otherClassName);
+         withMethod.add("otherRoleName", otherRoleName);
+         withMethod.add("otherToMany", otherCardinality != Type.ONE);
+         withMethod.add("roleType", roleType);
+         fragmentMap.add(METHOD + ":with" + capRoleName + "(Object...)", withMethod.render(), 3, modified);
 
-      String signature = "set";
-      String paramType = otherClassName;
-      if (cardinality != Type.ONE)
-      {
-         signature = "with";
-         paramType = "Object...";
-      }
-      if (Type.JAVA_FX.equals(role.getPropertyStyle()))
-      {
-         if (cardinality != Type.ONE)
-         {
-            // remove withXY(Object...) method
-            String oldSignature = "with" + capRoleName + "(" + paramType + ")";
-            fragmentMap.add(METHOD + ":" + oldSignature, "", 3, true);
-         }
-         paramType = otherClassName;
-      }
-      else
-      {
-         // remove withXY(OtherClass)
-         String oldSignature = "with" + capRoleName + "(" + otherClassName + ")";
-         fragmentMap.add(METHOD + ":" + oldSignature, "", 3, true);
-      }
+         final ST withItem = group.getInstanceOf("withItem");
+         withItem.add("myClassName", className);
+         withItem.add("roleName", roleName);
+         withItem.add("otherClassName", otherClassName);
+         withItem.add("otherRoleName", otherRoleName);
+         withItem.add("otherToMany", otherCardinality != Type.ONE);
+         withItem.add("roleType", roleType);
+         fragmentMap.add(METHOD + ":with" + capRoleName + "(" + otherClassName + ")", withItem.render(), 3, modified);
 
-      signature += capRoleName + "(" + paramType + ")";
-
-      fragmentMap.add(METHOD + ":" + signature, setMethod.render(), 3, modified);
-
-      if (cardinality != Type.ONE)
-      {
-         final ST withoutMethod = group.getInstanceOf("withoutMethod");
-         withoutMethod.add("roleName", roleName);
-         withoutMethod.add("toMany", cardinality != Type.ONE);
-         withoutMethod.add("myClassName", className);
-         withoutMethod.add("otherClassName", otherClassName);
-         withoutMethod.add("otherRoleName", otherRoleName);
-         withoutMethod.add("otherToMany", otherCardinality != Type.ONE);
-         withoutMethod.add("roleType", roleType);
-
-         paramType = "Object...";
-         if (Type.JAVA_FX.equals(role.getPropertyStyle()))
-         {
-            paramType = otherClassName;
-         }
+         final ST withArray = group.getInstanceOf("withArray");
+         withArray.add("myClassName", className);
+         withArray.add("roleName", roleName);
+         withArray.add("otherClassName", otherClassName);
          fragmentMap
-            .add(METHOD + ":without" + capRoleName + "(" + paramType + ")", withoutMethod.render(), 3, modified);
+            .add(METHOD + ":with" + capRoleName + "(" + otherClassName + "...)", withArray.render(), 3, modified);
+
+         final ST withColl = group.getInstanceOf("withColl");
+         withColl.add("myClassName", className);
+         withColl.add("roleName", roleName);
+         withColl.add("otherClassName", otherClassName);
+         fragmentMap
+            .add(METHOD + ":with" + capRoleName + "(Collection<? extends " + otherClassName + ">)", withColl.render(),
+                 3, modified);
+
+         final ST withoutMethod = group.getInstanceOf("withoutMethod");
+         withoutMethod.add("myClassName", className);
+         withoutMethod.add("roleName", roleName);
+         withoutMethod.add("otherClassName", otherClassName);
+         fragmentMap.add(METHOD + ":without" + capRoleName + "(Object...)", withoutMethod.render(), 3, modified);
+
+         final ST withoutItem = group.getInstanceOf("withoutItem");
+         withoutItem.add("myClassName", className);
+         withoutItem.add("roleName", roleName);
+         withoutItem.add("otherClassName", otherClassName);
+         withoutItem.add("otherRoleName", otherRoleName);
+         withoutItem.add("otherToMany", otherCardinality != Type.ONE);
+         fragmentMap.add(METHOD + ":without" + capRoleName + "(" + otherClassName + ")", withoutItem.render(), 3, modified);
+
+         final ST withoutArray = group.getInstanceOf("withoutArray");
+         withoutArray.add("myClassName", className);
+         withoutArray.add("roleName", roleName);
+         withoutArray.add("otherClassName", otherClassName);
+         fragmentMap
+            .add(METHOD + ":without" + capRoleName + "(" + otherClassName + "...)", withoutArray.render(), 3, modified);
+
+         final ST withoutColl = group.getInstanceOf("withoutColl");
+         withoutColl.add("myClassName", className);
+         withoutColl.add("roleName", roleName);
+         withoutColl.add("otherClassName", otherClassName);
+         fragmentMap.add(METHOD + ":without" + capRoleName + "(Collection<? extends " + otherClassName + ">)",
+                         withoutColl.render(), 3, modified);
+
+         // remove "set" method
+         fragmentMap.add(METHOD + ":set" + capRoleName + "(" + otherClassName + ")", "", 3, true);
+      }
+      else
+      {
+         final ST attrSet = group.getInstanceOf("setMethod");
+         attrSet.add("myClassName", className);
+         attrSet.add("roleName", roleName);
+         attrSet.add("otherClassName", otherClassName);
+         attrSet.add("otherRoleName", otherRoleName);
+         attrSet.add("otherToMany", otherCardinality != Type.ONE);
+         fragmentMap.add(METHOD + ":set" + capRoleName + "(" + otherClassName + ")", attrSet.render(), 3, modified);
+
+         // remove "with" and "without" methods
+         fragmentMap.add(METHOD + ":with" + capRoleName + "(Object...)", "", 3, true);
+         fragmentMap.add(METHOD + ":with" + capRoleName + "(" + otherClassName + ")", "", 3, true);
+         fragmentMap.add(METHOD + ":with" + capRoleName + "(" + otherClassName + "...)", "", 3, true);
+         fragmentMap
+            .add(METHOD + ":with" + capRoleName + "(Collection<? extends " + otherClassName + ">)", "", 3, true);
+
+         fragmentMap.add(METHOD + ":without" + capRoleName + "(Object...)", "", 3, true);
+         fragmentMap.add(METHOD + ":without" + capRoleName + "(" + otherClassName + ")", "", 3, true);
+         fragmentMap.add(METHOD + ":without" + capRoleName + "(" + otherClassName + "...)", "", 3, true);
+         fragmentMap
+            .add(METHOD + ":without" + capRoleName + "(Collection<? extends " + otherClassName + ">)", "", 3, true);
       }
 
       if (Type.JAVA_FX.equals(role.getPropertyStyle()) && cardinality == Type.ONE)
