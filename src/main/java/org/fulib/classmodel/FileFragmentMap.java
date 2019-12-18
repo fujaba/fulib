@@ -311,6 +311,40 @@ public class FileFragmentMap
       this.codeMap.put(fragment.getKey(), fragment);
    }
 
+   public void compressBlankLines()
+   {
+      int noOfBlankLines = 0;
+
+      for (CodeFragment firstFragment : this.fragmentList)
+      {
+         if (!firstFragment.getText().matches("\\s*"))
+         {
+            noOfBlankLines = 0;
+            continue;
+         }
+
+         for (int pos = firstFragment.getText().length() - 1; pos >= 0; pos--)
+         {
+            if (firstFragment.getText().charAt(pos) != '\n')
+            {
+               continue;
+            }
+
+            noOfBlankLines++;
+            if (noOfBlankLines == 2)
+            {
+               firstFragment.setText(firstFragment.getText().substring(pos));
+               break;
+            }
+            if (noOfBlankLines > 2)
+            {
+               firstFragment.setText(firstFragment.getText().substring(pos + 1));
+               break;
+            }
+         }
+      }
+   }
+
    public void writeFile()
    {
       final Path path = Paths.get(this.fileName);

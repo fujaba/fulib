@@ -72,43 +72,8 @@ public class Generator4ClassFile extends AbstractGenerator
       }
       else
       {
-         this.compressBlankLines(fragmentMap);
+         fragmentMap.compressBlankLines();
          fragmentMap.writeFile();
-      }
-   }
-
-   private void compressBlankLines(FileFragmentMap fragmentMap)
-   {
-      List<CodeFragment> fragmentList = fragmentMap.getFragments();
-      int noOfBlankLines = 0;
-
-      for (CodeFragment firstFragment : fragmentList)
-      {
-         if (!firstFragment.getText().matches("\\s*"))
-         {
-            noOfBlankLines = 0;
-            continue;
-         }
-
-         for (int pos = firstFragment.getText().length() - 1; pos >= 0; pos--)
-         {
-            if (firstFragment.getText().charAt(pos) != '\n')
-            {
-               continue;
-            }
-
-            noOfBlankLines++;
-            if (noOfBlankLines == 2)
-            {
-               firstFragment.setText(firstFragment.getText().substring(pos));
-               break;
-            }
-            if (noOfBlankLines > 2)
-            {
-               firstFragment.setText(firstFragment.getText().substring(pos + 1));
-               break;
-            }
-         }
       }
    }
 
