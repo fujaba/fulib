@@ -1,9 +1,60 @@
+// --------------- Overrides ---------------
+
 roleAttrDecl(roleName, roleType, toMany, otherClassName) ::= <<
 <if(toMany)>
    private SimpleListProperty\< <otherClassName> > <roleName> = _init<roleName; format="cap">();
 <else>
    private ObjectProperty\< <otherClassName> > <roleName> = _init<roleName; format="cap">();
 <endif>
+>>
+
+getMethod(roleName, toMany, otherClassName, roleType) ::= <<
+<if(toMany)>
+   public SimpleListProperty\< <otherClassName> > get<roleName; format="cap">()
+   {
+      return <roleName>;
+   }
+<else>
+   public <otherClassName> get<roleName; format="cap">()
+   {
+      return <roleName>.getValue();
+   }
+<endif>
+>>
+
+setMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
+   public <myClassName> set<roleName; format="cap">(<otherClassName> value)
+   {
+      if (value == this.<roleName>.getValue()) return this;
+      <roleName>.setValue(value);
+      return this;
+   }
+>>
+
+withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
+   public <myClassName> with<roleName; format="cap">(<otherClassName> value)
+   {
+      if (this.get<roleName; format="cap">().contains(value)) return this;
+      this.get<roleName; format="cap">().add(value);
+      return this;
+   }
+>>
+
+withoutItem(roleName, myClassName, otherClassName, otherRoleName, otherToMany) ::= <<
+   public <myClassName> without<roleName; format="cap">(<otherClassName> value)
+   {
+      this.get<roleName; format="cap">().remove(value);
+      return this;
+   }
+>>
+
+// --------------- Additional Templates ---------------
+
+propertyMethod(roleName, otherClassName) ::= <<
+   public ObjectProperty\< <otherClassName> > <roleName>Property()
+   {
+      return <roleName>;
+   }
 >>
 
 initMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToMany) ::= <<
@@ -44,54 +95,7 @@ initMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherTo
 <endif>
 >>
 
-getMethod(roleName, toMany, otherClassName, roleType) ::= <<
-<if(toMany)>
-   public SimpleListProperty\< <otherClassName> > get<roleName; format="cap">()
-   {
-      return <roleName>;
-   }
-<else>
-   public <otherClassName> get<roleName; format="cap">()
-   {
-      return <roleName>.getValue();
-   }
-<endif>
->>
-
-propertyMethod(roleName, otherClassName) ::= <<
-   public ObjectProperty\< <otherClassName> > <roleName>Property()
-   {
-      return <roleName>;
-   }
->>
-
-// --------------- Overrides ---------------
-
-setMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
-   public <myClassName> set<roleName; format="cap">(<otherClassName> value)
-   {
-      if (value == this.<roleName>.getValue()) return this;
-      <roleName>.setValue(value);
-      return this;
-   }
->>
-
-withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
-   public <myClassName> with<roleName; format="cap">(<otherClassName> value)
-   {
-      if (this.get<roleName; format="cap">().contains(value)) return this;
-      this.get<roleName; format="cap">().add(value);
-      return this;
-   }
->>
-
-withoutItem(roleName, myClassName, otherClassName, otherRoleName, otherToMany) ::= <<
-   public <myClassName> without<roleName; format="cap">(<otherClassName> value)
-   {
-      this.get<roleName; format="cap">().remove(value);
-      return this;
-   }
->>
+// --------------- Helpers ---------------
 
 withoutTypeThis(toMany, otherRoleName, myClassName) ::= <%
 <if(toMany)>
@@ -103,9 +107,9 @@ withoutTypeThis(toMany, otherRoleName, myClassName) ::= <%
 
 withoutThis(toMany, otherRoleName) ::= <%
 <if(toMany)>
-   without<cap(otherRoleName)>(this)
+   without<otherRoleName; format="cap">(this)
 <else>
-   set<cap(otherRoleName)>(null)
+   set<otherRoleName; format="cap">(null)
 <endif>
 %>
 
