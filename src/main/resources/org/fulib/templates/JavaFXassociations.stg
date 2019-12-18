@@ -65,25 +65,27 @@ propertyMethod(roleName, otherClassName) ::= <<
    }
 >>
 
-setMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
-<if(toMany)>
-   public <myClassName> with<roleName; format="cap">(<otherClassName> value)
-   {
-      if (this.get<roleName; format="cap">().contains(value)) return this;
-      this.get<roleName; format="cap">().add(value);
-      return this;
-   }
-<else>
+// --------------- Overrides ---------------
+
+setMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
    public <myClassName> set<roleName; format="cap">(<otherClassName> value)
    {
       if (value == this.<roleName>.getValue()) return this;
       <roleName>.setValue(value);
       return this;
    }
-<endif>
 >>
 
-withoutMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
+withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
+   public <myClassName> with<roleName; format="cap">(<otherClassName> value)
+   {
+      if (this.get<roleName; format="cap">().contains(value)) return this;
+      this.get<roleName; format="cap">().add(value);
+      return this;
+   }
+>>
+
+withoutItem(roleName, myClassName, otherClassName, otherRoleName, otherToMany) ::= <<
    public <myClassName> without<roleName; format="cap">(<otherClassName> value)
    {
       this.get<roleName; format="cap">().remove(value);

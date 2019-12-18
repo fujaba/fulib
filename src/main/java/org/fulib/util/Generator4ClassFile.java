@@ -385,6 +385,7 @@ public class Generator4ClassFile extends AbstractGenerator
       if (Type.JAVA_FX.equals(role.getPropertyStyle()))
       {
          group = this.getSTGroup("org/fulib/templates/JavaFXassociations.stg");
+         group.importTemplates(this.getSTGroup("org/fulib/templates/associations.stg"));
       }
       else
       {
