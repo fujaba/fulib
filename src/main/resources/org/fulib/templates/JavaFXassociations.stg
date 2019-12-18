@@ -2,22 +2,22 @@
 
 roleAttrDecl(roleName, roleType, toMany, otherClassName) ::= <<
 <if(toMany)>
-   private SimpleListProperty\< <otherClassName> > <roleName> = _init<roleName; format="cap">();
+   private SimpleListProperty\<<otherClassName>\> <roleName> = _init<roleName; format="cap">();
 <else>
-   private ObjectProperty\< <otherClassName> > <roleName> = _init<roleName; format="cap">();
+   private ObjectProperty\<<otherClassName>\> <roleName> = _init<roleName; format="cap">();
 <endif>
 >>
 
 getMethod(roleName, toMany, otherClassName, roleType) ::= <<
 <if(toMany)>
-   public SimpleListProperty\< <otherClassName> > get<roleName; format="cap">()
+   public SimpleListProperty\<<otherClassName>\> get<roleName; format="cap">()
    {
-      return <roleName>;
+      return this.<roleName>;
    }
 <else>
    public <otherClassName> get<roleName; format="cap">()
    {
-      return <roleName>.getValue();
+      return this.<roleName>.getValue();
    }
 <endif>
 >>
@@ -25,8 +25,10 @@ getMethod(roleName, toMany, otherClassName, roleType) ::= <<
 setMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
    public <myClassName> set<roleName; format="cap">(<otherClassName> value)
    {
-      if (value == this.<roleName>.getValue()) return this;
-      <roleName>.setValue(value);
+      if (value != this.<roleName>.getValue())
+      {
+         this.<roleName>.setValue(value);
+      }
       return this;
    }
 >>
@@ -34,8 +36,10 @@ setMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::=
 withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
    public <myClassName> with<roleName; format="cap">(<otherClassName> value)
    {
-      if (this.get<roleName; format="cap">().contains(value)) return this;
-      this.get<roleName; format="cap">().add(value);
+      if (!this.<roleName>.contains(value))
+      {
+         this.<roleName>.add(value);
+      }
       return this;
    }
 >>
@@ -43,7 +47,7 @@ withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, role
 withoutItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
    public <myClassName> without<roleName; format="cap">(<otherClassName> value)
    {
-      this.get<roleName; format="cap">().remove(value);
+      this.<roleName>.remove(value);
       return this;
    }
 >>
@@ -51,72 +55,50 @@ withoutItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany) :
 // --------------- Additional Templates ---------------
 
 propertyMethod(roleName, otherClassName) ::= <<
-   public ObjectProperty\< <otherClassName> > <roleName>Property()
+   public ObjectProperty\<<otherClassName>\> <roleName>Property()
    {
-      return <roleName>;
+      return this.<roleName>;
    }
 >>
 
 initMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToMany) ::= <<
 <if(toMany)>
-   private SimpleListProperty\< <otherClassName> > _init<roleName; format="cap">()
+   private SimpleListProperty\<<otherClassName>\> _init<roleName; format="cap">()
    {
-      SimpleListProperty\< <otherClassName> > result = new SimpleListProperty(javafx.collections.FXCollections.observableArrayList());
-      result.addListener((javafx.collections.ListChangeListener\<? super <otherClassName> >) change -> {
+      final SimpleListProperty\<<otherClassName>\> result = new SimpleListProperty(javafx.collections.FXCollections.observableArrayList());
+      result.addListener((javafx.collections.ListChangeListener\<? super <otherClassName>\>) change -> {
          while (change.next())
          {
-            java.util.List\<? extends <otherClassName> > removed = change.getRemoved();
-            for (<otherClassName>  value : removed)
+            for (final <otherClassName> value : change.getRemoved())
             {
-               value.<withoutThis(otherToMany,otherRoleName)>;
-               firePropertyChange("<roleName>", value, null);
+               value.<withoutThis(otherToMany, otherRoleName)>;
+               this.firePropertyChange("<roleName>", value, null);
             }
-            for (<otherClassName> value : change.getAddedSubList())
+            for (final <otherClassName> value : change.getAddedSubList())
             {
                value.<prefix(otherToMany)><otherRoleName; format="cap">(this);
-               firePropertyChange("<roleName>", null, value);
+               this.firePropertyChange("<roleName>", null, value);
             }
          }
       });
       return result;
    }
 <else>
-   private ObjectProperty\< <otherClassName> > _init<roleName; format="cap">()
+   private ObjectProperty\<<otherClassName>\> _init<roleName; format="cap">()
    {
-      ObjectProperty\< <otherClassName> > result = new SimpleObjectProperty\<>();
-      result.addListener((observable, oldValue, newValue) ->
-      {
-         if (oldValue != null) oldValue.<withoutTypeThis(otherToMany,otherRoleName,myClassName)>;
-         if (newValue != null) newValue.<prefix(otherToMany)><otherRoleName; format="cap">(<myClassName>.this);
-         firePropertyChange("<roleName>", oldValue, newValue);
+      final ObjectProperty\<<otherClassName>\> result = new SimpleObjectProperty\<>();
+      result.addListener((observable, oldValue, newValue) -> {
+         if (oldValue != null)
+         {
+            oldValue.<withoutThis(otherToMany, otherRoleName)>;
+         }
+         if (newValue != null)
+         {
+            newValue.<prefix(otherToMany)><otherRoleName; format="cap">(<myClassName>.this);
+         }
+         this.firePropertyChange("<roleName>", oldValue, newValue);
       });
       return result;
    }
 <endif>
 >>
-
-// --------------- Helpers ---------------
-
-withoutTypeThis(toMany, otherRoleName, myClassName) ::= <%
-<if(toMany)>
-   without<otherRoleName; format="cap">(<myClassName>.this)
-<else>
-   set<otherRoleName; format="cap">(null)
-<endif>
-%>
-
-withoutThis(toMany, otherRoleName) ::= <%
-<if(toMany)>
-   without<otherRoleName; format="cap">(this)
-<else>
-   set<otherRoleName; format="cap">(null)
-<endif>
-%>
-
-prefix(toMany) ::= <%
-<if(toMany)>
-   with
-<else>
-   set
-<endif>
-%>
