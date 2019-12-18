@@ -4,7 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 
-public class CodeFragment  
+public class CodeFragment
 {
    // =============== Constants ===============
 
