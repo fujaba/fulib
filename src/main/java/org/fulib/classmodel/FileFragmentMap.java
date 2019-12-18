@@ -192,57 +192,56 @@ public class FileFragmentMap
 
    public CodeFragment add(String key, String newText, int newLines, boolean removeFragment)
    {
-
-      CodeFragment result = this.codeMap.get(key);
-
-      if (result != null)
+      CodeFragment old = this.codeMap.get(key);
+      if (old == null)
       {
-         // TODO this also inspects method bodies. Perhaps we don't want that?
-         if (result.getText().contains("// no"))
-         {
-            // do not overwrite
-            return result;
-         }
-
          if (removeFragment)
          {
-            this.codeMap.remove(key);
-            int pos = this.fragmentList.indexOf(result);
-            this.fragmentList.remove(pos);
-            CodeFragment gap = this.fragmentList.get(pos - 1);
-            if (Objects.equals(gap.getKey(), GAP))
-            {
-               this.fragmentList.remove(pos - 1);
-            }
-            return result;
+            return null;
          }
 
-         // keep annotations and modifiers
-         if (newText.contains("@"))
-         {
-            // newtext contains annotations, thus it overrides annotations in the code
-            // do not modify newtext
-         }
-         else if (key.equals(CLASS))
-         {
-            newText = mergeClassDecl(result.getText(), newText);
-         }
-         else if (key.startsWith(ATTRIBUTE))
-         {
-            newText = mergeAttributeDecl(result.getText(), newText);
-         }
+         return this.addNew(key, newText, newLines);
+      }
 
-         result.setText(newText.trim());
-
-         return result;
+      // TODO this also inspects method bodies. Perhaps we don't want that?
+      final String oldText = old.getText();
+      if (oldText.contains("// no"))
+      {
+         // do not overwrite
+         return old;
       }
 
       if (removeFragment)
       {
-         return null;
+         this.codeMap.remove(key);
+         int pos = this.fragmentList.indexOf(old);
+         this.fragmentList.remove(pos);
+         CodeFragment gap = this.fragmentList.get(pos - 1);
+         if (Objects.equals(gap.getKey(), GAP))
+         {
+            this.fragmentList.remove(pos - 1);
+         }
+         return old;
       }
 
-      return this.addNew(key, newText, newLines);
+      // keep annotations and modifiers
+      if (newText.contains("@"))
+      {
+         // newtext contains annotations, thus it overrides annotations in the code
+         // do not modify newtext
+      }
+      else if (key.equals(CLASS))
+      {
+         newText = mergeClassDecl(oldText, newText);
+      }
+      else if (key.startsWith(ATTRIBUTE))
+      {
+         newText = mergeAttributeDecl(oldText, newText);
+      }
+
+      old.setText(newText.trim());
+
+      return old;
    }
 
    private CodeFragment addNew(String key, String newText, int newLines)
