@@ -460,15 +460,6 @@ public class Generator4ClassFile extends AbstractGenerator
 
       if (cardinality != Type.ONE)
       {
-         final ST withMethod = group.getInstanceOf("withMethod");
-         withMethod.add("myClassName", className);
-         withMethod.add("roleName", roleName);
-         withMethod.add("otherClassName", otherClassName);
-         withMethod.add("otherRoleName", otherRoleName);
-         withMethod.add("otherToMany", otherCardinality != Type.ONE);
-         withMethod.add("roleType", roleType);
-         fragmentMap.add(METHOD + ":with" + capRoleName + "(Object...)", withMethod.render(), 3, modified);
-
          final ST withItem = group.getInstanceOf("withItem");
          withItem.add("myClassName", className);
          withItem.add("roleName", roleName);
@@ -492,12 +483,6 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap
             .add(METHOD + ":with" + capRoleName + "(Collection<? extends " + otherClassName + ">)", withColl.render(),
                  3, modified);
-
-         final ST withoutMethod = group.getInstanceOf("withoutMethod");
-         withoutMethod.add("myClassName", className);
-         withoutMethod.add("roleName", roleName);
-         withoutMethod.add("otherClassName", otherClassName);
-         fragmentMap.add(METHOD + ":without" + capRoleName + "(Object...)", withoutMethod.render(), 3, modified);
 
          final ST withoutItem = group.getInstanceOf("withoutItem");
          withoutItem.add("myClassName", className);
@@ -535,13 +520,11 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap.add(METHOD + ":set" + capRoleName + "(" + otherClassName + ")", attrSet.render(), 3, modified);
 
          // remove "with" and "without" methods
-         fragmentMap.add(METHOD + ":with" + capRoleName + "(Object...)", "", 3, true);
          fragmentMap.add(METHOD + ":with" + capRoleName + "(" + otherClassName + ")", "", 3, true);
          fragmentMap.add(METHOD + ":with" + capRoleName + "(" + otherClassName + "...)", "", 3, true);
          fragmentMap
             .add(METHOD + ":with" + capRoleName + "(Collection<? extends " + otherClassName + ">)", "", 3, true);
 
-         fragmentMap.add(METHOD + ":without" + capRoleName + "(Object...)", "", 3, true);
          fragmentMap.add(METHOD + ":without" + capRoleName + "(" + otherClassName + ")", "", 3, true);
          fragmentMap.add(METHOD + ":without" + capRoleName + "(" + otherClassName + "...)", "", 3, true);
          fragmentMap

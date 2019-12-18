@@ -56,40 +56,6 @@ setMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::=
 
 // --------------- With ---------------
 
-withMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
-   public <myClassName> with<roleName; format="cap">(Object... value)
-   {
-      if (value == null)
-      {
-         return this;
-      }
-      for (Object item : value)
-      {
-         if (item == null)
-         {
-            continue;
-         }
-         if (item instanceof Collection)
-         {
-            this.with<roleName; format="cap">(((Collection\<?>) item).toArray());
-         }
-         else if (item instanceof <otherClassName>[])
-         {
-            this.with<roleName; format="cap">((<otherClassName>[]) item);
-         }
-         else if (item instanceof <otherClassName>)
-         {
-            this.with<roleName; format="cap">((<otherClassName>) item);
-         }
-         else
-         {
-            throw new IllegalArgumentException();
-         }
-      }
-      return this;
-   }
->>
-
 withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
    public <myClassName> with<roleName; format="cap">(<otherClassName> value)
    {
@@ -132,37 +98,6 @@ withColl(myClassName, roleName, otherClassName) ::= <<
 >>
 
 // --------------- Without ---------------
-
-// TODO deprecated, remove
-withoutMethod(myClassName, roleName, otherClassName) ::= <<
-   public <myClassName> without<roleName; format="cap">(Object... value)
-   {
-      if (this.<roleName> == null || value == null)
-      {
-         return this;
-      }
-      for (Object item : value)
-      {
-         if (item == null)
-         {
-            continue;
-         }
-         if (item instanceof Collection)
-         {
-            this.without<roleName; format="cap">(((Collection\<?>) item).toArray());
-         }
-         else if (item instanceof <otherClassName>[])
-         {
-            this.without<roleName; format="cap">((<otherClassName>[]) item);
-         }
-         else if (item instanceof <otherClassName>)
-         {
-            this.without<roleName; format="cap">((<otherClassName>) item);
-         }
-      }
-      return this;
-   }
->>
 
 withoutItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
    public <myClassName> without<roleName; format="cap">(<otherClassName> value)
