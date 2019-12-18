@@ -185,6 +185,30 @@ public class FileFragmentMap
 
    // =============== Methods ===============
 
+   public void add(CodeFragment fragment)
+   {
+      this.fragmentList.add(fragment);
+      this.codeMap.put(fragment.getKey(), fragment);
+   }
+
+   public void remove(CodeFragment fragment)
+   {
+      final int pos = this.fragmentList.indexOf(fragment);
+      if (pos < 0)
+      {
+         return;
+      }
+
+      this.fragmentList.remove(pos);
+      this.codeMap.remove(fragment.getKey());
+
+      final CodeFragment gap = this.fragmentList.get(pos - 1);
+      if (Objects.equals(gap.getKey(), GAP))
+      {
+         this.fragmentList.remove(pos - 1);
+      }
+   }
+
    public CodeFragment add(String key, String newText, int newLines)
    {
       return this.add(key, newText, newLines, false);
@@ -304,30 +328,6 @@ public class FileFragmentMap
       }
 
       this.codeMap.put(result.getKey(), result);
-   }
-
-   public void add(CodeFragment fragment)
-   {
-      this.fragmentList.add(fragment);
-      this.codeMap.put(fragment.getKey(), fragment);
-   }
-
-   public void remove(CodeFragment fragment)
-   {
-      final int pos = this.fragmentList.indexOf(fragment);
-      if (pos < 0)
-      {
-         return;
-      }
-
-      this.fragmentList.remove(pos);
-      this.codeMap.remove(fragment.getKey());
-
-      final CodeFragment gap = this.fragmentList.get(pos - 1);
-      if (Objects.equals(gap.getKey(), GAP))
-      {
-         this.fragmentList.remove(pos - 1);
-      }
    }
 
    public void compressBlankLines()
