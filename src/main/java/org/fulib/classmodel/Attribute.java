@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
  */
-public class Attribute  
+public class Attribute
 {
    // =============== Constants ===============
 

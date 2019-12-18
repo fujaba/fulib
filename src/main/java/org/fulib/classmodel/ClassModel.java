@@ -245,6 +245,7 @@ public class ClassModel
    public void removeYou()
    {
       this.withoutClasses(this.getClasses().clone());
+
    }
 
    @Override
