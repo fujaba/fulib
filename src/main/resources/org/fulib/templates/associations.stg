@@ -97,14 +97,15 @@ withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, role
       {
          this.<roleName> = new <roleType>();
       }
-      if (!this.<roleName>.contains(item))
+      if (!this.<roleName>.contains(value))
       {
-         this.<roleName>.add((<otherClassName>)item);
+         this.<roleName>.add(value);
 <if(otherRoleName)>
-         ((<otherClassName>) item).<prefix(otherToMany)><otherRoleName; format="cap">(this);
+         value.<prefix(otherToMany)><otherRoleName; format="cap">(this);
 <endif>
-         this.firePropertyChange("<roleName>", null, item);
+         this.firePropertyChange("<roleName>", null, value);
       }
+      return this;
    }
 >>
 
@@ -133,7 +134,7 @@ withColl(myClassName, roleName, otherClassName) ::= <<
 // --------------- Without ---------------
 
 // TODO deprecated, remove
-withoutMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
+withoutMethod(myClassName, roleName, otherClassName) ::= <<
    public <myClassName> without<roleName; format="cap">(Object... value)
    {
       if (this.<roleName> == null || value == null)
@@ -166,12 +167,12 @@ withoutMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany,
 withoutItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
    public <myClassName> without<roleName; format="cap">(<otherClassName> value)
    {
-      if (this.<roleName> != null && this.<roleName>.remove(item))
+      if (this.<roleName> != null && this.<roleName>.remove(value))
       {
 <if(otherRoleName)>
-         ((<otherClassName>) item).<withoutThis(otherToMany, otherRoleName)>;
+         value.<withoutThis(otherToMany, otherRoleName)>;
 <endif>
-         this.firePropertyChange("<roleName>", item, null);
+         this.firePropertyChange("<roleName>", value, null);
       }
       return this;
    }
