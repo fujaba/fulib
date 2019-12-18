@@ -40,7 +40,7 @@ withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, role
    }
 >>
 
-withoutItem(roleName, myClassName, otherClassName, otherRoleName, otherToMany) ::= <<
+withoutItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
    public <myClassName> without<roleName; format="cap">(<otherClassName> value)
    {
       this.get<roleName; format="cap">().remove(value);

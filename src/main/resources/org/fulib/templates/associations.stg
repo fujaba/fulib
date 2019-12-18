@@ -108,7 +108,7 @@ withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, role
    }
 >>
 
-withArray(roleName, myClassName, otherClassName) ::= <<
+withArray(myClassName, roleName, otherClassName) ::= <<
    public <myClassName> with<roleName; format="cap">(<otherClassName>... value)
    {
       for (final <otherClassName> item : value)
@@ -119,7 +119,7 @@ withArray(roleName, myClassName, otherClassName) ::= <<
    }
 >>
 
-withColl(roleName, myClassName, otherClassName) ::= <<
+withColl(myClassName, roleName, otherClassName) ::= <<
    public <myClassName> with<roleName; format="cap">(Collection\<? extends <otherClassName>\> value)
    {
       for (final <otherClassName> item : value)
@@ -133,7 +133,7 @@ withColl(roleName, myClassName, otherClassName) ::= <<
 // --------------- Without ---------------
 
 // TODO deprecated, remove
-withoutMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
+withoutMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
    public <myClassName> without<roleName; format="cap">(Object... value)
    {
       if (this.<roleName> == null || value == null)
@@ -163,7 +163,7 @@ withoutMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, othe
    }
 >>
 
-withoutItem(roleName, myClassName, otherClassName, otherRoleName, otherToMany) ::= <<
+withoutItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
    public <myClassName> without<roleName; format="cap">(<otherClassName> value)
    {
       if (this.<roleName> != null && this.<roleName>.remove(item))
@@ -177,7 +177,7 @@ withoutItem(roleName, myClassName, otherClassName, otherRoleName, otherToMany) :
    }
 >>
 
-withoutArray(roleName, myClassName, otherClassName) ::= <<
+withoutArray(myClassName, roleName, otherClassName) ::= <<
    public <myClassName> without<roleName; format="cap">(<otherClassName>... value)
    {
       for (final <otherClassName> item : value)
@@ -188,7 +188,7 @@ withoutArray(roleName, myClassName, otherClassName) ::= <<
    }
 >>
 
-withoutColl(roleName, myClassName, otherClassName) ::= <<
+withoutColl(myClassName, roleName, otherClassName) ::= <<
    public <myClassName> without<roleName; format="cap">(Collection\<? extends <otherClassName>\> value)
    {
       for (final <otherClassName> item : value)
