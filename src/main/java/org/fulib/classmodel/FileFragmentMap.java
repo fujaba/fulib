@@ -237,14 +237,18 @@ public class FileFragmentMap
          return null;
       }
 
-      result = new CodeFragment().setKey(key).setText(newText);
+      return this.addNew(key, newText, newLines);
+   }
+
+   private CodeFragment addNew(String key, String newText, int newLines)
+   {
+      final CodeFragment gap = this.getNewLineGapFragment(newLines);
+      final CodeFragment result = new CodeFragment().setKey(key).setText(newText);
       this.codeMap.put(key, result);
-      CodeFragment gap = this.getNewLineGapFragment(newLines);
 
       if (key.startsWith(ATTRIBUTE) || key.startsWith(METHOD) || key.startsWith(CONSTRUCTOR))
       {
          this.add(result, CLASS_END);
-
          this.add(gap, CLASS_END);
 
          return result;
