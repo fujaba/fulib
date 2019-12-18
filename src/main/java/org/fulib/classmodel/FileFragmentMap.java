@@ -3,6 +3,7 @@ package org.fulib.classmodel;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -80,18 +81,6 @@ public class FileFragmentMap
    public CodeFragment getFragment(String key)
    {
       return this.codeMap.get(key);
-   }
-
-   private String getFileText()
-   {
-      StringBuilder fileBody = new StringBuilder();
-
-      for (CodeFragment fragment : this.fragmentList)
-      {
-         fileBody.append(fragment.getText());
-      }
-
-      return fileBody.toString();
    }
 
    // =============== Static Methods ===============
@@ -295,16 +284,29 @@ public class FileFragmentMap
 
    public void writeFile()
    {
+      final Path path = Paths.get(this.fileName);
       try
       {
-         Path path = Paths.get(this.fileName);
          Files.createDirectories(path.getParent());
-         Files.write(path, this.getFileText().getBytes(), StandardOpenOption.CREATE,
-                     StandardOpenOption.TRUNCATE_EXISTING);
+
+         try (final Writer writer = Files
+            .newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING))
+         {
+            this.write(writer);
+         }
       }
       catch (IOException e)
       {
+         // TODO better error handling
          e.printStackTrace();
+      }
+   }
+
+   public void write(Writer writer) throws IOException
+   {
+      for (final CodeFragment fragment : this.fragmentList)
+      {
+         writer.write(fragment.getText());
       }
    }
 
@@ -399,14 +401,14 @@ public class FileFragmentMap
    @Override // no fulib
    public String toString()
    {
-      StringBuilder result = new StringBuilder();
+      final StringBuilder result = new StringBuilder();
 
-      result.append(" ").append(this.getFileName());
+      result.append(this.getFileName()).append('\n');
+      for (final CodeFragment fragment : this.fragmentList)
+      {
+         result.append(fragment.getText());
+      }
 
-      result.append("\n");
-
-      result.append(this.getFileText());
-
-      return result.substring(1);
+      return result.toString();
    }
 }
