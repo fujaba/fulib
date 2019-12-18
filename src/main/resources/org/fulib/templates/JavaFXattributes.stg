@@ -35,3 +35,19 @@ propertyGet(type, name) ::= <<
       return this.<name>;
    }
 >>
+
+attrWithItem(class, name, listType, baseType) ::= <<
+   public <class> with<name; format="cap">(<baseType> value)
+   {
+      this.<name>.add(value);
+      return this;
+   }
+>>
+
+attrWithoutItem(class, name, baseType) ::= <<
+   public <class> without<name; format="cap">(<baseType> value)
+   {
+      this.<name>.remove(value);
+      return this;
+   }
+>>
