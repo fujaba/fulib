@@ -22,10 +22,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MultiAttributeTest
 {
+   protected String getTargetFolder()
+   {
+      return "tmp/multi-attributes";
+   }
+
+   protected void configureModel(ClassModelBuilder mb)
+   {
+      // hook for JavaFXMultiAttributeTest
+   }
+
    @Test
    public void testAttrList() throws Exception
    {
-      final String testFolder = "tmp/multi-attributes";
+      final String testFolder = this.getTargetFolder();
       final String sourceFolder = testFolder + "/src";
       final String outFolder = testFolder + "/out";
       final String packageName = "org.testAttrList";
@@ -33,6 +43,8 @@ public class MultiAttributeTest
       Tools.removeDirAndFiles(testFolder);
 
       ClassModelBuilder mb = Fulib.classModelBuilder(packageName, sourceFolder);
+
+      this.configureModel(mb);
 
       ClassBuilder root = mb.buildClass("Root");
       root.buildAttribute("resultList", Type.INT + Type.__LIST);
