@@ -5,8 +5,8 @@ attrDecl(type, name, value) ::= <<
 initMethod(type, name) ::= <<
    private <type>Property _init<name; format="cap">()
    {
-      <type>Property result = new Simple<type>Property();
-      result.addListener((observable, oldValue, newValue) -> firePropertyChange("<name>", oldValue, newValue));
+      final <type>Property result = new Simple<type>Property();
+      result.addListener((observable, oldValue, newValue) -> this.firePropertyChange("<name>", oldValue, newValue));
       return result;
    }
 >>
@@ -14,14 +14,17 @@ initMethod(type, name) ::= <<
 attrGet(name, type) ::= <<
    public <type> get<name; format="cap">()
    {
-      return <name>.getValue();
+      return this.<name>.getValue();
    }
 >>
 
 attrSet(class, name, type, useEquals) ::= <<
    public <class> set<name; format="cap">(<type> value)
    {
-      this.<name>.setValue(value);
+      if (<if(useEquals)>!Objects.equals(value, this.<name>.getValue())<else>value != this.<name>.getValue()<endif>)
+      {
+         this.<name>.setValue(value);
+      }
       return this;
    }
 >>
@@ -29,6 +32,6 @@ attrSet(class, name, type, useEquals) ::= <<
 propertyGet(type, name) ::= <<
    public <type>Property <name>Property()
    {
-      return <name>;
+      return this.<name>;
    }
 >>
