@@ -203,6 +203,7 @@ public class Generator4ClassFile extends AbstractGenerator
       if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
       {
          group = this.getSTGroup("org/fulib/templates/JavaFXattributes.stg");
+         group.importTemplates(this.getSTGroup("org/fulib/templates/attributes.stg"));
       }
       else
       {

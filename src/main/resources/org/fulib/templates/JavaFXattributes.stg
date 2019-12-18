@@ -2,8 +2,6 @@ attrDecl(type, name, value) ::= <<
    private <type>Property <name> = _init<name; format="cap">();
 >>
 
-init(v) ::= "<if(v)> = <v><endif>"
-
 initMethod(type, name) ::= <<
    private <type>Property _init<name; format="cap">()
    {
@@ -11,10 +9,6 @@ initMethod(type, name) ::= <<
       result.addListener((observable, oldValue, newValue) -> firePropertyChange("<name>", oldValue, newValue));
       return result;
    }
->>
-
-propertyDecl(name) ::= <<
-   public static final String PROPERTY_<name> = "<name>";
 >>
 
 attrGet(name, type) ::= <<
@@ -38,10 +32,3 @@ propertyGet(type, name) ::= <<
       return <name>;
    }
 >>
-
-condition(name, type, useEquals) ::= <%
-<if(useEquals)>value == null ? this.<name> != null : ! value.equals(this.<name>)
-<else>
-value != this.<name>
-<endif>
-%>
