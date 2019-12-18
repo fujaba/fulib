@@ -2,10 +2,10 @@ package org.fulib.classmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class FMethod
 {
@@ -79,14 +79,22 @@ public class FMethod
          return null;
       }
 
-      String declaration = String.format("public %s %s(%s)", this.returnType, this.name, this.getParamsString());
-
-      if (this.annotations != null)
+      final StringBuilder builder = new StringBuilder();
+      if (this.annotations != null && !this.annotations.isEmpty())
       {
-         declaration = this.annotations + "\n   " + declaration;
+         builder.append(this.annotations);
+         builder.append("\n   ");
       }
 
-      return declaration;
+      builder.append("public ");
+      builder.append(this.returnType);
+      builder.append(' ');
+      builder.append(this.name);
+      builder.append('(');
+      builder.append(this.getParamsString());
+      builder.append(')');
+
+      return builder.toString();
    }
 
    public FMethod setDeclaration(String value) // no fulib
@@ -109,6 +117,8 @@ public class FMethod
 
       if (!value.equals(this.getDeclaration()))
       {
+         // TODO properly parse
+
          String oldValue = this.getDeclaration();
          int pos = value.indexOf('(');
          String namePart = value.substring(0, pos);
@@ -160,26 +170,18 @@ public class FMethod
 
    public String getParamsString()
    {
-      ArrayList<String> paramList = new ArrayList<>();
-      for (Map.Entry<String, String> entry : this.getParams().entrySet())
-      {
-         String paramName = entry.getKey();
-         String paramType = entry.getValue();
-         paramList.add(paramType + " " + paramName);
-      }
-
-      String result = String.join(", ", paramList);
-
-      return result;
+      return this.getParams().entrySet().stream().map(e -> e.getKey() + " " + e.getValue())
+                 .collect(Collectors.joining(", "));
    }
 
    public FMethod setParamsString(String params)
    {
+      // TODO properly parse the string
       String[] split = params.split(", ");
       this.getParams().clear();
       for (String s : split)
       {
-         if (s.equals(""))
+         if (s.isEmpty())
          {
             break;
          }
@@ -192,9 +194,9 @@ public class FMethod
 
    public String getSignature()
    {
-      this.getParams().remove("this");
-      String paramTypes = String.join(",", this.getParams().values());
-      return String.format(FileFragmentMap.METHOD + ":%s(%s)", this.getName(), paramTypes);
+      String paramTypes = this.getParams().entrySet().stream().filter(e -> !"this".equals(e.getKey()))
+                              .map(Map.Entry::getValue).collect(Collectors.joining(","));
+      return FileFragmentMap.METHOD + ":" + this.getName() + "(" + paramTypes + ")";
    }
 
    public String getReturnType()
@@ -251,7 +253,7 @@ public class FMethod
    {
       return this.getName();
    }
-   
+
    @Deprecated
    public FMethod writeName(String newName)
    {
