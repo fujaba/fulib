@@ -1,32 +1,27 @@
-removeYou(toOneNames, toManyNames, toOneAggregations, toManyAggregations, toManyTypes, javaFXStyles, superClass) ::= <<
+removeYou(superClass, roles) ::= <<
    public void removeYou()
    {
       <if(superClass)>
       super.removeYou();
       <endif>
-      <toOneNames:toOneLine(); separator="\n">
-      <toOneAggregations:toOneAggregationLine(); separator="\n">
-      <toManyNames, javaFXStyles : {name, javaFX | <toManyLine(name, javaFX)>}; separator="\n">
-      <toManyAggregations, toManyTypes : {name, type | <toManyAggregationLine(name, type)>}; separator="\n">
+      <roles:removeRole(); separator="\n">
    }
 >>
 
-toOneLine(name) ::= <<
-this.set<name; format="cap">(null);
->>
-
-toOneAggregationLine(name) ::= <<
-this.get<name; format="cap">().removeYou();
->>
-
-toManyLine(name, javaFX) ::= <<
-<if(javaFX)>
-this.get<name; format="cap">().clear();
-<else>
-this.without<name; format="cap">(this.get<name; format="cap">().clone());
+removeRole(role) ::= <%
+<if(role.toOne)>
+   <if(role.aggregation)>
+      this.get<role.name; format="cap">().removeYou();
+   <else>
+      this.set<role.name; format="cap">(null);
+   <endif>
+<else><! to many !>
+   <if(role.aggregation)>
+      new java.util.ArrayList\<>(this.get<role.name; format="cap">()).forEach(x -> x.removeYou());
+   <elseif(role.javaFX)>
+      this.get<role.name; format="cap">().clear();
+   <else>
+      this.without<role.name; format="cap">(this.get<role.name; format="cap">().clone());
+   <endif>
 <endif>
->>
-
-toManyAggregationLine(name, type) ::= <<
-new java.util.ArrayList\<>(this.get<name; format="cap">()).forEach(x -> x.removeYou());
->>
+%>

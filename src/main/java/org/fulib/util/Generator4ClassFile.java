@@ -603,59 +603,10 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      final List<String> toOneList = new ArrayList<>();
-      final List<String> toManyList = new ArrayList<>();
-      final List<String> toOneAggregationList = new ArrayList<>();
-      final List<String> toManyAggregationList = new ArrayList<>();
-      final List<String> toManyTypes = new ArrayList<>();
-      final List<Boolean> javaFXStyles = new ArrayList<>();
-
-      for (AssocRole role : clazz.getRoles())
-      {
-         if (role.getName() == null)
-         {
-            continue; //=============================
-         }
-
-         if (role.getCardinality() == Type.ONE)
-         {
-            if (role.getAggregation())
-            {
-               toOneAggregationList.add(role.getName());
-            }
-            else
-            {
-               toOneList.add(role.getName());
-            }
-         }
-         else
-         {
-            if (role.getAggregation())
-            {
-               toManyAggregationList.add(role.getName());
-               toManyTypes.add(role.getOther().getClazz().getName());
-            }
-            else
-            {
-               toManyList.add(role.getName());
-               javaFXStyles.add(role.isJavaFX());
-            }
-         }
-      }
-
       final STGroup group = this.getSTGroup("org/fulib/templates/removeYou.stg");
       final ST removeYou = group.getInstanceOf("removeYou");
-      removeYou.add("toOneNames", toOneList);
-      removeYou.add("toManyNames", toManyList);
-      removeYou.add("toOneAggregations", toOneAggregationList);
-      removeYou.add("toManyAggregations", toManyAggregationList);
-      removeYou.add("toManyTypes", toManyTypes);
-      removeYou.add("javaFXStyles", javaFXStyles);
-      if (clazz.getSuperClass() != null)
-      {
-         removeYou.add("superClass", "yes");
-      }
-
+      removeYou.add("superClass", clazz.getSuperClass() != null);
+      removeYou.add("roles", clazz.getRoles());
       fragmentMap.add(METHOD + ":removeYou()", removeYou.render(), 2, clazz.getModified());
    }
 }
