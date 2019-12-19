@@ -100,7 +100,7 @@ attrWithoutColl(attr) ::= <<
    {
       for (final <attr.boxType> item : value)
       {
-         this.with<attr.name; format="cap">(item);
+         this.without<attr.name; format="cap">(item);
       }
       return this;
    }
