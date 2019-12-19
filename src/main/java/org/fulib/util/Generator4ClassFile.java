@@ -170,7 +170,7 @@ public class Generator4ClassFile extends AbstractGenerator
       }
 
       // any non-primitive attributes
-      if (clazz.getAttributes().stream().anyMatch(a -> !isPrimitive(a.getType())))
+      if (clazz.getAttributes().stream().anyMatch(a -> !a.isPrimitive()))
       {
          qualifiedNames.add("java.util.Objects");
       }
@@ -215,40 +215,22 @@ public class Generator4ClassFile extends AbstractGenerator
          group = this.getSTGroup("org/fulib/templates/attributes.stg");
       }
 
-      String attrType = attr.getType();
-      if (attr.isJavaFX())
-      {
-         attrType = getBoxType(attrType);
-      }
+      final String baseType = attr.getType();
+      final String boxType = attr.getBoxType();
 
-      String baseType = attrType;
-      String boxType = baseType;
-      if (attr.isCollection())
-      {
-         boxType = getBoxType(baseType);
-         attrType = String.format(attr.getCollectionType(), boxType);
-      }
-
-      final String className = attr.getClazz().getName();
       final String attrName = attr.getName();
       final String capAttrName = StrUtil.cap(attrName);
       final boolean modified = attr.getModified();
 
-      final ST propertyDecl = group.getInstanceOf("propertyDecl");
-      propertyDecl.add("name", attrName);
+      final ST propertyDecl = group.getInstanceOf("propertyDecl").add("attr", attr);
       fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":PROPERTY_" + attrName, propertyDecl.render(), 2, modified);
 
-      final ST attrDecl = group.getInstanceOf("attrDecl");
-      attrDecl.add("type", attrType);
-      attrDecl.add("name", attrName);
-      attrDecl.add("value", attr.getInitialization());
+      final ST attrDecl = group.getInstanceOf("attrDecl").add("attr", attr);
       fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attrName, attrDecl.render(), 2, modified);
 
       if (attr.isJavaFX())
       {
-         final ST initMethod = group.getInstanceOf("initMethod");
-         initMethod.add("name", attrName);
-         initMethod.add("type", attrType);
+         final ST initMethod = group.getInstanceOf("initMethod").add("attr", attr);
          fragmentMap.add(METHOD + ":_init" + capAttrName + "()", initMethod.render(), 2, modified);
       }
       else
@@ -256,52 +238,31 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap.add(METHOD + ":_init" + capAttrName + "()", "", 2, true);
       }
 
-      final ST attrGet = group.getInstanceOf("attrGet");
-      attrGet.add("type", attrType);
-      attrGet.add("name", attrName);
+      final ST attrGet = group.getInstanceOf("attrGet").add("attr", attr);
       fragmentMap.add(METHOD + ":get" + capAttrName + "()", attrGet.render(), 2, modified);
 
       if (attr.isCollection())
       {
-         final ST attrWithItem = group.getInstanceOf("attrWithItem");
-         attrWithItem.add("class", className);
-         attrWithItem.add("listType", attrType);
-         attrWithItem.add("baseType", boxType);
-         attrWithItem.add("name", attrName);
+         final ST attrWithItem = group.getInstanceOf("attrWithItem").add("attr", attr);
          fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + ")", attrWithItem.render(), 3, modified);
 
-         final ST attrWithArray = group.getInstanceOf("attrWithArray");
-         attrWithArray.add("class", className);
-         attrWithArray.add("baseType", boxType);
-         attrWithArray.add("name", attrName);
+         final ST attrWithArray = group.getInstanceOf("attrWithArray").add("attr", attr);
          fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + "...)", attrWithArray.render(), 3, modified);
 
-         final ST attrWithColl = group.getInstanceOf("attrWithColl");
-         attrWithColl.add("class", className);
-         attrWithColl.add("baseType", boxType);
-         attrWithColl.add("name", attrName);
+         final ST attrWithColl = group.getInstanceOf("attrWithColl").add("attr", attr);
          fragmentMap
             .add(METHOD + ":with" + capAttrName + "(Collection<? extends " + boxType + ">)", attrWithColl.render(), 3,
                  modified);
 
-         final ST attrWithoutItem = group.getInstanceOf("attrWithoutItem");
-         attrWithoutItem.add("class", className);
-         attrWithoutItem.add("baseType", boxType);
-         attrWithoutItem.add("name", attrName);
+         final ST attrWithoutItem = group.getInstanceOf("attrWithoutItem").add("attr", attr);
          fragmentMap
             .add(METHOD + ":without" + capAttrName + "(" + boxType + ")", attrWithoutItem.render(), 3, modified);
 
-         final ST attrWithoutArray = group.getInstanceOf("attrWithoutArray");
-         attrWithoutArray.add("class", className);
-         attrWithoutArray.add("baseType", boxType);
-         attrWithoutArray.add("name", attrName);
+         final ST attrWithoutArray = group.getInstanceOf("attrWithoutArray").add("attr", attr);
          fragmentMap
             .add(METHOD + ":without" + capAttrName + "(" + boxType + "...)", attrWithoutArray.render(), 3, modified);
 
-         final ST attrWithoutColl = group.getInstanceOf("attrWithoutColl");
-         attrWithoutColl.add("class", className);
-         attrWithoutColl.add("baseType", boxType);
-         attrWithoutColl.add("name", attrName);
+         final ST attrWithoutColl = group.getInstanceOf("attrWithoutColl").add("attr", attr);
          fragmentMap.add(METHOD + ":without" + capAttrName + "(Collection<? extends " + boxType + ">)",
                          attrWithoutColl.render(), 3, modified);
 
@@ -310,12 +271,8 @@ public class Generator4ClassFile extends AbstractGenerator
       }
       else // usual attribute
       {
-         final ST attrSet = group.getInstanceOf("attrSet");
-         attrSet.add("class", className);
-         attrSet.add("type", attr.getType());
-         attrSet.add("name", attrName);
-         attrSet.add("useEquals", !isPrimitive(attr.getType()));
-         fragmentMap.add(METHOD + ":set" + capAttrName + "(" + attr.getType() + ")", attrSet.render(), 3, modified);
+         final ST attrSet = group.getInstanceOf("attrSet").add("attr", attr);
+         fragmentMap.add(METHOD + ":set" + capAttrName + "(" + baseType + ")", attrSet.render(), 3, modified);
 
          // remove "with" and "without" methods
          fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + ")", "", 3, true);
@@ -328,44 +285,13 @@ public class Generator4ClassFile extends AbstractGenerator
 
       if (attr.isJavaFX())
       {
-         final ST propertyGet = group.getInstanceOf("propertyGet");
-         propertyGet.add("name", attrName);
-         propertyGet.add("type", attrType);
+         final ST propertyGet = group.getInstanceOf("propertyGet").add("attr", attr);
          fragmentMap.add(METHOD + ":" + attrName + "Property()", propertyGet.render(), 3, modified);
       }
       else
       {
          fragmentMap.add(METHOD + ":" + attrName + "Property()", "", 3, true);
       }
-   }
-
-   private static String getBoxType(String attrType)
-   {
-      switch (attrType)
-      {
-      case "boolean":
-         return "Boolean";
-      case "byte":
-         return "Byte";
-      case "short":
-         return "Short";
-      case "char":
-         return "Character"; // !
-      case "int":
-         return "Integer"; // !
-      case "long":
-         return "Long";
-      case "float":
-         return "Float";
-      case "double":
-         return "Double";
-      }
-      return attrType;
-   }
-
-   private static boolean isPrimitive(String attrType)
-   {
-      return !attrType.equals(getBoxType(attrType));
    }
 
    // --------------- Associations ---------------

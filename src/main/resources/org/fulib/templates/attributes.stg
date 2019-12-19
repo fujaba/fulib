@@ -1,79 +1,71 @@
 // --------------- Declarations ---------------
 
-attrDecl(type, name, value) ::= <<
-   private <type> <name><if(value)> = <value><endif>;
+attrDecl(attr) ::= <<
+   private <attr.concreteType> <attr.name><if(attr.initialization)> = <attr.initialization><endif>;
 >>
 
-propertyDecl(name) ::= <<
-   public static final String PROPERTY_<name> = "<name>";
+propertyDecl(attr) ::= <<
+   public static final String PROPERTY_<attr.name> = "<attr.name>";
 >>
 
 // --------------- Simple Accessors ---------------
 
-attrGet(name, type) ::= <<
-   public <type> get<name; format="cap">()
+attrGet(attr) ::= <<
+   public <attr.concreteType> get<attr.name; format="cap">()
    {
-      return this.<name>;
+      return this.<attr.name>;
    }
 >>
 
-attrSet(class, name, type, useEquals) ::= <<
-   public <class> set<name; format="cap">(<type> value)
+attrSet(attr) ::= <<
+   public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
-      if (<if(useEquals)>Objects.equals(value, this.<name>)<else>value == this.<name><endif>)
+      if (<if(attr.isPrimitive)>value == this.<attr.name><else>Objects.equals(value, this.<attr.name>)<endif>)
       {
          return this;
       }
 
-      final <type> oldValue = this.<name>;
-      this.<name> = value;
-      this.firePropertyChange("<name>", oldValue, value);
-      return this;
-   }
->>
-
-simpleAttrSet(class, name, type) ::= <<
-   public <class> set<name; format="cap">(<type> value)
-   {
-      this.<name> = value;
+      final <attr.type> oldValue = this.<attr.name>;
+      this.<attr.name> = value;
+      this.firePropertyChange("<attr.name>", oldValue, value);
       return this;
    }
 >>
 
 // --------------- With ---------------
 
-attrWithItem(class, name, listType, baseType) ::= <<
-   public <class> with<name; format="cap">(<baseType> value)
+attrWithItem(attr) ::= <<
+   public <attr.clazz.name> with<attr.name; format="cap">(<attr.boxType> value)
    {
-      if (this.<name> == null)
+      if (this.<attr.name> == null)
       {
-         this.<name> = new <listType>();
+         this.<attr.name> = new <attr.concreteType>();
       }
-      if (this.<name>.add(value))<! the collection could be a set, in which case we don't want a PCE!>
+      if (this.<attr.name>.add(value))<! the collection could be a set, in which case we don't want a PCE!>
       {
-         this.firePropertyChange("<name>", null, value);
-      }
-      return this;
-   }
->>
-
-attrWithArray(class, name, baseType) ::= <<
-   public <class> with<name; format="cap">(<baseType>... value)
-   {
-      for (final <baseType> item : value)
-      {
-         this.with<name; format="cap">(item);
+         this.firePropertyChange("<attr.name>", null, value);
       }
       return this;
    }
 >>
 
-attrWithColl(class, name, baseType) ::= <<
-   public <class> with<name; format="cap">(Collection\<? extends <baseType>\> value)
+attrWithArray(attr) ::= <<
+   public <attr.clazz.name> with<attr.name; format="cap">(<attr.boxType>... value)
    {
-      for (final <baseType> item : value)
+      for (final <attr.type> item : value)
       {
-         this.with<name; format="cap">(item);
+         this.with<attr.name; format="cap">(item);
+      }
+      return this;
+   }
+>>
+
+attrWithColl(attr) ::= <<
+   public <attr.clazz.name> with<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
+   {
+      for (final <attr.boxType> item : value)
+      {
+         this.with<attr.name; format="cap">(item);
       }
       return this;
    }
@@ -81,34 +73,34 @@ attrWithColl(class, name, baseType) ::= <<
 
 // --------------- Without ---------------
 
-attrWithoutItem(class, name, baseType) ::= <<
-   public <class> without<name; format="cap">(<baseType> value)
+attrWithoutItem(attr) ::= <<
+   public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType> value)
    {
-      if (this.<name> != null && this.<name>.remove(value))
+      if (this.<attr.name> != null && this.<attr.name>.remove(value))
       {
-         this.firePropertyChange("<name>", value, null);
+         this.firePropertyChange("<attr.name>", value, null);
       }
       return this;
    }
 >>
 
-attrWithoutArray(class, name, baseType) ::= <<
-   public <class> without<name; format="cap">(<baseType>... value)
+attrWithoutArray(attr) ::= <<
+   public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType>... value)
    {
-      for (final <baseType> item : value)
+      for (final <attr.boxType> item : value)
       {
-         this.without<name; format="cap">(item);
+         this.without<attr.name; format="cap">(item);
       }
       return this;
    }
 >>
 
-attrWithoutColl(class, name, baseType) ::= <<
-   public <class> without<name; format="cap">(Collection\<? extends <baseType>\> value)
+attrWithoutColl(attr) ::= <<
+   public <attr.clazz.name> without<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
    {
-      for (final <baseType> item : value)
+      for (final <attr.boxType> item : value)
       {
-         this.with<name; format="cap">(item);
+         this.with<attr.name; format="cap">(item);
       }
       return this;
    }
@@ -116,45 +108,45 @@ attrWithoutColl(class, name, baseType) ::= <<
 
 // --------------- Set All ---------------
 
-attrSetAllArray(class, name, listType, baseType) ::= <<
-   public <class> set<name; format="cap">(<baseType>... value)
+attrSetAllArray(attr) ::= <<
+   public <attr.clazz.name> set<attr.name; format="cap">(<attr.boxType>... value)
    {
-      return this.set<name; format="cap">(Arrays.asList(value));
+      return this.set<attr.name; format="cap">(Arrays.asList(value));
    }
 >>
 
-attrSetAllColl(class, name, listType, baseType) ::= <<
-   public <class> set<name; format="cap">(Collection\<? extends <baseType>\> value)
+attrSetAllColl(attr) ::= <<
+   public <attr.clazz.name> set<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
    {
       if (value == null)
       {
-         if (this.<name> != null)
+         if (this.<attr.name> != null)
          {
-            for (final <baseType> oldItem : this.<name>)
+            for (final <attr.boxType> oldItem : this.<attr.name>)
             {
-               this.firePropertyChange(PROPERTY_<name>, oldItem, null);
+               this.firePropertyChange(PROPERTY_<attr.name>, oldItem, null);
             }
          }
-         this.<name> = null;
+         this.<attr.name> = null;
          return this;
       }
 
-      if (this.<name> == null)
+      if (this.<attr.name> == null)
       {
-         this.<name> = new <listType>\<>(value);
-         for (final <baseType> newItem : value)
+         this.<attr.name> = new <attr.concreteType>(value);
+         for (final <attr.boxType> newItem : value)
          {
-            this.firePropertyChange(PROPERTY_<name>, null, newItem);
+            this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);
          }
          return this;
       }
 
-      if (value.equals(this.<name>))
+      if (value.equals(this.<attr.name>))
       {
          return this;
       }
 
-      for (final <baseType> oldItem : this.<name>)
+      for (final <attr.boxType> oldItem : this.<attr.name>)
       {
          if (!value.contains(oldItem))
          {
@@ -162,16 +154,16 @@ attrSetAllColl(class, name, listType, baseType) ::= <<
          }
       }
 
-      for (final <baseType> newItem : value)
+      for (final <attr.boxType> newItem : value)
       {
-         if (!this.<name>.contains(newItem))
+         if (!this.<attr.name>.contains(newItem))
          {
-            this.firePropertyChange(PROPERTY_<name>, null, newItem);
+            this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);
          }
       }
 
-      this.<name>.clear();
-      this.<name>.addAll(value);
+      this.<attr.name>.clear();
+      this.<attr.name>.addAll(value);
       return this;
    }
 >>
