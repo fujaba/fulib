@@ -32,6 +32,14 @@ attrSet(attr) ::= <<
    }
 >>
 
+simpleAttrSet(attr) ::= <<
+   public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
+   {
+      this.<attr.name> = value;
+      return this;
+   }
+>>
+
 // --------------- With ---------------
 
 attrWithItem(attr) ::= <<

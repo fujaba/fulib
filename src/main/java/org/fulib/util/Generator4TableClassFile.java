@@ -128,26 +128,18 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       for (Attribute attr : standardAttributes)
       {
-         attrTemplate = group.getInstanceOf("attrDecl");
-         attrTemplate.add("type", attr.getType());
-         attrTemplate.add("name", attr.getName());
-         attrTemplate.add("value", attr.getInitialization());
+         attrTemplate = group.getInstanceOf("attrDecl").add("attr", attr);
          result = attrTemplate.render();
 
          fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attr.getName(), result, 2, clazz.getModified());
 
-         attrTemplate = group.getInstanceOf("attrGet");
-         attrTemplate.add("type", attr.getType());
-         attrTemplate.add("name", attr.getName());
+         attrTemplate = group.getInstanceOf("attrGet").add("attr", attr);
          result = attrTemplate.render();
 
          fragmentMap
             .add(FileFragmentMap.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
 
-         attrTemplate = group.getInstanceOf("simpleAttrSet");
-         attrTemplate.add("class", clazz.getName() + "Table");
-         attrTemplate.add("type", attr.getType());
-         attrTemplate.add("name", attr.getName());
+         attrTemplate = group.getInstanceOf("simpleAttrSet").add("attr", attr);
          result = attrTemplate.render();
 
          fragmentMap.add(
