@@ -39,22 +39,22 @@
   roles: 	clazz36 	other37 	other38 	
 
 - fMethod6: 	Clazz
-  attributes: 	declaration39 	methodBody40 	modified41 	annotations42 	
+  attributes: 	methodBody39 	modified40 	annotations41 	
   model: 	c1
   modified: 	false
   name: 	FMethod
   propertyStyle: 	POJO
-  roles: 	clazz43 	
+  roles: 	clazz42 	
 
 - fileFragmentMap7: 	Clazz
-  attributes: 	fileName44 	
+  attributes: 	fileName43 	
   model: 	c1
   modified: 	false
   name: 	FileFragmentMap
   propertyStyle: 	POJO
 
 - codeFragment8: 	Clazz
-  attributes: 	key45 	text46 	
+  attributes: 	key44 	text45 	
   model: 	c1
   modified: 	false
   name: 	CodeFragment
@@ -164,7 +164,7 @@
   clazz: 	clazz3
   modified: 	false
   name: 	methods
-  other: 	clazz43
+  other: 	clazz42
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
@@ -305,35 +305,28 @@
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
-- declaration39: 	Attribute
-  clazz: 	fMethod6
-  modified: 	false
-  name: 	declaration
-  propertyStyle: 	POJO
-  type: 	String
-
-- methodBody40: 	Attribute
+- methodBody39: 	Attribute
   clazz: 	fMethod6
   modified: 	false
   name: 	methodBody
   propertyStyle: 	POJO
   type: 	String
 
-- modified41: 	Attribute
+- modified40: 	Attribute
   clazz: 	fMethod6
   modified: 	false
   name: 	modified
   propertyStyle: 	POJO
   type: 	boolean
 
-- annotations42: 	Attribute
+- annotations41: 	Attribute
   clazz: 	fMethod6
   modified: 	false
   name: 	annotations
   propertyStyle: 	POJO
   type: 	String
 
-- clazz43: 	AssocRole
+- clazz42: 	AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	fMethod6
@@ -343,21 +336,21 @@
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
-- fileName44: 	Attribute
+- fileName43: 	Attribute
   clazz: 	fileFragmentMap7
   modified: 	false
   name: 	fileName
   propertyStyle: 	POJO
   type: 	String
 
-- key45: 	Attribute
+- key44: 	Attribute
   clazz: 	codeFragment8
   modified: 	false
   name: 	key
   propertyStyle: 	POJO
   type: 	String
 
-- text46: 	Attribute
+- text45: 	Attribute
   clazz: 	codeFragment8
   modified: 	false
   name: 	text

@@ -24,7 +24,6 @@ public class FMethod
 
    private Clazz                         clazz = null;
    private String                        name;
-   private String                        declaration;
    private String                        annotations;
    private LinkedHashMap<String, String> params;
    private String                        returnType;
@@ -374,7 +373,7 @@ public class FMethod
    }
 
    @Override
-   public String toString()
+   public String toString() // no fulib
    {
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getDeclaration());
