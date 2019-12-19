@@ -21,7 +21,7 @@ removeRole(role) ::= <%
    <elseif(role.javaFX)>
       this.get<role.name; format="cap">().clear();
    <else>
-      this.without<role.name; format="cap">(this.get<role.name; format="cap">().clone());
+      this.without<role.name; format="cap">(new java.util.ArrayList\<>(this.get<role.name; format="cap">()));
    <endif>
 <endif>
 %>
