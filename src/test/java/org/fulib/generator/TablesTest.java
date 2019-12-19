@@ -104,7 +104,7 @@ public class TablesTest
       Method studSetName = studClass.getMethod("setName", String.class);
       Method studSetUni = studClass.getMethod("setUni", uniClass);
       Method studSetIn = studClass.getMethod("setIn", roomClass);
-      Method studWithDone = studClass.getMethod("withDone", Object[].class);
+      Method studWithDone = studClass.getMethod("withDone", assignClass);
 
       final Object studyRight = uniClass.newInstance();
       uniSetName.invoke(studyRight, "Study Right");
@@ -149,7 +149,7 @@ public class TablesTest
       studSetName.invoke(alice, "Alice");
       studSetUni.invoke(alice, studyRight);
       studSetIn.invoke(alice, artsRoom);
-      studWithDone.invoke(alice, new Object[] { new Object[] { integrals } });
+      studWithDone.invoke(alice, integrals);
 
       Object bob = studClass.newInstance();
       studStudentId.invoke(bob, "m2323");
