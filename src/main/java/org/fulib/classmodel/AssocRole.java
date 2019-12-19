@@ -155,6 +155,11 @@ public class AssocRole
       return this;
    }
 
+   public String getCollectionType()
+   {
+      return String.format(this.roleType, this.other.getClazz().getName());
+   }
+
    public boolean getAggregation()
    {
       return this.aggregation;
