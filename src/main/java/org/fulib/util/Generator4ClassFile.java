@@ -13,7 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
@@ -381,14 +380,15 @@ public class Generator4ClassFile extends AbstractGenerator
             continue; //=====================================
          }
 
-         this.generateAssociation(clazz, fragmentMap, role);
+         this.generateAssociation(fragmentMap, role);
       }
    }
 
-   private void generateAssociation(Clazz clazz, FileFragmentMap fragmentMap, AssocRole role)
+   private void generateAssociation(FileFragmentMap fragmentMap, AssocRole role)
    {
       final STGroup group;
-      if (role.isJavaFX())
+      final boolean javaFX = role.isJavaFX();
+      if (javaFX)
       {
          group = this.getSTGroup("org/fulib/templates/JavaFXassociations.stg");
          group.importTemplates(this.getSTGroup("org/fulib/templates/associations.stg"));
@@ -400,14 +400,14 @@ public class Generator4ClassFile extends AbstractGenerator
 
       final String roleName = role.getName();
       final String capRoleName = StrUtil.cap(roleName);
-      final int cardinality = role.getCardinality();
+      final boolean toMany = role.isToMany();
       final boolean modified = role.getModified();
 
       final AssocRole other = role.getOther();
       final String otherClassName = other.getClazz().getName();
 
       // provide empty_set in this class
-      if (cardinality != Type.ONE && !role.isJavaFX())
+      if (toMany && !javaFX)
       {
          // add empty set decl
          final ST emptySetDecl = group.getInstanceOf("emptySetDecl").add("role", role).add("other", other);
@@ -425,7 +425,7 @@ public class Generator4ClassFile extends AbstractGenerator
       final ST roleAttrDecl = group.getInstanceOf("roleAttrDecl").add("role", role).add("other", other);
       fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + roleName, roleAttrDecl.render(), 2, modified);
 
-      if (role.isJavaFX())
+      if (javaFX)
       {
          // add _init method
          final ST initMethod = group.getInstanceOf("initMethod").add("role", role).add("other", other);
@@ -440,7 +440,7 @@ public class Generator4ClassFile extends AbstractGenerator
       final ST getMethod = group.getInstanceOf("getMethod").add("role", role).add("other", other);
       fragmentMap.add(METHOD + ":get" + capRoleName + "()", getMethod.render(), 2, modified);
 
-      if (cardinality != Type.ONE)
+      if (toMany)
       {
          final ST withItem = group.getInstanceOf("withItem").add("role", role).add("other", other);
          fragmentMap.add(METHOD + ":with" + capRoleName + "(" + otherClassName + ")", withItem.render(), 3, modified);
@@ -486,7 +486,7 @@ public class Generator4ClassFile extends AbstractGenerator
             .add(METHOD + ":without" + capRoleName + "(Collection<? extends " + otherClassName + ">)", "", 3, true);
       }
 
-      if (role.isJavaFX() && cardinality == Type.ONE)
+      if (javaFX && !toMany)
       {
          final ST propertyMethod = group.getInstanceOf("propertyMethod").add("role", role).add("other", other);
          fragmentMap.add(METHOD + ":" + roleName + "Property()", propertyMethod.render(), 3, modified);
