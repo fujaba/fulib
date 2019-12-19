@@ -44,6 +44,7 @@ public class GenModel implements ClassModelDecorator
       final Clazz Attribute = mb.haveClass("Attribute", c -> {
          c.attribute("name", STRING);
          c.attribute("type", STRING);
+         c.attribute("collectionType", STRING);
          c.attribute("initialization", STRING);
          c.attribute("propertyStyle", STRING);
          c.attribute("modified", BOOLEAN);

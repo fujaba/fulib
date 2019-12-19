@@ -15,6 +15,7 @@ public class Attribute
 
    public static final String PROPERTY_name = "name";
    public static final String PROPERTY_type = "type";
+   public static final String PROPERTY_collectionType = "collectionType";
    public static final String PROPERTY_initialization = "initialization";
    public static final String PROPERTY_propertyStyle = "propertyStyle";
    public static final String PROPERTY_modified = "modified";
@@ -27,6 +28,7 @@ public class Attribute
    private Clazz clazz = null;
    private String name;
    private String type;
+   private String collectionType;
    private String initialization;
    private String propertyStyle;
    private boolean modified;
@@ -94,6 +96,29 @@ public class Attribute
       this.type = value;
       this.firePropertyChange("type", oldValue, value);
       return this;
+   }
+
+   public String getCollectionType()
+   {
+      return this.collectionType;
+   }
+
+   public Attribute setCollectionType(String value)
+   {
+      if (Objects.equals(value, this.collectionType))
+      {
+         return this;
+      }
+
+      final String oldValue = this.collectionType;
+      this.collectionType = value;
+      this.firePropertyChange("collectionType", oldValue, value);
+      return this;
+   }
+
+   public boolean isCollection()
+   {
+      return this.getCollectionType() != null;
    }
 
    public String getInitialization()
@@ -221,6 +246,7 @@ public class Attribute
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getName());
       result.append(' ').append(this.getType());
+      result.append(' ').append(this.getCollectionType());
       result.append(' ').append(this.getInitialization());
       result.append(' ').append(this.getPropertyStyle());
       return result.substring(1);
