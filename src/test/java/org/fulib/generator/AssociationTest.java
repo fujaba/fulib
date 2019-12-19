@@ -16,9 +16,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -139,8 +137,8 @@ public class AssociationTest
       assertThat(studyRight, hasProperty("students", is(empty())));
       assertThat(karli, hasProperty("uni", nullValue()));
 
-      Method withStudents = uniClass.getMethod("withStudents", Object[].class);
-      Object withResult = withStudents.invoke(studyRight, new Object[] { new Object[] { karli } });
+      Method withStudents = uniClass.getMethod("withStudents", Collection.class);
+      Object withResult = withStudents.invoke(studyRight, Collections.singletonList(karli));
       assertThat(withResult, is(equalTo(studyRight)));
       assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
       assertThat(karli, hasProperty("uni", equalTo(studyRight)));
@@ -156,27 +154,26 @@ public class AssociationTest
       assertThat(karli, hasProperty("uni", nullValue()));
       assertThat(studyFuture, hasProperty("students", is(empty())));
 
-      withStudents.invoke(studyRight, new Object[] { new Object[] { karli, lee } });
+      withStudents.invoke(studyRight, Arrays.asList(karli, lee));
       assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli, lee)));
       assertThat(karli, hasProperty("uni", equalTo(studyRight)));
       assertThat(lee, hasProperty("uni", equalTo(studyRight)));
 
-      assertThrows(Exception.class,
-                   () -> withStudents.invoke(studyFuture, new Object[] { new Object[] { karli, lee, studyRight } }));
+      assertThrows(Exception.class, () -> withStudents.invoke(studyFuture, Arrays.asList(karli, lee, studyRight)));
 
       assertThat(studyFuture, hasProperty("students", containsInAnyOrder(karli, lee)));
       assertThat(studyFuture, hasProperty("students", not(containsInAnyOrder(studyRight))));
       assertThat(karli, hasProperty("uni", equalTo(studyFuture)));
       assertThat(lee, hasProperty("uni", equalTo(studyFuture)));
 
-      Method withoutStudents = uniClass.getMethod("withoutStudents", Object[].class);
-      withoutStudents.invoke(studyFuture, new Object[] { new Object[] { karli, lee, studyRight } });
+      Method withoutStudents = uniClass.getMethod("withoutStudents", Collection.class);
+      withoutStudents.invoke(studyFuture, Arrays.asList(karli, lee));
       assertThat(studyFuture, hasProperty("students", is(empty())));
       assertThat(karli, hasProperty("uni", nullValue()));
       assertThat(lee, hasProperty("uni", nullValue()));
 
-      withStudents.invoke(studyRight, new Object[] { new Object[] { karli, lee } });
-      withStudents.invoke(studyFuture, new Object[] { new Object[] { lee } });
+      withStudents.invoke(studyRight, Arrays.asList(karli, lee));
+      withStudents.invoke(studyFuture, Collections.singletonList(lee));
       assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
       assertThat(studyFuture, hasProperty("students", containsInAnyOrder(lee)));
       assertThat(karli, hasProperty("uni", equalTo(studyRight)));
@@ -186,16 +183,16 @@ public class AssociationTest
       Object wa1337 = roomClass.newInstance();
       Object wa1342 = roomClass.newInstance();
 
-      Method withRooms = uniClass.getMethod("withRooms", Object[].class);
+      Method withRooms = uniClass.getMethod("withRooms", Collection.class);
       Method setUni4Room = roomClass.getMethod("setUni", uniClass);
 
-      Object withRoomsResult = withRooms.invoke(studyRight, new Object[] { new Object[] { wa1337, wa1342 } });
+      Object withRoomsResult = withRooms.invoke(studyRight, Arrays.asList(wa1337, wa1342));
       assertThat(withRoomsResult, equalTo(studyRight));
       assertThat(studyRight, hasProperty("rooms", containsInAnyOrder(wa1337, wa1342)));
       assertThat(wa1337, hasProperty("uni", equalTo(studyRight)));
       assertThat(wa1342, hasProperty("uni", equalTo(studyRight)));
 
-      withRooms.invoke(studyFuture, new Object[] { new Object[] { wa1342 } });
+      withRooms.invoke(studyFuture, Collections.singletonList(wa1342));
       assertThat(studyRight, hasProperty("rooms", not(containsInAnyOrder(wa1342))));
       assertThat(studyFuture, hasProperty("rooms", containsInAnyOrder(wa1342)));
       assertThat(wa1342, hasProperty("uni", equalTo(studyFuture)));
@@ -213,18 +210,18 @@ public class AssociationTest
       assertThat(wa1337, hasProperty("owner", equalTo(lee)));
 
       // test n to m
-      Method withIn = studClass.getMethod("withIn", Object[].class);
+      Method withIn = studClass.getMethod("withIn", Collection.class);
 
-      Object withInResult = withIn.invoke(karli, new Object[] { new Object[] { wa1337, wa1342 } });
-      withIn.invoke(lee, new Object[] { new Object[] { wa1337, wa1342 } });
+      Object withInResult = withIn.invoke(karli, Arrays.asList(wa1337, wa1342));
+      withIn.invoke(lee, Arrays.asList(wa1337, wa1342));
       assertThat(withInResult, equalTo(karli));
       assertThat(karli, hasProperty("in", containsInAnyOrder(wa1337, wa1342)));
       assertThat(lee, hasProperty("in", containsInAnyOrder(wa1337, wa1342)));
       assertThat(wa1337, hasProperty("students", containsInAnyOrder(karli, lee)));
       assertThat(wa1342, hasProperty("students", containsInAnyOrder(karli, lee)));
 
-      Method withoutStudents4Room = roomClass.getMethod("withoutStudents", Object[].class);
-      withoutStudents4Room.invoke(wa1337, new Object[] { new Object[] { lee } });
+      Method withoutStudents4Room = roomClass.getMethod("withoutStudents", Collection.class);
+      withoutStudents4Room.invoke(wa1337, Collections.singletonList(lee));
       assertThat(wa1337, hasProperty("students", not(containsInAnyOrder(lee))));
       assertThat(lee, hasProperty("in", not(containsInAnyOrder(wa1337))));
 
