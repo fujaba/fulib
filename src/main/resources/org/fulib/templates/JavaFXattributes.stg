@@ -1,53 +1,67 @@
-attrDecl(type, name, value) ::= <<
-   private <type>Property <name> = _init<name; format="cap">();
+propertyType(attr) ::= <%
+<if(attr.collection)>
+   ListProperty\<<attr.boxType>>
+<elseif(attr.primitive)>
+   <attr.boxType>Property
+<else>
+   ObjectProperty\<<attr.type>>
+<endif>
+%>
+
+attrDecl(attr) ::= <<
+   private <propertyType(attr)> <attr.name> = _init<attr.name; format="cap">();
 >>
 
-initMethod(type, name) ::= <<
-   private <type>Property _init<name; format="cap">()
+initMethod(attr) ::= <<
+   private <propertyType(attr)> _init<attr.name; format="cap">()
    {
-      final <type>Property result = new Simple<type>Property();
-      result.addListener((observable, oldValue, newValue) -> this.firePropertyChange("<name>", oldValue, newValue));
+      final <propertyType(attr)> result = new Simple<propertyType(attr)>(<if(attr.collection)>javafx.collections.FXCollections.observableArrayList()<endif>);
+      result.addListener((observable, oldValue, newValue) -> this.firePropertyChange("<attr.name>", oldValue, newValue));
       return result;
    }
 >>
 
-attrGet(name, type) ::= <<
-   public <type> get<name; format="cap">()
+attrGet(attr) ::= <<
+<if(attr.collection)>
+   public java.util.List\<<attr.boxType>\> get<attr.name; format="cap">()
+<else>
+   public <attr.type> get<attr.name; format="cap">()
+<endif>
    {
-      return this.<name>.getValue();
+      return this.<attr.name>.getValue();
    }
 >>
 
-attrSet(class, name, type, useEquals) ::= <<
-   public <class> set<name; format="cap">(<type> value)
+attrSet(attr) ::= <<
+   public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
-      if (<if(useEquals)>!Objects.equals(value, this.<name>.getValue())<else>value != this.<name>.getValue()<endif>)
+      if (<if(attr.primitive)>value != this.<attr.name>.getValue()<else>!Objects.equals(value, this.<attr.name>.getValue())<endif>)
       {
-         this.<name>.setValue(value);
+         this.<attr.name>.setValue(value);
       }
       return this;
    }
 >>
 
-propertyGet(type, name) ::= <<
-   public <type>Property <name>Property()
+propertyGet(attr) ::= <<
+   public <propertyType(attr)> <attr.name>Property()
    {
-      return this.<name>;
+      return this.<attr.name>;
    }
 >>
 
-attrWithItem(class, name, listType, baseType) ::= <<
-   public <class> with<name; format="cap">(<baseType> value)
+attrWithItem(attr) ::= <<
+   public <attr.clazz.name> with<attr.name; format="cap">(<attr.boxType> value)
    {
-      this.<name>.add(value);
+      this.<attr.name>.add(value);
       return this;
    }
 >>
 
-attrWithoutItem(class, name, baseType) ::= <<
-   public <class> without<name; format="cap">(<baseType> value)
+attrWithoutItem(attr) ::= <<
+   public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType> value)
    {
-      this.<name>.remove(value);
+      this.<attr.name>.remove(value);
       return this;
    }
 >>
