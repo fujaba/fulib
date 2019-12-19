@@ -27,7 +27,7 @@ attrSet(attr) ::= <<
 
       final <attr.type> oldValue = this.<attr.name>;
       this.<attr.name> = value;
-      this.firePropertyChange("<attr.name>", oldValue, value);
+      this.firePropertyChange(PROPERTY_<attr.name>, oldValue, value);
       return this;
    }
 >>
@@ -51,7 +51,7 @@ attrWithItem(attr) ::= <<
       }
       if (this.<attr.name>.add(value))<! the collection could be a set, in which case we don't want a PCE!>
       {
-         this.firePropertyChange("<attr.name>", null, value);
+         this.firePropertyChange(PROPERTY_<attr.name>, null, value);
       }
       return this;
    }
@@ -86,7 +86,7 @@ attrWithoutItem(attr) ::= <<
    {
       if (this.<attr.name> != null && this.<attr.name>.removeAll(java.util.Collections.singleton(value)))
       {
-         this.firePropertyChange("<attr.name>", value, null);
+         this.firePropertyChange(PROPERTY_<attr.name>, value, null);
       }
       return this;
    }

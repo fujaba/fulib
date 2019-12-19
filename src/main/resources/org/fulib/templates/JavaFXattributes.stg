@@ -16,7 +16,7 @@ initMethod(attr) ::= <<
    private <propertyType(attr)> _init<attr.name; format="cap">()
    {
       final <propertyType(attr)> result = new Simple<propertyType(attr)>(<if(attr.collection)>javafx.collections.FXCollections.observableArrayList()<endif>);
-      result.addListener((observable, oldValue, newValue) -> this.firePropertyChange("<attr.name>", oldValue, newValue));
+      result.addListener((observable, oldValue, newValue) -> this.firePropertyChange(PROPERTY_<attr.name>, oldValue, newValue));
       return result;
    }
 >>
