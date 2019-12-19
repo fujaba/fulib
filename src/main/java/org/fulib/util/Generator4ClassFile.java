@@ -22,6 +22,12 @@ import static org.fulib.classmodel.FileFragmentMap.METHOD;
 
 public class Generator4ClassFile extends AbstractGenerator
 {
+   // =============== Constants ===============
+
+   // indentation used for method bodies.
+   // Used by generateMethod to normalize method bodies in preparation for ST's automatic indentation.
+   private static final String METHOD_BODY_INDENT = "      ";
+
    // =============== Properties ===============
 
    @Override
@@ -557,15 +563,27 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateMethod(FileFragmentMap fragmentMap, FMethod method)
    {
-      final String signature = method.getSignature();
-      String methodBody = method.getMethodBody();
-      if (methodBody == null)
+      String body = method.getMethodBody();
+      if (body.startsWith(METHOD_BODY_INDENT))
       {
-         methodBody = "      // hello world\n";
+         // remove indent from all body lines, e.g.:
+         // ......foo bar
+         // ......baz
+         // ->
+         // foo bar
+         // baz
+         body = body.substring(METHOD_BODY_INDENT.length()).replace("\n" + METHOD_BODY_INDENT, "\n");
       }
-      final String fragment = "   " + method.getDeclaration() + " { \n" + methodBody + "   }";
+      if (body.endsWith("\n"))
+      {
+         body = body.substring(0, body.length() - 1);
+      }
 
-      fragmentMap.add(signature, fragment, 2, method.getModified());
+      final STGroup group = this.getSTGroup("org/fulib/templates/method.stg");
+      final ST template = group.getInstanceOf("method");
+      template.add("method", method);
+      template.add("body", body);
+      fragmentMap.add(method.getSignature(), template.render(), 2, method.getModified());
    }
 
    // --------------- Additional Fragments ---------------

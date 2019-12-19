@@ -59,7 +59,6 @@ public class GenModel implements ClassModelDecorator
       });
 
       final Clazz FMethod = mb.haveClass("FMethod", c -> {
-         c.attribute("declaration", STRING);
          c.attribute("methodBody", STRING);
          c.attribute("modified", BOOLEAN);
          c.attribute("annotations", STRING);

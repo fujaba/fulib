@@ -21,6 +21,7 @@
 
 package org.fulib.util;
 
+@Deprecated
 public class Token
 {
 	public char kind;
