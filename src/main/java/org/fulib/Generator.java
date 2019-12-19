@@ -223,13 +223,11 @@ public class Generator
       {
          boolean modified = newClazz == null;
 
-         String oldDeclaration = oldMethod.getDeclaration();
-
          if (!modified)
          {
             for (FMethod newMethod : newClazz.getMethods())
             {
-               if (newMethod.getDeclaration().equals(oldDeclaration))
+               if (oldMethod.signatureMatches(newMethod))
                {
                   // FIXME this assignment is useless
                   modified = false;

@@ -2,6 +2,7 @@ package org.fulib.classmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -11,23 +12,23 @@ public class FMethod
 {
    // =============== Constants ===============
 
-   public static final String PROPERTY_methodBody = "methodBody";
+   public static final String PROPERTY_methodBody  = "methodBody";
    public static final String PROPERTY_declaration = "declaration";
-   public static final String PROPERTY_clazz = "clazz";
-   public static final String PROPERTY_modified = "modified";
+   public static final String PROPERTY_clazz       = "clazz";
+   public static final String PROPERTY_modified    = "modified";
    public static final String PROPERTY_annotations = "annotations";
 
    // =============== Fields ===============
 
    protected PropertyChangeSupport listeners = null;
 
-   private Clazz clazz = null;
-   private String name;
-   private String declaration;
-   private String annotations;
+   private Clazz                         clazz = null;
+   private String                        name;
+   private String                        declaration;
+   private String                        annotations;
    private LinkedHashMap<String, String> params;
-   private String returnType;
-   private String methodBody;
+   private String                        returnType;
+   private String                        methodBody;
 
    private boolean modified;
 
@@ -247,6 +248,29 @@ public class FMethod
    }
 
    // =============== Methods ===============
+
+   public boolean signatureMatches(FMethod that)
+   {
+      if (!Objects.equals(this.getName(), that.getName()) || this.getParams().size() != that.getParams().size())
+      {
+         return false;
+      }
+
+      // unfortunately this.params.values().equals(that.params.value()) does not work
+      final Iterator<String> it1 = this.getParams().values().iterator();
+      final Iterator<String> it2 = that.getParams().values().iterator();
+      while (it1.hasNext() && it2.hasNext())
+      {
+         final String type1 = it1.next();
+         final String type2 = it2.next();
+         if (!type1.equals(type2))
+         {
+            return false;
+         }
+      }
+
+      return true;
+   }
 
    @Deprecated
    public String readName()
