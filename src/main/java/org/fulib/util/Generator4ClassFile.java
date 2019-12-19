@@ -170,7 +170,7 @@ public class Generator4ClassFile extends AbstractGenerator
       }
 
       // any non-primitive attributes
-      if (clazz.getAttributes().stream().anyMatch(a -> !a.isPrimitive()))
+      if (clazz.getAttributes().stream().anyMatch(a -> !a.isCollection() && !a.isPrimitive()))
       {
          qualifiedNames.add("java.util.Objects");
       }

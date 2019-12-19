@@ -20,7 +20,7 @@ attrGet(attr) ::= <<
 attrSet(attr) ::= <<
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
-      if (<if(attr.isPrimitive)>value == this.<attr.name><else>Objects.equals(value, this.<attr.name>)<endif>)
+      if (<if(attr.primitive)>value == this.<attr.name><else>Objects.equals(value, this.<attr.name>)<endif>)
       {
          return this;
       }
