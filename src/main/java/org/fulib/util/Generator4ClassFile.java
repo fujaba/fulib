@@ -177,7 +177,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
       // any to-n roles or to-n attributes
       if (clazz.getRoles().stream().anyMatch(a -> a.getCardinality() != Type.ONE) //
-          || clazz.getAttributes().stream().anyMatch(a -> a.getType().endsWith(Type.__LIST)))
+          || clazz.getAttributes().stream().anyMatch(Attribute::isCollection))
       {
          qualifiedNames.add("java.util.Collection");
       }
@@ -223,11 +223,10 @@ public class Generator4ClassFile extends AbstractGenerator
 
       String baseType = attrType;
       String boxType = baseType;
-      if (attrType.endsWith(Type.__LIST))
+      if (attr.isCollection())
       {
-         baseType = attrType.substring(0, attrType.length() - Type.__LIST.length());
          boxType = getBoxType(baseType);
-         attrType = String.format("java.util.ArrayList<%s>", boxType);
+         attrType = String.format(attr.getCollectionType(), boxType);
       }
 
       final String className = attr.getClazz().getName();
@@ -262,7 +261,7 @@ public class Generator4ClassFile extends AbstractGenerator
       attrGet.add("name", attrName);
       fragmentMap.add(METHOD + ":get" + capAttrName + "()", attrGet.render(), 2, modified);
 
-      if (attr.getType().endsWith(Type.__LIST))
+      if (attr.isCollection())
       {
          final ST attrWithItem = group.getInstanceOf("attrWithItem");
          attrWithItem.add("class", className);

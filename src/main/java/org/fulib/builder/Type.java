@@ -7,7 +7,6 @@ public class Type {
     public static final String FLOAT = "float";
     public static final String DOUBLE = "double";
     public static final String BOOLEAN = "boolean";
-    public static final String __LIST = "__list";
     public static final int ONE = 1;
     public static final int MANY = 42;
     public static final String COLLECTION_ARRAY_LIST = "java.util.ArrayList<%s>";

@@ -47,10 +47,14 @@ public class MultiAttributeTest
       this.configureModel(mb);
 
       ClassBuilder root = mb.buildClass("Root");
-      root.buildAttribute("resultList", Type.INT + Type.__LIST);
+      root.buildAttribute("resultList", Type.INT);
       mb.buildClass("Kid").setSuperClass(root);
 
       ClassModel model = mb.getClassModel();
+      Clazz modelRoot = model.getClazz("Root");
+      Attribute modelResultList = modelRoot.getAttribute("resultList");
+      modelResultList.setCollectionType(Type.COLLECTION_ARRAY_LIST);
+
       Fulib.generator().generate(model);
 
       int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
@@ -84,9 +88,7 @@ public class MultiAttributeTest
       }
 
       // change to simple attribute
-      Clazz modelRoot = model.getClazz("Root");
-      Attribute modelResultList = modelRoot.getAttribute("resultList");
-      modelResultList.setType(Type.INT);
+      modelResultList.setCollectionType(null);
 
       Fulib.generator().generate(model);
 
@@ -94,7 +96,7 @@ public class MultiAttributeTest
       assertThat("compiler return code: ", returnCode, is(0));
 
       // change back to multi attribute
-      modelResultList.setType(Type.INT + Type.__LIST);
+      modelResultList.setCollectionType(Type.COLLECTION_ARRAY_LIST);
 
       Fulib.generator().generate(model);
 
