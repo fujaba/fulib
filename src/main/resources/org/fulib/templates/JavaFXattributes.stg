@@ -61,7 +61,7 @@ attrWithItem(attr) ::= <<
 attrWithoutItem(attr) ::= <<
    public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType> value)
    {
-      this.<attr.name>.remove(value);
+      this.<attr.name>.removeAll(value);
       return this;
    }
 >>

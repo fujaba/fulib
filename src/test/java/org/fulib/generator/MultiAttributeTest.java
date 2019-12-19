@@ -79,10 +79,10 @@ public class MultiAttributeTest
 
          withItemMethod.invoke(theRoot, 42);
          withItemMethod.invoke(theRoot, 23);
-         assertThat(theList.size(), equalTo(3));
+         assertThat("items can be added more than once", theList.size(), equalTo(3));
 
          withoutItemMethod.invoke(theRoot, 23);
-         assertThat(theList.size(), equalTo(2));
+         assertThat("without removes all occurrences", theList.size(), equalTo(1));
 
          // TODO test other "with" and "without" overloads
       }
