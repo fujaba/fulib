@@ -126,6 +126,9 @@ public class Generator4TableClassFile extends AbstractGenerator
       standardAttributes.add(new Attribute().setName("columnMap").setType("LinkedHashMap<String, Integer>")
                                             .setInitialization("new LinkedHashMap<>()"));
 
+      // here so the attribute templates have a class name
+      new Clazz().setName(clazz.getName() + "Table").withAttributes(standardAttributes);
+
       for (Attribute attr : standardAttributes)
       {
          attrTemplate = group.getInstanceOf("attrDecl").add("attr", attr);
