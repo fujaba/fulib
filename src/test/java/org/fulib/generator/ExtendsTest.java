@@ -105,6 +105,7 @@ public class ExtendsTest
    private void runDataTests(ClassLoader classLoader, String packageName) throws Exception
    {
       Class<?> uniClass = Class.forName(packageName + ".University", true, classLoader);
+      Class<?> studentClass = Class.forName(packageName + ".Student", true, classLoader);
       Class<?> taClass = Class.forName(packageName + ".TeachingAssistent", true, classLoader);
 
       Object studyRight = uniClass.newInstance();
@@ -122,8 +123,8 @@ public class ExtendsTest
       // ok, create a link
       assertThat(karli, hasProperty("uni", nullValue()));
 
-      Method withStudents = uniClass.getMethod("withStudents", Object[].class);
-      Object withResult = withStudents.invoke(studyRight, new Object[] { new Object[] { karli } });
+      Method withStudents = uniClass.getMethod("withStudents", studentClass);
+      Object withResult = withStudents.invoke(studyRight, karli);
       assertThat(withResult, is(equalTo(studyRight)));
       assertThat(studyRight, hasProperty("students", containsInAnyOrder(karli)));
       assertThat(karli, hasProperty("uni", equalTo(studyRight)));
