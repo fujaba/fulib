@@ -1,4 +1,3 @@
-
-attrDecl(type, name, value) ::= <<   private <type> <name> /* custom attribute comment */ <init(value)>;>>
-
-init(v) ::= "<if(v)> = <v><endif>"
+attrDecl(attr) ::= <<
+   private <attr.concreteType> <attr.name> /* custom attribute comment */<if(attr.initialization)> = <attr.initialization><endif>;
+>>
