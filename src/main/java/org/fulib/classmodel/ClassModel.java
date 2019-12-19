@@ -127,6 +127,7 @@ public class ClassModel
       return this.classes != null ? this.classes : EMPTY_classes;
    }
 
+   @Deprecated
    public ClassModel withClasses(Object... value)
    {
       if (value == null)
@@ -145,16 +146,7 @@ public class ClassModel
          }
          else if (item instanceof Clazz)
          {
-            if (this.classes == null)
-            {
-               this.classes = new java.util.ArrayList<Clazz>();
-            }
-            if (!this.classes.contains(item))
-            {
-               this.classes.add((Clazz)item);
-               ((Clazz)item).setModel(this);
-               this.firePropertyChange("classes", null, item);
-            }
+            this.withClasses((Clazz) item);
          }
          else
          {
@@ -164,6 +156,40 @@ public class ClassModel
       return this;
    }
 
+   public ClassModel withClasses(Clazz value)
+   {
+      if (this.classes == null)
+      {
+         this.classes = new java.util.ArrayList<Clazz>();
+      }
+      if (!this.classes.contains(value))
+      {
+         this.classes.add(value);
+         value.setModel(this);
+         this.firePropertyChange("classes", null, value);
+      }
+      return this;
+   }
+
+   public ClassModel withClasses(Clazz... value)
+   {
+      for (final Clazz item : value)
+      {
+         this.withClasses(item);
+      }
+      return this;
+   }
+
+   public ClassModel withClasses(Collection<? extends Clazz> value)
+   {
+      for (final Clazz item : value)
+      {
+         this.withClasses(item);
+      }
+      return this;
+   }
+
+   @Deprecated
    public ClassModel withoutClasses(Object... value)
    {
       if (this.classes == null || value == null)
@@ -182,12 +208,36 @@ public class ClassModel
          }
          else if (item instanceof Clazz)
          {
-            if (this.classes.remove(item))
-            {
-               ((Clazz)item).setModel(null);
-               this.firePropertyChange("classes", item, null);
-            }
+            this.withoutClasses((Clazz) item);
          }
+      }
+      return this;
+   }
+
+   public ClassModel withoutClasses(Clazz value)
+   {
+      if (this.classes != null && this.classes.remove(value))
+      {
+         value.setModel(null);
+         this.firePropertyChange("classes", value, null);
+      }
+      return this;
+   }
+
+   public ClassModel withoutClasses(Clazz... value)
+   {
+      for (final Clazz item : value)
+      {
+         this.withoutClasses(item);
+      }
+      return this;
+   }
+
+   public ClassModel withoutClasses(Collection<? extends Clazz> value)
+   {
+      for (final Clazz item : value)
+      {
+         this.withoutClasses(item);
       }
       return this;
    }
@@ -244,8 +294,7 @@ public class ClassModel
 
    public void removeYou()
    {
-      this.withoutClasses(this.getClasses().clone());
-
+      this.withoutClasses(new java.util.ArrayList<>(this.getClasses()));
    }
 
    @Override

@@ -126,6 +126,7 @@ public class Clazz
       return this.subClasses != null ? this.subClasses : EMPTY_subClasses;
    }
 
+   @Deprecated
    public Clazz withSubClasses(Object... value)
    {
       if (value == null)
@@ -144,16 +145,7 @@ public class Clazz
          }
          else if (item instanceof Clazz)
          {
-            if (this.subClasses == null)
-            {
-               this.subClasses = new java.util.ArrayList<Clazz>();
-            }
-            if (!this.subClasses.contains(item))
-            {
-               this.subClasses.add((Clazz)item);
-               ((Clazz)item).setSuperClass(this);
-               this.firePropertyChange("subClasses", null, item);
-            }
+            this.withSubClasses((Clazz) item);
          }
          else
          {
@@ -163,6 +155,40 @@ public class Clazz
       return this;
    }
 
+   public Clazz withSubClasses(Clazz value)
+   {
+      if (this.subClasses == null)
+      {
+         this.subClasses = new java.util.ArrayList<Clazz>();
+      }
+      if (!this.subClasses.contains(value))
+      {
+         this.subClasses.add(value);
+         value.setSuperClass(this);
+         this.firePropertyChange("subClasses", null, value);
+      }
+      return this;
+   }
+
+   public Clazz withSubClasses(Clazz... value)
+   {
+      for (final Clazz item : value)
+      {
+         this.withSubClasses(item);
+      }
+      return this;
+   }
+
+   public Clazz withSubClasses(Collection<? extends Clazz> value)
+   {
+      for (final Clazz item : value)
+      {
+         this.withSubClasses(item);
+      }
+      return this;
+   }
+
+   @Deprecated
    public Clazz withoutSubClasses(Object... value)
    {
       if (this.subClasses == null || value == null)
@@ -181,12 +207,36 @@ public class Clazz
          }
          else if (item instanceof Clazz)
          {
-            if (this.subClasses.remove(item))
-            {
-               ((Clazz)item).setSuperClass(null);
-               this.firePropertyChange("subClasses", item, null);
-            }
+            this.withoutSubClasses((Clazz) item);
          }
+      }
+      return this;
+   }
+
+   public Clazz withoutSubClasses(Clazz value)
+   {
+      if (this.subClasses != null && this.subClasses.remove(value))
+      {
+         value.setSuperClass(null);
+         this.firePropertyChange("subClasses", value, null);
+      }
+      return this;
+   }
+
+   public Clazz withoutSubClasses(Clazz... value)
+   {
+      for (final Clazz item : value)
+      {
+         this.withoutSubClasses(item);
+      }
+      return this;
+   }
+
+   public Clazz withoutSubClasses(Collection<? extends Clazz> value)
+   {
+      for (final Clazz item : value)
+      {
+         this.withoutSubClasses(item);
       }
       return this;
    }
@@ -208,6 +258,7 @@ public class Clazz
       return this.attributes != null ? this.attributes : EMPTY_attributes;
    }
 
+   @Deprecated
    public Clazz withAttributes(Object... value)
    {
       if (value == null)
@@ -226,16 +277,7 @@ public class Clazz
          }
          else if (item instanceof Attribute)
          {
-            if (this.attributes == null)
-            {
-               this.attributes = new java.util.ArrayList<Attribute>();
-            }
-            if (!this.attributes.contains(item))
-            {
-               this.attributes.add((Attribute)item);
-               ((Attribute)item).setClazz(this);
-               this.firePropertyChange("attributes", null, item);
-            }
+            this.withAttributes((Attribute) item);
          }
          else
          {
@@ -245,6 +287,40 @@ public class Clazz
       return this;
    }
 
+   public Clazz withAttributes(Attribute value)
+   {
+      if (this.attributes == null)
+      {
+         this.attributes = new java.util.ArrayList<Attribute>();
+      }
+      if (!this.attributes.contains(value))
+      {
+         this.attributes.add(value);
+         value.setClazz(this);
+         this.firePropertyChange("attributes", null, value);
+      }
+      return this;
+   }
+
+   public Clazz withAttributes(Attribute... value)
+   {
+      for (final Attribute item : value)
+      {
+         this.withAttributes(item);
+      }
+      return this;
+   }
+
+   public Clazz withAttributes(Collection<? extends Attribute> value)
+   {
+      for (final Attribute item : value)
+      {
+         this.withAttributes(item);
+      }
+      return this;
+   }
+
+   @Deprecated
    public Clazz withoutAttributes(Object... value)
    {
       if (this.attributes == null || value == null)
@@ -263,12 +339,36 @@ public class Clazz
          }
          else if (item instanceof Attribute)
          {
-            if (this.attributes.remove(item))
-            {
-               ((Attribute)item).setClazz(null);
-               this.firePropertyChange("attributes", item, null);
-            }
+            this.withoutAttributes((Attribute) item);
          }
+      }
+      return this;
+   }
+
+   public Clazz withoutAttributes(Attribute value)
+   {
+      if (this.attributes != null && this.attributes.remove(value))
+      {
+         value.setClazz(null);
+         this.firePropertyChange("attributes", value, null);
+      }
+      return this;
+   }
+
+   public Clazz withoutAttributes(Attribute... value)
+   {
+      for (final Attribute item : value)
+      {
+         this.withoutAttributes(item);
+      }
+      return this;
+   }
+
+   public Clazz withoutAttributes(Collection<? extends Attribute> value)
+   {
+      for (final Attribute item : value)
+      {
+         this.withoutAttributes(item);
       }
       return this;
    }
@@ -290,6 +390,7 @@ public class Clazz
       return this.roles != null ? this.roles : EMPTY_roles;
    }
 
+   @Deprecated
    public Clazz withRoles(Object... value)
    {
       if (value == null)
@@ -308,16 +409,7 @@ public class Clazz
          }
          else if (item instanceof AssocRole)
          {
-            if (this.roles == null)
-            {
-               this.roles = new java.util.ArrayList<AssocRole>();
-            }
-            if (!this.roles.contains(item))
-            {
-               this.roles.add((AssocRole)item);
-               ((AssocRole)item).setClazz(this);
-               this.firePropertyChange("roles", null, item);
-            }
+            this.withRoles((AssocRole) item);
          }
          else
          {
@@ -327,6 +419,40 @@ public class Clazz
       return this;
    }
 
+   public Clazz withRoles(AssocRole value)
+   {
+      if (this.roles == null)
+      {
+         this.roles = new java.util.ArrayList<AssocRole>();
+      }
+      if (!this.roles.contains(value))
+      {
+         this.roles.add(value);
+         value.setClazz(this);
+         this.firePropertyChange("roles", null, value);
+      }
+      return this;
+   }
+
+   public Clazz withRoles(AssocRole... value)
+   {
+      for (final AssocRole item : value)
+      {
+         this.withRoles(item);
+      }
+      return this;
+   }
+
+   public Clazz withRoles(Collection<? extends AssocRole> value)
+   {
+      for (final AssocRole item : value)
+      {
+         this.withRoles(item);
+      }
+      return this;
+   }
+
+   @Deprecated
    public Clazz withoutRoles(Object... value)
    {
       if (this.roles == null || value == null)
@@ -345,12 +471,36 @@ public class Clazz
          }
          else if (item instanceof AssocRole)
          {
-            if (this.roles.remove(item))
-            {
-               ((AssocRole)item).setClazz(null);
-               this.firePropertyChange("roles", item, null);
-            }
+            this.withoutRoles((AssocRole) item);
          }
+      }
+      return this;
+   }
+
+   public Clazz withoutRoles(AssocRole value)
+   {
+      if (this.roles != null && this.roles.remove(value))
+      {
+         value.setClazz(null);
+         this.firePropertyChange("roles", value, null);
+      }
+      return this;
+   }
+
+   public Clazz withoutRoles(AssocRole... value)
+   {
+      for (final AssocRole item : value)
+      {
+         this.withoutRoles(item);
+      }
+      return this;
+   }
+
+   public Clazz withoutRoles(Collection<? extends AssocRole> value)
+   {
+      for (final AssocRole item : value)
+      {
+         this.withoutRoles(item);
       }
       return this;
    }
@@ -360,6 +510,7 @@ public class Clazz
       return this.methods != null ? this.methods : EMPTY_methods;
    }
 
+   @Deprecated
    public Clazz withMethods(Object... value)
    {
       if (value == null)
@@ -378,16 +529,7 @@ public class Clazz
          }
          else if (item instanceof FMethod)
          {
-            if (this.methods == null)
-            {
-               this.methods = new java.util.ArrayList<FMethod>();
-            }
-            if (!this.methods.contains(item))
-            {
-               this.methods.add((FMethod)item);
-               ((FMethod)item).setClazz(this);
-               this.firePropertyChange("methods", null, item);
-            }
+            this.withMethods((FMethod) item);
          }
          else
          {
@@ -397,6 +539,40 @@ public class Clazz
       return this;
    }
 
+   public Clazz withMethods(FMethod value)
+   {
+      if (this.methods == null)
+      {
+         this.methods = new java.util.ArrayList<FMethod>();
+      }
+      if (!this.methods.contains(value))
+      {
+         this.methods.add(value);
+         value.setClazz(this);
+         this.firePropertyChange("methods", null, value);
+      }
+      return this;
+   }
+
+   public Clazz withMethods(FMethod... value)
+   {
+      for (final FMethod item : value)
+      {
+         this.withMethods(item);
+      }
+      return this;
+   }
+
+   public Clazz withMethods(Collection<? extends FMethod> value)
+   {
+      for (final FMethod item : value)
+      {
+         this.withMethods(item);
+      }
+      return this;
+   }
+
+   @Deprecated
    public Clazz withoutMethods(Object... value)
    {
       if (this.methods == null || value == null)
@@ -415,12 +591,36 @@ public class Clazz
          }
          else if (item instanceof FMethod)
          {
-            if (this.methods.remove(item))
-            {
-               ((FMethod)item).setClazz(null);
-               this.firePropertyChange("methods", item, null);
-            }
+            this.withoutMethods((FMethod) item);
          }
+      }
+      return this;
+   }
+
+   public Clazz withoutMethods(FMethod value)
+   {
+      if (this.methods != null && this.methods.remove(value))
+      {
+         value.setClazz(null);
+         this.firePropertyChange("methods", value, null);
+      }
+      return this;
+   }
+
+   public Clazz withoutMethods(FMethod... value)
+   {
+      for (final FMethod item : value)
+      {
+         this.withoutMethods(item);
+      }
+      return this;
+   }
+
+   public Clazz withoutMethods(Collection<? extends FMethod> value)
+   {
+      for (final FMethod item : value)
+      {
+         this.withoutMethods(item);
       }
       return this;
    }
@@ -537,18 +737,11 @@ public class Clazz
    public void removeYou()
    {
       this.setModel(null);
+      this.withoutAttributes(new java.util.ArrayList<>(this.getAttributes()));
+      this.withoutRoles(new java.util.ArrayList<>(this.getRoles()));
+      this.withoutMethods(new java.util.ArrayList<>(this.getMethods()));
       this.setSuperClass(null);
-      this.withoutAttributes(this.getAttributes().clone());
-
-
-      this.withoutRoles(this.getRoles().clone());
-
-
-      this.withoutMethods(this.getMethods().clone());
-
-
-      this.withoutSubClasses(this.getSubClasses().clone());
-
+      this.withoutSubClasses(new java.util.ArrayList<>(this.getSubClasses()));
    }
 
    @Override

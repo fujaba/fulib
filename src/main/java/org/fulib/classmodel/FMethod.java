@@ -12,22 +12,22 @@ public class FMethod
 {
    // =============== Constants ===============
 
-   public static final String PROPERTY_methodBody  = "methodBody";
+   public static final String PROPERTY_methodBody = "methodBody";
    public static final String PROPERTY_declaration = "declaration";
-   public static final String PROPERTY_clazz       = "clazz";
-   public static final String PROPERTY_modified    = "modified";
+   public static final String PROPERTY_clazz = "clazz";
+   public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_annotations = "annotations";
 
    // =============== Fields ===============
 
    protected PropertyChangeSupport listeners = null;
 
-   private Clazz                         clazz = null;
-   private String                        name;
-   private String                        annotations;
+   private Clazz clazz = null;
+   private String name;
+   private String annotations;
    private LinkedHashMap<String, String> params;
-   private String                        returnType;
-   private String                        methodBody;
+   private String returnType;
+   private String methodBody;
 
    private boolean modified;
 
