@@ -164,8 +164,8 @@ public class Generator4ClassFile extends AbstractGenerator
       }
 
       // any JavaFX roles or attributes
-      if (clazz.getRoles().stream().anyMatch(a -> Type.JAVA_FX.equals(a.getPropertyStyle())) //
-          || clazz.getAttributes().stream().anyMatch(a -> Type.JAVA_FX.equals(a.getPropertyStyle())))
+      if (clazz.getRoles().stream().anyMatch(AssocRole::isJavaFX) //
+          || clazz.getAttributes().stream().anyMatch(Attribute::isJavaFX))
       {
          qualifiedNames.add("javafx.beans.property.*");
       }
@@ -206,7 +206,7 @@ public class Generator4ClassFile extends AbstractGenerator
    private void generateAttribute(FileFragmentMap fragmentMap, Attribute attr)
    {
       final STGroup group;
-      if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
+      if (attr.isJavaFX())
       {
          group = this.getSTGroup("org/fulib/templates/JavaFXattributes.stg");
          group.importTemplates(this.getSTGroup("org/fulib/templates/attributes.stg"));
@@ -217,7 +217,7 @@ public class Generator4ClassFile extends AbstractGenerator
       }
 
       String attrType = attr.getType();
-      if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
+      if (attr.isJavaFX())
       {
          attrType = getBoxType(attrType);
       }
@@ -246,7 +246,7 @@ public class Generator4ClassFile extends AbstractGenerator
       attrDecl.add("value", attr.getInitialization());
       fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attrName, attrDecl.render(), 2, modified);
 
-      if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
+      if (attr.isJavaFX())
       {
          final ST initMethod = group.getInstanceOf("initMethod");
          initMethod.add("name", attrName);
@@ -328,7 +328,7 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap.add(METHOD + ":without" + capAttrName + "(Collection<? extends " + boxType + ">)", "", 3, true);
       }
 
-      if (Type.JAVA_FX.equals(attr.getPropertyStyle()))
+      if (attr.isJavaFX())
       {
          final ST propertyGet = group.getInstanceOf("propertyGet");
          propertyGet.add("name", attrName);
@@ -388,7 +388,7 @@ public class Generator4ClassFile extends AbstractGenerator
    private void generateAssociation(Clazz clazz, FileFragmentMap fragmentMap, AssocRole role)
    {
       final STGroup group;
-      if (Type.JAVA_FX.equals(role.getPropertyStyle()))
+      if (role.isJavaFX())
       {
          group = this.getSTGroup("org/fulib/templates/JavaFXassociations.stg");
          group.importTemplates(this.getSTGroup("org/fulib/templates/associations.stg"));
@@ -407,7 +407,7 @@ public class Generator4ClassFile extends AbstractGenerator
       final String otherClassName = other.getClazz().getName();
 
       // provide empty_set in this class
-      if (cardinality != Type.ONE && !Type.JAVA_FX.equals(role.getPropertyStyle()))
+      if (cardinality != Type.ONE && !role.isJavaFX())
       {
          // add empty set decl
          final ST emptySetDecl = group.getInstanceOf("emptySetDecl").add("role", role).add("other", other);
@@ -425,7 +425,7 @@ public class Generator4ClassFile extends AbstractGenerator
       final ST roleAttrDecl = group.getInstanceOf("roleAttrDecl").add("role", role).add("other", other);
       fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + roleName, roleAttrDecl.render(), 2, modified);
 
-      if (Type.JAVA_FX.equals(role.getPropertyStyle()))
+      if (role.isJavaFX())
       {
          // add _init method
          final ST initMethod = group.getInstanceOf("initMethod").add("role", role).add("other", other);
@@ -486,7 +486,7 @@ public class Generator4ClassFile extends AbstractGenerator
             .add(METHOD + ":without" + capRoleName + "(Collection<? extends " + otherClassName + ">)", "", 3, true);
       }
 
-      if (Type.JAVA_FX.equals(role.getPropertyStyle()) && cardinality == Type.ONE)
+      if (role.isJavaFX() && cardinality == Type.ONE)
       {
          final ST propertyMethod = group.getInstanceOf("propertyMethod").add("role", role).add("other", other);
          fragmentMap.add(METHOD + ":" + roleName + "Property()", propertyMethod.render(), 3, modified);
@@ -638,7 +638,7 @@ public class Generator4ClassFile extends AbstractGenerator
             else
             {
                toManyList.add(role.getName());
-               javaFXStyles.add(Type.JAVA_FX.equals(role.getPropertyStyle()));
+               javaFXStyles.add(role.isJavaFX());
             }
          }
       }

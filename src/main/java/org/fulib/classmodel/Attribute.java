@@ -1,5 +1,7 @@
 package org.fulib.classmodel;
 
+import org.fulib.builder.Type;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
@@ -128,6 +130,11 @@ public class Attribute
       this.propertyStyle = value;
       this.firePropertyChange("propertyStyle", oldValue, value);
       return this;
+   }
+
+   public boolean isJavaFX()
+   {
+      return Type.JAVA_FX.equals(this.getPropertyStyle());
    }
 
    public boolean getModified()
