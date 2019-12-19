@@ -531,7 +531,7 @@ public class Generator4ClassFile extends AbstractGenerator
       final STGroup group = this.getSTGroup("org/fulib/templates/removeYou.stg");
       final ST removeYou = group.getInstanceOf("removeYou");
       removeYou.add("superClass", clazz.getSuperClass() != null);
-      removeYou.add("roles", clazz.getRoles());
+      removeYou.add("roles", clazz.getRoles().stream().filter(r -> r.getName() != null).toArray());
       fragmentMap.add(METHOD + ":removeYou()", removeYou.render(), 2, clazz.getModified());
    }
 }
