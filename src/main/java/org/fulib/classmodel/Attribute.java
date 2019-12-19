@@ -98,6 +98,45 @@ public class Attribute
       return this;
    }
 
+   public String getBoxType()
+   {
+      return getBoxType(this.getType());
+   }
+
+   private static String getBoxType(String attrType)
+   {
+      switch (attrType)
+      {
+      case "boolean":
+         return "Boolean";
+      case "byte":
+         return "Byte";
+      case "short":
+         return "Short";
+      case "char":
+         return "Character"; // !
+      case "int":
+         return "Integer"; // !
+      case "long":
+         return "Long";
+      case "float":
+         return "Float";
+      case "double":
+         return "Double";
+      }
+      return attrType;
+   }
+
+   public boolean isPrimitive()
+   {
+      return isPrimitive(this.getType());
+   }
+
+   private static boolean isPrimitive(String attrType)
+   {
+      return !attrType.equals(getBoxType(attrType));
+   }
+
    public String getCollectionType()
    {
       return this.collectionType;
@@ -119,6 +158,12 @@ public class Attribute
    public boolean isCollection()
    {
       return this.getCollectionType() != null;
+   }
+
+   public String getConcreteType()
+   {
+      final String collectionType = this.getCollectionType();
+      return collectionType == null ? this.getType() : String.format(collectionType, this.getBoxType());
    }
 
    public String getInitialization()
