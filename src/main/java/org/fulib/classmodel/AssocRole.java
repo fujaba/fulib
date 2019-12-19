@@ -1,5 +1,7 @@
 package org.fulib.classmodel;
 
+import org.fulib.builder.Type;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
@@ -123,6 +125,16 @@ public class AssocRole
       this.cardinality = value;
       this.firePropertyChange("cardinality", oldValue, value);
       return this;
+   }
+
+   public boolean isToOne()
+   {
+      return this.cardinality == Type.ONE;
+   }
+
+   public boolean isToMany()
+   {
+      return this.cardinality != Type.ONE;
    }
 
    public String getRoleType()
