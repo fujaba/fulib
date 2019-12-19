@@ -401,26 +401,16 @@ public class Generator4ClassFile extends AbstractGenerator
       final String roleName = role.getName();
       final String capRoleName = StrUtil.cap(roleName);
       final int cardinality = role.getCardinality();
-      final String className = clazz.getName();
       final boolean modified = role.getModified();
 
       final AssocRole other = role.getOther();
-      final String otherRoleName = other.getName();
-      final int otherCardinality = other.getCardinality();
       final String otherClassName = other.getClazz().getName();
-
-      String roleType = otherClassName;
 
       // provide empty_set in this class
       if (cardinality != Type.ONE && !Type.JAVA_FX.equals(role.getPropertyStyle()))
       {
          // add empty set decl
-         roleType = String.format(role.getRoleType(), otherClassName);
-
-         final ST emptySetDecl = group.getInstanceOf("emptySetDecl");
-         emptySetDecl.add("roleName", roleName);
-         emptySetDecl.add("otherClassName", otherClassName);
-         emptySetDecl.add("roleType", roleType);
+         final ST emptySetDecl = group.getInstanceOf("emptySetDecl").add("role", role).add("other", other);
          fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":EMPTY_" + roleName, emptySetDecl.render(), 3, modified);
       }
       else
@@ -429,27 +419,16 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":EMPTY_" + roleName, "", 3, true);
       }
 
-      final ST propertyDecl = group.getInstanceOf("propertyDecl");
-      propertyDecl.add("roleName", roleName);
+      final ST propertyDecl = group.getInstanceOf("propertyDecl").add("role", role).add("other", other);
       fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":PROPERTY_" + roleName, propertyDecl.render(), 2, modified);
 
-      final ST roleAttrDecl = group.getInstanceOf("roleAttrDecl");
-      roleAttrDecl.add("roleName", roleName);
-      roleAttrDecl.add("roleType", roleType);
-      roleAttrDecl.add("toMany", cardinality != Type.ONE);
-      roleAttrDecl.add("otherClassName", otherClassName);
+      final ST roleAttrDecl = group.getInstanceOf("roleAttrDecl").add("role", role).add("other", other);
       fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + roleName, roleAttrDecl.render(), 2, modified);
 
       if (Type.JAVA_FX.equals(role.getPropertyStyle()))
       {
          // add _init method
-         final ST initMethod = group.getInstanceOf("initMethod");
-         initMethod.add("roleName", roleName);
-         initMethod.add("toMany", cardinality != Type.ONE);
-         initMethod.add("myClassName", className);
-         initMethod.add("otherClassName", otherClassName);
-         initMethod.add("otherRoleName", otherRoleName);
-         initMethod.add("otherToMany", otherCardinality != Type.ONE);
+         final ST initMethod = group.getInstanceOf("initMethod").add("role", role).add("other", other);
          fragmentMap.add(METHOD + ":_init" + capRoleName + "()", initMethod.render(), 2, modified);
       }
       else
@@ -458,58 +437,32 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap.add(METHOD + ":_init" + capRoleName + "()", "", 2, true);
       }
 
-      final ST getMethod = group.getInstanceOf("getMethod");
-      getMethod.add("roleName", roleName);
-      getMethod.add("toMany", cardinality != Type.ONE);
-      getMethod.add("otherClassName", otherClassName);
-      getMethod.add("roleType", roleType);
+      final ST getMethod = group.getInstanceOf("getMethod").add("role", role).add("other", other);
       fragmentMap.add(METHOD + ":get" + capRoleName + "()", getMethod.render(), 2, modified);
 
       if (cardinality != Type.ONE)
       {
-         final ST withItem = group.getInstanceOf("withItem");
-         withItem.add("myClassName", className);
-         withItem.add("roleName", roleName);
-         withItem.add("otherClassName", otherClassName);
-         withItem.add("otherRoleName", otherRoleName);
-         withItem.add("otherToMany", otherCardinality != Type.ONE);
-         withItem.add("roleType", roleType);
+         final ST withItem = group.getInstanceOf("withItem").add("role", role).add("other", other);
          fragmentMap.add(METHOD + ":with" + capRoleName + "(" + otherClassName + ")", withItem.render(), 3, modified);
 
-         final ST withArray = group.getInstanceOf("withArray");
-         withArray.add("myClassName", className);
-         withArray.add("roleName", roleName);
-         withArray.add("otherClassName", otherClassName);
+         final ST withArray = group.getInstanceOf("withArray").add("role", role).add("other", other);
          fragmentMap
             .add(METHOD + ":with" + capRoleName + "(" + otherClassName + "...)", withArray.render(), 3, modified);
 
-         final ST withColl = group.getInstanceOf("withColl");
-         withColl.add("myClassName", className);
-         withColl.add("roleName", roleName);
-         withColl.add("otherClassName", otherClassName);
+         final ST withColl = group.getInstanceOf("withColl").add("role", role).add("other", other);
          fragmentMap
             .add(METHOD + ":with" + capRoleName + "(Collection<? extends " + otherClassName + ">)", withColl.render(),
                  3, modified);
 
-         final ST withoutItem = group.getInstanceOf("withoutItem");
-         withoutItem.add("myClassName", className);
-         withoutItem.add("roleName", roleName);
-         withoutItem.add("otherClassName", otherClassName);
-         withoutItem.add("otherRoleName", otherRoleName);
-         withoutItem.add("otherToMany", otherCardinality != Type.ONE);
-         fragmentMap.add(METHOD + ":without" + capRoleName + "(" + otherClassName + ")", withoutItem.render(), 3, modified);
+         final ST withoutItem = group.getInstanceOf("withoutItem").add("role", role).add("other", other);
+         fragmentMap
+            .add(METHOD + ":without" + capRoleName + "(" + otherClassName + ")", withoutItem.render(), 3, modified);
 
-         final ST withoutArray = group.getInstanceOf("withoutArray");
-         withoutArray.add("myClassName", className);
-         withoutArray.add("roleName", roleName);
-         withoutArray.add("otherClassName", otherClassName);
+         final ST withoutArray = group.getInstanceOf("withoutArray").add("role", role).add("other", other);
          fragmentMap
             .add(METHOD + ":without" + capRoleName + "(" + otherClassName + "...)", withoutArray.render(), 3, modified);
 
-         final ST withoutColl = group.getInstanceOf("withoutColl");
-         withoutColl.add("myClassName", className);
-         withoutColl.add("roleName", roleName);
-         withoutColl.add("otherClassName", otherClassName);
+         final ST withoutColl = group.getInstanceOf("withoutColl").add("role", role).add("other", other);
          fragmentMap.add(METHOD + ":without" + capRoleName + "(Collection<? extends " + otherClassName + ">)",
                          withoutColl.render(), 3, modified);
 
@@ -518,12 +471,7 @@ public class Generator4ClassFile extends AbstractGenerator
       }
       else
       {
-         final ST attrSet = group.getInstanceOf("setMethod");
-         attrSet.add("myClassName", className);
-         attrSet.add("roleName", roleName);
-         attrSet.add("otherClassName", otherClassName);
-         attrSet.add("otherRoleName", otherRoleName);
-         attrSet.add("otherToMany", otherCardinality != Type.ONE);
+         final ST attrSet = group.getInstanceOf("setMethod").add("role", role).add("other", other);
          fragmentMap.add(METHOD + ":set" + capRoleName + "(" + otherClassName + ")", attrSet.render(), 3, modified);
 
          // remove "with" and "without" methods
@@ -540,9 +488,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
       if (Type.JAVA_FX.equals(role.getPropertyStyle()) && cardinality == Type.ONE)
       {
-         final ST propertyMethod = group.getInstanceOf("propertyMethod");
-         propertyMethod.add("roleName", roleName);
-         propertyMethod.add("otherClassName", otherClassName);
+         final ST propertyMethod = group.getInstanceOf("propertyMethod").add("role", role).add("other", other);
          fragmentMap.add(METHOD + ":" + roleName + "Property()", propertyMethod.render(), 3, modified);
       }
       else

@@ -1,102 +1,102 @@
 // --------------- Overrides ---------------
 
-roleAttrDecl(roleName, roleType, toMany, otherClassName) ::= <<
-<if(toMany)>
-   private SimpleListProperty\<<otherClassName>\> <roleName> = _init<roleName; format="cap">();
+roleAttrDecl(role, other) ::= <<
+<if(role.toMany)>
+   private SimpleListProperty\<<other.clazz.name>\> <role.name> = _init<role.name; format="cap">();
 <else>
-   private ObjectProperty\<<otherClassName>\> <roleName> = _init<roleName; format="cap">();
+   private ObjectProperty\<<other.clazz.name>\> <role.name> = _init<role.name; format="cap">();
 <endif>
 >>
 
-getMethod(roleName, toMany, otherClassName, roleType) ::= <<
-<if(toMany)>
-   public SimpleListProperty\<<otherClassName>\> get<roleName; format="cap">()
+getMethod(role, other) ::= <<
+<if(role.toMany)>
+   public SimpleListProperty\<<other.clazz.name>\> get<role.name; format="cap">()
    {
-      return this.<roleName>;
+      return this.<role.name>;
    }
 <else>
-   public <otherClassName> get<roleName; format="cap">()
+   public <other.clazz.name> get<role.name; format="cap">()
    {
-      return this.<roleName>.getValue();
+      return this.<role.name>.getValue();
    }
 <endif>
 >>
 
-setMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
-   public <myClassName> set<roleName; format="cap">(<otherClassName> value)
+setMethod(role, other) ::= <<
+   public <role.clazz.name> set<role.name; format="cap">(<other.clazz.name> value)
    {
-      if (value != this.<roleName>.getValue())
+      if (value != this.<role.name>.getValue())
       {
-         this.<roleName>.setValue(value);
+         this.<role.name>.setValue(value);
       }
       return this;
    }
 >>
 
-withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
-   public <myClassName> with<roleName; format="cap">(<otherClassName> value)
+withItem(role, other) ::= <<
+   public <role.clazz.name> with<role.name; format="cap">(<other.clazz.name> value)
    {
-      if (!this.<roleName>.contains(value))
+      if (!this.<role.name>.contains(value))
       {
-         this.<roleName>.add(value);
+         this.<role.name>.add(value);
       }
       return this;
    }
 >>
 
-withoutItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
-   public <myClassName> without<roleName; format="cap">(<otherClassName> value)
+withoutItem(role, other) ::= <<
+   public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name> value)
    {
-      this.<roleName>.remove(value);
+      this.<role.name>.remove(value);
       return this;
    }
 >>
 
 // --------------- Additional Templates ---------------
 
-propertyMethod(roleName, otherClassName) ::= <<
-   public ObjectProperty\<<otherClassName>\> <roleName>Property()
+propertyMethod(role, other) ::= <<
+   public ObjectProperty\<<other.clazz.name>\> <role.name>Property()
    {
-      return this.<roleName>;
+      return this.<role.name>;
    }
 >>
 
-initMethod(roleName, toMany, myClassName, otherClassName, otherRoleName, otherToMany) ::= <<
-<if(toMany)>
-   private SimpleListProperty\<<otherClassName>\> _init<roleName; format="cap">()
+initMethod(role, other) ::= <<
+<if(role.toMany)>
+   private SimpleListProperty\<<other.clazz.name>\> _init<role.name; format="cap">()
    {
-      final SimpleListProperty\<<otherClassName>\> result = new SimpleListProperty(javafx.collections.FXCollections.observableArrayList());
-      result.addListener((javafx.collections.ListChangeListener\<? super <otherClassName>\>) change -> {
+      final SimpleListProperty\<<other.clazz.name>\> result = new SimpleListProperty(javafx.collections.FXCollections.observableArrayList());
+      result.addListener((javafx.collections.ListChangeListener\<? super <other.clazz.name>\>) change -> {
          while (change.next())
          {
-            for (final <otherClassName> value : change.getRemoved())
+            for (final <other.clazz.name> value : change.getRemoved())
             {
-               value.<withoutThis(otherToMany, otherRoleName)>;
-               this.firePropertyChange("<roleName>", value, null);
+               value.<withoutThis(other)>;
+               this.firePropertyChange("<role.name>", value, null);
             }
-            for (final <otherClassName> value : change.getAddedSubList())
+            for (final <other.clazz.name> value : change.getAddedSubList())
             {
-               value.<prefix(otherToMany)><otherRoleName; format="cap">(this);
-               this.firePropertyChange("<roleName>", null, value);
+               value.<withThis(other)>;
+               this.firePropertyChange("<role.name>", null, value);
             }
          }
       });
       return result;
    }
 <else>
-   private ObjectProperty\<<otherClassName>\> _init<roleName; format="cap">()
+   private ObjectProperty\<<other.clazz.name>\> _init<role.name; format="cap">()
    {
-      final ObjectProperty\<<otherClassName>\> result = new SimpleObjectProperty\<>();
+      final ObjectProperty\<<other.clazz.name>\> result = new SimpleObjectProperty\<>();
       result.addListener((observable, oldValue, newValue) -> {
          if (oldValue != null)
          {
-            oldValue.<withoutThis(otherToMany, otherRoleName)>;
+            oldValue.<withoutThis(other)>;
          }
          if (newValue != null)
          {
-            newValue.<prefix(otherToMany)><otherRoleName; format="cap">(<myClassName>.this);
+            newValue.<withThis(other)>;
          }
-         this.firePropertyChange("<roleName>", oldValue, newValue);
+         this.firePropertyChange("<role.name>", oldValue, newValue);
       });
       return result;
    }

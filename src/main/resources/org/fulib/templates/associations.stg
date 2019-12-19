@@ -1,97 +1,104 @@
 // --------------- Declarations ---------------
 
-emptySetDecl(roleName, otherClassName, roleType) ::= <<
-   public static final <roleType> EMPTY_<roleName> = new <roleType>()
-   { @Override public boolean add(<otherClassName> value){ throw new UnsupportedOperationException("No direct add! Use xy.with<roleName; format="cap">(obj)"); }};
+emptySetDecl(role, other) ::= <<
+   public static final <role.collectionType> EMPTY_<role.name> = new <role.collectionType>()
+   { @Override public boolean add(<other.clazz.name> value){ throw new UnsupportedOperationException("No direct add! Use xy.with<role.name; format="cap">(obj)"); }};
 >>
 
-roleAttrDecl(roleName, roleType, toMany, otherClassName) ::= <<
-   private <roleType> <roleName> = null;
+roleAttrDecl(role, other) ::= <<
+<if(role.toMany)>
+   private <role.collectionType> <role.name> = null;
+<else>
+   private <other.clazz.name> <role.name> = null;
+<endif>
 >>
 
-propertyDecl(roleName) ::= <<
-   public static final String PROPERTY_<roleName> = "<roleName>";
+propertyDecl(role, other) ::= <<
+   public static final String PROPERTY_<role.name> = "<role.name>";
 >>
 
 // --------------- Simple Accessors ---------------
 
-getMethod(roleName, toMany, otherClassName, roleType) ::= <<
-   public <roleType> get<roleName; format="cap">()
+getMethod(role, other) ::= <<
+<if(role.toMany)>
+   public <role.collectionType> get<role.name; format="cap">()
    {
-      <if(toMany)>
-      return this.<roleName> != null ? this.<roleName> : EMPTY_<roleName>;
-      <else>
-      return this.<roleName>;
-      <endif>
+      return this.<role.name> != null ? this.<role.name> : EMPTY_<role.name>;
    }
+<else>
+   public <other.clazz.name> get<role.name; format="cap">()
+   {
+      return this.<role.name>;
+   }
+<endif>
 >>
 
-setMethod(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
-   public <myClassName> set<roleName; format="cap">(<otherClassName> value)
+setMethod(role, other) ::= <<
+   public <role.clazz.name> set<role.name; format="cap">(<other.clazz.name> value)
    {
-      if (this.<roleName> == value)
+      if (this.<role.name> == value)
       {
          return this;
       }
 
-      final <otherClassName> oldValue = this.<roleName>;
-<if(otherRoleName)>
-      if (this.<roleName> != null)
+      final <other.clazz.name> oldValue = this.<role.name>;
+<if(other.name)>
+      if (this.<role.name> != null)
       {
-         this.<roleName> = null;
-         oldValue.<withoutThis(otherToMany, otherRoleName)>;
+         this.<role.name> = null;
+         oldValue.<withoutThis(other)>;
       }
 <endif>
-      this.<roleName> = value;
-<if(otherRoleName)>
+      this.<role.name> = value;
+<if(other.name)>
       if (value != null)
       {
-         value.<prefix(otherToMany)><otherRoleName; format="cap">(this);
+         value.<withThis(other)>;
       }
 <endif>
-      this.firePropertyChange("<roleName>", oldValue, value);
+      this.firePropertyChange("<role.name>", oldValue, value);
       return this;
    }
 >>
 
 // --------------- With ---------------
 
-withItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany, roleType) ::= <<
-   public <myClassName> with<roleName; format="cap">(<otherClassName> value)
+withItem(role, other) ::= <<
+   public <role.clazz.name> with<role.name; format="cap">(<other.clazz.name> value)
    {
-      if (this.<roleName> == null)
+      if (this.<role.name> == null)
       {
-         this.<roleName> = new <roleType>();
+         this.<role.name> = new <role.collectionType>();
       }
-      if (!this.<roleName>.contains(value))
+      if (!this.<role.name>.contains(value))
       {
-         this.<roleName>.add(value);
-<if(otherRoleName)>
-         value.<prefix(otherToMany)><otherRoleName; format="cap">(this);
+         this.<role.name>.add(value);
+<if(other.name)>
+         value.<withThis(other)>;
 <endif>
-         this.firePropertyChange("<roleName>", null, value);
+         this.firePropertyChange("<role.name>", null, value);
       }
       return this;
    }
 >>
 
-withArray(myClassName, roleName, otherClassName) ::= <<
-   public <myClassName> with<roleName; format="cap">(<otherClassName>... value)
+withArray(role, other) ::= <<
+   public <role.clazz.name> with<role.name; format="cap">(<other.clazz.name>... value)
    {
-      for (final <otherClassName> item : value)
+      for (final <other.clazz.name> item : value)
       {
-         this.with<roleName; format="cap">(item);
+         this.with<role.name; format="cap">(item);
       }
       return this;
    }
 >>
 
-withColl(myClassName, roleName, otherClassName) ::= <<
-   public <myClassName> with<roleName; format="cap">(Collection\<? extends <otherClassName>\> value)
+withColl(role, other) ::= <<
+   public <role.clazz.name> with<role.name; format="cap">(Collection\<? extends <other.clazz.name>\> value)
    {
-      for (final <otherClassName> item : value)
+      for (final <other.clazz.name> item : value)
       {
-         this.with<roleName; format="cap">(item);
+         this.with<role.name; format="cap">(item);
       }
       return this;
    }
@@ -99,37 +106,37 @@ withColl(myClassName, roleName, otherClassName) ::= <<
 
 // --------------- Without ---------------
 
-withoutItem(myClassName, roleName, otherClassName, otherRoleName, otherToMany) ::= <<
-   public <myClassName> without<roleName; format="cap">(<otherClassName> value)
+withoutItem(role, other) ::= <<
+   public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name> value)
    {
-      if (this.<roleName> != null && this.<roleName>.remove(value))
+      if (this.<role.name> != null && this.<role.name>.remove(value))
       {
-<if(otherRoleName)>
-         value.<withoutThis(otherToMany, otherRoleName)>;
+<if(other.name)>
+         value.<withoutThis(other)>;
 <endif>
-         this.firePropertyChange("<roleName>", value, null);
+         this.firePropertyChange("<role.name>", value, null);
       }
       return this;
    }
 >>
 
-withoutArray(myClassName, roleName, otherClassName) ::= <<
-   public <myClassName> without<roleName; format="cap">(<otherClassName>... value)
+withoutArray(role, other) ::= <<
+   public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name>... value)
    {
-      for (final <otherClassName> item : value)
+      for (final <other.clazz.name> item : value)
       {
-         this.without<roleName; format="cap">(item);
+         this.without<role.name; format="cap">(item);
       }
       return this;
    }
 >>
 
-withoutColl(myClassName, roleName, otherClassName) ::= <<
-   public <myClassName> without<roleName; format="cap">(Collection\<? extends <otherClassName>\> value)
+withoutColl(role, other) ::= <<
+   public <role.clazz.name> without<role.name; format="cap">(Collection\<? extends <other.clazz.name>\> value)
    {
-      for (final <otherClassName> item : value)
+      for (final <other.clazz.name> item : value)
       {
-         this.without<roleName; format="cap">(item);
+         this.without<role.name; format="cap">(item);
       }
       return this;
    }
@@ -137,18 +144,18 @@ withoutColl(myClassName, roleName, otherClassName) ::= <<
 
 // --------------- Helpers ---------------
 
-withoutThis(toMany, otherRoleName) ::= <%
-<if(toMany)>
-   without<otherRoleName; format="cap">(this)
+withoutThis(other) ::= <%
+<if(other.toMany)>
+   without<other.name; format="cap">(this)
 <else>
-   set<otherRoleName; format="cap">(null)
+   set<other.name; format="cap">(null)
 <endif>
 %>
 
-prefix(toMany) ::= <%
-<if(toMany)>
-   with
+withThis(other) ::= <%
+<if(other.toMany)>
+   with<other.name; format="cap">(this)
 <else>
-   set
+   set<other.name; format="cap">(this)
 <endif>
 %>
