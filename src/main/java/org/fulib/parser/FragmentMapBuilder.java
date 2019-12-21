@@ -220,13 +220,27 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    private static void writeType(ReferenceTypeContext referenceTypeCtx, StringBuilder builder)
    {
-      builder.append(referenceTypeCtx.qualifiedName().getText());
+      final List<ReferenceTypePartContext> parts = referenceTypeCtx.referenceTypePart();
 
-      final List<TypeArgContext> typeArgCtxs = referenceTypeCtx.typeArg();
-      if (typeArgCtxs.isEmpty())
+      writeType(parts.get(0), builder);
+      for (int i = 1; i < parts.size(); i++)
+      {
+         builder.append('.');
+         writeType(parts.get(i), builder);
+      }
+   }
+
+   private static void writeType(ReferenceTypePartContext referenceTypePartCtx, StringBuilder builder)
+   {
+      builder.append(referenceTypePartCtx.IDENTIFIER().getText());
+
+      final TypeArgListContext typeArgListCtx = referenceTypePartCtx.typeArgList();
+      if (typeArgListCtx == null)
       {
          return;
       }
+
+      final List<TypeArgContext> typeArgCtxs = typeArgListCtx.typeArg();
 
       builder.append('<');
       writeType(typeArgCtxs.get(0), builder);

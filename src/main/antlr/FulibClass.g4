@@ -64,7 +64,9 @@ annotatedType: annotation* type;
 annotatedTypeList: annotatedType (COMMA annotatedType)*;
 
 primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
-referenceType: qualifiedName (LANGLE (typeArg (COMMA typeArg)*)? RANGLE)?;
+referenceType: referenceTypePart (DOT annotation* referenceTypePart)*;
+referenceTypePart: IDENTIFIER typeArgList?;
+typeArgList: LANGLE (typeArg (COMMA typeArg)*)? RANGLE;
 
 // --------------- Misc. ---------------
 
