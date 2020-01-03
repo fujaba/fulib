@@ -184,6 +184,7 @@ public class ClassModelBuilder
     *
     * @deprecated since 1.2; use {@link #setDefaultPropertyStyle(String) setDefaultPropertyStyle}({@link Type#JAVA_FX}) instead.
     */
+   @Deprecated
    public ClassModelBuilder setJavaFXPropertyStyle()
    {
       this.classModel.setDefaultPropertyStyle(Type.JAVA_FX);
