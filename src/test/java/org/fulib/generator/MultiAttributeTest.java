@@ -29,7 +29,7 @@ public class MultiAttributeTest
 
    protected void configureModel(ClassModelBuilder mb)
    {
-      // hook for JavaFXMultiAttributeTest
+      mb.setDefaultPropertyStyle(Type.POJO);
    }
 
    @Test

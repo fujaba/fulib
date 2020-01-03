@@ -4,7 +4,7 @@ import org.fulib.Fulib;
 import org.fulib.builder.Type;
 import org.fulib.classmodel.ClassModel;
 
-public class JavaFXAttributeTest extends AttributeTest
+public class JavaFXAttributeTest extends BeanAttributeTest
 {
    @Override
    protected String getTargetFolder()
