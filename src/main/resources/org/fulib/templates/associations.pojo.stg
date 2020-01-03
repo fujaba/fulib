@@ -1,13 +1,17 @@
+collectionType(role, other) ::= <%
+<other.clazz.name; format={<role.collectionType>}>
+%>
+
 // --------------- Declarations ---------------
 
 emptySetDecl(role, other) ::= <<
-   public static final <role.collectionType> EMPTY_<role.name> = new <role.collectionType>()
+   public static final <collectionType(role, other)> EMPTY_<role.name> = new <collectionType(role, other)>()
    { @Override public boolean add(<other.clazz.name> value){ throw new UnsupportedOperationException("No direct add! Use xy.with<role.name; format="cap">(obj)"); }};
 >>
 
 roleAttrDecl(role, other) ::= <<
 <if(role.toMany)>
-   private <role.collectionType> <role.name> = null;
+   private <collectionType(role, other)> <role.name> = null;
 <else>
    private <other.clazz.name> <role.name> = null;
 <endif>
@@ -21,7 +25,7 @@ propertyDecl(role, other) ::= <<
 
 getMethod(role, other) ::= <<
 <if(role.toMany)>
-   public <role.collectionType> get<role.name; format="cap">()
+   public <collectionType(role, other)> get<role.name; format="cap">()
    {
       return this.<role.name> != null ? this.<role.name> : EMPTY_<role.name>;
    }
@@ -67,7 +71,7 @@ withItem(role, other) ::= <<
    {
       if (this.<role.name> == null)
       {
-         this.<role.name> = new <role.collectionType>();
+         this.<role.name> = new <collectionType(role, other)>();
       }
       if (!this.<role.name>.contains(value))
       {
