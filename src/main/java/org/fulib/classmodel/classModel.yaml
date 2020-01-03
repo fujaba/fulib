@@ -1,5 +1,6 @@
 - c1: 	ClassModel
   classes: 	classModel2 	clazz3 	attribute4 	assocRole5 	fMethod6 	fileFragmentMap7 	codeFragment8 	
+  defaultCollectionType: 	"java.util.ArrayList<%s>"
   defaultPropertyStyle: 	Bean
   defaultRoleType: 	"java.util.ArrayList<%s>"
   mainJavaDir: 	"src/main/java"
@@ -101,7 +102,7 @@
   aggregation: 	false
   cardinality: 	42
   clazz: 	classModel2
-  collectionType: 	"java.util.ArrayList<Clazz>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	classes
   other: 	model18
@@ -149,7 +150,7 @@
   aggregation: 	false
   cardinality: 	1
   clazz: 	clazz3
-  collectionType: 	"java.util.ArrayList<ClassModel>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	model
   other: 	classes13
@@ -160,7 +161,7 @@
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz3
-  collectionType: 	"java.util.ArrayList<Attribute>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	attributes
   other: 	clazz30
@@ -171,7 +172,7 @@
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz3
-  collectionType: 	"java.util.ArrayList<AssocRole>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	roles
   other: 	clazz37
@@ -182,7 +183,7 @@
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz3
-  collectionType: 	"java.util.ArrayList<FMethod>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	methods
   other: 	clazz43
@@ -193,7 +194,7 @@
   aggregation: 	false
   cardinality: 	1
   clazz: 	clazz3
-  collectionType: 	"java.util.ArrayList<Clazz>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	superClass
   other: 	subClasses23
@@ -204,7 +205,7 @@
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz3
-  collectionType: 	"java.util.ArrayList<Clazz>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	subClasses
   other: 	superClass22
@@ -269,7 +270,7 @@
   aggregation: 	false
   cardinality: 	1
   clazz: 	attribute4
-  collectionType: 	"java.util.ArrayList<Clazz>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	clazz
   other: 	attributes19
@@ -334,7 +335,7 @@
   aggregation: 	false
   cardinality: 	1
   clazz: 	assocRole5
-  collectionType: 	"java.util.ArrayList<Clazz>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	clazz
   other: 	roles20
@@ -345,7 +346,7 @@
   aggregation: 	false
   cardinality: 	1
   clazz: 	assocRole5
-  collectionType: 	"java.util.ArrayList<AssocRole>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	other
   other: 	other39
@@ -356,7 +357,7 @@
   aggregation: 	false
   cardinality: 	1
   clazz: 	assocRole5
-  collectionType: 	"java.util.ArrayList<AssocRole>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	other
   other: 	other38
@@ -394,7 +395,7 @@
   aggregation: 	false
   cardinality: 	1
   clazz: 	fMethod6
-  collectionType: 	"java.util.ArrayList<Clazz>"
+  collectionType: 	"java.util.ArrayList<%s>"
   modified: 	false
   name: 	clazz
   other: 	methods21
