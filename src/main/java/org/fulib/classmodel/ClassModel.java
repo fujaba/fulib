@@ -76,6 +76,24 @@ public class ClassModel
       return this;
    }
 
+//   public String getDefaultCollectionInterfaceName()
+//   {
+//      return deriveCollectionInterfaceName(this.getDefaultCollectionType());
+//   }
+
+   static String deriveCollectionInterfaceName(String collectionType)
+   {
+      if (collectionType.contains("List"))
+      {
+         return "List";
+      }
+      else if (collectionType.contains("Set"))
+      {
+         return "Set";
+      }
+      return "Collection";
+   }
+
    /**
     * @return the default collection type
     *

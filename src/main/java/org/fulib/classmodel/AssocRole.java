@@ -141,6 +141,17 @@ public class AssocRole
    }
 
    /**
+    * @return the name of the collection interface derived from {@link #getCollectionType()},
+    * i.e. either "List", "Set" or "Collection".
+    *
+    * @since 1.2
+    */
+   public String getCollectionInterfaceName()
+   {
+      return ClassModel.deriveCollectionInterfaceName(this.getCollectionType());
+   }
+
+   /**
     * @return the collection type
     *
     * @since 1.2
