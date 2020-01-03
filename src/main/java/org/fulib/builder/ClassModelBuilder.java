@@ -93,7 +93,7 @@ public class ClassModelBuilder
       final ClassModel classModel = new ClassModel();
       classModel.setPackageName(packagename);
       classModel.setMainJavaDir(sourceFolder);
-      classModel.setDefaultPropertyStyle(Type.POJO);
+      classModel.setDefaultPropertyStyle(Type.BEAN);
       classModel.setDefaultRoleType(Type.COLLECTION_ARRAY_LIST);
 
       this.setClassModel(classModel);

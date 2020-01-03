@@ -132,9 +132,7 @@ public class ClassModelManager implements IModelManager
    {
       this.setModelEventManager(classModelEventManager);
 
-      this.classModel = new ClassModel()
-            .setDefaultPropertyStyle(POJO)
-            .setDefaultRoleType(COLLECTION_ARRAY_LIST);
+      this.classModel = new ClassModel().setDefaultPropertyStyle(BEAN).setDefaultRoleType(COLLECTION_ARRAY_LIST);
    }
 
    // =============== Properties ===============

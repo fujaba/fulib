@@ -24,5 +24,6 @@ public class Type
    // property styles
    // for attributes and associations
    public static final String POJO    = "POJO";
+   public static final String BEAN    = "Bean";
    public static final String JAVA_FX = "JavaFX";
 }

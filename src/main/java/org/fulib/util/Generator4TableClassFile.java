@@ -142,7 +142,7 @@ public class Generator4TableClassFile extends AbstractGenerator
          fragmentMap
             .add(FileFragmentMap.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
 
-         attrTemplate = group.getInstanceOf("simpleAttrSet").add("attr", attr);
+         attrTemplate = group.getInstanceOf("attrSet").add("attr", attr);
          result = attrTemplate.render();
 
          fragmentMap.add(
