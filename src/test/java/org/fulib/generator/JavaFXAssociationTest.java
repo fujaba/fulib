@@ -1,6 +1,7 @@
 package org.fulib.generator;
 
 import org.fulib.Fulib;
+import org.fulib.builder.Type;
 import org.fulib.classmodel.ClassModel;
 
 import java.beans.PropertyChangeEvent;
@@ -25,7 +26,7 @@ public class JavaFXAssociationTest extends AssociationTest
    @Override
    protected ClassModel getClassModel(String srcFolder, String packageName)
    {
-      return this.getClassModel(Fulib.classModelBuilder(packageName, srcFolder).setJavaFXPropertyStyle());
+      return this.getClassModel(Fulib.classModelBuilder(packageName, srcFolder).setDefaultPropertyStyle(Type.JAVA_FX));
    }
 
    @Override

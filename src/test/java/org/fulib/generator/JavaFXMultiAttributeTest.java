@@ -1,6 +1,7 @@
 package org.fulib.generator;
 
 import org.fulib.builder.ClassModelBuilder;
+import org.fulib.builder.Type;
 
 public class JavaFXMultiAttributeTest extends MultiAttributeTest
 {
@@ -13,6 +14,6 @@ public class JavaFXMultiAttributeTest extends MultiAttributeTest
    @Override
    protected void configureModel(ClassModelBuilder mb)
    {
-      mb.setJavaFXPropertyStyle();
+      mb.setDefaultPropertyStyle(Type.JAVA_FX);
    }
 }

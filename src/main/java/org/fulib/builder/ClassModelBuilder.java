@@ -146,7 +146,7 @@ public class ClassModelBuilder
    {
       // TODO use implementation from AssociationBuilder
 
-      if ( ! Collection.class.isAssignableFrom(collectionClass))
+      if (!Collection.class.isAssignableFrom(collectionClass))
       {
          throw new IllegalArgumentException("class is no collection");
       }
@@ -161,6 +161,29 @@ public class ClassModelBuilder
       return this;
    }
 
+   /**
+    * Sets the default property style for the class model being built.
+    *
+    * @param propertyStyle
+    *    the property style
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @since 1.2
+    */
+   public ClassModelBuilder setDefaultPropertyStyle(String propertyStyle)
+   {
+      this.classModel.setDefaultPropertyStyle(propertyStyle);
+      return this;
+   }
+
+   /**
+    * Sets the default property style for the class model being built to "JavaFX".
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @deprecated since 1.2; use {@link #setDefaultPropertyStyle(String) setDefaultPropertyStyle}({@link Type#JAVA_FX}) instead.
+    */
    public ClassModelBuilder setJavaFXPropertyStyle()
    {
       this.classModel.setDefaultPropertyStyle(Type.JAVA_FX);
