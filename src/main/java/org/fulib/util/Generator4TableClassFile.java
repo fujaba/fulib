@@ -109,7 +109,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
    private void generateStandardAttributes(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("org/fulib/templates/attributes.stg");
+      STGroup group = this.getSTGroup("org/fulib/templates/attributes.pojo.stg");
       ST attrTemplate;
       String result;
 

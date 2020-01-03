@@ -1,3 +1,5 @@
+import "attributes.pojo.stg"
+
 propertyType(attr) ::= <%
 <if(attr.collection)>
    ListProperty\<<attr.boxType>>

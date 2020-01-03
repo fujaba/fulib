@@ -204,16 +204,8 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateAttribute(FileFragmentMap fragmentMap, Attribute attr)
    {
-      final STGroup group;
-      if (attr.isJavaFX())
-      {
-         group = this.getSTGroup("org/fulib/templates/JavaFXattributes.stg");
-         group.importTemplates(this.getSTGroup("org/fulib/templates/attributes.stg"));
-      }
-      else
-      {
-         group = this.getSTGroup("org/fulib/templates/attributes.stg");
-      }
+      final STGroup group = this
+         .getSTGroup("org/fulib/templates/attributes." + attr.getPropertyStyle().toLowerCase() + ".stg");
 
       final String baseType = attr.getType();
       final String boxType = attr.getBoxType();
@@ -311,17 +303,9 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateAssociation(FileFragmentMap fragmentMap, AssocRole role)
    {
-      final STGroup group;
+      final STGroup group = this
+         .getSTGroup("org/fulib/templates/associations." + role.getPropertyStyle().toLowerCase() + ".stg");
       final boolean javaFX = role.isJavaFX();
-      if (javaFX)
-      {
-         group = this.getSTGroup("org/fulib/templates/JavaFXassociations.stg");
-         group.importTemplates(this.getSTGroup("org/fulib/templates/associations.stg"));
-      }
-      else
-      {
-         group = this.getSTGroup("org/fulib/templates/associations.stg");
-      }
 
       final String roleName = role.getName();
       final String capRoleName = StrUtil.cap(roleName);
