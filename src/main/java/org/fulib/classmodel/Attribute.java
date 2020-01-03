@@ -4,6 +4,7 @@ import org.fulib.builder.Type;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -153,6 +154,11 @@ public class Attribute
       this.collectionType = value;
       this.firePropertyChange(PROPERTY_collectionType, oldValue, value);
       return this;
+   }
+
+   public Attribute setCollectionClass(@SuppressWarnings("rawtypes") Class<? extends Collection> value)
+   {
+      return this.setCollectionType(ClassModel.deriveCollectionType(value));
    }
 
    public boolean isCollection()

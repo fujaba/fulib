@@ -4,6 +4,7 @@ import org.fulib.builder.Type;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -168,6 +169,19 @@ public class AssocRole
       this.collectionType = value;
       this.firePropertyChange(PROPERTY_collectionType, oldValue, value);
       return this;
+   }
+
+   /**
+    * @param value
+    *    the new collection class
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @since 1.2
+    */
+   public AssocRole setCollectionClass(@SuppressWarnings("rawtypes") Class<? extends Collection> value)
+   {
+      return this.setCollectionType(ClassModel.deriveCollectionType(value));
    }
 
    /**

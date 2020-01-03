@@ -3,9 +3,7 @@ package org.fulib.builder;
 import org.fulib.Fulib;
 import org.fulib.classmodel.AssocRole;
 
-import java.lang.reflect.TypeVariable;
 import java.util.Collection;
-import java.util.Objects;
 
 /**
  * ClassModelbuilder is used to create fulib class models that are input for
@@ -53,26 +51,17 @@ public class AssociationBuilder
       return this;
    }
 
-   public AssociationBuilder setSourceRoleCollection(Class<?> collectionClass)
+   public AssociationBuilder setSourceRoleCollection(
+      @SuppressWarnings("rawtypes") Class<? extends Collection> collectionClass)
    {
-      this.srcRole.setCollectionType(deriveRoleType(collectionClass));
+      this.srcRole.setCollectionClass(collectionClass);
       return this;
    }
 
-   public AssociationBuilder setTargetRoleCollection(Class<?> collectionClass)
+   public AssociationBuilder setTargetRoleCollection(
+      @SuppressWarnings("rawtypes") Class<? extends Collection> collectionClass)
    {
-      this.srcRole.getOther().setCollectionType(deriveRoleType(collectionClass));
+      this.srcRole.getOther().setCollectionClass(collectionClass);
       return this;
-   }
-
-   private static String deriveRoleType(Class<?> collectionClass)
-   {
-      if (!Collection.class.isAssignableFrom(collectionClass))
-      {
-         throw new IllegalArgumentException("class is not a sub-type of java.util.Collection");
-      }
-
-      final String roleType = collectionClass.getName();
-      return collectionClass.getTypeParameters().length == 1 ? roleType + "<%s>" : roleType;
    }
 }

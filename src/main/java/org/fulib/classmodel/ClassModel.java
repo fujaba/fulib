@@ -108,6 +108,27 @@ public class ClassModel
    }
 
    /**
+    * @return the default collection class
+    *
+    * @since 1.2
+    */
+   public ClassModel setDefaultCollectionClass(@SuppressWarnings("rawtypes") Class<? extends Collection> value)
+   {
+      return this.setDefaultCollectionType(deriveCollectionType(value));
+   }
+
+   static String deriveCollectionType(@SuppressWarnings("rawtypes") Class<? extends Collection> value)
+   {
+      if (!Collection.class.isAssignableFrom(value))
+      {
+         throw new IllegalArgumentException("class is not a sub-type of java.util.Collection");
+      }
+
+      final String roleType = value.getName();
+      return value.getTypeParameters().length == 1 ? roleType + "<%s>" : roleType;
+   }
+
+   /**
     * @return the default collection type
     *
     * @deprecated since 1.2; use {@link #getDefaultCollectionType()} instead

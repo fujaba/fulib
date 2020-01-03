@@ -142,22 +142,10 @@ public class ClassModelBuilder
     *
     * @return this instance, to allow call chaining
     */
-   public ClassModelBuilder setDefaultCollectionClass(Class<?> collectionClass)
+   public ClassModelBuilder setDefaultCollectionClass(
+      @SuppressWarnings("rawtypes") Class<? extends Collection> collectionClass)
    {
-      // TODO use implementation from AssociationBuilder
-
-      if (!Collection.class.isAssignableFrom(collectionClass))
-      {
-         throw new IllegalArgumentException("class is no collection");
-      }
-
-      String defaultRoleType = collectionClass.getName();
-      TypeVariable<?>[] typeParameters = collectionClass.getTypeParameters();
-      if (typeParameters.length == 1)
-      {
-         defaultRoleType += "<%s>";
-      }
-      this.classModel.setDefaultCollectionType(defaultRoleType);
+      this.classModel.setDefaultCollectionClass(collectionClass);
       return this;
    }
 
