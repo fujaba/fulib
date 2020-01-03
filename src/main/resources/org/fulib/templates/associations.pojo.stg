@@ -4,11 +4,6 @@ collectionType(role, other) ::= <%
 
 // --------------- Declarations ---------------
 
-emptySetDecl(role, other) ::= <<
-   public static final <collectionType(role, other)> EMPTY_<role.name> = new <collectionType(role, other)>()
-   { @Override public boolean add(<other.clazz.name> value){ throw new UnsupportedOperationException("No direct add! Use xy.with<role.name; format="cap">(obj)"); }};
->>
-
 roleAttrDecl(role, other) ::= <<
 <if(role.toMany)>
    private <collectionType(role, other)> <role.name> = null;
@@ -27,7 +22,7 @@ getMethod(role, other) ::= <<
 <if(role.toMany)>
    public <collectionType(role, other)> get<role.name; format="cap">()
    {
-      return this.<role.name> != null ? this.<role.name> : EMPTY_<role.name>;
+      return this.<role.name> != null ? this.<role.name> : new <collectionType(role, other)>();
    }
 <else>
    public <other.clazz.name> get<role.name; format="cap">()

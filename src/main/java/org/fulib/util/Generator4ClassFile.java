@@ -315,19 +315,6 @@ public class Generator4ClassFile extends AbstractGenerator
       final AssocRole other = role.getOther();
       final String otherClassName = other.getClazz().getName();
 
-      // provide empty_set in this class
-      if (toMany && !javaFX)
-      {
-         // add empty set decl
-         final ST emptySetDecl = group.getInstanceOf("emptySetDecl").add("role", role).add("other", other);
-         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":EMPTY_" + roleName, emptySetDecl.render(), 3, modified);
-      }
-      else
-      {
-         // remove empty set decl
-         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":EMPTY_" + roleName, "", 3, true);
-      }
-
       final ST propertyDecl = group.getInstanceOf("propertyDecl").add("role", role).add("other", other);
       fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":PROPERTY_" + roleName, propertyDecl.render(), 2, modified);
 
