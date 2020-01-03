@@ -1,6 +1,6 @@
 - c1: 	ClassModel
   classes: 	classModel2 	clazz3 	attribute4 	assocRole5 	fMethod6 	fileFragmentMap7 	codeFragment8 	
-  defaultPropertyStyle: 	POJO
+  defaultPropertyStyle: 	Bean
   defaultRoleType: 	"java.util.ArrayList<%s>"
   mainJavaDir: 	"src/main/java"
   packageName: 	org.fulib.classmodel
@@ -11,7 +11,7 @@
   model: 	c1
   modified: 	false
   name: 	ClassModel
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roles: 	classes13 	
 
 - clazz3: 	Clazz
@@ -19,7 +19,7 @@
   model: 	c1
   modified: 	false
   name: 	Clazz
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roles: 	model18 	attributes19 	roles20 	methods21 	superClass22 	subClasses23 	
 
 - attribute4: 	Clazz
@@ -27,7 +27,7 @@
   model: 	c1
   modified: 	false
   name: 	Attribute
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roles: 	clazz30 	
 
 - assocRole5: 	Clazz
@@ -35,7 +35,7 @@
   model: 	c1
   modified: 	false
   name: 	AssocRole
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roles: 	clazz37 	other38 	other39 	
 
 - fMethod6: 	Clazz
@@ -43,7 +43,7 @@
   model: 	c1
   modified: 	false
   name: 	FMethod
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roles: 	clazz43 	
 
 - fileFragmentMap7: 	Clazz
@@ -51,42 +51,50 @@
   model: 	c1
   modified: 	false
   name: 	FileFragmentMap
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
 
 - codeFragment8: 	Clazz
   attributes: 	key45 	text46 	
   model: 	c1
   modified: 	false
   name: 	CodeFragment
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
 
 - packageName9: 	Attribute
+  boxType: 	String
   clazz: 	classModel2
+  concreteType: 	String
   modified: 	false
   name: 	packageName
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - mainJavaDir10: 	Attribute
+  boxType: 	String
   clazz: 	classModel2
+  concreteType: 	String
   modified: 	false
   name: 	mainJavaDir
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - defaultRoleType11: 	Attribute
+  boxType: 	String
   clazz: 	classModel2
+  concreteType: 	String
   modified: 	false
   name: 	defaultRoleType
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - defaultPropertyStyle12: 	Attribute
+  boxType: 	String
   clazz: 	classModel2
+  concreteType: 	String
   initialization: 	"\"POJO\""
   modified: 	false
   name: 	defaultPropertyStyle
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - classes13: 	AssocRole
@@ -97,36 +105,44 @@
   modified: 	false
   name: 	classes
   other: 	model18
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - name14: 	Attribute
+  boxType: 	String
   clazz: 	clazz3
+  concreteType: 	String
   modified: 	false
   name: 	name
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - propertyStyle15: 	Attribute
+  boxType: 	String
   clazz: 	clazz3
+  concreteType: 	String
   modified: 	false
   name: 	propertyStyle
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - modified16: 	Attribute
+  boxType: 	Boolean
   clazz: 	clazz3
+  concreteType: 	boolean
   modified: 	false
   name: 	modified
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	boolean
 
 - importList17: 	Attribute
+  boxType: 	"java.util.LinkedHashSet<String>"
   clazz: 	clazz3
+  concreteType: 	"java.util.LinkedHashSet<String>"
   initialization: 	"new java.util.LinkedHashSet<>()"
   modified: 	false
   name: 	importList
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	"java.util.LinkedHashSet<String>"
 
 - model18: 	AssocRole
@@ -137,7 +153,7 @@
   modified: 	false
   name: 	model
   other: 	classes13
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - attributes19: 	AssocRole
@@ -148,7 +164,7 @@
   modified: 	false
   name: 	attributes
   other: 	clazz30
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - roles20: 	AssocRole
@@ -159,7 +175,7 @@
   modified: 	false
   name: 	roles
   other: 	clazz37
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - methods21: 	AssocRole
@@ -170,7 +186,7 @@
   modified: 	false
   name: 	methods
   other: 	clazz43
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - superClass22: 	AssocRole
@@ -181,7 +197,7 @@
   modified: 	false
   name: 	superClass
   other: 	subClasses23
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - subClasses23: 	AssocRole
@@ -192,49 +208,61 @@
   modified: 	false
   name: 	subClasses
   other: 	superClass22
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - name24: 	Attribute
+  boxType: 	String
   clazz: 	attribute4
+  concreteType: 	String
   modified: 	false
   name: 	name
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - type25: 	Attribute
+  boxType: 	String
   clazz: 	attribute4
+  concreteType: 	String
   modified: 	false
   name: 	type
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - collectionType26: 	Attribute
+  boxType: 	String
   clazz: 	attribute4
+  concreteType: 	String
   modified: 	false
   name: 	collectionType
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - initialization27: 	Attribute
+  boxType: 	String
   clazz: 	attribute4
+  concreteType: 	String
   modified: 	false
   name: 	initialization
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - propertyStyle28: 	Attribute
+  boxType: 	String
   clazz: 	attribute4
+  concreteType: 	String
   modified: 	false
   name: 	propertyStyle
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - modified29: 	Attribute
+  boxType: 	Boolean
   clazz: 	attribute4
+  concreteType: 	boolean
   modified: 	false
   name: 	modified
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	boolean
 
 - clazz30: 	AssocRole
@@ -245,49 +273,61 @@
   modified: 	false
   name: 	clazz
   other: 	attributes19
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - name31: 	Attribute
+  boxType: 	String
   clazz: 	assocRole5
+  concreteType: 	String
   modified: 	false
   name: 	name
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - cardinality32: 	Attribute
+  boxType: 	Integer
   clazz: 	assocRole5
+  concreteType: 	int
   modified: 	false
   name: 	cardinality
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	int
 
 - roleType33: 	Attribute
+  boxType: 	String
   clazz: 	assocRole5
+  concreteType: 	String
   modified: 	false
   name: 	roleType
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - aggregation34: 	Attribute
+  boxType: 	Boolean
   clazz: 	assocRole5
+  concreteType: 	boolean
   modified: 	false
   name: 	aggregation
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	boolean
 
 - propertyStyle35: 	Attribute
+  boxType: 	String
   clazz: 	assocRole5
+  concreteType: 	String
   modified: 	false
   name: 	propertyStyle
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - modified36: 	Attribute
+  boxType: 	Boolean
   clazz: 	assocRole5
+  concreteType: 	boolean
   modified: 	false
   name: 	modified
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	boolean
 
 - clazz37: 	AssocRole
@@ -298,7 +338,7 @@
   modified: 	false
   name: 	clazz
   other: 	roles20
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - other38: 	AssocRole
@@ -309,7 +349,7 @@
   modified: 	false
   name: 	other
   other: 	other39
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - other39: 	AssocRole
@@ -320,28 +360,34 @@
   modified: 	false
   name: 	other
   other: 	other38
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - methodBody40: 	Attribute
+  boxType: 	String
   clazz: 	fMethod6
+  concreteType: 	String
   modified: 	false
   name: 	methodBody
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - modified41: 	Attribute
+  boxType: 	Boolean
   clazz: 	fMethod6
+  concreteType: 	boolean
   modified: 	false
   name: 	modified
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	boolean
 
 - annotations42: 	Attribute
+  boxType: 	String
   clazz: 	fMethod6
+  concreteType: 	String
   modified: 	false
   name: 	annotations
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - clazz43: 	AssocRole
@@ -352,27 +398,33 @@
   modified: 	false
   name: 	clazz
   other: 	methods21
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - fileName44: 	Attribute
+  boxType: 	String
   clazz: 	fileFragmentMap7
+  concreteType: 	String
   modified: 	false
   name: 	fileName
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - key45: 	Attribute
+  boxType: 	String
   clazz: 	codeFragment8
+  concreteType: 	String
   modified: 	false
   name: 	key
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 
 - text46: 	Attribute
+  boxType: 	String
   clazz: 	codeFragment8
+  concreteType: 	String
   modified: 	false
   name: 	text
-  propertyStyle: 	POJO
+  propertyStyle: 	Bean
   type: 	String
 

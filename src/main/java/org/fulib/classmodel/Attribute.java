@@ -58,7 +58,7 @@ public class Attribute
       {
          value.withAttributes(this);
       }
-      this.firePropertyChange("clazz", oldValue, value);
+      this.firePropertyChange(PROPERTY_clazz, oldValue, value);
       return this;
    }
 
@@ -76,7 +76,7 @@ public class Attribute
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange("name", oldValue, value);
+      this.firePropertyChange(PROPERTY_name, oldValue, value);
       return this;
    }
 
@@ -94,7 +94,7 @@ public class Attribute
 
       final String oldValue = this.type;
       this.type = value;
-      this.firePropertyChange("type", oldValue, value);
+      this.firePropertyChange(PROPERTY_type, oldValue, value);
       return this;
    }
 
@@ -151,7 +151,7 @@ public class Attribute
 
       final String oldValue = this.collectionType;
       this.collectionType = value;
-      this.firePropertyChange("collectionType", oldValue, value);
+      this.firePropertyChange(PROPERTY_collectionType, oldValue, value);
       return this;
    }
 
@@ -180,7 +180,7 @@ public class Attribute
 
       final String oldValue = this.initialization;
       this.initialization = value;
-      this.firePropertyChange("initialization", oldValue, value);
+      this.firePropertyChange(PROPERTY_initialization, oldValue, value);
       return this;
    }
 
@@ -198,7 +198,7 @@ public class Attribute
 
       final String oldValue = this.propertyStyle;
       this.propertyStyle = value;
-      this.firePropertyChange("propertyStyle", oldValue, value);
+      this.firePropertyChange(PROPERTY_propertyStyle, oldValue, value);
       return this;
    }
 
@@ -221,7 +221,7 @@ public class Attribute
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange("modified", oldValue, value);
+      this.firePropertyChange(PROPERTY_modified, oldValue, value);
       return this;
    }
 

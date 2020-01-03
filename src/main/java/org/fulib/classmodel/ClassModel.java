@@ -52,7 +52,7 @@ public class ClassModel
 
       final String oldValue = this.mainJavaDir;
       this.mainJavaDir = value;
-      this.firePropertyChange("mainJavaDir", oldValue, value);
+      this.firePropertyChange(PROPERTY_mainJavaDir, oldValue, value);
       return this;
    }
 
@@ -70,7 +70,7 @@ public class ClassModel
 
       final String oldValue = this.packageName;
       this.packageName = value;
-      this.firePropertyChange("packageName", oldValue, value);
+      this.firePropertyChange(PROPERTY_packageName, oldValue, value);
       return this;
    }
 
@@ -88,7 +88,7 @@ public class ClassModel
 
       final String oldValue = this.defaultRoleType;
       this.defaultRoleType = value;
-      this.firePropertyChange("defaultRoleType", oldValue, value);
+      this.firePropertyChange(PROPERTY_defaultRoleType, oldValue, value);
       return this;
    }
 
@@ -106,7 +106,7 @@ public class ClassModel
 
       final String oldValue = this.defaultPropertyStyle;
       this.defaultPropertyStyle = value;
-      this.firePropertyChange("defaultPropertyStyle", oldValue, value);
+      this.firePropertyChange(PROPERTY_defaultPropertyStyle, oldValue, value);
       return this;
    }
 
@@ -166,7 +166,7 @@ public class ClassModel
       {
          this.classes.add(value);
          value.setModel(this);
-         this.firePropertyChange("classes", null, value);
+         this.firePropertyChange(PROPERTY_classes, null, value);
       }
       return this;
    }
@@ -219,7 +219,7 @@ public class ClassModel
       if (this.classes != null && this.classes.remove(value))
       {
          value.setModel(null);
-         this.firePropertyChange("classes", value, null);
+         this.firePropertyChange(PROPERTY_classes, value, null);
       }
       return this;
    }

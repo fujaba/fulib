@@ -68,7 +68,7 @@ public class FileFragmentMap
 
       final String oldValue = this.fileName;
       this.fileName = value;
-      this.firePropertyChange("fileName", oldValue, value);
+      this.firePropertyChange(PROPERTY_fileName, oldValue, value);
       return this;
    }
 

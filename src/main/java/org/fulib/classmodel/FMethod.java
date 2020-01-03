@@ -56,7 +56,7 @@ public class FMethod
       {
          value.withMethods(this);
       }
-      this.firePropertyChange("clazz", oldValue, value);
+      this.firePropertyChange(PROPERTY_clazz, oldValue, value);
       return this;
    }
 
@@ -155,7 +155,7 @@ public class FMethod
 
       final String oldValue = this.annotations;
       this.annotations = value;
-      this.firePropertyChange("annotations", oldValue, value);
+      this.firePropertyChange(PROPERTY_annotations, oldValue, value);
       return this;
    }
 
@@ -224,7 +224,7 @@ public class FMethod
 
       final String oldValue = this.methodBody;
       this.methodBody = value;
-      this.firePropertyChange("methodBody", oldValue, value);
+      this.firePropertyChange(PROPERTY_methodBody, oldValue, value);
       return this;
    }
 
@@ -242,7 +242,7 @@ public class FMethod
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange("modified", oldValue, value);
+      this.firePropertyChange(PROPERTY_modified, oldValue, value);
       return this;
    }
 

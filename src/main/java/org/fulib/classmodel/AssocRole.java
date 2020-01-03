@@ -60,7 +60,7 @@ public class AssocRole
       {
          value.withRoles(this);
       }
-      this.firePropertyChange("clazz", oldValue, value);
+      this.firePropertyChange(PROPERTY_clazz, oldValue, value);
       return this;
    }
 
@@ -87,7 +87,7 @@ public class AssocRole
       {
          value.setOther(this);
       }
-      this.firePropertyChange("other", oldValue, value);
+      this.firePropertyChange(PROPERTY_other, oldValue, value);
       return this;
    }
 
@@ -105,7 +105,7 @@ public class AssocRole
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange("name", oldValue, value);
+      this.firePropertyChange(PROPERTY_name, oldValue, value);
       return this;
    }
 
@@ -123,7 +123,7 @@ public class AssocRole
 
       final int oldValue = this.cardinality;
       this.cardinality = value;
-      this.firePropertyChange("cardinality", oldValue, value);
+      this.firePropertyChange(PROPERTY_cardinality, oldValue, value);
       return this;
    }
 
@@ -151,7 +151,7 @@ public class AssocRole
 
       final String oldValue = this.roleType;
       this.roleType = value;
-      this.firePropertyChange("roleType", oldValue, value);
+      this.firePropertyChange(PROPERTY_roleType, oldValue, value);
       return this;
    }
 
@@ -174,7 +174,7 @@ public class AssocRole
 
       final boolean oldValue = this.aggregation;
       this.aggregation = value;
-      this.firePropertyChange("aggregation", oldValue, value);
+      this.firePropertyChange(PROPERTY_aggregation, oldValue, value);
       return this;
    }
 
@@ -192,7 +192,7 @@ public class AssocRole
 
       final String oldValue = this.propertyStyle;
       this.propertyStyle = value;
-      this.firePropertyChange("propertyStyle", oldValue, value);
+      this.firePropertyChange(PROPERTY_propertyStyle, oldValue, value);
       return this;
    }
 
@@ -215,7 +215,7 @@ public class AssocRole
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange("modified", oldValue, value);
+      this.firePropertyChange(PROPERTY_modified, oldValue, value);
       return this;
    }
 

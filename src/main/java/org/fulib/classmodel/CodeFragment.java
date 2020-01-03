@@ -34,7 +34,7 @@ public class CodeFragment
 
       final String oldValue = this.key;
       this.key = value;
-      this.firePropertyChange("key", oldValue, value);
+      this.firePropertyChange(PROPERTY_key, oldValue, value);
       return this;
    }
 
@@ -52,7 +52,7 @@ public class CodeFragment
 
       final String oldValue = this.text;
       this.text = value;
-      this.firePropertyChange("text", oldValue, value);
+      this.firePropertyChange(PROPERTY_text, oldValue, value);
       return this;
    }
 
