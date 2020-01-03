@@ -44,6 +44,11 @@ public class ClassModelManager implements IModelManager
          this.clazz = clazz;
       }
 
+      public void imports(String qualifiedName)
+      {
+         ClassModelManager.this.addImport(this.clazz, qualifiedName);
+      }
+
       public void extend(Clazz superClazz)
       {
          ClassModelManager.this.extend(this.clazz, superClazz);
@@ -76,6 +81,9 @@ public class ClassModelManager implements IModelManager
    public static final String INIT       = "init";
 
    public static final String CLASS_NAME = "className";
+
+   public static final String IMPORT         = "import";
+   public static final String QUALIFIED_NAME = "qualifiedName";
 
    public static final String ASSOCIATE      = "associate";
    public static final String SRC_CLASS_NAME = "srcClassName";
@@ -286,6 +294,18 @@ public class ClassModelManager implements IModelManager
          e.put(EVENT_KEY, subClass.getName());
          e.put(SUB_CLASS, subClass.getName());
          e.put(SUPER_CLASS, superClass.getName());
+      });
+   }
+
+   public void addImport(Clazz clazz, String qualifiedName)
+   {
+      clazz.getImportList().add(qualifiedName);
+
+      this.event(e -> {
+         e.put(EVENT_TYPE, IMPORT);
+         e.put(EVENT_KEY, clazz.getName() + ":" + IMPORT + ":" + qualifiedName);
+         e.put(CLASS_NAME, clazz.getName());
+         e.put(QUALIFIED_NAME, qualifiedName);
       });
    }
 
@@ -650,6 +670,13 @@ public class ClassModelManager implements IModelManager
          Clazz subClass = this.haveClass(map.get(SUB_CLASS));
          Clazz superClass = this.haveClass(map.get(SUPER_CLASS));
          this.extend(subClass, superClass);
+      });
+
+      consumerMap.put(IMPORT, map -> {
+         final String className = map.get(CLASS_NAME);
+         final String qualifiedName = map.get(QUALIFIED_NAME);
+         final Clazz clazz = this.haveClass(className);
+         this.addImport(clazz, qualifiedName);
       });
 
       consumerMap.put(ATTRIBUTE, map -> {
