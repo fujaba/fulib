@@ -121,11 +121,23 @@ public class ClassModel
    {
       if (!Collection.class.isAssignableFrom(value))
       {
-         throw new IllegalArgumentException("class is not a sub-type of java.util.Collection");
+         throw new IllegalArgumentException(
+            "class '" + value.getName() + "' is not a sub-type of java.util.Collection");
       }
 
       final String roleType = value.getName();
-      return value.getTypeParameters().length == 1 ? roleType + "<%s>" : roleType;
+      final int typeParamCount = value.getTypeParameters().length;
+      switch (typeParamCount)
+      {
+      case 0:
+         return roleType;
+      case 1:
+         return roleType + "<%s>";
+      default:
+         throw new IllegalArgumentException(
+            "class '" + value.getName() + "' has too many type parameters (" + typeParamCount
+            + "), only 0 or 1 are supported");
+      }
    }
 
    /**
