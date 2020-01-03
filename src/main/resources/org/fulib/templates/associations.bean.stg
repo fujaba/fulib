@@ -37,7 +37,7 @@ withItem(role, other) ::= <<
    {
       if (this.<role.name> == null)
       {
-         this.<role.name> = new <collectionType(role, other)>();
+         this.<role.name> = new <collectionImpl(role, other)>();
       }
       if (!this.<role.name>.contains(value))
       {

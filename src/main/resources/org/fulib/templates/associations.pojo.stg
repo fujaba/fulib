@@ -1,12 +1,16 @@
-collectionType(role, other) ::= <%
+collectionImpl(role, other) ::= <%
 <other.clazz.name; format={<role.collectionType>}>
+%>
+
+collectionItf(role, other) ::= <%
+java.util.<role.collectionInterfaceName>\<<other.clazz.name>>
 %>
 
 // --------------- Declarations ---------------
 
 roleAttrDecl(role, other) ::= <<
 <if(role.toMany)>
-   private <collectionType(role, other)> <role.name> = null;
+   private <collectionItf(role, other)> <role.name> = null;
 <else>
    private <other.clazz.name> <role.name> = null;
 <endif>
@@ -20,9 +24,9 @@ propertyDecl(role, other) ::= <<
 
 getMethod(role, other) ::= <<
 <if(role.toMany)>
-   public <collectionType(role, other)> get<role.name; format="cap">()
+   public <collectionItf(role, other)> get<role.name; format="cap">()
    {
-      return this.<role.name> != null ? this.<role.name> : new <collectionType(role, other)>();
+      return this.<role.name> != null ? java.util.Collections.unmodifiable<role.collectionInterfaceName>(this.<role.name>) : java.util.Collections.empty<role.collectionInterfaceName>();
    }
 <else>
    public <other.clazz.name> get<role.name; format="cap">()
@@ -66,7 +70,7 @@ withItem(role, other) ::= <<
    {
       if (this.<role.name> == null)
       {
-         this.<role.name> = new <collectionType(role, other)>();
+         this.<role.name> = new <collectionImpl(role, other)>();
       }
       if (!this.<role.name>.contains(value))
       {
