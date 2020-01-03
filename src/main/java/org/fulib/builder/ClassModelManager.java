@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import static org.fulib.builder.Type.BEAN;
 import static org.fulib.builder.Type.COLLECTION_ARRAY_LIST;
-import static org.fulib.builder.Type.POJO;
 import static org.fulib.classmodel.ClassModel.PROPERTY_mainJavaDir;
 import static org.fulib.classmodel.ClassModel.PROPERTY_packageName;
 import static org.fulib.classmodel.Clazz.PROPERTY_name;
@@ -25,12 +25,11 @@ import static org.fulib.yaml.EventSource.EVENT_TYPE;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-
- ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+ * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+ *
+ * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
- *
  */
 public class ClassModelManager implements IModelManager
 {
@@ -120,9 +119,9 @@ public class ClassModelManager implements IModelManager
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-        ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-
-        ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
+    *
+    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -251,7 +250,8 @@ public class ClassModelManager implements IModelManager
    {
       Clazz clazz = this.classModel.getClazz(className);
 
-      if (clazz != null)  return clazz; //============================
+      if (clazz != null)
+         return clazz; //============================
 
       clazz = new ClassBuilder(this.classModel, className).getClazz();
 
@@ -496,31 +496,27 @@ public class ClassModelManager implements IModelManager
    {
       AssocRole role = srcClass.getRole(srcRole);
 
-      if (role != null
-            && role.getCardinality() >= srcSize
-            && role.getOther().getClazz() == tgtClass
-            && ( ! bothRoles || role.getOther().getName().equals(tgtRole))
-            && ( ! bothRoles || role.getOther().getCardinality() >= tgtSize)
-      )
+      if (role != null && role.getCardinality() >= srcSize && role.getOther().getClazz() == tgtClass && (!bothRoles
+                                                                                                         || role
+                                                                                                            .getOther()
+                                                                                                            .getName()
+                                                                                                            .equals(
+                                                                                                               tgtRole))
+          && (!bothRoles || role.getOther().getCardinality() >= tgtSize))
          return role; //===============================================================
 
-      if (Objects.equals(srcRole, tgtRole)) tgtSize = srcSize;
+      if (Objects.equals(srcRole, tgtRole))
+         tgtSize = srcSize;
 
       if (role == null)
       {
-         role = new AssocRole()
-               .setClazz(srcClass)
-               .setName(srcRole)
-               .setCardinality(srcSize)
-               .setPropertyStyle(srcClass.getPropertyStyle())
-               .setRoleType(srcClass.getModel().getDefaultRoleType());
+         role = new AssocRole().setClazz(srcClass).setName(srcRole).setCardinality(srcSize)
+                               .setPropertyStyle(srcClass.getPropertyStyle())
+                               .setRoleType(srcClass.getModel().getDefaultRoleType());
 
-         AssocRole otherRole = new AssocRole()
-               .setClazz(tgtClass)
-               .setName(tgtRole)
-               .setCardinality(tgtSize)
-               .setPropertyStyle(tgtClass.getPropertyStyle())
-               .setRoleType(tgtClass.getModel().getDefaultRoleType());
+         AssocRole otherRole = new AssocRole().setClazz(tgtClass).setName(tgtRole).setCardinality(tgtSize)
+                                              .setPropertyStyle(tgtClass.getPropertyStyle())
+                                              .setRoleType(tgtClass.getModel().getDefaultRoleType());
 
          role.setOther(otherRole);
       }
@@ -529,7 +525,8 @@ public class ClassModelManager implements IModelManager
       role.setCardinality(maxSize);
 
       int maxTgtSize = Math.max(role.getOther().getCardinality(), tgtSize);
-      if (bothRoles) role.getOther().setName(tgtRole);
+      if (bothRoles)
+         role.getOther().setName(tgtRole);
       role.getOther().setCardinality(tgtSize);
 
       // mm.haveRole(currentRegisterClazz, srcRole, tgtClass, srcSize, tgtRole, ClassModelBuilder.ONE);
@@ -562,28 +559,30 @@ public class ClassModelManager implements IModelManager
       FMethod method = null;
       for (FMethod fMethod : clazz.getMethods())
       {
-         if (fMethod.getDeclaration().equals(declaration)) {
+         if (fMethod.getDeclaration().equals(declaration))
+         {
             method = fMethod;
-               break;
+            break;
          }
       }
 
-      if (method != null) {
-         if (body == null || body.equals(method.getMethodBody())) {
+      if (method != null)
+      {
+         if (body == null || body.equals(method.getMethodBody()))
+         {
             return method;
          }
       }
 
-      if (method == null) {
+      if (method == null)
+      {
          method = new FMethod();
       }
 
       // need a final variable due to use in lambda expression below.
       final FMethod foundMethod = method;
 
-      foundMethod.setClazz(clazz)
-            .setDeclaration(declaration)
-            .setMethodBody(body);
+      foundMethod.setClazz(clazz).setDeclaration(declaration).setMethodBody(body);
 
       String key = clazz.getName() + "." + foundMethod.getDeclaration();
 
