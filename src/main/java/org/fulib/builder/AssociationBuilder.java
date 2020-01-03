@@ -55,13 +55,13 @@ public class AssociationBuilder
 
    public AssociationBuilder setSourceRoleCollection(Class<?> collectionClass)
    {
-      this.srcRole.setRoleType(deriveRoleType(collectionClass));
+      this.srcRole.setCollectionType(deriveRoleType(collectionClass));
       return this;
    }
 
    public AssociationBuilder setTargetRoleCollection(Class<?> collectionClass)
    {
-      this.srcRole.getOther().setRoleType(deriveRoleType(collectionClass));
+      this.srcRole.getOther().setCollectionType(deriveRoleType(collectionClass));
       return this;
    }
 

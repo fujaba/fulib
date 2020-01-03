@@ -15,7 +15,9 @@ public class AssocRole
 
    public static final String PROPERTY_name = "name";
    public static final String PROPERTY_cardinality = "cardinality";
+   @Deprecated
    public static final String PROPERTY_roleType = "roleType";
+   public static final String PROPERTY_collectionType = "collectionType";
    public static final String PROPERTY_aggregation = "aggregation";
    public static final String PROPERTY_propertyStyle = "propertyStyle";
    public static final String PROPERTY_modified = "modified";
@@ -30,7 +32,7 @@ public class AssocRole
    private AssocRole other = null;
    private String name;
    private int cardinality;
-   private String roleType;
+   private String collectionType;
    private boolean aggregation;
    private String propertyStyle;
    private boolean modified;
@@ -137,27 +139,60 @@ public class AssocRole
       return this.cardinality != Type.ONE;
    }
 
-   public String getRoleType()
+   /**
+    * @return the collection type
+    *
+    * @since 1.2
+    */
+   public String getCollectionType()
    {
-      return this.roleType;
+      return this.collectionType;
    }
 
-   public AssocRole setRoleType(String value)
+   /**
+    * @param value
+    *    the new collection type
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @since 1.2
+    */
+   public AssocRole setCollectionType(String value)
    {
-      if (Objects.equals(value, this.roleType))
+      if (Objects.equals(value, this.collectionType))
       {
          return this;
       }
 
-      final String oldValue = this.roleType;
-      this.roleType = value;
-      this.firePropertyChange(PROPERTY_roleType, oldValue, value);
+      final String oldValue = this.collectionType;
+      this.collectionType = value;
+      this.firePropertyChange(PROPERTY_collectionType, oldValue, value);
       return this;
    }
 
-   public String getCollectionType()
+   /**
+    * @return the collection type
+    *
+    * @deprecated since 1.2; use {@link #getCollectionType()} instead
+    */
+   @Deprecated
+   public String getRoleType()
    {
-      return String.format(this.roleType, this.other.getClazz().getName());
+      return this.getCollectionType();
+   }
+
+   /**
+    * @param value
+    *    the new collection type
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @deprecated since 1.2; use {@link #setCollectionType(String)} instead
+    */
+   @Deprecated
+   public AssocRole setRoleType(String value)
+   {
+      return this.setCollectionType(value);
    }
 
    public boolean getAggregation()
@@ -286,7 +321,7 @@ public class AssocRole
    {
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getName());
-      result.append(' ').append(this.getRoleType());
+      result.append(' ').append(this.getCollectionType());
       result.append(' ').append(this.getPropertyStyle());
       return result.substring(1);
    }

@@ -94,7 +94,7 @@ public class ClassModelBuilder
       classModel.setPackageName(packagename);
       classModel.setMainJavaDir(sourceFolder);
       classModel.setDefaultPropertyStyle(Type.BEAN);
-      classModel.setDefaultRoleType(Type.COLLECTION_ARRAY_LIST);
+      classModel.setDefaultCollectionType(Type.COLLECTION_ARRAY_LIST);
 
       this.setClassModel(classModel);
    }
@@ -157,7 +157,7 @@ public class ClassModelBuilder
       {
          defaultRoleType += "<%s>";
       }
-      this.classModel.setDefaultRoleType(defaultRoleType);
+      this.classModel.setDefaultCollectionType(defaultRoleType);
       return this;
    }
 

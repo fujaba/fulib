@@ -16,7 +16,9 @@ public class ClassModel
    { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withClasses(obj)"); }};
    public static final String PROPERTY_packageName = "packageName";
    public static final String PROPERTY_mainJavaDir = "mainJavaDir";
+   @Deprecated
    public static final String PROPERTY_defaultRoleType = "defaultRoleType";
+   public static final String PROPERTY_defaultCollectionType = "defaultCollectionType";
    public static final String PROPERTY_defaultPropertyStyle = "defaultPropertyStyle";
    public static final String PROPERTY_classes = "classes";
 
@@ -28,7 +30,7 @@ public class ClassModel
 
    private String mainJavaDir;
    private String packageName;
-   private String defaultRoleType;
+   private String defaultCollectionType;
    private String defaultPropertyStyle = "POJO";
 
    // =============== Properties ===============
@@ -74,22 +76,60 @@ public class ClassModel
       return this;
    }
 
-   public String getDefaultRoleType()
+   /**
+    * @return the default collection type
+    *
+    * @since 1.2
+    */
+   public String getDefaultCollectionType()
    {
-      return this.defaultRoleType;
+      return this.defaultCollectionType;
    }
 
-   public ClassModel setDefaultRoleType(String value)
+   /**
+    * @param value
+    *    the new default collection type
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @since 1.2
+    */
+   public ClassModel setDefaultCollectionType(String value)
    {
-      if (Objects.equals(value, this.defaultRoleType))
+      if (Objects.equals(value, this.defaultCollectionType))
       {
          return this;
       }
 
-      final String oldValue = this.defaultRoleType;
-      this.defaultRoleType = value;
-      this.firePropertyChange(PROPERTY_defaultRoleType, oldValue, value);
+      final String oldValue = this.defaultCollectionType;
+      this.defaultCollectionType = value;
+      this.firePropertyChange(PROPERTY_defaultCollectionType, oldValue, value);
       return this;
+   }
+
+   /**
+    * @return the default collection type
+    *
+    * @deprecated since 1.2; use {@link #getDefaultCollectionType()} instead
+    */
+   @Deprecated
+   public String getDefaultRoleType()
+   {
+      return this.getDefaultCollectionType();
+   }
+
+   /**
+    * @param value
+    *    the new default collection type
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @deprecated since 1.2; use {@link #setDefaultCollectionType(String)} instead
+    */
+   @Deprecated
+   public ClassModel setDefaultRoleType(String value)
+   {
+      return this.setDefaultCollectionType(value);
    }
 
    public String getDefaultPropertyStyle()
@@ -303,7 +343,7 @@ public class ClassModel
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getPackageName());
       result.append(' ').append(this.getMainJavaDir());
-      result.append(' ').append(this.getDefaultRoleType());
+      result.append(' ').append(this.getDefaultCollectionType());
       result.append(' ').append(this.getDefaultPropertyStyle());
       return result.substring(1);
    }

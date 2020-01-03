@@ -30,7 +30,7 @@ public class GenModel implements ClassModelDecorator
       final Clazz ClassModel = mb.haveClass("ClassModel", c -> {
          c.attribute("packageName", STRING);
          c.attribute("mainJavaDir", STRING);
-         c.attribute("defaultRoleType", STRING);
+         c.attribute("defaultCollectionType", STRING);
          c.attribute("defaultPropertyStyle", STRING, "\"POJO\"");
       });
 
@@ -53,7 +53,7 @@ public class GenModel implements ClassModelDecorator
       final Clazz AssocRole = mb.haveClass("AssocRole", c -> {
          c.attribute("name", STRING);
          c.attribute("cardinality", INT);
-         c.attribute("roleType", STRING);
+         c.attribute("collectionType", STRING);
          c.attribute("aggregation", BOOLEAN);
          c.attribute("propertyStyle", STRING);
          c.attribute("modified", BOOLEAN);

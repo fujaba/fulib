@@ -195,12 +195,12 @@ public class ClassBuilder
 
       AssocRole myRole = new AssocRole().setClazz(this.getClazz()).setName(myRoleName).setCardinality(myCardinality)
                                         .setPropertyStyle(this.clazz.getPropertyStyle())
-                                        .setRoleType(this.clazz.getModel().getDefaultRoleType());
+                                        .setCollectionType(this.clazz.getModel().getDefaultCollectionType());
 
       AssocRole otherRole = new AssocRole().setClazz(otherClass.getClazz()).setName(otherRoleName)
                                            .setCardinality(otherCardinality)
                                            .setPropertyStyle(this.clazz.getPropertyStyle())
-                                           .setRoleType(this.clazz.getModel().getDefaultRoleType());
+                                           .setCollectionType(this.clazz.getModel().getDefaultCollectionType());
 
       myRole.setOther(otherRole);
 

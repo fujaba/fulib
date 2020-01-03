@@ -140,7 +140,7 @@ public class ClassModelManager implements IModelManager
    {
       this.setModelEventManager(classModelEventManager);
 
-      this.classModel = new ClassModel().setDefaultPropertyStyle(BEAN).setDefaultRoleType(COLLECTION_ARRAY_LIST);
+      this.classModel = new ClassModel().setDefaultPropertyStyle(BEAN).setDefaultCollectionType(COLLECTION_ARRAY_LIST);
    }
 
    // =============== Properties ===============
@@ -530,11 +530,11 @@ public class ClassModelManager implements IModelManager
       {
          role = new AssocRole().setClazz(srcClass).setName(srcRole).setCardinality(srcSize)
                                .setPropertyStyle(srcClass.getPropertyStyle())
-                               .setRoleType(srcClass.getModel().getDefaultRoleType());
+                               .setCollectionType(srcClass.getModel().getDefaultCollectionType());
 
          AssocRole otherRole = new AssocRole().setClazz(tgtClass).setName(tgtRole).setCardinality(tgtSize)
                                               .setPropertyStyle(tgtClass.getPropertyStyle())
-                                              .setRoleType(tgtClass.getModel().getDefaultRoleType());
+                                              .setCollectionType(tgtClass.getModel().getDefaultCollectionType());
 
          role.setOther(otherRole);
       }
