@@ -71,7 +71,7 @@ public class AssociationTest
 
    protected ClassModel getClassModel(String srcFolder, String packageName)
    {
-      return this.getClassModel(Fulib.classModelBuilder(packageName, srcFolder));
+      return this.getClassModel(Fulib.classModelBuilder(packageName, srcFolder)).setDefaultPropertyStyle(Type.BEAN);
    }
 
    protected final ClassModel getClassModel(ClassModelBuilder mb)
@@ -100,9 +100,6 @@ public class AssociationTest
 
    protected void runDataTests(ClassLoader classLoader, String packageName) throws Exception
    {
-      final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
-      PropertyChangeListener listener = eventList::add;
-
       Class<?> uniClass = Class.forName(packageName + ".University", true, classLoader);
       Class<?> studClass = Class.forName(packageName + ".Student", true, classLoader);
       Class<?> roomClass = Class.forName(packageName + ".Room", true, classLoader);
@@ -111,21 +108,15 @@ public class AssociationTest
       Object studyFuture = uniClass.newInstance();
 
       Method setName = uniClass.getMethod("setName", String.class);
-      Method addPropertyChangeListener = uniClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
       setName.invoke(studyRight, "Study Right");
       setName.invoke(studyFuture, "Study Future");
-      addPropertyChangeListener.invoke(studyRight, listener);
-      addPropertyChangeListener.invoke(studyFuture, listener);
 
       Object karli = studClass.newInstance();
       Object lee = studClass.newInstance();
 
       setName = studClass.getMethod("setName", String.class);
-      addPropertyChangeListener = studClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
       setName.invoke(karli, "Karli");
       setName.invoke(lee, "Lee");
-      addPropertyChangeListener.invoke(karli, listener);
-      addPropertyChangeListener.invoke(lee, listener);
 
       // do not add to students directly
       Method getStudents = uniClass.getMethod("getStudents");

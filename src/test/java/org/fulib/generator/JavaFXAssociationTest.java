@@ -15,7 +15,7 @@ import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 
-public class JavaFXAssociationTest extends AssociationTest
+public class JavaFXAssociationTest extends BeanAssociationTest
 {
    @Override
    protected String getTargetFolder()
