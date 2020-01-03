@@ -1,0 +1,154 @@
+import "attributes.pojo.stg"
+
+// --------------- Simple Accessors ---------------
+
+attrSet(attr) ::= <<
+   public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
+   {
+      if (<if(attr.primitive)>value == this.<attr.name><else>Objects.equals(value, this.<attr.name>)<endif>)
+      {
+         return this;
+      }
+
+      final <attr.type> oldValue = this.<attr.name>;
+      this.<attr.name> = value;
+      this.firePropertyChange(PROPERTY_<attr.name>, oldValue, value);
+      return this;
+   }
+>>
+
+// --------------- With ---------------
+
+attrWithItem(attr) ::= <<
+   public <attr.clazz.name> with<attr.name; format="cap">(<attr.boxType> value)
+   {
+      if (this.<attr.name> == null)
+      {
+         this.<attr.name> = new <attr.concreteType>();
+      }
+      if (this.<attr.name>.add(value))<! the collection could be a set, in which case we don't want a PCE!>
+      {
+         this.firePropertyChange(PROPERTY_<attr.name>, null, value);
+      }
+      return this;
+   }
+>>
+
+attrWithArray(attr) ::= <<
+   public <attr.clazz.name> with<attr.name; format="cap">(<attr.boxType>... value)
+   {
+      for (final <attr.type> item : value)
+      {
+         this.with<attr.name; format="cap">(item);
+      }
+      return this;
+   }
+>>
+
+attrWithColl(attr) ::= <<
+   public <attr.clazz.name> with<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
+   {
+      for (final <attr.boxType> item : value)
+      {
+         this.with<attr.name; format="cap">(item);
+      }
+      return this;
+   }
+>>
+
+// --------------- Without ---------------
+
+attrWithoutItem(attr) ::= <<
+   public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType> value)
+   {
+      if (this.<attr.name> != null && this.<attr.name>.removeAll(java.util.Collections.singleton(value)))
+      {
+         this.firePropertyChange(PROPERTY_<attr.name>, value, null);
+      }
+      return this;
+   }
+>>
+
+attrWithoutArray(attr) ::= <<
+   public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType>... value)
+   {
+      for (final <attr.boxType> item : value)
+      {
+         this.without<attr.name; format="cap">(item);
+      }
+      return this;
+   }
+>>
+
+attrWithoutColl(attr) ::= <<
+   public <attr.clazz.name> without<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
+   {
+      for (final <attr.boxType> item : value)
+      {
+         this.without<attr.name; format="cap">(item);
+      }
+      return this;
+   }
+>>
+
+// --------------- Set All ---------------
+
+attrSetAllArray(attr) ::= <<
+   public <attr.clazz.name> set<attr.name; format="cap">(<attr.boxType>... value)
+   {
+      return this.set<attr.name; format="cap">(Arrays.asList(value));
+   }
+>>
+
+attrSetAllColl(attr) ::= <<
+   public <attr.clazz.name> set<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
+   {
+      if (value == null)
+      {
+         if (this.<attr.name> != null)
+         {
+            for (final <attr.boxType> oldItem : this.<attr.name>)
+            {
+               this.firePropertyChange(PROPERTY_<attr.name>, oldItem, null);
+            }
+         }
+         this.<attr.name> = null;
+         return this;
+      }
+
+      if (this.<attr.name> == null)
+      {
+         this.<attr.name> = new <attr.concreteType>(value);
+         for (final <attr.boxType> newItem : value)
+         {
+            this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);
+         }
+         return this;
+      }
+
+      if (value.equals(this.<attr.name>))
+      {
+         return this;
+      }
+
+      for (final <attr.boxType> oldItem : this.<attr.name>)
+      {
+         if (!value.contains(oldItem))
+         {
+            this.firePropertyChange(PROPERTY_methods, oldItem, null);
+         }
+      }
+
+      for (final <attr.boxType> newItem : value)
+      {
+         if (!this.<attr.name>.contains(newItem))
+         {
+            this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);
+         }
+      }
+
+      this.<attr.name>.clear();
+      this.<attr.name>.addAll(value);
+      return this;
+   }
+>>

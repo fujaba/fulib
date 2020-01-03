@@ -20,21 +20,6 @@ attrGet(attr) ::= <<
 attrSet(attr) ::= <<
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
-      if (<if(attr.primitive)>value == this.<attr.name><else>Objects.equals(value, this.<attr.name>)<endif>)
-      {
-         return this;
-      }
-
-      final <attr.type> oldValue = this.<attr.name>;
-      this.<attr.name> = value;
-      this.firePropertyChange(PROPERTY_<attr.name>, oldValue, value);
-      return this;
-   }
->>
-
-simpleAttrSet(attr) ::= <<
-   public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
-   {
       this.<attr.name> = value;
       return this;
    }
@@ -49,10 +34,7 @@ attrWithItem(attr) ::= <<
       {
          this.<attr.name> = new <attr.concreteType>();
       }
-      if (this.<attr.name>.add(value))<! the collection could be a set, in which case we don't want a PCE!>
-      {
-         this.firePropertyChange(PROPERTY_<attr.name>, null, value);
-      }
+      this.<attr.name>.add(value);
       return this;
    }
 >>
@@ -60,10 +42,7 @@ attrWithItem(attr) ::= <<
 attrWithArray(attr) ::= <<
    public <attr.clazz.name> with<attr.name; format="cap">(<attr.boxType>... value)
    {
-      for (final <attr.type> item : value)
-      {
-         this.with<attr.name; format="cap">(item);
-      }
+      this.with<attr.name; format="cap">(java.util.Arrays.asList(value));
       return this;
    }
 >>
@@ -71,9 +50,13 @@ attrWithArray(attr) ::= <<
 attrWithColl(attr) ::= <<
    public <attr.clazz.name> with<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
    {
-      for (final <attr.boxType> item : value)
+      if (this.<attr.name> == null)
       {
-         this.with<attr.name; format="cap">(item);
+         this.<attr.name> = new <attr.concreteType>(value);
+      }
+      else
+      {
+         this.<attr.name>.addAll(value);
       }
       return this;
    }
@@ -84,10 +67,7 @@ attrWithColl(attr) ::= <<
 attrWithoutItem(attr) ::= <<
    public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType> value)
    {
-      if (this.<attr.name> != null && this.<attr.name>.removeAll(java.util.Collections.singleton(value)))
-      {
-         this.firePropertyChange(PROPERTY_<attr.name>, value, null);
-      }
+      this.<attr.name>.removeAll(java.util.Collections.singleton(value));
       return this;
    }
 >>
@@ -95,10 +75,7 @@ attrWithoutItem(attr) ::= <<
 attrWithoutArray(attr) ::= <<
    public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType>... value)
    {
-      for (final <attr.boxType> item : value)
-      {
-         this.without<attr.name; format="cap">(item);
-      }
+      this.without<attr.name; format="cap">(java.util.Arrays.asList(value));
       return this;
    }
 >>
@@ -106,9 +83,9 @@ attrWithoutArray(attr) ::= <<
 attrWithoutColl(attr) ::= <<
    public <attr.clazz.name> without<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
    {
-      for (final <attr.boxType> item : value)
+      if (this.<attr.name> != null)
       {
-         this.without<attr.name; format="cap">(item);
+         this.<attr.name>.removeAll(value);
       }
       return this;
    }
@@ -126,52 +103,15 @@ attrSetAllArray(attr) ::= <<
 attrSetAllColl(attr) ::= <<
    public <attr.clazz.name> set<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
    {
-      if (value == null)
-      {
-         if (this.<attr.name> != null)
-         {
-            for (final <attr.boxType> oldItem : this.<attr.name>)
-            {
-               this.firePropertyChange(PROPERTY_<attr.name>, oldItem, null);
-            }
-         }
-         this.<attr.name> = null;
-         return this;
-      }
-
       if (this.<attr.name> == null)
       {
          this.<attr.name> = new <attr.concreteType>(value);
-         for (final <attr.boxType> newItem : value)
-         {
-            this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);
-         }
-         return this;
       }
-
-      if (value.equals(this.<attr.name>))
+      else
       {
-         return this;
+         this.<attr.name>.clear();
+         this.<attr.name>.addAll(value);
       }
-
-      for (final <attr.boxType> oldItem : this.<attr.name>)
-      {
-         if (!value.contains(oldItem))
-         {
-            this.firePropertyChange(PROPERTY_methods, oldItem, null);
-         }
-      }
-
-      for (final <attr.boxType> newItem : value)
-      {
-         if (!this.<attr.name>.contains(newItem))
-         {
-            this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);
-         }
-      }
-
-      this.<attr.name>.clear();
-      this.<attr.name>.addAll(value);
       return this;
    }
 >>

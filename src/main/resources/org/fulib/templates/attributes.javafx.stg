@@ -1,4 +1,4 @@
-import "attributes.pojo.stg"
+import "attributes.bean.stg"
 
 propertyType(attr) ::= <%
 <if(attr.collection)>
