@@ -56,7 +56,6 @@ setMethod(role, other) ::= <<
          value.<withThis(other)>;
       }
 <endif>
-      this.firePropertyChange(PROPERTY_<role.name>, oldValue, value);
       return this;
    }
 >>
@@ -76,7 +75,6 @@ withItem(role, other) ::= <<
 <if(other.name)>
          value.<withThis(other)>;
 <endif>
-         this.firePropertyChange(PROPERTY_<role.name>, null, value);
       }
       return this;
    }
@@ -114,7 +112,6 @@ withoutItem(role, other) ::= <<
 <if(other.name)>
          value.<withoutThis(other)>;
 <endif>
-         this.firePropertyChange(PROPERTY_<role.name>, value, null);
       }
       return this;
    }

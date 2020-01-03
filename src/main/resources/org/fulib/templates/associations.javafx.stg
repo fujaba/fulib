@@ -1,4 +1,4 @@
-import "associations.pojo.stg"
+import "associations.bean.stg"
 
 // --------------- Overrides ---------------
 
