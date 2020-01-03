@@ -42,7 +42,10 @@ public class AssociationTest
 
       Tools.removeDirAndFiles(targetFolder);
 
-      ClassModel model = this.getClassModel(srcFolder, packageName);
+      final ClassModelBuilder mb = new ClassModelBuilder(packageName, srcFolder);
+      this.configureModel(mb);
+      this.buildModel(mb);
+      ClassModel model = mb.getClassModel();
 
       UniversityFileHelper.create(packageName, model);
 
@@ -69,12 +72,12 @@ public class AssociationTest
       }
    }
 
-   protected ClassModel getClassModel(String srcFolder, String packageName)
+   protected void configureModel(ClassModelBuilder mb)
    {
-      return this.getClassModel(Fulib.classModelBuilder(packageName, srcFolder)).setDefaultPropertyStyle(Type.BEAN);
+      mb.setDefaultPropertyStyle(Type.BEAN);
    }
 
-   protected final ClassModel getClassModel(ClassModelBuilder mb)
+   protected final void buildModel(ClassModelBuilder mb)
    {
       ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
       // end_code_fragment:
@@ -94,8 +97,6 @@ public class AssociationTest
 
       ClassBuilder assignment = mb.buildClass("Assignment").buildAttribute("topic", Type.STRING);
       studi.buildAssociation(assignment, "done", Type.MANY, "students", Type.MANY);
-
-      return mb.getClassModel();
    }
 
    protected void runDataTests(ClassLoader classLoader, String packageName) throws Exception

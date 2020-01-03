@@ -1,8 +1,7 @@
 package org.fulib.generator;
 
-import org.fulib.Fulib;
+import org.fulib.builder.ClassModelBuilder;
 import org.fulib.builder.Type;
-import org.fulib.classmodel.ClassModel;
 
 public class JavaFXAttributeTest extends BeanAttributeTest
 {
@@ -13,8 +12,8 @@ public class JavaFXAttributeTest extends BeanAttributeTest
    }
 
    @Override
-   protected ClassModel getClassModel(String srcFolder, String packageName)
+   protected void configureModel(ClassModelBuilder mb)
    {
-      return this.getClassModel(Fulib.classModelBuilder(packageName, srcFolder).setDefaultPropertyStyle(Type.JAVA_FX));
+      mb.setDefaultPropertyStyle(Type.JAVA_FX);
    }
 }

@@ -35,7 +35,10 @@ public class AttributeTest
 
       Tools.removeDirAndFiles(targetFolder);
 
-      ClassModel model = this.getClassModel(srcFolder, packageName);
+      final ClassModelBuilder mb = new ClassModelBuilder(packageName, srcFolder);
+      this.configureModel(mb);
+      this.buildModel(mb);
+      ClassModel model = mb.getClassModel();
 
       UniversityFileHelper.create(packageName, model);
 
@@ -62,19 +65,17 @@ public class AttributeTest
       }
    }
 
-   protected ClassModel getClassModel(String srcFolder, String packageName)
+   protected void configureModel(ClassModelBuilder mb)
    {
-      return this.getClassModel(Fulib.classModelBuilder(packageName, srcFolder)).setDefaultPropertyStyle(Type.POJO);
+      mb.setDefaultPropertyStyle(Type.POJO);
    }
 
-   protected final ClassModel getClassModel(ClassModelBuilder mb)
+   protected final void buildModel(ClassModelBuilder mb)
    {
       mb.buildClass("University").buildAttribute("name", Type.STRING);
 
       mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"")
         .buildAttribute("matrNo", Type.LONG, "0");
-
-      return mb.getClassModel();
    }
 
    protected void runDataTests(ClassLoader classLoader, String packageName) throws Exception
