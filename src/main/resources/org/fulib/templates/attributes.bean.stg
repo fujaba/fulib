@@ -24,7 +24,7 @@ attrWithItem(attr) ::= <<
    {
       if (this.<attr.name> == null)
       {
-         this.<attr.name> = new <attr.concreteType>();
+         this.<attr.name> = new <collectionImpl(attr)>();
       }
       if (this.<attr.name>.add(value))<! the collection could be a set, in which case we don't want a PCE!>
       {
@@ -118,7 +118,7 @@ attrSetAllColl(attr) ::= <<
 
       if (this.<attr.name> == null)
       {
-         this.<attr.name> = new <attr.concreteType>(value);
+         this.<attr.name> = new <collectionImpl(attr)>(value);
          for (final <attr.boxType> newItem : value)
          {
             this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);

@@ -1,7 +1,19 @@
+collectionImpl(attr) ::= <%
+<attr.boxType; format={<attr.collectionType>}>
+%>
+
+collectionItf(attr) ::= <%
+java.util.<attr.collectionInterfaceName>\<<attr.boxType>>
+%>
+
 // --------------- Declarations ---------------
 
 attrDecl(attr) ::= <<
-   private <attr.concreteType> <attr.name><if(attr.initialization)> = <attr.initialization><endif>;
+<if(attr.collection)>
+   private <collectionItf(attr)> <attr.name><if(attr.initialization)> = <attr.initialization><endif>;
+<else>
+   private <attr.type> <attr.name><if(attr.initialization)> = <attr.initialization><endif>;
+<endif>
 >>
 
 propertyDecl(attr) ::= <<
@@ -11,10 +23,17 @@ propertyDecl(attr) ::= <<
 // --------------- Simple Accessors ---------------
 
 attrGet(attr) ::= <<
-   public <attr.concreteType> get<attr.name; format="cap">()
+<if(attr.collection)>
+   public <collectionItf(attr)> get<attr.name; format="cap">()
+   {
+      return this.<attr.name> != null ? java.util.Collections.unmodifiable<attr.collectionInterfaceName>(this.<attr.name>) : java.util.Collections.empty<attr.collectionInterfaceName>();
+   }
+<else>
+   public <attr.type> get<attr.name; format="cap">()
    {
       return this.<attr.name>;
    }
+<endif>
 >>
 
 attrSet(attr) ::= <<
@@ -32,7 +51,7 @@ attrWithItem(attr) ::= <<
    {
       if (this.<attr.name> == null)
       {
-         this.<attr.name> = new <attr.concreteType>();
+         this.<attr.name> = new <collectionImpl(attr)>();
       }
       this.<attr.name>.add(value);
       return this;
@@ -52,7 +71,7 @@ attrWithColl(attr) ::= <<
    {
       if (this.<attr.name> == null)
       {
-         this.<attr.name> = new <attr.concreteType>(value);
+         this.<attr.name> = new <collectionImpl(attr)>(value);
       }
       else
       {
@@ -105,7 +124,7 @@ attrSetAllColl(attr) ::= <<
    {
       if (this.<attr.name> == null)
       {
-         this.<attr.name> = new <attr.concreteType>(value);
+         this.<attr.name> = new <collectionImpl(attr)>(value);
       }
       else
       {
