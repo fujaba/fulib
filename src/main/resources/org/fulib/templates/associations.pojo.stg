@@ -1,5 +1,5 @@
 collectionImpl(role, other) ::= <%
-<other.clazz.name; format={<role.collectionType>}>
+<other.clazz.name; format={<role.collectionType.implTemplate>}>
 %>
 
 collectionItf(role, other) ::= <%
