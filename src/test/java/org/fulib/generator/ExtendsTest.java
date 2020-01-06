@@ -19,11 +19,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedHashSet;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
-import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.hamcrest.Matchers.*;
 
 public class ExtendsTest
 {
@@ -139,5 +136,8 @@ public class ExtendsTest
       Method setLevel = taClass.getMethod("setLevel", String.class);
       setLevel.invoke(karli, "master");
       assertThat(karli, hasProperty("level", equalTo("master")));
+
+      // toString
+      assertThat(karli, hasToString("Karli master"));
    }
 }
