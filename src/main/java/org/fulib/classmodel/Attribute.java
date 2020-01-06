@@ -138,6 +138,17 @@ public class Attribute
       return !attrType.equals(getBoxType(attrType));
    }
 
+   /**
+    * @return the name of the collection interface derived from {@link #getCollectionType()},
+    * i.e. either "List", "Set" or "Collection".
+    *
+    * @since 1.2
+    */
+   public String getCollectionInterfaceName()
+   {
+      return ClassModel.deriveCollectionInterfaceName(this.getCollectionType());
+   }
+
    public String getCollectionType()
    {
       return this.collectionType;
@@ -164,12 +175,6 @@ public class Attribute
    public boolean isCollection()
    {
       return this.getCollectionType() != null;
-   }
-
-   public String getConcreteType()
-   {
-      final String collectionType = this.getCollectionType();
-      return collectionType == null ? this.getType() : String.format(collectionType, this.getBoxType());
    }
 
    public String getInitialization()
