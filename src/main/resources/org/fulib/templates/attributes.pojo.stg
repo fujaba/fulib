@@ -3,7 +3,7 @@ collectionImpl(attr) ::= <%
 %>
 
 collectionItf(attr) ::= <%
-java.util.<attr.collectionInterfaceName>\<<attr.boxType>>
+<attr.collectionType.itf.qualifiedName>\<<attr.boxType>>
 %>
 
 // --------------- Declarations ---------------
@@ -26,7 +26,7 @@ attrGet(attr) ::= <<
 <if(attr.collection)>
    public <collectionItf(attr)> get<attr.name; format="cap">()
    {
-      return this.<attr.name> != null ? java.util.Collections.unmodifiable<attr.collectionInterfaceName>(this.<attr.name>) : java.util.Collections.empty<attr.collectionInterfaceName>();
+      return this.<attr.name> != null ? java.util.Collections.unmodifiable<attr.collectionType.itf.simpleName>(this.<attr.name>) : java.util.Collections.empty<attr.collectionType.itf.simpleName>();
    }
 <else>
    public <attr.type> get<attr.name; format="cap">()

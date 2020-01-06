@@ -3,7 +3,7 @@ collectionImpl(role, other) ::= <%
 %>
 
 collectionItf(role, other) ::= <%
-java.util.<role.collectionInterfaceName>\<<other.clazz.name>>
+<role.collectionType.itf.qualifiedName>\<<other.clazz.name>>
 %>
 
 // --------------- Declarations ---------------
@@ -26,7 +26,7 @@ getMethod(role, other) ::= <<
 <if(role.toMany)>
    public <collectionItf(role, other)> get<role.name; format="cap">()
    {
-      return this.<role.name> != null ? java.util.Collections.unmodifiable<role.collectionInterfaceName>(this.<role.name>) : java.util.Collections.empty<role.collectionInterfaceName>();
+      return this.<role.name> != null ? java.util.Collections.unmodifiable<role.collectionType.itf.simpleName>(this.<role.name>) : java.util.Collections.empty<role.collectionType.itf.simpleName>();
    }
 <else>
    public <other.clazz.name> get<role.name; format="cap">()
