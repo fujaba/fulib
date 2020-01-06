@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class CustomTemplateTest
 {
@@ -22,6 +23,7 @@ public class CustomTemplateTest
    {
       final String targetFolder = "tmp/custom-templates";
       final String srcFolder = targetFolder + "/src";
+      final String outFolder = targetFolder + "/out";
 
       Tools.removeDirAndFiles(targetFolder);
 
@@ -39,6 +41,9 @@ public class CustomTemplateTest
       String content = new String(bytes);
       assertThat(content, not(containsString("/* custom attribute comment */")));
 
+      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
+
       // generate custom
       // start_code_fragment: testCustomTemplates
       Fulib.generator().setCustomTemplatesFile("templates/custom.stg").generate(model);
@@ -47,5 +52,8 @@ public class CustomTemplateTest
       bytes = Files.readAllBytes(Paths.get(model.getPackageSrcFolder() + "/Student.java"));
       content = new String(bytes);
       assertThat(content, containsString("/* custom attribute comment */"));
+
+      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      assertThat("compiler return code: ", returnCode, is(0));
    }
 }
