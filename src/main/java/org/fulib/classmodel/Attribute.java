@@ -29,7 +29,7 @@ public class Attribute
    private Clazz clazz = null;
    private String name;
    private String type;
-   private String collectionType;
+   private CollectionType collectionType;
    private String initialization;
    private String propertyStyle;
    private boolean modified;
@@ -138,38 +138,22 @@ public class Attribute
       return !attrType.equals(getBoxType(attrType));
    }
 
-   /**
-    * @return the name of the collection interface derived from {@link #getCollectionType()},
-    * i.e. either "List", "Set" or "Collection".
-    *
-    * @since 1.2
-    */
-   public String getCollectionInterfaceName()
-   {
-      return ClassModel.deriveCollectionInterfaceName(this.getCollectionType());
-   }
-
-   public String getCollectionType()
+   public CollectionType getCollectionType()
    {
       return this.collectionType;
    }
 
-   public Attribute setCollectionType(String value)
+   public Attribute setCollectionType(CollectionType value)
    {
       if (Objects.equals(value, this.collectionType))
       {
          return this;
       }
 
-      final String oldValue = this.collectionType;
+      final CollectionType oldValue = this.collectionType;
       this.collectionType = value;
       this.firePropertyChange(PROPERTY_collectionType, oldValue, value);
       return this;
-   }
-
-   public Attribute setCollectionClass(@SuppressWarnings("rawtypes") Class<? extends Collection> value)
-   {
-      return this.setCollectionType(ClassModel.deriveCollectionType(value));
    }
 
    public boolean isCollection()
@@ -302,7 +286,6 @@ public class Attribute
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getName());
       result.append(' ').append(this.getType());
-      result.append(' ').append(this.getCollectionType());
       result.append(' ').append(this.getInitialization());
       result.append(' ').append(this.getPropertyStyle());
       return result.substring(1);

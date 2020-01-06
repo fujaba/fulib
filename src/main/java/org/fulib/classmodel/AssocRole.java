@@ -4,7 +4,6 @@ import org.fulib.builder.Type;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -33,7 +32,7 @@ public class AssocRole
    private AssocRole other = null;
    private String name;
    private int cardinality;
-   private String collectionType;
+   private CollectionType collectionType;
    private boolean aggregation;
    private String propertyStyle;
    private boolean modified;
@@ -141,22 +140,11 @@ public class AssocRole
    }
 
    /**
-    * @return the name of the collection interface derived from {@link #getCollectionType()},
-    * i.e. either "List", "Set" or "Collection".
-    *
-    * @since 1.2
-    */
-   public String getCollectionInterfaceName()
-   {
-      return ClassModel.deriveCollectionInterfaceName(this.getCollectionType());
-   }
-
-   /**
     * @return the collection type
     *
     * @since 1.2
     */
-   public String getCollectionType()
+   public CollectionType getCollectionType()
    {
       return this.collectionType;
    }
@@ -169,30 +157,17 @@ public class AssocRole
     *
     * @since 1.2
     */
-   public AssocRole setCollectionType(String value)
+   public AssocRole setCollectionType(CollectionType value)
    {
       if (Objects.equals(value, this.collectionType))
       {
          return this;
       }
 
-      final String oldValue = this.collectionType;
+      final CollectionType oldValue = this.collectionType;
       this.collectionType = value;
       this.firePropertyChange(PROPERTY_collectionType, oldValue, value);
       return this;
-   }
-
-   /**
-    * @param value
-    *    the new collection class
-    *
-    * @return this instance, to allow method chaining
-    *
-    * @since 1.2
-    */
-   public AssocRole setCollectionClass(@SuppressWarnings("rawtypes") Class<? extends Collection> value)
-   {
-      return this.setCollectionType(ClassModel.deriveCollectionType(value));
    }
 
    /**
@@ -203,7 +178,7 @@ public class AssocRole
    @Deprecated
    public String getRoleType()
    {
-      return this.getCollectionType();
+      return this.getCollectionType().getImplTemplate();
    }
 
    /**
@@ -212,12 +187,13 @@ public class AssocRole
     *
     * @return this instance, to allow method chaining
     *
-    * @deprecated since 1.2; use {@link #setCollectionType(String)} instead
+    * @deprecated since 1.2; use {@link #setCollectionType(CollectionType) setCollectionType}
+    * ({@link CollectionType#of(String) CollectionType.of}(value)) instead
     */
    @Deprecated
    public AssocRole setRoleType(String value)
    {
-      return this.setCollectionType(value);
+      return this.setCollectionType(CollectionType.of(value));
    }
 
    public boolean getAggregation()

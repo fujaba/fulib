@@ -2,6 +2,7 @@ package org.fulib.builder;
 
 import org.fulib.Fulib;
 import org.fulib.classmodel.AssocRole;
+import org.fulib.classmodel.CollectionType;
 
 import java.util.Collection;
 
@@ -54,14 +55,14 @@ public class AssociationBuilder
    public AssociationBuilder setSourceRoleCollection(
       @SuppressWarnings("rawtypes") Class<? extends Collection> collectionClass)
    {
-      this.srcRole.setCollectionClass(collectionClass);
+      this.srcRole.setCollectionType(CollectionType.of(collectionClass));
       return this;
    }
 
    public AssociationBuilder setTargetRoleCollection(
       @SuppressWarnings("rawtypes") Class<? extends Collection> collectionClass)
    {
-      this.srcRole.getOther().setCollectionClass(collectionClass);
+      this.srcRole.getOther().setCollectionType(CollectionType.of(collectionClass));
       return this;
    }
 }

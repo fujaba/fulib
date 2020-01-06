@@ -2,6 +2,7 @@ package org.fulib.builder;
 
 import org.fulib.Fulib;
 import org.fulib.classmodel.ClassModel;
+import org.fulib.classmodel.CollectionType;
 import org.fulib.util.Validator;
 
 import java.lang.reflect.TypeVariable;
@@ -94,7 +95,7 @@ public class ClassModelBuilder
       classModel.setPackageName(packagename);
       classModel.setMainJavaDir(sourceFolder);
       classModel.setDefaultPropertyStyle(Type.BEAN);
-      classModel.setDefaultCollectionType(Type.COLLECTION_ARRAY_LIST);
+      classModel.setDefaultCollectionType(CollectionType.ArrayList);
 
       this.setClassModel(classModel);
    }
@@ -145,7 +146,7 @@ public class ClassModelBuilder
    public ClassModelBuilder setDefaultCollectionClass(
       @SuppressWarnings("rawtypes") Class<? extends Collection> collectionClass)
    {
-      this.classModel.setDefaultCollectionClass(collectionClass);
+      this.classModel.setDefaultCollectionType(CollectionType.of(collectionClass));
       return this;
    }
 

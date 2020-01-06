@@ -30,7 +30,7 @@ public class ClassModel
 
    private String mainJavaDir;
    private String packageName;
-   private String defaultCollectionType;
+   private CollectionType defaultCollectionType;
    private String defaultPropertyStyle = "POJO";
 
    // =============== Properties ===============
@@ -99,7 +99,7 @@ public class ClassModel
     *
     * @since 1.2
     */
-   public String getDefaultCollectionType()
+   public CollectionType getDefaultCollectionType()
    {
       return this.defaultCollectionType;
    }
@@ -112,50 +112,17 @@ public class ClassModel
     *
     * @since 1.2
     */
-   public ClassModel setDefaultCollectionType(String value)
+   public ClassModel setDefaultCollectionType(CollectionType value)
    {
       if (Objects.equals(value, this.defaultCollectionType))
       {
          return this;
       }
 
-      final String oldValue = this.defaultCollectionType;
+      final CollectionType oldValue = this.defaultCollectionType;
       this.defaultCollectionType = value;
       this.firePropertyChange(PROPERTY_defaultCollectionType, oldValue, value);
       return this;
-   }
-
-   /**
-    * @return the default collection class
-    *
-    * @since 1.2
-    */
-   public ClassModel setDefaultCollectionClass(@SuppressWarnings("rawtypes") Class<? extends Collection> value)
-   {
-      return this.setDefaultCollectionType(deriveCollectionType(value));
-   }
-
-   static String deriveCollectionType(@SuppressWarnings("rawtypes") Class<? extends Collection> value)
-   {
-      if (!Collection.class.isAssignableFrom(value))
-      {
-         throw new IllegalArgumentException(
-            "class '" + value.getName() + "' is not a sub-type of java.util.Collection");
-      }
-
-      final String roleType = value.getName();
-      final int typeParamCount = value.getTypeParameters().length;
-      switch (typeParamCount)
-      {
-      case 0:
-         return roleType;
-      case 1:
-         return roleType + "<%s>";
-      default:
-         throw new IllegalArgumentException(
-            "class '" + value.getName() + "' has too many type parameters (" + typeParamCount
-            + "), only 0 or 1 are supported");
-      }
    }
 
    /**
@@ -166,7 +133,7 @@ public class ClassModel
    @Deprecated
    public String getDefaultRoleType()
    {
-      return this.getDefaultCollectionType();
+      return this.getDefaultCollectionType().getImplTemplate();
    }
 
    /**
@@ -175,12 +142,13 @@ public class ClassModel
     *
     * @return this instance, to allow method chaining
     *
-    * @deprecated since 1.2; use {@link #setDefaultCollectionType(String)} instead
+    * @deprecated since 1.2; use {@link #setDefaultCollectionType(CollectionType) setDefaultCollectionType}
+    * ({@link CollectionType#of(String) CollectionType.of}(value)) instead
     */
    @Deprecated
    public ClassModel setDefaultRoleType(String value)
    {
-      return this.setDefaultCollectionType(value);
+      return this.setDefaultCollectionType(CollectionType.of(value));
    }
 
    public String getDefaultPropertyStyle()
