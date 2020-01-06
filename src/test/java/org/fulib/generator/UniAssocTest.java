@@ -40,13 +40,11 @@ public class UniAssocTest
       int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       assertThat("compiler return code: ", returnCode, is(0));
 
-      ArrayList<AssocRole> clone = (ArrayList<AssocRole>) university.getClazz().getRoles().clone();
-      for (AssocRole r : clone)
+      for (AssocRole r : new ArrayList<>(university.getClazz().getRoles()))
       {
          r.setClazz(null);
       }
-      clone = (ArrayList<AssocRole>) prof.getClazz().getRoles().clone();
-      for (AssocRole r : clone)
+      for (AssocRole r : new ArrayList<>(prof.getClazz().getRoles()))
       {
          r.setClazz(null);
       }
@@ -59,13 +57,11 @@ public class UniAssocTest
       returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       assertThat("compiler return code: ", returnCode, is(0));
 
-      clone = (ArrayList<AssocRole>) university.getClazz().getRoles().clone();
-      for (AssocRole r : clone)
+      for (AssocRole r : new ArrayList<>(university.getClazz().getRoles()))
       {
          r.setClazz(null);
       }
-      clone = (ArrayList<AssocRole>) prof.getClazz().getRoles().clone();
-      for (AssocRole r : clone)
+      for (AssocRole r : new ArrayList<>(prof.getClazz().getRoles()))
       {
          r.setClazz(null);
       }
