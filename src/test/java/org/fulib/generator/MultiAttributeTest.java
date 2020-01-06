@@ -8,6 +8,7 @@ import org.fulib.builder.Type;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
+import org.fulib.classmodel.CollectionType;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -53,7 +54,7 @@ public class MultiAttributeTest
       ClassModel model = mb.getClassModel();
       Clazz modelRoot = model.getClazz("Root");
       Attribute modelResultList = modelRoot.getAttribute("resultList");
-      modelResultList.setCollectionType(Type.COLLECTION_ARRAY_LIST);
+      modelResultList.setCollectionType(CollectionType.ArrayList);
 
       Fulib.generator().generate(model);
 
@@ -96,7 +97,7 @@ public class MultiAttributeTest
       assertThat("compiler return code: ", returnCode, is(0));
 
       // change back to multi attribute
-      modelResultList.setCollectionType(Type.COLLECTION_ARRAY_LIST);
+      modelResultList.setCollectionType(CollectionType.ArrayList);
 
       Fulib.generator().generate(model);
 

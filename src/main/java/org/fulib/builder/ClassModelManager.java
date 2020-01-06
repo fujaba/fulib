@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import static org.fulib.builder.Type.BEAN;
-import static org.fulib.builder.Type.COLLECTION_ARRAY_LIST;
 import static org.fulib.classmodel.ClassModel.PROPERTY_mainJavaDir;
 import static org.fulib.classmodel.ClassModel.PROPERTY_packageName;
 import static org.fulib.classmodel.Clazz.PROPERTY_name;
@@ -140,7 +139,7 @@ public class ClassModelManager implements IModelManager
    {
       this.setModelEventManager(classModelEventManager);
 
-      this.classModel = new ClassModel().setDefaultPropertyStyle(BEAN).setDefaultCollectionType(COLLECTION_ARRAY_LIST);
+      this.classModel = new ClassModel().setDefaultPropertyStyle(BEAN).setDefaultCollectionType(CollectionType.ArrayList);
    }
 
    // =============== Properties ===============
