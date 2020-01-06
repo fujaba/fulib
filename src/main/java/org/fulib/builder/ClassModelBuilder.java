@@ -1,6 +1,7 @@
 package org.fulib.builder;
 
 import org.fulib.Fulib;
+import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.CollectionType;
 import org.fulib.util.Validator;
@@ -35,14 +36,25 @@ public class ClassModelBuilder
    @Deprecated public static final String FLOAT = "float";
    @Deprecated public static final String DOUBLE = "double";
    @Deprecated public static final String BOOLEAN = "boolean";
-   @Deprecated public static final String __LIST = "__list";
    @Deprecated public static final int ONE = 1;
    @Deprecated public static final int MANY = 42;
-   @Deprecated public static final String COLLECTION_ARRAY_LIST = "java.util.ArrayList<%s>";
-   @Deprecated public static final String COLLECTION_LINKED_HASH_SET = "java.util.LinkedHashSet<%s>";
    @Deprecated public static final String POJO = "POJO";
    @Deprecated public static final String JAVA_FX = "JavaFX";
    // @formatter:on
+
+   /**
+    * @deprecated since 1.2; use {@link CollectionType#ArrayList} in conjunction with
+    * {@link AssocRole#setCollectionType(CollectionType)} or
+    * {@link ClassModel#setDefaultCollectionType(CollectionType)}
+    */
+   @Deprecated public static final String COLLECTION_ARRAY_LIST = "java.util.ArrayList<%s>";
+
+   /**
+    * @deprecated since 1.2; use {@link CollectionType#LinkedHashSet} in conjunction with
+    * {@link AssocRole#setCollectionType(CollectionType)} or
+    * {@link ClassModel#setDefaultCollectionType(CollectionType)}
+    */
+   @Deprecated public static final String COLLECTION_LINKED_HASH_SET = "java.util.LinkedHashSet<%s>";
 
    // =============== Fields ===============
 
