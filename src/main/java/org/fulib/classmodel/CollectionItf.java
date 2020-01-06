@@ -59,8 +59,13 @@ public enum CollectionItf
       return this.itf;
    }
 
-   public String getItfName()
+   public String getSimpleName()
    {
       return this.itf.getSimpleName();
+   }
+
+   public String getQualifiedName()
+   {
+      return this.itf.getName();
    }
 }

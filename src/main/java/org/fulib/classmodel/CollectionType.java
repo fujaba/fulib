@@ -92,16 +92,6 @@ public class CollectionType
       return this.itf;
    }
 
-   public Class<? extends Collection> getItfClass()
-   {
-      return this.itf.getItfClass();
-   }
-
-   public String getItfName()
-   {
-      return this.itf.getItfName();
-   }
-
    public String getImplTemplate()
    {
       return this.implTemplate;
