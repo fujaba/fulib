@@ -1,10 +1,10 @@
-toString(names) ::= <<
+toString(names, superClass) ::= <<
    @Override
    public String toString()
    {
-      final StringBuilder result = new StringBuilder();
+      final StringBuilder result = new StringBuilder(<if(superClass)>super.toString()<endif>);
       <names:attrLine(); separator="\n">
-      return result.substring(1);
+      return result.<if(superClass)>toString()<else>substring(1)<endif>;
    }
 >>
 

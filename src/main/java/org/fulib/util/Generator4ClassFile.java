@@ -491,6 +491,7 @@ public class Generator4ClassFile extends AbstractGenerator
          final STGroup group = this.getSTGroup("org/fulib/templates/toString.stg");
          final ST toString = group.getInstanceOf("toString");
          toString.add("names", nameList);
+         toString.add("superClass", clazz.getSuperClass() != null);
          fragment = toString.render();
       }
 
