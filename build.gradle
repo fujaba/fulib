@@ -21,6 +21,7 @@ plugins {
    id 'maven-publish'
    id 'com.jfrog.bintray' version '1.8.4'
    id 'de.clashsoft.simple-publish' version '0.5.0'
+   id 'com.palantir.revapi' version '1.1.2'
    // id 'org.fulib.fulibGradle' version '0.1.0'
 }
 
@@ -123,6 +124,10 @@ test {
 
 javadoc {
    failOnError = false
+}
+
+revapi {
+   oldVersion = '1.1.0'
 }
 
 // --------------- ANTLR ---------------
