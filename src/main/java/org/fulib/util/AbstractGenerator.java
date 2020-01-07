@@ -7,6 +7,11 @@ import org.stringtemplate.v4.StringRenderer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Adrian Kunz
+ *
+ * @since 1.2
+ */
 public class AbstractGenerator
 {
    // =============== Fields ===============
@@ -29,6 +34,20 @@ public class AbstractGenerator
    }
 
    // =============== Methods ===============
+
+   /**
+    * @param origFileName
+    *    the original template file name
+    *
+    * @return the loaded ST group
+    *
+    * @deprecated since 1.2; use {@link #getSTGroup(String)} instead
+    */
+   @Deprecated
+   public STGroup createSTGroup(String origFileName)
+   {
+      return this.getSTGroup(origFileName);
+   }
 
    public STGroup getSTGroup(String origFileName)
    {

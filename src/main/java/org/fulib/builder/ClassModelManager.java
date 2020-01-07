@@ -68,6 +68,11 @@ public class ClassModelManager implements IModelManager
 
    public static final String THE_CLASS_MODEL = "theClassModel";
 
+   @Deprecated
+   public static final String HAVE_MAIN_JAVA_DIR = "haveMainJavaDir";
+   @Deprecated
+   public static final String HAVE_PACKAGE_NAME  = "havePackageName";
+
    public static final String USE_PACKAGE_NAME  = "usePackageName";
    public static final String USE_SOURCE_FOLDER = "useSourceFolder";
 
@@ -78,6 +83,13 @@ public class ClassModelManager implements IModelManager
    public static final String NAME       = "name";
    public static final String TYPE       = "type";
    public static final String INIT       = "init";
+
+   @Deprecated
+   public static final String HAVE_ATTRIBUTE = "haveAttribute";
+   @Deprecated
+   public static final String ATTR_NAME      = "attrName";
+   @Deprecated
+   public static final String ATTR_TYPE      = "attrType";
 
    public static final String CLASS_NAME = "className";
 
@@ -93,9 +105,19 @@ public class ClassModelManager implements IModelManager
    public static final String TGT_SIZE       = "tgtSize";
    public static final String BOTH_ROLES     = "bothRoles";
 
+   @Deprecated
+   public static final String HAVE_ROLE = "haveRole";
+   @Deprecated
+   public static final String TGT_CARDINALITY = "tgtCardinality";
+
    public static final String HAVE_METHOD = "haveMethod";
    public static final String METHOD_BODY = "methodBody";
    public static final String DECLARATION = "declaration";
+
+   @Deprecated
+   public static final String METHOD_NAME = "methodName";
+   @Deprecated
+   public static final String PARAMS      = "params";
 
    public static final String EXTEND      = "extend";
    public static final String SUB_CLASS   = "subClass";
