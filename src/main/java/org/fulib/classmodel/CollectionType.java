@@ -16,11 +16,15 @@ public class CollectionType
 
    // =============== Fields ===============
 
-   private final CollectionItf               itf;
-   private final String                      implTemplate;
-   private final Class<? extends Collection> implClass;
+   private CollectionItf               itf;
+   private String                      implTemplate;
+   private Class<? extends Collection> implClass;
 
    // =============== Constructors ===============
+
+   public CollectionType()
+   {
+   }
 
    private CollectionType(CollectionItf itf, String implTemplate, Class<? extends Collection> implClass)
    {
@@ -92,13 +96,28 @@ public class CollectionType
       return this.itf;
    }
 
+   public void setItf(CollectionItf itf)
+   {
+      this.itf = itf;
+   }
+
    public String getImplTemplate()
    {
       return this.implTemplate;
    }
 
+   public void setImplTemplate(String implTemplate)
+   {
+      this.implTemplate = implTemplate;
+   }
+
    public Class<? extends Collection> getImplClass()
    {
       return this.implClass;
+   }
+
+   public void setImplClass(Class<? extends Collection> implClass)
+   {
+      this.implClass = implClass;
    }
 }
