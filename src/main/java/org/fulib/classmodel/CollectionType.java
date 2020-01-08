@@ -1,18 +1,22 @@
 package org.fulib.classmodel;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("rawtypes")
 public class CollectionType
 {
+   // =============== Static Fields ===============
+
+   private static final Map<String, CollectionType> cache = new ConcurrentHashMap<>();
+
    // =============== Constants ===============
 
-   public static final CollectionType ArrayList = new CollectionType(CollectionItf.List, "java.util.ArrayList<%s>",
-                                                                     java.util.ArrayList.class);
+   // must be initialized after cache!
 
-   public static final CollectionType LinkedHashSet = new CollectionType(CollectionItf.Set,
-                                                                         "java.util.LinkedHashSet<%s>",
-                                                                         java.util.LinkedHashSet.class);
+   public static final CollectionType ArrayList     = of(java.util.ArrayList.class);
+   public static final CollectionType LinkedHashSet = of(java.util.LinkedHashSet.class);
 
    // =============== Fields ===============
 
@@ -20,14 +24,18 @@ public class CollectionType
    private String                      implTemplate;
    private Class<? extends Collection> implClass;
 
+   private final boolean cached;
+
    // =============== Constructors ===============
 
    public CollectionType()
    {
+      this.cached = false;
    }
 
    private CollectionType(CollectionItf itf, String implTemplate, Class<? extends Collection> implClass)
    {
+      this.cached = true;
       this.itf = itf;
       this.implTemplate = implTemplate;
       this.implClass = implClass;
@@ -36,6 +44,11 @@ public class CollectionType
    // =============== Static Methods ===============
 
    public static CollectionType of(Class<? extends Collection> implClass)
+   {
+      return cache.computeIfAbsent(implClass.getName(), n -> create(implClass));
+   }
+
+   private static CollectionType create(Class<? extends Collection> implClass)
    {
       final CollectionItf itf = CollectionItf.deriveFrom(implClass);
       final String implTemplate = deriveTemplate(implClass);
@@ -47,6 +60,11 @@ public class CollectionType
       final int genericIndex = implTemplate.indexOf('<');
       final String className = genericIndex >= 0 ? implTemplate.substring(0, genericIndex) : implTemplate;
 
+      return cache.computeIfAbsent(className, c -> create(className, implTemplate));
+   }
+
+   private static CollectionType create(String className, String implTemplate)
+   {
       try
       {
          final Class<?> implClass = Class.forName(className);
@@ -98,6 +116,7 @@ public class CollectionType
 
    public void setItf(CollectionItf itf)
    {
+      this.checkCached();
       this.itf = itf;
    }
 
@@ -108,6 +127,7 @@ public class CollectionType
 
    public void setImplTemplate(String implTemplate)
    {
+      this.checkCached();
       this.implTemplate = implTemplate;
    }
 
@@ -118,6 +138,15 @@ public class CollectionType
 
    public void setImplClass(Class<? extends Collection> implClass)
    {
+      this.checkCached();
       this.implClass = implClass;
+   }
+
+   private void checkCached()
+   {
+      if (this.cached)
+      {
+         throw new UnsupportedOperationException("cannot modify cached CollectionType");
+      }
    }
 }
