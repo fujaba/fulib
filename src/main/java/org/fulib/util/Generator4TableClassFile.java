@@ -36,32 +36,21 @@ public class Generator4TableClassFile extends AbstractGenerator
       String classFileName = clazz.getModel().getPackageSrcFolder() + "/tables/" + clazz.getName() + "Table.java";
       FileFragmentMap fragmentMap = FragmentMapBuilder.parse(classFileName);
 
-      // doGenerate code for class
       this.generatePackageDecl(clazz, fragmentMap);
-
       this.generateClassDecl(clazz, fragmentMap);
-
       this.generateConstructor(clazz, fragmentMap);
-
       this.generateStandardAttributes(clazz, fragmentMap);
-
       this.generateAttributes(clazz, fragmentMap);
-
       this.generateAssociations(clazz, fragmentMap);
-
       this.generateSelectColumns(clazz, fragmentMap);
-
       this.generateAddColumn(clazz, fragmentMap);
-
       this.generateFilter(clazz, fragmentMap);
-
       this.generateToSet(clazz, fragmentMap);
-
       this.generateToString(clazz, fragmentMap);
 
       fragmentMap.add(FileFragmentMap.CLASS_END, "}", 1);
 
-	   if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
+      if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
       {
          Path path = Paths.get(classFileName);
          try
