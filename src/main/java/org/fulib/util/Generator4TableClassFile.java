@@ -160,38 +160,36 @@ public class Generator4TableClassFile extends AbstractGenerator
       String fullClassName = clazz.getModel().getPackageName() + "." + clazz.getName();
       fragmentMap.add(FileFragmentMap.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
 
-      STGroup group = this.getSTGroup("org/fulib/templates/tables/associations.stg");
-      String result;
-      ST st;
+      final STGroup group = this.getSTGroup("org/fulib/templates/tables/associations.stg");
+
       for (AssocRole role : clazz.getRoles())
       {
          if (role.getName() == null)
          {
-            continue; //===================================
+            continue;
          }
 
          String otherClassName = role.getOther().getClazz().getName();
 
          // getMethod(roleName,toMany,className,otherClassName) ::=
-         st = group.getInstanceOf("expandMethod");
+         final ST st = group.getInstanceOf("expandMethod");
          st.add("roleName", role.getName());
          st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("className", clazz.getName());
          st.add("otherClassName", otherClassName);
-         result = st.render();
-         fragmentMap.add(FileFragmentMap.METHOD + ":expand" + StrUtil.cap(role.getName()) + "(String...)", result, 2,
-                         role.getModified());
+         fragmentMap
+            .add(FileFragmentMap.METHOD + ":expand" + StrUtil.cap(role.getName()) + "(String...)", st.render(), 2,
+                 role.getModified());
 
          // hasMethod(roleName,toMany,className,otherClassName) ::=
-         st = group.getInstanceOf("hasMethod");
-         st.add("roleName", role.getName());
-         st.add("toMany", role.getCardinality() != Type.ONE);
-         st.add("className", clazz.getName());
-         st.add("otherClassName", otherClassName);
-         result = st.render();
+         final ST hasMethod = group.getInstanceOf("hasMethod");
+         hasMethod.add("roleName", role.getName());
+         hasMethod.add("toMany", role.getCardinality() != Type.ONE);
+         hasMethod.add("className", clazz.getName());
+         hasMethod.add("otherClassName", otherClassName);
          fragmentMap
             .add(FileFragmentMap.METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)",
-                 result, 2, role.getModified());
+                 hasMethod.render(), 2, role.getModified());
 
          fullClassName = clazz.getModel().getPackageName() + "." + otherClassName;
          fragmentMap.add(FileFragmentMap.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
