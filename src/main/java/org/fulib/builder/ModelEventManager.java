@@ -5,6 +5,7 @@ import org.fulib.yaml.Yamler;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class ModelEventManager
@@ -82,6 +83,27 @@ public class ModelEventManager
       this.eventSource.setOldEventTimeStamp(0);
    }
 
+   /**
+    * Appends the event.
+    *
+    * @param event
+    *    the event
+    *
+    * @since 1.2
+    */
+   public void append(Map<String, String> event)
+   {
+      this.eventSource.append(event);
+   }
+
+   /**
+    * Appends the event.
+    *
+    * @param event
+    *    the event
+    *
+    * @deprecated since 1.2; use {@link #append(Map)} instead
+    */
    public void append(LinkedHashMap<String, String> event)
    {
       this.eventSource.append(event);
