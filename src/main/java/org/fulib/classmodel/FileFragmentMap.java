@@ -11,7 +11,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Objects;
 
 public class FileFragmentMap
 {
@@ -210,17 +209,73 @@ public class FileFragmentMap
       }
    }
 
+   // --------------- Smart Modification ---------------
+
+   /**
+    * Adds or replaces the fragment with the given key, UNLESS it is marked as user-defined.
+    * When no old fragment exists, a gap with the specified number of newlines is added after the new fragment.
+    *
+    * @param key
+    *    the key
+    * @param newText
+    *    the new text
+    * @param newLines
+    *    the number of line breaks to insert after the text
+    *
+    * @return the old fragment, or {@code null} if not found
+    */
    public CodeFragment add(String key, String newText, int newLines)
    {
-      return this.add(key, newText, newLines, false);
+      return this.replace(key, newText, newLines);
    }
 
+   /**
+    * Removes the fragment with the given key, UNLESS it is marked as user-defined.
+    *
+    * @param key
+    *    the key
+    *
+    * @return the old fragment, or {@code null} if not found
+    *
+    * @since 1.2
+    */
+   public CodeFragment remove(String key)
+   {
+      return this.replace(key, null, 0);
+   }
+
+   /**
+    * Behaves like {@link #add(String, String, int)} when removeFragment is true,
+    * and like {@link #remove(String)} otherwise.
+    *
+    * @see #add(String, String, int)
+    * @see #remove(String)
+    *
+    * @param key
+    *    the key
+    * @param newText
+    *    the new text (ignored if removeFragment is true)
+    * @param newLines
+    *    the number of line breaks to insert after the text (ignored if removeFragment is true)
+    * @param removeFragment
+    *    whether to remove the fragment associated with the key
+    *
+    * @return the old fragment, or {@code null} if not found
+    *
+    * @deprecated since 1.2; use {@link #add(String, String, int)} or {@link #remove(String)} instead
+    */
+   @Deprecated
    public CodeFragment add(String key, String newText, int newLines, boolean removeFragment)
+   {
+      return this.replace(key, removeFragment ? null : newText, newLines);
+   }
+
+   private CodeFragment replace(String key, String newText, int newLines)
    {
       CodeFragment old = this.codeMap.get(key);
       if (old == null)
       {
-         if (removeFragment)
+         if (newText == null)
          {
             return null;
          }
@@ -236,7 +291,7 @@ public class FileFragmentMap
          return old;
       }
 
-      if (removeFragment)
+      if (newText == null)
       {
          this.remove(old);
          return old;
