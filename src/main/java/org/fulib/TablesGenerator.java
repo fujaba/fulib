@@ -3,7 +3,6 @@ package org.fulib;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.fulib.util.Generator4TableClassFile;
-import org.fulib.yaml.YamlIdMap;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
@@ -79,7 +78,7 @@ public class TablesGenerator
     */
    public void generate(ClassModel model)
    {
-      ClassModel oldModel = this.loadOldClassModel(model.getPackageSrcFolder());
+      ClassModel oldModel = Generator.loadClassModel(model.getPackageSrcFolder(), MODEL_FILE_NAME);
 
       if (oldModel != null)
       {
@@ -91,7 +90,7 @@ public class TablesGenerator
 
       this.generateClasses(model);
 
-      this.saveClassmodel(model);
+      Generator.saveNewClassModel(model, MODEL_FILE_NAME);
    }
 
    private void generateClasses(ClassModel model)
@@ -142,15 +141,5 @@ public class TablesGenerator
       {
          e.printStackTrace();
       }
-   }
-
-   private ClassModel loadOldClassModel(String modelFolder)
-   {
-      return Generator.loadClassModel(modelFolder, MODEL_FILE_NAME);
-   }
-
-   private void saveClassmodel(ClassModel model)
-   {
-      Generator.saveNewClassModel(model, MODEL_FILE_NAME);
    }
 }

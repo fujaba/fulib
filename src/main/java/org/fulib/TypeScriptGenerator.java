@@ -3,15 +3,6 @@ package org.fulib;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.fulib.util.Generator4TypeScriptClassFile;
-import org.fulib.yaml.YamlIdMap;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The fulib TypeScriptGenerator generates Table classes from a class model.
@@ -68,7 +59,7 @@ public class TypeScriptGenerator
     */
    public void generate(ClassModel model)
    {
-      ClassModel oldModel = this.loadOldClassModel(model.getPackageSrcFolder());
+      ClassModel oldModel = Generator.loadClassModel(model.getPackageSrcFolder(), MODEL_FILE_NAME);
 
       if (oldModel != null)
       {
@@ -80,7 +71,7 @@ public class TypeScriptGenerator
 
       this.generateClasses(model);
 
-      this.saveClassmodel(model);
+      Generator.saveNewClassModel(model, MODEL_FILE_NAME);
    }
 
    private void generateClasses(ClassModel model)
@@ -90,15 +81,5 @@ public class TypeScriptGenerator
       {
          new Generator4TypeScriptClassFile().setCustomTemplatesFile(this.getCustomTemplateFile()).generate(clazz);
       }
-   }
-
-   private ClassModel loadOldClassModel(String modelFolder)
-   {
-      return Generator.loadClassModel(modelFolder, MODEL_FILE_NAME);
-   }
-
-   private void saveClassmodel(ClassModel model)
-   {
-      Generator.saveNewClassModel(model, MODEL_FILE_NAME);
    }
 }

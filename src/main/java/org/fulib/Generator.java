@@ -87,7 +87,7 @@ public class Generator
     */
    public void generate(ClassModel model)
    {
-      ClassModel oldModel = this.loadOldClassModel(model.getPackageSrcFolder());
+      ClassModel oldModel = loadClassModel(model.getPackageSrcFolder(), MODEL_FILE_NAME);
 
       if (oldModel != null)
       {
@@ -99,7 +99,7 @@ public class Generator
 
       this.generateClasses(model);
 
-      this.saveClassmodel(model);
+      saveNewClassModel(model, MODEL_FILE_NAME);
    }
 
    private void generateClasses(ClassModel model)
@@ -111,11 +111,6 @@ public class Generator
       {
          generator.generate(clazz);
       }
-   }
-
-   private ClassModel loadOldClassModel(String modelFolder)
-   {
-      return loadClassModel(modelFolder, MODEL_FILE_NAME);
    }
 
    static ClassModel loadClassModel(String modelFolder, String modelFileName)
@@ -142,11 +137,6 @@ public class Generator
       }
 
       return null;
-   }
-
-   private void saveClassmodel(ClassModel model)
-   {
-      saveNewClassModel(model, MODEL_FILE_NAME);
    }
 
    static void saveNewClassModel(ClassModel model, String modelFileName)
