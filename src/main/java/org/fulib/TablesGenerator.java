@@ -15,36 +15,60 @@ import java.nio.file.StandardOpenOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * The fulib TablesGenerator generates Table classes from a class model.
  * Table classes are used for relational model queries.
  * <pre>
  * <!-- insert_code_fragment: Fulib.tablesGenerator-->
-      ClassModel model = mb.getClassModel();
-      Fulib.tablesGenerator().generate(model);
+ * ClassModel model = mb.getClassModel();
+ * Fulib.tablesGenerator().generate(model);
  * <!-- end_code_fragment:  -->
  * </pre>
  */
 public class TablesGenerator
 {
+   // =============== Fields ===============
 
-   private static Logger logger;
+   private String customTemplateFile;
 
-   static {
-      logger = Logger.getLogger(TablesGenerator.class.getName());
-      logger.setLevel(Level.SEVERE);
+   // =============== Properties ===============
+
+   public String getCustomTemplateFile()
+   {
+      return this.customTemplateFile;
    }
 
-   private String customTemplateFile = null;
+   /**
+    * You may overwrite code generation templates within some custom template file. <br>
+    * Provide your templates for code generation as in:
+    * <pre>
+    * <!-- insert_code_fragment: testCustomTemplates -->
+    * Fulib.generator()
+    * .setCustomTemplatesFile("templates/custom.stg")
+    * .generate(model);
+    * <!-- end_code_fragment: testCustomTemplates -->
+    * </pre>
+    *
+    * @param customFileName
+    *    the custom templates file name
+    *
+    * @return this instance, to allow call chaining.
+    */
+   public TablesGenerator setCustomTemplatesFile(String customFileName)
+   {
+      this.customTemplateFile = customFileName;
+      return this;
+   }
+
+   // =============== Methods ===============
 
    /**
     * The fulib TablesGenerator generates Table classes from a class model.
     * Table classes are used for relational model queries.
     * <pre>
     * <!-- insert_code_fragment: Fulib.tablesGenerator-->
-    ClassModel model = mb.getClassModel();
-    Fulib.tablesGenerator().generate(model);
+    * ClassModel model = mb.getClassModel();
+    * Fulib.tablesGenerator().generate(model);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -53,58 +77,55 @@ public class TablesGenerator
     */
    public void generate(ClassModel model)
    {
-      ClassModel oldModel = loadOldClassModel(model.getPackageSrcFolder());
+      ClassModel oldModel = this.loadOldClassModel(model.getPackageSrcFolder());
 
       if (oldModel != null)
       {
          Fulib.generator().markModifiedElementsInOldModel(oldModel, model);
 
          // remove code of modfiedElements
-         generateClasses(oldModel);
+         this.generateClasses(oldModel);
       }
 
-      generateClasses(model);
+      this.generateClasses(model);
 
-      saveClassmodel(model);
-
+      this.saveClassmodel(model);
    }
-
 
    private void generateClasses(ClassModel model)
    {
       // loop through all classes
       for (Clazz clazz : model.getClasses())
       {
-         new Generator4TableClassFile()
-               .setCustomTemplatesFile(this.getCustomTemplateFile())
-               .generate(clazz);
+         new Generator4TableClassFile().setCustomTemplatesFile(this.getCustomTemplateFile()).generate(clazz);
       }
 
       // generate primitive tables
       Generator4TableClassFile generator4TableClassFile = new Generator4TableClassFile()
-            .setCustomTemplatesFile(this.getCustomTemplateFile());
+         .setCustomTemplatesFile(this.getCustomTemplateFile());
 
-      generatePrimitivTable(model, generator4TableClassFile, "int", "Integer");
-      generatePrimitivTable(model, generator4TableClassFile, "long", "Long");
-      generatePrimitivTable(model, generator4TableClassFile, "double", "Double");
-      generatePrimitivTable(model, generator4TableClassFile, "float", "Float");
+      this.generatePrimitiveTable(model, generator4TableClassFile, "int", "Integer");
+      this.generatePrimitiveTable(model, generator4TableClassFile, "long", "Long");
+      this.generatePrimitiveTable(model, generator4TableClassFile, "double", "Double");
+      this.generatePrimitiveTable(model, generator4TableClassFile, "float", "Float");
 
       STGroup group = generator4TableClassFile.getSTGroup("org/fulib/templates/tables/StringTable.stg");
       ST st = group.getInstanceOf("StringTable");
       st.add("packageName", model.getPackageName() + ".tables");
       String result = st.render();
-      writeFile(model.getPackageSrcFolder() + "/tables/StringTable.java", result);
+      this.writeFile(model.getPackageSrcFolder() + "/tables/StringTable.java", result);
    }
 
-   private void generatePrimitivTable(ClassModel model, Generator4TableClassFile generator4TableClassFile, String primitivType, String objectType)
+   private void generatePrimitiveTable(ClassModel model, Generator4TableClassFile generator4TableClassFile,
+      String primitiveType, String objectType)
    {
       STGroup group = generator4TableClassFile.getSTGroup("org/fulib/templates/tables/intTable.stg");
       ST st = group.getInstanceOf("intTable");
       st.add("packageName", model.getPackageName() + ".tables");
-      st.add("primitiveType", primitivType);
+      st.add("primitiveType", primitiveType);
       st.add("objectType", objectType);
       String result = st.render();
-      writeFile(model.getPackageSrcFolder() + "/tables/" + primitivType + "Table.java", result);
+      this.writeFile(model.getPackageSrcFolder() + "/tables/" + primitiveType + "Table.java", result);
    }
 
    public void writeFile(String fileName, String content)
@@ -129,7 +150,7 @@ public class TablesGenerator
       {
          Path path = Paths.get(fileName);
 
-         if ( ! Files.exists(path))
+         if (!Files.exists(path))
          {
             return null;
          }
@@ -138,8 +159,7 @@ public class TablesGenerator
          String yamlString = new String(bytes);
 
          YamlIdMap idMap = new YamlIdMap(ClassModel.class.getPackage().getName());
-         ClassModel model = (ClassModel) idMap.decode(yamlString);
-         return model;
+         return (ClassModel) idMap.decode(yamlString);
       }
       catch (IOException e)
       {
@@ -148,7 +168,6 @@ public class TablesGenerator
 
       return null;
    }
-
 
    private void saveClassmodel(ClassModel model)
    {
@@ -160,40 +179,12 @@ public class TablesGenerator
          String modelFolder = model.getPackageSrcFolder();
          String fileName = modelFolder + "/tablesClassModel.yaml";
          Files.createDirectories(Paths.get(modelFolder));
-         Files.write(Paths.get(fileName), yamlString.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+         Files.write(Paths.get(fileName), yamlString.getBytes(), StandardOpenOption.CREATE,
+                     StandardOpenOption.TRUNCATE_EXISTING);
       }
       catch (IOException e)
       {
          e.printStackTrace();
       }
-   }
-
-
-
-   public String getCustomTemplateFile()
-   {
-      return customTemplateFile;
-   }
-
-   /**
-    * You may overwrite code generation templates within some custom template file. <br>
-    * Provide your templates for code generation as in:
-    * <pre>
-    * <!-- insert_code_fragment: testCustomTemplates -->
-        Fulib.generator()
-                .setCustomTemplatesFile("templates/custom.stg")
-                .generate(model);
-    * <!-- end_code_fragment: testCustomTemplates -->
-    * </pre>
-    *
-    * @param customFileName
-    *    the custom templates file name
-    *
-    * @return this instance, to allow call chaining.
-    */
-   public TablesGenerator setCustomTemplatesFile(String customFileName)
-   {
-      this.customTemplateFile = customFileName;
-      return this;
    }
 }
