@@ -13,6 +13,9 @@ import java.util.Objects;
 
 import static org.fulib.Parser.CLASS_END;
 
+/**
+ * @deprecated since 1.2; TypeScript support is no longer maintained by the Java implementation of Fulib
+ */
 @Deprecated
 public class TypeScriptParser
 {
