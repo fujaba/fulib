@@ -70,9 +70,11 @@ public class Generator4TableClassFile extends AbstractGenerator
 
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      // TODO template
-      String result = String.format("package %s;", clazz.getModel().getPackageName() + ".tables");
-      fragmentMap.add(FileFragmentMap.PACKAGE, result, 2);
+      final STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
+
+      final ST packageDecl = group.getInstanceOf("packageDecl");
+      packageDecl.add("packageName", clazz.getModel().getPackageName() + ".tables");
+      fragmentMap.add(FileFragmentMap.PACKAGE, packageDecl.render(), 2);
    }
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
