@@ -261,11 +261,10 @@ public class Generator4TableClassFile extends AbstractGenerator
    {
       fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.LinkedHashSet", "import java.util.LinkedHashSet;", 1);
 
-      boolean removeFragment = clazz.getModified();
       if (clazz.getModified() || clazz.getSuperClass() != null)
       {
          // do not generate toSet method
-         fragmentMap.add(FileFragmentMap.METHOD + ":toSet()", "", 2, removeFragment);
+         fragmentMap.add(FileFragmentMap.METHOD + ":toSet()", "", 2, true);
       }
       else
       {
@@ -273,7 +272,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
          final ST st = group.getInstanceOf("toSet");
          st.add("className", clazz.getName());
-         fragmentMap.add(FileFragmentMap.METHOD + ":toSet()", st.render(), 2, removeFragment);
+         fragmentMap.add(FileFragmentMap.METHOD + ":toSet()", st.render(), 2);
       }
    }
 
