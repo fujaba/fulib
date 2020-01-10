@@ -147,20 +147,6 @@ public class TablesGenerator
 
    private void saveClassmodel(ClassModel model)
    {
-      // store new model
-      YamlIdMap idMap = new YamlIdMap(ClassModel.class.getPackage().getName());
-      String yamlString = idMap.encode(model);
-      try
-      {
-         String modelFolder = model.getPackageSrcFolder();
-         String fileName = modelFolder + "/tablesClassModel.yaml";
-         Files.createDirectories(Paths.get(modelFolder));
-         Files.write(Paths.get(fileName), yamlString.getBytes(), StandardOpenOption.CREATE,
-                     StandardOpenOption.TRUNCATE_EXISTING);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
+      Generator.saveNewClassModel(model, "tablesClassModel.yaml");
    }
 }

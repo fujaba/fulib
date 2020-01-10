@@ -142,13 +142,17 @@ public class Generator
 
    private void saveClassmodel(ClassModel model)
    {
-      // store new model
+      saveNewClassModel(model, "classModel.yaml");
+   }
+
+   static void saveNewClassModel(ClassModel model, String modelFileName)
+   {
       YamlIdMap idMap = new YamlIdMap(ClassModel.class.getPackage().getName());
       String yamlString = idMap.encode(model);
       try
       {
          String modelFolder = model.getPackageSrcFolder();
-         String fileName = modelFolder + "/classModel.yaml";
+         String fileName = modelFolder + '/' + modelFileName;
          Files.createDirectories(Paths.get(modelFolder));
          Files.write(Paths.get(fileName), yamlString.getBytes(), StandardOpenOption.CREATE,
                      StandardOpenOption.TRUNCATE_EXISTING);
