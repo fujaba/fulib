@@ -25,6 +25,10 @@ import java.nio.file.StandardOpenOption;
  */
 public class TablesGenerator
 {
+   // =============== Constants ===============
+
+   private static final String MODEL_FILE_NAME = "tablesClassModel.yaml";
+
    // =============== Fields ===============
 
    private String customTemplateFile;
@@ -142,11 +146,11 @@ public class TablesGenerator
 
    private ClassModel loadOldClassModel(String modelFolder)
    {
-      return Generator.loadClassModel(modelFolder, "tablesClassModel.yaml");
+      return Generator.loadClassModel(modelFolder, MODEL_FILE_NAME);
    }
 
    private void saveClassmodel(ClassModel model)
    {
-      Generator.saveNewClassModel(model, "tablesClassModel.yaml");
+      Generator.saveNewClassModel(model, MODEL_FILE_NAME);
    }
 }

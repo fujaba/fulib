@@ -28,6 +28,10 @@ import java.util.logging.Logger;
 @Deprecated
 public class TypeScriptGenerator
 {
+   // =============== Constants ===============
+
+   private static final String MODEL_FILE_NAME = "typeScriptClassModel.yaml";
+
    // =============== Fields ===============
 
    private String customTemplateFile;
@@ -90,11 +94,11 @@ public class TypeScriptGenerator
 
    private ClassModel loadOldClassModel(String modelFolder)
    {
-      return Generator.loadClassModel(modelFolder, "typeScriptClassModel.yaml");
+      return Generator.loadClassModel(modelFolder, MODEL_FILE_NAME);
    }
 
    private void saveClassmodel(ClassModel model)
    {
-      Generator.saveNewClassModel(model, "typeScriptClassModel.yaml");
+      Generator.saveNewClassModel(model, MODEL_FILE_NAME);
    }
 }

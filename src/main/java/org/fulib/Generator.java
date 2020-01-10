@@ -24,6 +24,10 @@ import java.util.logging.Logger;
  */
 public class Generator
 {
+   // =============== Constants ===============
+
+   private static final String MODEL_FILE_NAME = "classModel.yaml";
+
    // =============== Static Fields ===============
 
    private static Logger logger;
@@ -111,7 +115,7 @@ public class Generator
 
    private ClassModel loadOldClassModel(String modelFolder)
    {
-      return loadClassModel(modelFolder, "classModel.yaml");
+      return loadClassModel(modelFolder, MODEL_FILE_NAME);
    }
 
    static ClassModel loadClassModel(String modelFolder, String modelFileName)
@@ -142,7 +146,7 @@ public class Generator
 
    private void saveClassmodel(ClassModel model)
    {
-      saveNewClassModel(model, "classModel.yaml");
+      saveNewClassModel(model, MODEL_FILE_NAME);
    }
 
    static void saveNewClassModel(ClassModel model, String modelFileName)
