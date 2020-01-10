@@ -142,20 +142,16 @@ public class Generator4TableClassFile extends AbstractGenerator
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("org/fulib/templates/tables/attributes.stg");
-      ST attrTemplate;
-      String result;
+      final STGroup group = this.getSTGroup("org/fulib/templates/tables/attributes.stg");
 
       for (Attribute attr : clazz.getAttributes())
       {
-         attrTemplate = group.getInstanceOf("expandMethod");
-         attrTemplate.add("roleName", attr.getName());
-         attrTemplate.add("typeName", attr.getType());
-         attrTemplate.add("className", clazz.getName());
-         result = attrTemplate.render();
-
-         fragmentMap.add(FileFragmentMap.METHOD + ":expand" + StrUtil.cap(attr.getName()) + "(String...)", result, 2,
-                         attr.getModified());
+         final ST expandMethod = group.getInstanceOf("expandMethod");
+         expandMethod.add("roleName", attr.getName());
+         expandMethod.add("typeName", attr.getType());
+         expandMethod.add("className", clazz.getName());
+         fragmentMap.add(FileFragmentMap.METHOD + ":expand" + StrUtil.cap(attr.getName()) + "(String...)",
+                         expandMethod.render(), 2, attr.getModified());
       }
    }
 
