@@ -17,6 +17,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 
+/**
+ * @deprecated since 1.2; TypeScript support is no longer maintained by the Java implementation of Fulib
+ */
+@Deprecated
 public class Generator4TypeScriptClassFile extends AbstractGenerator
 {
    // =============== Properties ===============
