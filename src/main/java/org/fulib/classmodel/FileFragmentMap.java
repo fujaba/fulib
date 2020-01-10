@@ -278,25 +278,14 @@ public class FileFragmentMap
 
       if (key.startsWith(IMPORT))
       {
-         CodeFragment oldFragment = this.codeMap.get(CLASS);
-         int pos = this.fragmentList.indexOf(oldFragment);
-
-         // go to the gap before this
-         pos--;
-
-         pos = Math.max(0, pos);
-
-         this.fragmentList.add(pos, gap);
-         pos++;
-         //         fragmentList.add(pos, gap);
-         //         pos++;
-         this.fragmentList.add(pos, result);
+         this.add(result, CLASS);
+         this.add(gap, CLASS);
 
          return result;
       }
 
       this.add(result);
-      this.add(gap, CLASS_END);
+      this.add(gap);
 
       return result;
    }
@@ -327,8 +316,6 @@ public class FileFragmentMap
       {
          this.fragmentList.add(pos, result);
       }
-
-      this.codeMap.put(result.getKey(), result);
    }
 
    public void compressBlankLines()
