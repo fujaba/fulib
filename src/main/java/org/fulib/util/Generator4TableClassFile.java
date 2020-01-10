@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Generator4TableClassFile extends AbstractGenerator
@@ -98,14 +99,12 @@ public class Generator4TableClassFile extends AbstractGenerator
 
    private void generateStandardAttributes(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("org/fulib/templates/attributes.pojo.stg");
-      ST attrTemplate;
-      String result;
+      final STGroup group = this.getSTGroup("org/fulib/templates/attributes.pojo.stg");
 
       fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.ArrayList", "import java.util.ArrayList;", 1);
       fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.LinkedHashMap", "import java.util.LinkedHashMap;", 1);
 
-      ArrayList<Attribute> standardAttributes = new ArrayList<>();
+      final List<Attribute> standardAttributes = new ArrayList<>();
 
       standardAttributes.add(new Attribute().setName("table").setType("ArrayList<ArrayList<Object>>")
                                             .setInitialization("new ArrayList<>()"));
@@ -120,23 +119,20 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       for (Attribute attr : standardAttributes)
       {
-         attrTemplate = group.getInstanceOf("attrDecl").add("attr", attr);
-         result = attrTemplate.render();
+         final ST attrDecl = group.getInstanceOf("attrDecl");
+         attrDecl.add("attr", attr);
+         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attr.getName(), attrDecl.render(), 2, clazz.getModified());
 
-         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attr.getName(), result, 2, clazz.getModified());
+         final ST attrGet = group.getInstanceOf("attrGet");
+         attrGet.add("attr", attr);
+         fragmentMap.add(FileFragmentMap.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", attrGet.render(), 2,
+                         attr.getModified());
 
-         attrTemplate = group.getInstanceOf("attrGet").add("attr", attr);
-         result = attrTemplate.render();
-
-         fragmentMap
-            .add(FileFragmentMap.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
-
-         attrTemplate = group.getInstanceOf("attrSet").add("attr", attr);
-         result = attrTemplate.render();
-
+         final ST attrSet = group.getInstanceOf("attrSet");
+         attrSet.add("attr", attr);
          fragmentMap.add(
             FileFragmentMap.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType().replace(" ", "") + ")",
-            result, 3, attr.getModified());
+            attrSet.render(), 3, attr.getModified());
       }
    }
 
