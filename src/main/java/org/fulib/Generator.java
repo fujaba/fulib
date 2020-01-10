@@ -111,8 +111,12 @@ public class Generator
 
    private ClassModel loadOldClassModel(String modelFolder)
    {
-      // store new model
-      String fileName = modelFolder + "/classModel.yaml";
+      return loadClassModel(modelFolder, "classModel.yaml");
+   }
+
+   static ClassModel loadClassModel(String modelFolder, String modelFileName)
+   {
+      String fileName = modelFolder + '/' + modelFileName;
       try
       {
          Path path = Paths.get(fileName);

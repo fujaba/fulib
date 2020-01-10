@@ -90,29 +90,7 @@ public class TypeScriptGenerator
 
    private ClassModel loadOldClassModel(String modelFolder)
    {
-      // store new model
-      String fileName = modelFolder + "/typeScriptClassModel.yaml";
-      try
-      {
-         Path path = Paths.get(fileName);
-
-         if (!Files.exists(path))
-         {
-            return null;
-         }
-
-         byte[] bytes = Files.readAllBytes(path);
-         String yamlString = new String(bytes);
-
-         YamlIdMap idMap = new YamlIdMap(ClassModel.class.getPackage().getName());
-         return (ClassModel) idMap.decode(yamlString);
-      }
-      catch (IOException e)
-      {
-         Logger.getGlobal().log(Level.SEVERE, "\n   could not load " + fileName, e);
-      }
-
-      return null;
+      return Generator.loadClassModel(modelFolder, "typeScriptClassModel.yaml");
    }
 
    private void saveClassmodel(ClassModel model)
