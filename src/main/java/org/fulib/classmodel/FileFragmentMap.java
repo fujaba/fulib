@@ -317,9 +317,9 @@ public class FileFragmentMap
 
    private void add(CodeFragment result, String posKey)
    {
-      CodeFragment oldFragment = this.codeMap.get(posKey);
-      int pos = this.fragmentList.indexOf(oldFragment);
-      if (pos == -1)
+      final CodeFragment oldFragment = this.codeMap.get(posKey);
+      final int pos;
+      if (oldFragment == null || (pos = this.fragmentList.indexOf(oldFragment)) < 0)
       {
          this.fragmentList.add(result);
       }
