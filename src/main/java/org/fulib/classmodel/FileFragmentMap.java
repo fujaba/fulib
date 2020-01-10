@@ -121,7 +121,8 @@ public class FileFragmentMap
 
    // =============== Static Methods ===============
 
-   public static String mergeClassDecl(String oldText, String newText)
+   // package-private for testability
+   static String mergeClassDecl(String oldText, String newText)
    {
       // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
       final Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
@@ -169,7 +170,9 @@ public class FileFragmentMap
       return newTextBuilder.toString();
    }
 
-   private static String mergeAttributeDecl(String oldText, String newText)
+   // package-private for testability
+   // TODO test
+   static String mergeAttributeDecl(String oldText, String newText)
    {
       // keep everything before public
       final int oldPublicPos = oldText.indexOf("public");
