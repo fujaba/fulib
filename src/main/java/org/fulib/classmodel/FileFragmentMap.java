@@ -112,6 +112,13 @@ public class FileFragmentMap
       return true;
    }
 
+   @Deprecated
+   @SuppressWarnings("unused")
+   public boolean classBodyIsEmpty(FileFragmentMap fragmentMap)
+   {
+      return this.isClassBodyEmpty();
+   }
+
    // =============== Static Methods ===============
 
    public static String mergeClassDecl(String oldText, String newText)
@@ -184,6 +191,8 @@ public class FileFragmentMap
    }
 
    // =============== Methods ===============
+
+   // --------------- Raw Modification ---------------
 
    public void add(CodeFragment fragment)
    {
@@ -373,6 +382,8 @@ public class FileFragmentMap
       }
    }
 
+   // --------------- Post-Processing ---------------
+
    public void compressBlankLines()
    {
       int noOfBlankLines = 0;
@@ -407,6 +418,8 @@ public class FileFragmentMap
       }
    }
 
+   // --------------- Output ---------------
+
    public void writeFile()
    {
       final Path path = Paths.get(this.fileName);
@@ -433,13 +446,6 @@ public class FileFragmentMap
       {
          writer.write(fragment.getText());
       }
-   }
-
-   @Deprecated
-   @SuppressWarnings("unused")
-   public boolean classBodyIsEmpty(FileFragmentMap fragmentMap)
-   {
-      return this.isClassBodyEmpty();
    }
 
    // --------------- Property Change Support ---------------
