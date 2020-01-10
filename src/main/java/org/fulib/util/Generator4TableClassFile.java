@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 public class Generator4TableClassFile extends AbstractGenerator
@@ -104,36 +102,47 @@ public class Generator4TableClassFile extends AbstractGenerator
       fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.ArrayList", "import java.util.ArrayList;", 1);
       fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.LinkedHashMap", "import java.util.LinkedHashMap;", 1);
 
-      final List<Attribute> standardAttributes = new ArrayList<>();
-
-      standardAttributes.add(new Attribute().setName("table").setType("ArrayList<ArrayList<Object>>")
-                                            .setInitialization("new ArrayList<>()"));
-
-      standardAttributes.add(new Attribute().setName("columnName").setType("String").setInitialization("null"));
-
-      standardAttributes.add(new Attribute().setName("columnMap").setType("LinkedHashMap<String, Integer>")
-                                            .setInitialization("new LinkedHashMap<>()"));
-
       // here so the attribute templates have a class name
-      new Clazz().setName(clazz.getName() + "Table").withAttributes(standardAttributes);
+      final Clazz owner = new Clazz().setName(clazz.getName() + "Table");
 
-      for (Attribute attr : standardAttributes)
-      {
-         final ST attrDecl = group.getInstanceOf("attrDecl");
-         attrDecl.add("attr", attr);
-         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attr.getName(), attrDecl.render(), 2, clazz.getModified());
+      final Attribute table = new Attribute();
+      table.setName("table");
+      table.setType("ArrayList<ArrayList<Object>>");
+      table.setInitialization("new ArrayList<>()");
+      table.setClazz(owner);
+      this.generateStandardAttribute(clazz, fragmentMap, group, table);
 
-         final ST attrGet = group.getInstanceOf("attrGet");
-         attrGet.add("attr", attr);
-         fragmentMap.add(FileFragmentMap.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", attrGet.render(), 2,
-                         attr.getModified());
+      final Attribute columnName = new Attribute();
+      columnName.setName("columnName");
+      columnName.setType("String");
+      columnName.setInitialization("null");
+      columnName.setClazz(owner);
+      this.generateStandardAttribute(clazz, fragmentMap, group, columnName);
 
-         final ST attrSet = group.getInstanceOf("attrSet");
-         attrSet.add("attr", attr);
-         fragmentMap.add(
-            FileFragmentMap.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType().replace(" ", "") + ")",
-            attrSet.render(), 3, attr.getModified());
-      }
+      final Attribute columnMap = new Attribute();
+      columnMap.setName("columnMap");
+      columnMap.setType("LinkedHashMap<String, Integer>");
+      columnMap.setInitialization("new LinkedHashMap<>()");
+      columnMap.setClazz(owner);
+      this.generateStandardAttribute(clazz, fragmentMap, group, columnMap);
+   }
+
+   private void generateStandardAttribute(Clazz clazz, FileFragmentMap fragmentMap, STGroup group, Attribute attr)
+   {
+      final ST attrDecl = group.getInstanceOf("attrDecl");
+      attrDecl.add("attr", attr);
+      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attr.getName(), attrDecl.render(), 2, clazz.getModified());
+
+      final ST attrGet = group.getInstanceOf("attrGet");
+      attrGet.add("attr", attr);
+      fragmentMap.add(FileFragmentMap.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", attrGet.render(), 2,
+                      attr.getModified());
+
+      final ST attrSet = group.getInstanceOf("attrSet");
+      attrSet.add("attr", attr);
+      fragmentMap.add(
+         FileFragmentMap.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType().replace(" ", "") + ")",
+         attrSet.render(), 3, attr.getModified());
    }
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
