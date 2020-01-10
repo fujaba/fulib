@@ -30,7 +30,7 @@ public class TypeScriptGenerator
 {
    // =============== Fields ===============
 
-   private String customTemplateFile = null;
+   private String customTemplateFile;
 
    // =============== Properties ===============
 

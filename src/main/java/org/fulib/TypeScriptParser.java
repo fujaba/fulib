@@ -28,7 +28,7 @@ public class TypeScriptParser
    public static final String IMPORT = "import";
 
    private FileFragmentMap fragmentMap;
-   private StringBuilder fileBody = null;
+   private StringBuilder fileBody;
    private String fileName;
    private int indexOfResult;
    private char currentChar;
