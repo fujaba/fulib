@@ -22,7 +22,10 @@ import java.util.logging.Logger;
  * Fulib.tablesGenerator().generate(model);
  * <!-- end_code_fragment:  -->
  * </pre>
+ *
+ * @deprecated since 1.2; TypeScript support is no longer maintained by the Java implementation of Fulib
  */
+@Deprecated
 public class TypeScriptGenerator
 {
    // =============== Fields ===============
