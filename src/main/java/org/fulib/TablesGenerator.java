@@ -3,10 +3,12 @@ package org.fulib;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.fulib.util.Generator4TableClassFile;
+import org.stringtemplate.v4.AutoIndentWriter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -113,8 +115,7 @@ public class TablesGenerator
       STGroup group = generator4TableClassFile.getSTGroup("org/fulib/templates/tables/StringTable.stg");
       ST st = group.getInstanceOf("StringTable");
       st.add("packageName", model.getPackageName() + ".tables");
-      String result = st.render();
-      this.writeFile(model.getPackageSrcFolder() + "/tables/StringTable.java", result);
+      this.writeToFile(model.getPackageSrcFolder() + "/tables/StringTable.java", st);
    }
 
    private void generatePrimitiveTable(ClassModel model, Generator4TableClassFile generator4TableClassFile,
@@ -125,10 +126,41 @@ public class TablesGenerator
       st.add("packageName", model.getPackageName() + ".tables");
       st.add("primitiveType", primitiveType);
       st.add("objectType", objectType);
-      String result = st.render();
-      this.writeFile(model.getPackageSrcFolder() + "/tables/" + primitiveType + "Table.java", result);
+      this.writeToFile(model.getPackageSrcFolder() + "/tables/" + primitiveType + "Table.java", st);
    }
 
+   private void writeToFile(String fileName, ST st)
+   {
+      try
+      {
+         Path path = Paths.get(fileName);
+         Files.createDirectories(path.getParent());
+
+         try (final Writer writer = Files
+            .newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING))
+         {
+            st.write(new AutoIndentWriter(writer));
+         }
+      }
+      catch (IOException ex)
+      {
+         ex.printStackTrace();
+      }
+   }
+
+   /**
+    * Writes the content to the file, using the system-default charset and creating parent directories if needed.
+    * <p>
+    * If an exception occurs, the stack trace is printed to stderr.
+    *
+    * @param fileName
+    *    the file name
+    * @param content
+    *    the content
+    *
+    * @deprecated since 1.2; for internal use only
+    */
+   @Deprecated
    public void writeFile(String fileName, String content)
    {
       try
