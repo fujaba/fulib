@@ -15,7 +15,7 @@ public class ModelEventManager
    private final EventSource   eventSource;
    private       IModelManager modelManager;
 
-   private LinkedHashMap<String, Consumer<LinkedHashMap<String, String>>> consumerMap;
+   private Map<String, Consumer<? super Map<String, String>>> consumerMap;
 
    // =============== Constructors ===============
 
@@ -59,12 +59,12 @@ public class ModelEventManager
       this.applyEvents(list);
    }
 
-   public void applyEvents(ArrayList<LinkedHashMap<String, String>> events)
+   public void applyEvents(Iterable<? extends Map<String, String>> events)
    {
       this.modelManager.initConsumers(this.consumerMap);
 
       // consume event list
-      for (LinkedHashMap<String, String> map : events)
+      for (Map<String, String> map : events)
       {
          if (this.eventSource.isOverwritten(map))
          {
@@ -76,7 +76,7 @@ public class ModelEventManager
          this.eventSource.setOldEventTimeStamp(oldTimeStampString);
 
          String eventType = map.get(EventSource.EVENT_TYPE);
-         Consumer<LinkedHashMap<String, String>> consumer = this.consumerMap.get(eventType);
+         Consumer<? super Map<String, String>> consumer = this.consumerMap.get(eventType);
          consumer.accept(map);
       }
 
