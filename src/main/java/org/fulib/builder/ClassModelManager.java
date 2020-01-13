@@ -6,6 +6,7 @@ import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
 import org.fulib.yaml.EventSource;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -665,17 +666,32 @@ public class ClassModelManager implements IModelManager
       this.mem.append(map);
    }
 
+   @Deprecated
    @Override
    public void initConsumers(LinkedHashMap<String, Consumer<LinkedHashMap<String, String>>> consumerMap)
    {
-      final Consumer<LinkedHashMap<String, String>> usePackageName = map -> {
+      final Map<String, Consumer<? super Map<String, String>>> map = new HashMap<>();
+      this.initConsumers(map);
+
+      for (final Map.Entry<String, Consumer<? super Map<String, String>>> entry : map.entrySet())
+      {
+         final Consumer<? super Map<String, String>> value = entry.getValue();
+         final Consumer<LinkedHashMap<String, String>> bridge = value::accept;
+         consumerMap.put(entry.getKey(), bridge);
+      }
+   }
+
+   @Override
+   public void initConsumers(Map<String, Consumer<? super Map<String, String>>> consumerMap)
+   {
+      final Consumer<Map<String, String>> usePackageName = map -> {
          final String packageName = map.get(PROPERTY_packageName);
          this.setPackageName(packageName);
       };
       consumerMap.put(USE_PACKAGE_NAME, usePackageName);
       consumerMap.put("havePackageName", usePackageName); // legacy name
 
-      final Consumer<LinkedHashMap<String, String>> useSourceFolder = map -> {
+      final Consumer<Map<String, String>> useSourceFolder = map -> {
          final String sourceFolder = map.get(PROPERTY_mainJavaDir);
          this.setSourceFolder(sourceFolder);
       };
@@ -720,7 +736,7 @@ public class ClassModelManager implements IModelManager
          this.attribute(clazz, attrName, attrType);
       });
 
-      final Consumer<LinkedHashMap<String, String>> associateHandler = map -> {
+      final Consumer<Map<String, String>> associateHandler = map -> {
          final String srcClassName = map.get(SRC_CLASS_NAME);
          final String srcRole = map.get(SRC_ROLE);
          final int srcSize = Integer.parseInt(map.get(SRC_SIZE));
