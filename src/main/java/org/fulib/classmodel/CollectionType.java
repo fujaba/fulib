@@ -120,6 +120,28 @@ public class CollectionType
       this.itf = itf;
    }
 
+   // TODO remove when FulibYaml has enum support
+   /**
+    * @deprecated only here for YAML deserialization to work;
+    * use {@link #getItf()}.{@link CollectionItf#name() name()} instead
+    */
+   @Deprecated
+   public String getItfName()
+   {
+      return this.getItf().name();
+   }
+
+   // TODO remove when FulibYaml has enum support
+   /**
+    * @deprecated only here for YAML deserialization to work;
+    * use {@link #setItf(CollectionItf) setItf}({@link CollectionItf#valueOf(String)}) instead
+    */
+   @Deprecated
+   public void setItfName(String name)
+   {
+      this.setItf(CollectionItf.valueOf(name));
+   }
+
    public String getImplTemplate()
    {
       return this.implTemplate;
