@@ -41,7 +41,18 @@ public class ModelEventManager
 
    public void setModelManager(IModelManager modelManager)
    {
+      if (modelManager == this.modelManager)
+      {
+         return;
+      }
+
       this.modelManager = modelManager;
+      this.consumerMap.clear();
+
+      if (modelManager != null)
+      {
+         modelManager.initConsumers(this.consumerMap);
+      }
    }
 
    // =============== Methods ===============
@@ -67,8 +78,6 @@ public class ModelEventManager
     */
    public void applyEvents(Iterable<? extends Map<String, String>> events)
    {
-      this.modelManager.initConsumers(this.consumerMap);
-
       // consume event list
       for (Map<String, String> map : events)
       {
