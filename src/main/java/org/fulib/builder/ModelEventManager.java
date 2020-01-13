@@ -59,6 +59,12 @@ public class ModelEventManager
       this.applyEvents(list);
    }
 
+   /**
+    * Applies all events, disregarding superseded ones.
+    *
+    * @param events
+    *    the events
+    */
    public void applyEvents(Iterable<? extends Map<String, String>> events)
    {
       this.modelManager.initConsumers(this.consumerMap);
@@ -81,6 +87,18 @@ public class ModelEventManager
       }
 
       this.eventSource.setOldEventTimeStamp(0);
+   }
+
+   /**
+    * @param events
+    *    the list of events to apply
+    *
+    * @deprecated since 1.2; use {@link #applyEvents(Iterable)} instead
+    */
+   @Deprecated
+   public void applyEvents(ArrayList<LinkedHashMap<String, String>> events)
+   {
+      this.applyEvents((Iterable<LinkedHashMap<String, String>>) events);
    }
 
    /**
