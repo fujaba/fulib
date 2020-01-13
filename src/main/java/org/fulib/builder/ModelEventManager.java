@@ -104,6 +104,7 @@ public class ModelEventManager
     *
     * @deprecated since 1.2; use {@link #append(Map)} instead
     */
+   @Deprecated
    public void append(LinkedHashMap<String, String> event)
    {
       this.eventSource.append(event);
