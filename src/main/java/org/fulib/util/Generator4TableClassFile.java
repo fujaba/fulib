@@ -277,21 +277,21 @@ public class Generator4TableClassFile extends AbstractGenerator
       if (clazz.getModified() || clazz.getSuperClass() != null)
       {
          // do not generate filter method
-         fragmentMap.remove(FileFragmentMap.METHOD + ":filter(Predicate<" + clazz.getName() + ">)");
+         fragmentMap.remove(FileFragmentMap.METHOD + ":filter(Predicate<? super " + clazz.getName() + ">)");
       }
       else
       {
          final ST filter = group.getInstanceOf("filter");
          filter.add("className", clazz.getName());
-         fragmentMap.add(FileFragmentMap.METHOD + ":filter(Predicate<" + clazz.getName() + ">)", filter.render(), 2);
+         fragmentMap
+            .add(FileFragmentMap.METHOD + ":filter(Predicate<? super " + clazz.getName() + ">)", filter.render(), 2);
       }
 
       final ST filterRow = group.getInstanceOf("filterRow");
       filterRow.add("className", clazz.getName());
 
-      fragmentMap
-         .add(FileFragmentMap.METHOD + ":filterRow(Predicate<LinkedHashMap<String,Object>>)", filterRow.render(), 2,
-              clazz.getModified());
+      fragmentMap.add(FileFragmentMap.METHOD + ":filterRow(Predicate<? super Map<String,Object>>)",
+                      filterRow.render(), 2, clazz.getModified());
    }
 
    private void generateToSet(Clazz clazz, FileFragmentMap fragmentMap)
