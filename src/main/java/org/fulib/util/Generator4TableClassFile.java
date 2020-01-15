@@ -101,9 +101,12 @@ public class Generator4TableClassFile extends AbstractGenerator
    private void collectImports(Clazz clazz, Set<String> qualifiedNames)
    {
       qualifiedNames.add("java.util.Arrays");
+      qualifiedNames.add("java.util.List");
       qualifiedNames.add("java.util.ArrayList");
       qualifiedNames.add("java.util.function.Predicate");
+      qualifiedNames.add("java.util.Set");
       qualifiedNames.add("java.util.LinkedHashSet");
+      qualifiedNames.add("java.util.Map");
       qualifiedNames.add("java.util.LinkedHashMap");
 
       // qualified name of the class
