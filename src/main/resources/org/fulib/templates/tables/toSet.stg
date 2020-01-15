@@ -1,10 +1,11 @@
 toSet(className) ::= <<
-   public LinkedHashSet\< <className> > toSet()
+   public Set\<<className>\> toSet()
    {
-      LinkedHashSet\< <className> > result = new LinkedHashSet\<>();
-      for (ArrayList row : this.table)
+      int column = columnMap.get(this.columnName);
+      Set\<<className>\> result = new LinkedHashSet\<>(this.table.size());
+      for (List\<?> row : this.table)
       {
-         <className> value = (<className>) row.get(columnMap.get(columnName));
+         <className> value = (<className>) row.get(column);
          result.add(value);
       }
       return result;
