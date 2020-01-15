@@ -274,7 +274,7 @@ public class Generator4TableClassFile extends AbstractGenerator
       if (clazz.getModified() || clazz.getSuperClass() != null)
       {
          // do not generate filter method
-         fragmentMap.add(FileFragmentMap.METHOD + ":filter(Predicate<" + clazz.getName() + ">)", "", 2, true);
+         fragmentMap.remove(FileFragmentMap.METHOD + ":filter(Predicate<" + clazz.getName() + ">)");
       }
       else
       {
@@ -296,7 +296,7 @@ public class Generator4TableClassFile extends AbstractGenerator
       if (clazz.getModified() || clazz.getSuperClass() != null)
       {
          // do not generate toSet method
-         fragmentMap.add(FileFragmentMap.METHOD + ":toSet()", "", 2, true);
+         fragmentMap.remove(FileFragmentMap.METHOD + ":toSet()");
       }
       else
       {
