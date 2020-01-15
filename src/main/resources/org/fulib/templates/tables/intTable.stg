@@ -75,7 +75,7 @@ public class <primitiveType>Table
       <primitiveType> result = <objectType>.MAX_VALUE;
       for (List\<Object> row : this.table)
       {
-         <primitiveType> value =  (<objectType>) row.get(column);
+         <primitiveType> value = (<objectType>) row.get(column);
          if (value \< result)
          {
             result = value;
@@ -90,7 +90,7 @@ public class <primitiveType>Table
       <primitiveType> result = <objectType>.MIN_VALUE;
       for (List\<Object> row : this.table)
       {
-         <primitiveType> value =  (<objectType>) row.get(column);
+         <primitiveType> value = (<objectType>) row.get(column);
          if (value > result)
          {
             result = value;
@@ -113,7 +113,7 @@ public class <primitiveType>Table
       List\<<objectType>\> result = new ArrayList\<>();
       for (List\<Object> row : this.table)
       {
-         <primitiveType> value =  (<objectType>) row.get(column);
+         <primitiveType> value = (<objectType>) row.get(column);
          result.add(value);
       }
       return result;
