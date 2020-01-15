@@ -1,5 +1,5 @@
 expandMethod(roleName,typeName,className) ::= <<
-   public <typeName>Table expand<cap(roleName)>(String... rowName)
+   public <typeName>Table expand<roleName; format="cap">(String... rowName)
    {
       <typeName>Table result = new <typeName>Table();
       result.setColumnMap(this.columnMap);
