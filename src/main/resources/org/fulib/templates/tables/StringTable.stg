@@ -1,7 +1,4 @@
-
-
-StringTable(packageName) ::=
-<<
+StringTable(packageName) ::= <<
 package <packageName>;
 
 import java.util.ArrayList;

@@ -1,6 +1,4 @@
-
-toSet(className) ::=
-<<
+toSet(className) ::= <<
    public LinkedHashSet\< <className> > toSet()
    {
       LinkedHashSet\< <className> > result = new LinkedHashSet\<>();
@@ -12,4 +10,3 @@ toSet(className) ::=
       return result;
    }
 >>
-

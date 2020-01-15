@@ -1,7 +1,4 @@
-
-
-intTable(packageName,primitiveType,objectType) ::=
-<<
+intTable(packageName,primitiveType,objectType) ::= <<
 package <packageName>;
 
 import java.util.ArrayList;

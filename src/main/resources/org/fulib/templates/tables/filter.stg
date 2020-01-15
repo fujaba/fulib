@@ -1,6 +1,4 @@
-
-filter(className) ::=
-<<
+filter(className) ::= <<
    public <className>Table filter(Predicate\< <className> > predicate)
    {
       ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();
@@ -17,10 +15,7 @@ filter(className) ::=
    }
 >>
 
-
-
-filterRow(className) ::=
-<<
+filterRow(className) ::= <<
    public <className>Table filterRow(Predicate\<LinkedHashMap\<String,Object> > predicate)
    {
       ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();

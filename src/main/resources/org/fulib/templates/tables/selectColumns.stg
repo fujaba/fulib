@@ -1,6 +1,4 @@
-
-selectColumns(className) ::=
-<<
+selectColumns(className) ::= <<
    public <className>Table selectColumns(String... columnNames)
    {
       LinkedHashMap\<String, Integer> oldColumnMap = (LinkedHashMap\<String, Integer>) this.columnMap.clone();
@@ -35,10 +33,7 @@ selectColumns(className) ::=
    }
 >>
 
-
-
-dropColumns(className) ::=
-<<
+dropColumns(className) ::= <<
    public <className>Table dropColumns(String... columnNames)
    {
       LinkedHashMap\<String, Integer> oldColumnMap = (LinkedHashMap\<String, Integer>) this.columnMap.clone();
@@ -76,9 +71,7 @@ dropColumns(className) ::=
    }
 >>
 
-
-addColumn(className) ::=
-<<
+addColumn(className) ::= <<
    public void addColumn(String columnName, java.util.function.Function\<java.util.LinkedHashMap\<String,Object>,Object> function)
    {
       int newColumnNumber = this.table.size() > 0 ? this.table.get(0).size() : 0;

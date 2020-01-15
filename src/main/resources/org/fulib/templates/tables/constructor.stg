@@ -1,4 +1,3 @@
-
 constructor(className) ::= <<
    public <className>Table(<className>... start)
    {
@@ -12,4 +11,3 @@ constructor(className) ::= <<
       }
    }
 >>
-

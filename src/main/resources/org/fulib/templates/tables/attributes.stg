@@ -1,6 +1,4 @@
-
-expandMethod(roleName,typeName,className) ::=
-<<
+expandMethod(roleName,typeName,className) ::= <<
    public <typeName>Table expand<cap(roleName)>(String... rowName)
    {
       <typeName>Table result = new <typeName>Table();
@@ -17,18 +15,9 @@ expandMethod(roleName,typeName,className) ::=
       {
          <className> start = (<className>) row.get(columnMap.get(this.getColumnName()));
          ArrayList\<Object> newRow = (ArrayList\<Object>) row.clone();
-         newRow.add(start.get<cap(roleName)>());
+         newRow.add(start.get<roleName; format="cap">());
          this.table.add(newRow);
       }
       return result;
    }
 >>
-
-
-
-
-cap(n) ::=
-<%
-<n; format="cap">
-%>
-
