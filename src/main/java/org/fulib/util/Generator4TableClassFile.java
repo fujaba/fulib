@@ -103,8 +103,10 @@ public class Generator4TableClassFile extends AbstractGenerator
       qualifiedNames.add("java.util.Arrays");
       qualifiedNames.add("java.util.List");
       qualifiedNames.add("java.util.ArrayList");
+      qualifiedNames.add("java.util.function.Function");
       qualifiedNames.add("java.util.function.Predicate");
       qualifiedNames.add("java.util.Set");
+      qualifiedNames.add("java.util.HashSet");
       qualifiedNames.add("java.util.LinkedHashSet");
       qualifiedNames.add("java.util.Map");
       qualifiedNames.add("java.util.LinkedHashMap");
@@ -269,7 +271,7 @@ public class Generator4TableClassFile extends AbstractGenerator
       final ST addColumn = group.getInstanceOf("addColumn");
       addColumn.add("className", clazz.getName());
       fragmentMap.add(FileFragmentMap.METHOD
-                      + ":addColumn(String,java.util.function.Function<java.util.LinkedHashMap<String,Object>,Object>)",
+                      + ":addColumn(String,Function<? super Map<String,Object>,?>)",
                       addColumn.render(), 2, clazz.getModified());
    }
 
