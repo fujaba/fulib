@@ -1,7 +1,7 @@
 filter(className) ::= <<
    public <className>Table filter(Predicate\<? super <className>\> predicate)
    {
-      int column = this.columnMap.get(this.columnName);
+      int column = this.getColumn();
       List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
       for (List\<Object> row : oldTable)

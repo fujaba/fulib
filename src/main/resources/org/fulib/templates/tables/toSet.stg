@@ -1,7 +1,7 @@
 toSet(className) ::= <<
    public Set\<<className>\> toSet()
    {
-      int column = this.columnMap.get(this.columnName);
+      int column = this.getColumn();
       Set\<<className>\> result = new LinkedHashSet\<>(this.table.size());
       for (List\<?> row : this.table)
       {

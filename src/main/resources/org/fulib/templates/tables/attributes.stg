@@ -16,7 +16,7 @@ expandMethod(roleName,typeName,className) ::= <<
       result.setColumnName(newColumnName);
       this.columnMap.put(newColumnName, newColumnNumber);
 
-      int column = this.columnMap.get(this.columnName);
+      int column = this.getColumn();
       List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
       for (List\<Object> row : oldTable)

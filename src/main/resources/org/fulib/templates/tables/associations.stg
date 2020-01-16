@@ -10,7 +10,7 @@ expandMethod(roleName, toMany, className, otherClassName) ::= <<
       result.setColumnName(newColumnName);
       this.columnMap.put(newColumnName, newColumnNumber);
 
-      int column = this.columnMap.get(this.columnName);
+      int column = this.getColumn();
       List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
       for (List\<Object> row : oldTable)
@@ -36,7 +36,7 @@ expandMethod(roleName, toMany, className, otherClassName) ::= <<
 hasMethod(roleName, toMany, className, otherClassName) ::= <<
    public <className>Table has<roleName; format="cap">(<otherClassName>Table rowName)
    {
-      int column = this.columnMap.get(this.columnName);
+      int column = this.getColumn();
       int otherColumn = this.columnMap.get(rowName.getColumnName());
       List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
