@@ -10,12 +10,12 @@ expandMethod(roleName,typeName,className) ::= <<
       this.columnMap.put(newColumnName, newColumnNumber);
 
       int column = this.columnMap.get(this.columnName);
-      List\<List\<Object>\> oldTable = (List\<List\<Object>\>) this.table.clone();
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
       for (List\<Object> row : oldTable)
       {
          <className> start = (<className>) row.get(column);
-         List\<Object> newRow = (List\<Object>) row.clone();
+         List\<Object> newRow = new ArrayList\<>(row);
          newRow.add(start.get<roleName; format="cap">());
          this.table.add(newRow);
       }

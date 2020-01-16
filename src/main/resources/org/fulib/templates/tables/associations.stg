@@ -11,7 +11,7 @@ expandMethod(roleName, toMany, className, otherClassName) ::= <<
       this.columnMap.put(newColumnName, newColumnNumber);
 
       int column = this.columnMap.get(this.columnName);
-      List\<List\<Object>\> oldTable = (List\<List\<Object>\>) this.table.clone();
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
       for (List\<Object> row : oldTable)
       {
@@ -19,12 +19,12 @@ expandMethod(roleName, toMany, className, otherClassName) ::= <<
          <if(toMany)>
          for (<otherClassName> current : start.get<roleName; format="cap">())
          {
-            List\<Object> newRow = (List\<Object>) row.clone();
+            List\<Object> newRow = new ArrayList\<>(row);
             newRow.add(current);
             this.table.add(newRow);
          }
          <else>
-         List\<Object> newRow = (List\<Object>) row.clone();
+         List\<Object> newRow = new ArrayList\<>(row);
          newRow.add(start.get<roleName; format="cap">());
          this.table.add(newRow);
          <endif>
@@ -38,7 +38,7 @@ hasMethod(roleName, toMany, className, otherClassName) ::= <<
    {
       int column = this.columnMap.get(this.columnName);
       int otherColumn = this.columnMap.get(rowName.getColumnName());
-      List\<List\<Object>\> oldTable = (List\<List\<Object>\>) this.table.clone();
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
       for (List\<Object> row : oldTable)
       {
