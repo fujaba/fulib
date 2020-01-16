@@ -122,10 +122,6 @@ test {
    }
 }
 
-javadoc {
-   failOnError = false
-}
-
 revapi {
    oldVersion = '1.1.0'
 }
