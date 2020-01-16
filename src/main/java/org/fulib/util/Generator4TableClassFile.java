@@ -165,7 +165,6 @@ public class Generator4TableClassFile extends AbstractGenerator
       final Attribute columnName = new Attribute();
       columnName.setName("columnName");
       columnName.setType("String");
-      columnName.setInitialization("null");
       columnName.setClazz(owner);
       this.generateStandardAttribute(clazz, fragmentMap, group, columnName);
 
