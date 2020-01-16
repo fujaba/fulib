@@ -162,6 +162,10 @@ public class Generator4TableClassFile extends AbstractGenerator
       table.setClazz(owner);
       this.generateStandardAttribute(clazz, fragmentMap, group, table);
 
+      final STGroup attributesGroup = this.getSTGroup("org/fulib/templates/tables/attributes.stg");
+      final ST getColumn = attributesGroup.getInstanceOf("getColumn");
+      fragmentMap.add(FileFragmentMap.METHOD + ":getColumn()", getColumn.render(), 2);
+
       final Attribute columnName = new Attribute();
       columnName.setName("columnName");
       columnName.setType("String");

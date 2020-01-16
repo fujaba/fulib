@@ -1,3 +1,10 @@
+getColumn() ::= <<
+   public int getColumn()
+   {
+      return this.columnMap.get(this.columnName);
+   }
+>>
+
 expandMethod(roleName,typeName,className) ::= <<
    public <typeName>Table expand<roleName; format="cap">(String... rowName)
    {
