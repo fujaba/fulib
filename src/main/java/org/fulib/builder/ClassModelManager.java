@@ -661,7 +661,7 @@ public class ClassModelManager implements IModelManager
          return;
       }
 
-      final LinkedHashMap<String, String> map = new LinkedHashMap<>();
+      final Map<String, String> map = new LinkedHashMap<>();
       populator.accept(map);
       this.mem.append(map);
    }
