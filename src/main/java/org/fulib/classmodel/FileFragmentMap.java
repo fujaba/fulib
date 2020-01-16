@@ -32,6 +32,7 @@ public class FileFragmentMap
    public static final int FIELD_NEWLINES       = 2;
    public static final int CONSTRUCTOR_NEWLINES = 2;
    public static final int METHOD_NEWLINES      = 2;
+   public static final int CLASS_END_NEWLINES   = 1;
 
    public static final String PROPERTY_fileName = "fileName";
 

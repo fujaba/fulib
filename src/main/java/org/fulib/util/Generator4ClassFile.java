@@ -60,7 +60,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
       this.generateRemoveYou(clazz, fragmentMap);
 
-      fragmentMap.add(CLASS_END, "}", 1);
+      fragmentMap.add(CLASS_END, "}", CLASS_END_NEWLINES);
 
       this.generateImports(clazz, fragmentMap);
 
@@ -141,7 +141,7 @@ public class Generator4ClassFile extends AbstractGenerator
       {
          final ST importDecl = group.getInstanceOf("importDecl");
          importDecl.add("qualifiedName", qualifiedName);
-         fragmentMap.add(IMPORT + ":" + qualifiedName, importDecl.render(), 1);
+         fragmentMap.add(IMPORT + ":" + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
       }
 
       for (final String qualifiedName : staticImports)
@@ -149,7 +149,7 @@ public class Generator4ClassFile extends AbstractGenerator
          final ST importDecl = group.getInstanceOf("importDecl");
          importDecl.add("qualifiedName", qualifiedName);
          importDecl.add("static", true);
-         fragmentMap.add(IMPORT + ":" + qualifiedName, importDecl.render(), 1);
+         fragmentMap.add(IMPORT + ":" + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
       }
    }
 
