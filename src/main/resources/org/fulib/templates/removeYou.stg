@@ -17,11 +17,11 @@ removeRole(role) ::= <%
    <endif>
 <else><! to many !>
    <if(role.aggregation)>
-      new java.util.ArrayList\<>(this.get<role.name; format="cap">()).forEach(x -> x.removeYou());
+      new ArrayList\<>(this.get<role.name; format="cap">()).forEach(x -> x.removeYou());
    <elseif(role.javaFX)>
       this.get<role.name; format="cap">().clear();
    <else>
-      this.without<role.name; format="cap">(new java.util.ArrayList\<>(this.get<role.name; format="cap">()));
+      this.without<role.name; format="cap">(new ArrayList\<>(this.get<role.name; format="cap">()));
    <endif>
 <endif>
 %>

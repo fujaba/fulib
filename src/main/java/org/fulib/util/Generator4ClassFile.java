@@ -169,6 +169,12 @@ public class Generator4ClassFile extends AbstractGenerator
          qualifiedNames.add("javafx.beans.property.*");
       }
 
+      // ArrayList required by removeYou template
+      if (clazz.getRoles().stream().anyMatch(r -> r.isToMany() && (r.getAggregation() || !r.isJavaFX())))
+      {
+         qualifiedNames.add("java.util.ArrayList");
+      }
+
       // any non-primitive attributes
       if (clazz.getAttributes().stream().anyMatch(a -> !a.isCollection() && !a.isPrimitive()))
       {
