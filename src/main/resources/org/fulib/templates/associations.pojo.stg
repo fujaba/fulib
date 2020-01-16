@@ -26,7 +26,7 @@ getMethod(role, other) ::= <<
 <if(role.toMany)>
    public <collectionItf(role, other)> get<role.name; format="cap">()
    {
-      return this.<role.name> != null ? java.util.Collections.unmodifiable<role.collectionType.itf.simpleName>(this.<role.name>) : java.util.Collections.empty<role.collectionType.itf.simpleName>();
+      return this.<role.name> != null ? Collections.unmodifiable<role.collectionType.itf.simpleName>(this.<role.name>) : Collections.empty<role.collectionType.itf.simpleName>();
    }
 <else>
    public <other.clazz.name> get<role.name; format="cap">()

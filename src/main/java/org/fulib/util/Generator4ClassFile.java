@@ -186,6 +186,8 @@ public class Generator4ClassFile extends AbstractGenerator
           || clazz.getAttributes().stream().anyMatch(Attribute::isCollection))
       {
          qualifiedNames.add("java.util.Collection");
+         qualifiedNames.add("java.util.Collections");
+         qualifiedNames.add("java.util.Arrays");
       }
    }
 

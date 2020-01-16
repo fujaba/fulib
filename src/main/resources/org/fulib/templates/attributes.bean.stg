@@ -61,7 +61,7 @@ attrWithColl(attr) ::= <<
 attrWithoutItem(attr) ::= <<
    public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType> value)
    {
-      if (this.<attr.name> != null && this.<attr.name>.removeAll(java.util.Collections.singleton(value)))
+      if (this.<attr.name> != null && this.<attr.name>.removeAll(Collections.singleton(value)))
       {
          this.firePropertyChange(PROPERTY_<attr.name>, value, null);
       }
