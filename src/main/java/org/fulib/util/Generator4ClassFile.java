@@ -447,9 +447,8 @@ public class Generator4ClassFile extends AbstractGenerator
 
       final STGroup group = this.getSTGroup("org/fulib/templates/propertyChangeSupport.stg");
 
-      // TODO template
-      final String listeners = "   protected PropertyChangeSupport listeners = null;";
-      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":listeners", listeners, 2, clazz.getModified());
+      final ST listenersField = group.getInstanceOf("listenersField");
+      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":listeners", listenersField.render(), 2, clazz.getModified());
 
       final ST firePropertyChange = group.getInstanceOf("firePropertyChange");
       fragmentMap.add(METHOD + ":firePropertyChange(String,Object,Object)", firePropertyChange.render(), 2,
