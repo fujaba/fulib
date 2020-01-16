@@ -235,7 +235,7 @@ public class Generator4ClassFile extends AbstractGenerator
       }
       else
       {
-         fragmentMap.add(METHOD + ":_init" + capAttrName + "()", "", 2, true);
+         fragmentMap.remove(METHOD + ":_init" + capAttrName + "()");
       }
 
       final ST attrGet = group.getInstanceOf("attrGet").add("attr", attr);
@@ -267,7 +267,7 @@ public class Generator4ClassFile extends AbstractGenerator
                          attrWithoutColl.render(), 3, modified);
 
          // remove "set" method
-         fragmentMap.add(METHOD + ":set" + capAttrName + "(" + baseType + ")", "", 3, true);
+         fragmentMap.remove(METHOD + ":set" + capAttrName + "(" + baseType + ")");
       }
       else // usual attribute
       {
@@ -275,12 +275,12 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap.add(METHOD + ":set" + capAttrName + "(" + baseType + ")", attrSet.render(), 3, modified);
 
          // remove "with" and "without" methods
-         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + ")", "", 3, true);
-         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + "...)", "", 3, true);
-         fragmentMap.add(METHOD + ":with" + capAttrName + "(Collection<? extends " + boxType + ">)", "", 3, true);
-         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + boxType + ")", "", 3, true);
-         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + boxType + "...)", "", 3, true);
-         fragmentMap.add(METHOD + ":without" + capAttrName + "(Collection<? extends " + boxType + ">)", "", 3, true);
+         fragmentMap.remove(METHOD + ":with" + capAttrName + "(" + boxType + ")");
+         fragmentMap.remove(METHOD + ":with" + capAttrName + "(" + boxType + "...)");
+         fragmentMap.remove(METHOD + ":with" + capAttrName + "(Collection<? extends " + boxType + ">)");
+         fragmentMap.remove(METHOD + ":without" + capAttrName + "(" + boxType + ")");
+         fragmentMap.remove(METHOD + ":without" + capAttrName + "(" + boxType + "...)");
+         fragmentMap.remove(METHOD + ":without" + capAttrName + "(Collection<? extends " + boxType + ">)");
       }
 
       if (attr.isJavaFX())
@@ -290,7 +290,7 @@ public class Generator4ClassFile extends AbstractGenerator
       }
       else
       {
-         fragmentMap.add(METHOD + ":" + attrName + "Property()", "", 3, true);
+         fragmentMap.remove(METHOD + ":" + attrName + "Property()");
       }
    }
 
@@ -338,7 +338,7 @@ public class Generator4ClassFile extends AbstractGenerator
       else
       {
          // remove _init method
-         fragmentMap.add(METHOD + ":_init" + capRoleName + "()", "", 2, true);
+         fragmentMap.remove(METHOD + ":_init" + capRoleName + "()");
       }
 
       final ST getMethod = group.getInstanceOf("getMethod").add("role", role).add("other", other);
@@ -371,7 +371,7 @@ public class Generator4ClassFile extends AbstractGenerator
                          withoutColl.render(), 3, modified);
 
          // remove "set" method
-         fragmentMap.add(METHOD + ":set" + capRoleName + "(" + otherClassName + ")", "", 3, true);
+         fragmentMap.remove(METHOD + ":set" + capRoleName + "(" + otherClassName + ")");
       }
       else
       {
@@ -379,15 +379,12 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap.add(METHOD + ":set" + capRoleName + "(" + otherClassName + ")", attrSet.render(), 3, modified);
 
          // remove "with" and "without" methods
-         fragmentMap.add(METHOD + ":with" + capRoleName + "(" + otherClassName + ")", "", 3, true);
-         fragmentMap.add(METHOD + ":with" + capRoleName + "(" + otherClassName + "...)", "", 3, true);
-         fragmentMap
-            .add(METHOD + ":with" + capRoleName + "(Collection<? extends " + otherClassName + ">)", "", 3, true);
-
-         fragmentMap.add(METHOD + ":without" + capRoleName + "(" + otherClassName + ")", "", 3, true);
-         fragmentMap.add(METHOD + ":without" + capRoleName + "(" + otherClassName + "...)", "", 3, true);
-         fragmentMap
-            .add(METHOD + ":without" + capRoleName + "(Collection<? extends " + otherClassName + ">)", "", 3, true);
+         fragmentMap.remove(METHOD + ":with" + capRoleName + "(" + otherClassName + ")");
+         fragmentMap.remove(METHOD + ":with" + capRoleName + "(" + otherClassName + "...)");
+         fragmentMap.remove(METHOD + ":with" + capRoleName + "(Collection<? extends " + otherClassName + ">)");
+         fragmentMap.remove(METHOD + ":without" + capRoleName + "(" + otherClassName + ")");
+         fragmentMap.remove(METHOD + ":without" + capRoleName + "(" + otherClassName + "...)");
+         fragmentMap.remove(METHOD + ":without" + capRoleName + "(Collection<? extends " + otherClassName + ">)");
       }
 
       if (javaFX && !toMany)
@@ -397,7 +394,7 @@ public class Generator4ClassFile extends AbstractGenerator
       }
       else
       {
-         fragmentMap.add(METHOD + ":" + roleName + "Property()", "", 3, true);
+         fragmentMap.remove(METHOD + ":" + roleName + "Property()");
       }
    }
 
