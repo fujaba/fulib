@@ -26,6 +26,13 @@ public class FileFragmentMap
    public static final String CLASS_END   = "classEnd";
    public static final String GAP         = "gap:";
 
+   public static final int PACKAGE_NEWLINES     = 2;
+   public static final int IMPORT_NEWLINES      = 1;
+   public static final int CLASS_NEWLINES       = 2;
+   public static final int FIELD_NEWLINES       = 2;
+   public static final int CONSTRUCTOR_NEWLINES = 2;
+   public static final int METHOD_NEWLINES      = 2;
+
    public static final String PROPERTY_fileName = "fileName";
 
    // =============== Fields ===============
@@ -260,9 +267,6 @@ public class FileFragmentMap
     * Behaves like {@link #add(String, String, int)} when removeFragment is true,
     * and like {@link #remove(String)} otherwise.
     *
-    * @see #add(String, String, int)
-    * @see #remove(String)
-    *
     * @param key
     *    the key
     * @param newText
@@ -274,6 +278,8 @@ public class FileFragmentMap
     *
     * @return the old fragment, or {@code null} if not found
     *
+    * @see #add(String, String, int)
+    * @see #remove(String)
     * @deprecated since 1.2; use {@link #add(String, String, int)} or {@link #remove(String)} instead
     */
    @Deprecated
