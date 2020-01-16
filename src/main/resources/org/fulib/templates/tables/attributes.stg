@@ -4,17 +4,18 @@ expandMethod(roleName,typeName,className) ::= <<
       <typeName>Table result = new <typeName>Table();
       result.setColumnMap(this.columnMap);
       result.setTable(this.table);
-      int newColumnNumber = this.table.size() > 0 ? this.table.get(0).size() : 0;
+      int newColumnNumber = this.table.isEmpty() ? 0 : this.table.get(0).size();
       String newColumnName = rowName != null && rowName.length > 0 ? rowName[0] : "" + ((char)('A' + newColumnNumber));
       result.setColumnName(newColumnName);
-      columnMap.put(newColumnName, newColumnNumber);
+      this.columnMap.put(newColumnName, newColumnNumber);
 
-      ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();
+      int column = this.columnMap.get(this.columnName);
+      List\<List\<Object>\> oldTable = (List\<List\<Object>\>) this.table.clone();
       this.table.clear();
-      for (ArrayList\<Object> row : oldTable)
+      for (List\<Object> row : oldTable)
       {
-         <className> start = (<className>) row.get(columnMap.get(this.getColumnName()));
-         ArrayList\<Object> newRow = (ArrayList\<Object>) row.clone();
+         <className> start = (<className>) row.get(column);
+         List\<Object> newRow = (List\<Object>) row.clone();
          newRow.add(start.get<roleName; format="cap">());
          this.table.add(newRow);
       }
