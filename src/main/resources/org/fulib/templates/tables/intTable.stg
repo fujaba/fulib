@@ -40,6 +40,11 @@ public class <primitiveType>Table
    {
       this.columnName = columnName;
    }
+   
+   public int getColumn()
+   {
+      return this.columnMap.get(this.columnName);
+   }
 
    public List\<List\<Object>\> getTable()
    {
@@ -60,7 +65,7 @@ public class <primitiveType>Table
 
    public <primitiveType> sum()
    {
-      int column = this.columnMap.get(this.columnName);
+      int column = this.getColumn();
       <primitiveType> result = 0;
       for (List\<Object> row : this.table)
       {
@@ -71,7 +76,7 @@ public class <primitiveType>Table
 
    public <primitiveType> min()
    {
-      int column = this.columnMap.get(this.columnName);
+      int column = this.getColumn();
       <primitiveType> result = <objectType>.MAX_VALUE;
       for (List\<Object> row : this.table)
       {
@@ -86,7 +91,7 @@ public class <primitiveType>Table
 
    public <primitiveType> max()
    {
-      int column = this.columnMap.get(this.columnName);
+      int column = this.getColumn();
       <primitiveType> result = <objectType>.MIN_VALUE;
       for (List\<Object> row : this.table)
       {
@@ -109,7 +114,7 @@ public class <primitiveType>Table
 
    public List\<<objectType>\> toList()
    {
-      int column = this.columnMap.get(this.columnName);
+      int column = this.getColumn();
       List\<<objectType>\> result = new ArrayList\<>();
       for (List\<Object> row : this.table)
       {

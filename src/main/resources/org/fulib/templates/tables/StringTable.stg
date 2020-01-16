@@ -40,6 +40,11 @@ public class StringTable
       this.columnName = columnName;
    }
 
+   public int getColumn()
+   {
+      return this.columnMap.get(this.columnName);
+   }
+
    public List\<List\<Object>\> getTable()
    {
       return this.table;
@@ -59,7 +64,7 @@ public class StringTable
 
    public List\<String> toList()
    {
-      int column = this.columnMap.get(this.columnName);
+      int column = this.getColumn();
       List\<String> result = new ArrayList\<>();
       for (List\<Object> row : this.table)
       {
@@ -71,7 +76,7 @@ public class StringTable
 
    public String join(String seperator)
    {
-      int column = this.columnMap.get(this.columnName);
+      int column = this.getColumn();
       StringBuilder buf = new StringBuilder();
       boolean first = true;
       for (List\<Object> row : this.table)
