@@ -1,7 +1,7 @@
 filter(className) ::= <<
    public <className>Table filter(Predicate\<? super <className>\> predicate)
    {
-      int column = this.columnMap.get(this.getColumnName());
+      int column = this.columnMap.get(this.columnName);
       List\<List\<Object>\> oldTable = (List\<List\<Object>\>) this.table.clone();
       this.table.clear();
       for (List\<Object> row : oldTable)
@@ -24,9 +24,9 @@ filterRow(className) ::= <<
       for (List\<Object> row : oldTable)
       {
          Map\<String, Object> map = new LinkedHashMap\<>();
-         for (String key : columnMap.keySet())
+         for (Map.Entry\<String, Integer> entry : this.columnMap.entrySet())
          {
-            map.put(key, row.get(columnMap.get(key)));
+            map.put(entry.getKey(), row.get(entry.getValue()));
          }
          if (predicate.test(map))
          {
