@@ -19,6 +19,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
+import static org.fulib.classmodel.FileFragmentMap.*;
+
 public class Generator4TableClassFile extends AbstractGenerator
 {
    // =============== Properties ===============
@@ -50,7 +52,7 @@ public class Generator4TableClassFile extends AbstractGenerator
       this.generateToSet(clazz, fragmentMap);
       this.generateToString(clazz, fragmentMap);
 
-      fragmentMap.add(FileFragmentMap.CLASS_END, "}", FileFragmentMap.CLASS_END_NEWLINES);
+      fragmentMap.add(CLASS_END, "}", CLASS_END_NEWLINES);
 
       if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
       {
@@ -77,7 +79,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       final ST packageDecl = group.getInstanceOf("packageDecl");
       packageDecl.add("packageName", clazz.getModel().getPackageName() + ".tables");
-      fragmentMap.add(FileFragmentMap.PACKAGE, packageDecl.render(), FileFragmentMap.PACKAGE_NEWLINES);
+      fragmentMap.add(PACKAGE, packageDecl.render(), PACKAGE_NEWLINES);
    }
 
    private void generateImports(Clazz clazz, FileFragmentMap fragmentMap)
@@ -94,8 +96,7 @@ public class Generator4TableClassFile extends AbstractGenerator
       {
          final ST importDecl = group.getInstanceOf("importDecl");
          importDecl.add("qualifiedName", qualifiedName);
-         fragmentMap
-            .add(FileFragmentMap.IMPORT + ":" + qualifiedName, importDecl.render(), FileFragmentMap.IMPORT_NEWLINES);
+         fragmentMap.add(IMPORT + ":" + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
       }
    }
 
@@ -138,7 +139,7 @@ public class Generator4TableClassFile extends AbstractGenerator
       final ST classDecl = group.getInstanceOf("classDecl");
       classDecl.add("name", clazz.getName() + "Table");
       classDecl.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() + "Table" : null);
-      fragmentMap.add(FileFragmentMap.CLASS, classDecl.render(), FileFragmentMap.CLASS_NEWLINES);
+      fragmentMap.add(CLASS, classDecl.render(), CLASS_NEWLINES);
    }
 
    private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap)
@@ -147,8 +148,8 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       final ST constructor = group.getInstanceOf("constructor");
       constructor.add("className", clazz.getName());
-      fragmentMap.add(FileFragmentMap.CONSTRUCTOR + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)",
-                      constructor.render(), FileFragmentMap.CONSTRUCTOR_NEWLINES, clazz.getModified());
+      fragmentMap.add(CONSTRUCTOR + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)", constructor.render(),
+                      CONSTRUCTOR_NEWLINES, clazz.getModified());
    }
 
    private void generateStandardAttributes(Clazz clazz, FileFragmentMap fragmentMap)
@@ -167,7 +168,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       final STGroup attributesGroup = this.getSTGroup("org/fulib/templates/tables/attributes.stg");
       final ST getColumn = attributesGroup.getInstanceOf("getColumn");
-      fragmentMap.add(FileFragmentMap.METHOD + ":getColumn()", getColumn.render(), FileFragmentMap.METHOD_NEWLINES);
+      fragmentMap.add(METHOD + ":getColumn()", getColumn.render(), METHOD_NEWLINES);
 
       final Attribute columnName = new Attribute();
       columnName.setName("columnName");
@@ -187,20 +188,17 @@ public class Generator4TableClassFile extends AbstractGenerator
    {
       final ST attrDecl = group.getInstanceOf("attrDecl");
       attrDecl.add("attr", attr);
-      fragmentMap
-         .add(FileFragmentMap.ATTRIBUTE + ":" + attr.getName(), attrDecl.render(), FileFragmentMap.FIELD_NEWLINES,
-              clazz.getModified());
+      fragmentMap.add(ATTRIBUTE + ":" + attr.getName(), attrDecl.render(), FIELD_NEWLINES, clazz.getModified());
 
       final ST attrGet = group.getInstanceOf("attrGet");
       attrGet.add("attr", attr);
-      fragmentMap.add(FileFragmentMap.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", attrGet.render(),
-                      FileFragmentMap.METHOD_NEWLINES, attr.getModified());
+      fragmentMap.add(METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", attrGet.render(), METHOD_NEWLINES,
+                      attr.getModified());
 
       final ST attrSet = group.getInstanceOf("attrSet");
       attrSet.add("attr", attr);
-      fragmentMap.add(
-         FileFragmentMap.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType().replace(" ", "") + ")",
-         attrSet.render(), FileFragmentMap.METHOD_NEWLINES, attr.getModified());
+      fragmentMap.add(METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType().replace(" ", "") + ")",
+                      attrSet.render(), METHOD_NEWLINES, attr.getModified());
    }
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
@@ -213,8 +211,8 @@ public class Generator4TableClassFile extends AbstractGenerator
          expandMethod.add("roleName", attr.getName());
          expandMethod.add("typeName", attr.getType());
          expandMethod.add("className", clazz.getName());
-         fragmentMap.add(FileFragmentMap.METHOD + ":expand" + StrUtil.cap(attr.getName()) + "(String...)",
-                         expandMethod.render(), FileFragmentMap.METHOD_NEWLINES, attr.getModified());
+         fragmentMap.add(METHOD + ":expand" + StrUtil.cap(attr.getName()) + "(String...)", expandMethod.render(),
+                         METHOD_NEWLINES, attr.getModified());
       }
    }
 
@@ -237,8 +235,8 @@ public class Generator4TableClassFile extends AbstractGenerator
          st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("className", clazz.getName());
          st.add("otherClassName", otherClassName);
-         fragmentMap.add(FileFragmentMap.METHOD + ":expand" + StrUtil.cap(role.getName()) + "(String...)", st.render(),
-                         FileFragmentMap.METHOD_NEWLINES, role.getModified());
+         fragmentMap.add(METHOD + ":expand" + StrUtil.cap(role.getName()) + "(String...)", st.render(), METHOD_NEWLINES,
+                         role.getModified());
 
          // hasMethod(roleName,toMany,className,otherClassName) ::=
          final ST hasMethod = group.getInstanceOf("hasMethod");
@@ -247,8 +245,8 @@ public class Generator4TableClassFile extends AbstractGenerator
          hasMethod.add("className", clazz.getName());
          hasMethod.add("otherClassName", otherClassName);
          fragmentMap
-            .add(FileFragmentMap.METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)",
-                 hasMethod.render(), FileFragmentMap.METHOD_NEWLINES, role.getModified());
+            .add(METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)", hasMethod.render(),
+                 METHOD_NEWLINES, role.getModified());
       }
    }
 
@@ -258,14 +256,12 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       final ST selectColumns = group.getInstanceOf("selectColumns");
       selectColumns.add("className", clazz.getName());
-      fragmentMap.add(FileFragmentMap.METHOD + ":selectColumns(String...)", selectColumns.render(),
-                      FileFragmentMap.METHOD_NEWLINES, clazz.getModified());
+      fragmentMap
+         .add(METHOD + ":selectColumns(String...)", selectColumns.render(), METHOD_NEWLINES, clazz.getModified());
 
       final ST dropColumns = group.getInstanceOf("dropColumns");
       dropColumns.add("className", clazz.getName());
-      fragmentMap
-         .add(FileFragmentMap.METHOD + ":dropColumns(String...)", dropColumns.render(), FileFragmentMap.METHOD_NEWLINES,
-              clazz.getModified());
+      fragmentMap.add(METHOD + ":dropColumns(String...)", dropColumns.render(), METHOD_NEWLINES, clazz.getModified());
    }
 
    private void generateAddColumn(Clazz clazz, FileFragmentMap fragmentMap)
@@ -275,8 +271,8 @@ public class Generator4TableClassFile extends AbstractGenerator
       final ST addColumn = group.getInstanceOf("addColumn");
       addColumn.add("className", clazz.getName());
       fragmentMap
-         .add(FileFragmentMap.METHOD + ":addColumn(String,Function<? super Map<String,Object>,?>)", addColumn.render(),
-              FileFragmentMap.METHOD_NEWLINES, clazz.getModified());
+         .add(METHOD + ":addColumn(String,Function<? super Map<String,Object>,?>)", addColumn.render(), METHOD_NEWLINES,
+              clazz.getModified());
    }
 
    private void generateFilter(Clazz clazz, FileFragmentMap fragmentMap)
@@ -286,22 +282,21 @@ public class Generator4TableClassFile extends AbstractGenerator
       if (clazz.getModified() || clazz.getSuperClass() != null)
       {
          // do not generate filter method
-         fragmentMap.remove(FileFragmentMap.METHOD + ":filter(Predicate<? super " + clazz.getName() + ">)");
+         fragmentMap.remove(METHOD + ":filter(Predicate<? super " + clazz.getName() + ">)");
       }
       else
       {
          final ST filter = group.getInstanceOf("filter");
          filter.add("className", clazz.getName());
          fragmentMap
-            .add(FileFragmentMap.METHOD + ":filter(Predicate<? super " + clazz.getName() + ">)", filter.render(),
-                 FileFragmentMap.METHOD_NEWLINES);
+            .add(METHOD + ":filter(Predicate<? super " + clazz.getName() + ">)", filter.render(), METHOD_NEWLINES);
       }
 
       final ST filterRow = group.getInstanceOf("filterRow");
       filterRow.add("className", clazz.getName());
 
-      fragmentMap.add(FileFragmentMap.METHOD + ":filterRow(Predicate<? super Map<String,Object>>)", filterRow.render(),
-                      FileFragmentMap.METHOD_NEWLINES, clazz.getModified());
+      fragmentMap.add(METHOD + ":filterRow(Predicate<? super Map<String,Object>>)", filterRow.render(), METHOD_NEWLINES,
+                      clazz.getModified());
    }
 
    private void generateToSet(Clazz clazz, FileFragmentMap fragmentMap)
@@ -309,7 +304,7 @@ public class Generator4TableClassFile extends AbstractGenerator
       if (clazz.getModified() || clazz.getSuperClass() != null)
       {
          // do not generate toSet method
-         fragmentMap.remove(FileFragmentMap.METHOD + ":toSet()");
+         fragmentMap.remove(METHOD + ":toSet()");
       }
       else
       {
@@ -317,7 +312,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
          final ST st = group.getInstanceOf("toSet");
          st.add("className", clazz.getName());
-         fragmentMap.add(FileFragmentMap.METHOD + ":toSet()", st.render(), FileFragmentMap.METHOD_NEWLINES);
+         fragmentMap.add(METHOD + ":toSet()", st.render(), METHOD_NEWLINES);
       }
    }
 
@@ -326,7 +321,6 @@ public class Generator4TableClassFile extends AbstractGenerator
       final STGroup group = this.getSTGroup("org/fulib/templates/tables/toString.stg");
 
       final ST st = group.getInstanceOf("toString");
-      fragmentMap.add(FileFragmentMap.METHOD + ":toString()", st.render(), FileFragmentMap.METHOD_NEWLINES,
-                      clazz.getModified());
+      fragmentMap.add(METHOD + ":toString()", st.render(), METHOD_NEWLINES, clazz.getModified());
    }
 }
