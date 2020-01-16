@@ -157,7 +157,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       final Attribute table = new Attribute();
       table.setName("table");
-      table.setType("ArrayList<ArrayList<Object>>");
+      table.setType("List<List<Object>>");
       table.setInitialization("new ArrayList<>()");
       table.setClazz(owner);
       this.generateStandardAttribute(clazz, fragmentMap, group, table);
@@ -171,7 +171,7 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       final Attribute columnMap = new Attribute();
       columnMap.setName("columnMap");
-      columnMap.setType("LinkedHashMap<String, Integer>");
+      columnMap.setType("Map<String, Integer>");
       columnMap.setInitialization("new LinkedHashMap<>()");
       columnMap.setClazz(owner);
       this.generateStandardAttribute(clazz, fragmentMap, group, columnMap);
