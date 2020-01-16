@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import static org.fulib.classmodel.FileFragmentMap.METHOD;
+import static org.fulib.classmodel.FileFragmentMap.*;
 
 public class Generator4ClassFile extends AbstractGenerator
 {
@@ -60,7 +60,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
       this.generateRemoveYou(clazz, fragmentMap);
 
-      fragmentMap.add(FileFragmentMap.CLASS_END, "}", 1);
+      fragmentMap.add(CLASS_END, "}", 1);
 
       this.generateImports(clazz, fragmentMap);
 
@@ -91,7 +91,7 @@ public class Generator4ClassFile extends AbstractGenerator
       final STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
       final ST packageDecl = group.getInstanceOf("packageDecl");
       packageDecl.add("packageName", clazz.getModel().getPackageName());
-      fragmentMap.add(FileFragmentMap.PACKAGE, packageDecl.render(), FileFragmentMap.PACKAGE_NEWLINES);
+      fragmentMap.add(PACKAGE, packageDecl.render(), PACKAGE_NEWLINES);
    }
 
    private void generateImports(Clazz clazz, FileFragmentMap fragmentMap)
@@ -141,7 +141,7 @@ public class Generator4ClassFile extends AbstractGenerator
       {
          final ST importDecl = group.getInstanceOf("importDecl");
          importDecl.add("qualifiedName", qualifiedName);
-         fragmentMap.add(FileFragmentMap.IMPORT + ":" + qualifiedName, importDecl.render(), 1);
+         fragmentMap.add(IMPORT + ":" + qualifiedName, importDecl.render(), 1);
       }
 
       for (final String qualifiedName : staticImports)
@@ -149,7 +149,7 @@ public class Generator4ClassFile extends AbstractGenerator
          final ST importDecl = group.getInstanceOf("importDecl");
          importDecl.add("qualifiedName", qualifiedName);
          importDecl.add("static", true);
-         fragmentMap.add(FileFragmentMap.IMPORT + ":" + qualifiedName, importDecl.render(), 1);
+         fragmentMap.add(IMPORT + ":" + qualifiedName, importDecl.render(), 1);
       }
    }
 
@@ -197,7 +197,7 @@ public class Generator4ClassFile extends AbstractGenerator
       final ST classDecl = group.getInstanceOf("classDecl");
       classDecl.add("name", clazz.getName());
       classDecl.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() : null);
-      fragmentMap.add(FileFragmentMap.CLASS, classDecl.render(), FileFragmentMap.CLASS_NEWLINES);
+      fragmentMap.add(CLASS, classDecl.render(), CLASS_NEWLINES);
    }
 
    // --------------- Attributes ---------------
@@ -223,18 +223,15 @@ public class Generator4ClassFile extends AbstractGenerator
       final boolean modified = attr.getModified();
 
       final ST propertyDecl = group.getInstanceOf("propertyDecl").add("attr", attr);
-      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":PROPERTY_" + attrName, propertyDecl.render(),
-                      FileFragmentMap.FIELD_NEWLINES, modified);
+      fragmentMap.add(ATTRIBUTE + ":PROPERTY_" + attrName, propertyDecl.render(), FIELD_NEWLINES, modified);
 
       final ST attrDecl = group.getInstanceOf("attrDecl").add("attr", attr);
-      fragmentMap
-         .add(FileFragmentMap.ATTRIBUTE + ":" + attrName, attrDecl.render(), FileFragmentMap.FIELD_NEWLINES, modified);
+      fragmentMap.add(ATTRIBUTE + ":" + attrName, attrDecl.render(), FIELD_NEWLINES, modified);
 
       if (attr.isJavaFX())
       {
          final ST initMethod = group.getInstanceOf("initMethod").add("attr", attr);
-         fragmentMap.add(METHOD + ":_init" + capAttrName + "()", initMethod.render(), FileFragmentMap.METHOD_NEWLINES,
-                         modified);
+         fragmentMap.add(METHOD + ":_init" + capAttrName + "()", initMethod.render(), METHOD_NEWLINES, modified);
       }
       else
       {
@@ -242,35 +239,37 @@ public class Generator4ClassFile extends AbstractGenerator
       }
 
       final ST attrGet = group.getInstanceOf("attrGet").add("attr", attr);
-      fragmentMap
-         .add(METHOD + ":get" + capAttrName + "()", attrGet.render(), FileFragmentMap.METHOD_NEWLINES, modified);
+      fragmentMap.add(METHOD + ":get" + capAttrName + "()", attrGet.render(), METHOD_NEWLINES, modified);
 
       if (attr.isCollection())
       {
          final ST attrWithItem = group.getInstanceOf("attrWithItem").add("attr", attr);
-         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + ")", attrWithItem.render(),
-                         FileFragmentMap.METHOD_NEWLINES, modified);
+         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + ")", attrWithItem.render(), METHOD_NEWLINES,
+                         modified);
 
          final ST attrWithArray = group.getInstanceOf("attrWithArray").add("attr", attr);
-         fragmentMap.add(METHOD + ":with" + capAttrName + "(" + boxType + "...)", attrWithArray.render(),
-                         FileFragmentMap.METHOD_NEWLINES, modified);
+         fragmentMap
+            .add(METHOD + ":with" + capAttrName + "(" + boxType + "...)", attrWithArray.render(), METHOD_NEWLINES,
+                 modified);
 
          final ST attrWithColl = group.getInstanceOf("attrWithColl").add("attr", attr);
          fragmentMap
             .add(METHOD + ":with" + capAttrName + "(Collection<? extends " + boxType + ">)", attrWithColl.render(),
-                 FileFragmentMap.METHOD_NEWLINES, modified);
+                 METHOD_NEWLINES, modified);
 
          final ST attrWithoutItem = group.getInstanceOf("attrWithoutItem").add("attr", attr);
-         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + boxType + ")", attrWithoutItem.render(),
-                         FileFragmentMap.METHOD_NEWLINES, modified);
+         fragmentMap
+            .add(METHOD + ":without" + capAttrName + "(" + boxType + ")", attrWithoutItem.render(), METHOD_NEWLINES,
+                 modified);
 
          final ST attrWithoutArray = group.getInstanceOf("attrWithoutArray").add("attr", attr);
-         fragmentMap.add(METHOD + ":without" + capAttrName + "(" + boxType + "...)", attrWithoutArray.render(),
-                         FileFragmentMap.METHOD_NEWLINES, modified);
+         fragmentMap
+            .add(METHOD + ":without" + capAttrName + "(" + boxType + "...)", attrWithoutArray.render(), METHOD_NEWLINES,
+                 modified);
 
          final ST attrWithoutColl = group.getInstanceOf("attrWithoutColl").add("attr", attr);
          fragmentMap.add(METHOD + ":without" + capAttrName + "(Collection<? extends " + boxType + ">)",
-                         attrWithoutColl.render(), FileFragmentMap.METHOD_NEWLINES, modified);
+                         attrWithoutColl.render(), METHOD_NEWLINES, modified);
 
          // remove "set" method
          fragmentMap.remove(METHOD + ":set" + capAttrName + "(" + baseType + ")");
@@ -278,8 +277,8 @@ public class Generator4ClassFile extends AbstractGenerator
       else // usual attribute
       {
          final ST attrSet = group.getInstanceOf("attrSet").add("attr", attr);
-         fragmentMap.add(METHOD + ":set" + capAttrName + "(" + baseType + ")", attrSet.render(),
-                         FileFragmentMap.METHOD_NEWLINES, modified);
+         fragmentMap
+            .add(METHOD + ":set" + capAttrName + "(" + baseType + ")", attrSet.render(), METHOD_NEWLINES, modified);
 
          // remove "with" and "without" methods
          fragmentMap.remove(METHOD + ":with" + capAttrName + "(" + boxType + ")");
@@ -293,8 +292,7 @@ public class Generator4ClassFile extends AbstractGenerator
       if (attr.isJavaFX())
       {
          final ST propertyGet = group.getInstanceOf("propertyGet").add("attr", attr);
-         fragmentMap.add(METHOD + ":" + attrName + "Property()", propertyGet.render(), FileFragmentMap.METHOD_NEWLINES,
-                         modified);
+         fragmentMap.add(METHOD + ":" + attrName + "Property()", propertyGet.render(), METHOD_NEWLINES, modified);
       }
       else
       {
@@ -332,19 +330,16 @@ public class Generator4ClassFile extends AbstractGenerator
       final String otherClassName = other.getClazz().getName();
 
       final ST propertyDecl = group.getInstanceOf("propertyDecl").add("role", role).add("other", other);
-      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":PROPERTY_" + roleName, propertyDecl.render(),
-                      FileFragmentMap.FIELD_NEWLINES, modified);
+      fragmentMap.add(ATTRIBUTE + ":PROPERTY_" + roleName, propertyDecl.render(), FIELD_NEWLINES, modified);
 
       final ST roleAttrDecl = group.getInstanceOf("roleAttrDecl").add("role", role).add("other", other);
-      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + roleName, roleAttrDecl.render(), FileFragmentMap.FIELD_NEWLINES,
-                      modified);
+      fragmentMap.add(ATTRIBUTE + ":" + roleName, roleAttrDecl.render(), FIELD_NEWLINES, modified);
 
       if (javaFX)
       {
          // add _init method
          final ST initMethod = group.getInstanceOf("initMethod").add("role", role).add("other", other);
-         fragmentMap.add(METHOD + ":_init" + capRoleName + "()", initMethod.render(), FileFragmentMap.METHOD_NEWLINES,
-                         modified);
+         fragmentMap.add(METHOD + ":_init" + capRoleName + "()", initMethod.render(), METHOD_NEWLINES, modified);
       }
       else
       {
@@ -353,35 +348,37 @@ public class Generator4ClassFile extends AbstractGenerator
       }
 
       final ST getMethod = group.getInstanceOf("getMethod").add("role", role).add("other", other);
-      fragmentMap
-         .add(METHOD + ":get" + capRoleName + "()", getMethod.render(), FileFragmentMap.METHOD_NEWLINES, modified);
+      fragmentMap.add(METHOD + ":get" + capRoleName + "()", getMethod.render(), METHOD_NEWLINES, modified);
 
       if (toMany)
       {
          final ST withItem = group.getInstanceOf("withItem").add("role", role).add("other", other);
-         fragmentMap.add(METHOD + ":with" + capRoleName + "(" + otherClassName + ")", withItem.render(),
-                         FileFragmentMap.METHOD_NEWLINES, modified);
+         fragmentMap
+            .add(METHOD + ":with" + capRoleName + "(" + otherClassName + ")", withItem.render(), METHOD_NEWLINES,
+                 modified);
 
          final ST withArray = group.getInstanceOf("withArray").add("role", role).add("other", other);
-         fragmentMap.add(METHOD + ":with" + capRoleName + "(" + otherClassName + "...)", withArray.render(),
-                         FileFragmentMap.METHOD_NEWLINES, modified);
+         fragmentMap
+            .add(METHOD + ":with" + capRoleName + "(" + otherClassName + "...)", withArray.render(), METHOD_NEWLINES,
+                 modified);
 
          final ST withColl = group.getInstanceOf("withColl").add("role", role).add("other", other);
          fragmentMap
             .add(METHOD + ":with" + capRoleName + "(Collection<? extends " + otherClassName + ">)", withColl.render(),
-                 FileFragmentMap.METHOD_NEWLINES, modified);
+                 METHOD_NEWLINES, modified);
 
          final ST withoutItem = group.getInstanceOf("withoutItem").add("role", role).add("other", other);
-         fragmentMap.add(METHOD + ":without" + capRoleName + "(" + otherClassName + ")", withoutItem.render(),
-                         FileFragmentMap.METHOD_NEWLINES, modified);
+         fragmentMap
+            .add(METHOD + ":without" + capRoleName + "(" + otherClassName + ")", withoutItem.render(), METHOD_NEWLINES,
+                 modified);
 
          final ST withoutArray = group.getInstanceOf("withoutArray").add("role", role).add("other", other);
          fragmentMap.add(METHOD + ":without" + capRoleName + "(" + otherClassName + "...)", withoutArray.render(),
-                         FileFragmentMap.METHOD_NEWLINES, modified);
+                         METHOD_NEWLINES, modified);
 
          final ST withoutColl = group.getInstanceOf("withoutColl").add("role", role).add("other", other);
          fragmentMap.add(METHOD + ":without" + capRoleName + "(Collection<? extends " + otherClassName + ">)",
-                         withoutColl.render(), FileFragmentMap.METHOD_NEWLINES, modified);
+                         withoutColl.render(), METHOD_NEWLINES, modified);
 
          // remove "set" method
          fragmentMap.remove(METHOD + ":set" + capRoleName + "(" + otherClassName + ")");
@@ -389,8 +386,8 @@ public class Generator4ClassFile extends AbstractGenerator
       else
       {
          final ST attrSet = group.getInstanceOf("setMethod").add("role", role).add("other", other);
-         fragmentMap.add(METHOD + ":set" + capRoleName + "(" + otherClassName + ")", attrSet.render(),
-                         FileFragmentMap.METHOD_NEWLINES, modified);
+         fragmentMap.add(METHOD + ":set" + capRoleName + "(" + otherClassName + ")", attrSet.render(), METHOD_NEWLINES,
+                         modified);
 
          // remove "with" and "without" methods
          fragmentMap.remove(METHOD + ":with" + capRoleName + "(" + otherClassName + ")");
@@ -404,9 +401,7 @@ public class Generator4ClassFile extends AbstractGenerator
       if (javaFX && !toMany)
       {
          final ST propertyMethod = group.getInstanceOf("propertyMethod").add("role", role).add("other", other);
-         fragmentMap
-            .add(METHOD + ":" + roleName + "Property()", propertyMethod.render(), FileFragmentMap.METHOD_NEWLINES,
-                 modified);
+         fragmentMap.add(METHOD + ":" + roleName + "Property()", propertyMethod.render(), METHOD_NEWLINES, modified);
       }
       else
       {
@@ -446,7 +441,7 @@ public class Generator4ClassFile extends AbstractGenerator
       final ST template = group.getInstanceOf("method");
       template.add("method", method);
       template.add("body", body);
-      fragmentMap.add(method.getSignature(), template.render(), FileFragmentMap.METHOD_NEWLINES, method.getModified());
+      fragmentMap.add(method.getSignature(), template.render(), METHOD_NEWLINES, method.getModified());
    }
 
    // --------------- Additional Fragments ---------------
@@ -461,28 +456,30 @@ public class Generator4ClassFile extends AbstractGenerator
       final STGroup group = this.getSTGroup("org/fulib/templates/propertyChangeSupport.stg");
 
       final ST listenersField = group.getInstanceOf("listenersField");
-      fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":listeners", listenersField.render(), FileFragmentMap.FIELD_NEWLINES,
-                      clazz.getModified());
+      fragmentMap.add(ATTRIBUTE + ":listeners", listenersField.render(), FIELD_NEWLINES, clazz.getModified());
 
       final ST firePropertyChange = group.getInstanceOf("firePropertyChange");
-      fragmentMap.add(METHOD + ":firePropertyChange(String,Object,Object)", firePropertyChange.render(),
-                      FileFragmentMap.METHOD_NEWLINES, clazz.getModified());
+      fragmentMap
+         .add(METHOD + ":firePropertyChange(String,Object,Object)", firePropertyChange.render(), METHOD_NEWLINES,
+              clazz.getModified());
 
       final ST addPCL1 = group.getInstanceOf("addPropertyChangeListener1");
-      fragmentMap.add(METHOD + ":addPropertyChangeListener(PropertyChangeListener)", addPCL1.render(),
-                      FileFragmentMap.METHOD_NEWLINES, clazz.getModified());
+      fragmentMap.add(METHOD + ":addPropertyChangeListener(PropertyChangeListener)", addPCL1.render(), METHOD_NEWLINES,
+                      clazz.getModified());
 
       final ST addPCL2 = group.getInstanceOf("addPropertyChangeListener2");
-      fragmentMap.add(METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", addPCL2.render(),
-                      FileFragmentMap.METHOD_NEWLINES, clazz.getModified());
+      fragmentMap
+         .add(METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", addPCL2.render(), METHOD_NEWLINES,
+              clazz.getModified());
 
       final ST removePCL1 = group.getInstanceOf("removePropertyChangeListener1");
-      fragmentMap.add(METHOD + ":removePropertyChangeListener(PropertyChangeListener)", removePCL1.render(),
-                      FileFragmentMap.METHOD_NEWLINES, clazz.getModified());
+      fragmentMap
+         .add(METHOD + ":removePropertyChangeListener(PropertyChangeListener)", removePCL1.render(), METHOD_NEWLINES,
+              clazz.getModified());
 
       final ST removePCL2 = group.getInstanceOf("removePropertyChangeListener2");
       fragmentMap.add(METHOD + ":removePropertyChangeListener(String,PropertyChangeListener)", removePCL2.render(),
-                      FileFragmentMap.METHOD_NEWLINES, clazz.getModified());
+                      METHOD_NEWLINES, clazz.getModified());
    }
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
@@ -516,7 +513,7 @@ public class Generator4ClassFile extends AbstractGenerator
          fragment = toString.render();
       }
 
-      fragmentMap.add(METHOD + ":toString()", fragment, FileFragmentMap.METHOD_NEWLINES, modified);
+      fragmentMap.add(METHOD + ":toString()", fragment, METHOD_NEWLINES, modified);
    }
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
@@ -525,7 +522,6 @@ public class Generator4ClassFile extends AbstractGenerator
       final ST removeYou = group.getInstanceOf("removeYou");
       removeYou.add("superClass", clazz.getSuperClass() != null);
       removeYou.add("roles", clazz.getRoles().stream().filter(r -> r.getName() != null).toArray());
-      fragmentMap
-         .add(METHOD + ":removeYou()", removeYou.render(), FileFragmentMap.METHOD_NEWLINES, clazz.getModified());
+      fragmentMap.add(METHOD + ":removeYou()", removeYou.render(), METHOD_NEWLINES, clazz.getModified());
    }
 }
