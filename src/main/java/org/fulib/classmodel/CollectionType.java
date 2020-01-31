@@ -15,13 +15,13 @@ public class CollectionType
 
    // must be initialized after cache!
 
-   public static final CollectionType ArrayList     = of(java.util.ArrayList.class);
+   public static final CollectionType ArrayList = of(java.util.ArrayList.class);
    public static final CollectionType LinkedHashSet = of(java.util.LinkedHashSet.class);
 
    // =============== Fields ===============
 
-   private CollectionItf               itf;
-   private String                      implTemplate;
+   private CollectionItf itf;
+   private String implTemplate;
    private Class<? extends Collection> implClass;
 
    private final boolean cached;
@@ -121,6 +121,7 @@ public class CollectionType
    }
 
    // TODO remove when FulibYaml has enum support
+
    /**
     * @deprecated only here for YAML deserialization to work;
     * use {@link #getItf()}.{@link CollectionItf#name() name()} instead
@@ -132,6 +133,7 @@ public class CollectionType
    }
 
    // TODO remove when FulibYaml has enum support
+
    /**
     * @deprecated only here for YAML deserialization to work;
     * use {@link #setItf(CollectionItf) setItf}({@link CollectionItf#valueOf(String)}) instead
@@ -162,6 +164,43 @@ public class CollectionType
    {
       this.checkCached();
       this.implClass = implClass;
+   }
+
+   public String getQualifiedImplName()
+   {
+      if (this.implClass != null)
+      {
+         return this.implClass.getCanonicalName();
+      }
+
+      return this.implTemplate.substring(0, this.getClassNameEndIndex());
+   }
+
+   public String getSimpleImplName()
+   {
+      if (this.implClass != null)
+      {
+         return this.implClass.getSimpleName();
+      }
+
+      final int endIndex = this.getClassNameEndIndex();
+      final int startIndex = this.implTemplate.lastIndexOf('.', endIndex) + 1; // not found, i.e. -1, becomes 0
+      return this.implTemplate.substring(startIndex, endIndex);
+   }
+
+   public boolean isGeneric()
+   {
+      return this.implTemplate.indexOf('<') >= 0;
+   }
+
+   private int getClassNameEndIndex()
+   {
+      final int genericIndex = this.implTemplate.indexOf('<');
+      if (genericIndex >= 0)
+      {
+         return genericIndex;
+      }
+      return this.implTemplate.length();
    }
 
    private void checkCached()
