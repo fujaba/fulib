@@ -1,5 +1,5 @@
 listenersField() ::= <<
-   protected PropertyChangeSupport listeners = null;
+   protected PropertyChangeSupport listeners;
 >>
 
 addPropertyChangeListener1() ::= <<
