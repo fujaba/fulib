@@ -3,7 +3,7 @@ collectionImpl(attr) ::= <%
 %>
 
 collectionItf(attr) ::= <%
-<attr.collectionType.itf.qualifiedName>\<<attr.boxType>>
+<attr.collectionType.itf.simpleName>\<<attr.boxType>>
 %>
 
 // --------------- Declarations ---------------

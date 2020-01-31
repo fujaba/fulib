@@ -3,7 +3,7 @@ collectionImpl(role, other) ::= <%
 %>
 
 collectionItf(role, other) ::= <%
-<role.collectionType.itf.qualifiedName>\<<other.clazz.name>>
+<role.collectionType.itf.simpleName>\<<other.clazz.name>>
 %>
 
 // --------------- Declarations ---------------

@@ -189,6 +189,22 @@ public class Generator4ClassFile extends AbstractGenerator
          qualifiedNames.add("java.util.Collections");
          qualifiedNames.add("java.util.Arrays");
       }
+
+      for (final AssocRole role : clazz.getRoles())
+      {
+         if (role.getCollectionType() != null)
+         {
+            qualifiedNames.add(role.getCollectionType().getItf().getQualifiedName());
+         }
+      }
+
+      for (final Attribute attribute : clazz.getAttributes())
+      {
+         if (attribute.getCollectionType() != null)
+         {
+            qualifiedNames.add(attribute.getCollectionType().getItf().getQualifiedName());
+         }
+      }
    }
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
