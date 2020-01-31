@@ -1,5 +1,6 @@
 collectionImpl(attr) ::= <%
-<attr.boxType; format={<attr.collectionType.implTemplate>}>
+<attr.collectionType.simpleImplName>
+<if(attr.collectionType.generic)>\<><endif>
 %>
 
 collectionItf(attr) ::= <%

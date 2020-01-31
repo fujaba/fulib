@@ -192,19 +192,24 @@ public class Generator4ClassFile extends AbstractGenerator
 
       for (final AssocRole role : clazz.getRoles())
       {
-         if (role.getCollectionType() != null)
-         {
-            qualifiedNames.add(role.getCollectionType().getItf().getQualifiedName());
-         }
+         this.addCollectionTypeImports(role.getCollectionType(), qualifiedNames);
       }
 
       for (final Attribute attribute : clazz.getAttributes())
       {
-         if (attribute.getCollectionType() != null)
-         {
-            qualifiedNames.add(attribute.getCollectionType().getItf().getQualifiedName());
-         }
+         this.addCollectionTypeImports(attribute.getCollectionType(), qualifiedNames);
       }
+   }
+
+   private void addCollectionTypeImports(CollectionType collectionType, Set<String> qualifiedNames)
+   {
+      if (collectionType == null)
+      {
+         return;
+      }
+
+      qualifiedNames.add(collectionType.getItf().getQualifiedName());
+      qualifiedNames.add(collectionType.getQualifiedImplName());
    }
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
