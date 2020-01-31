@@ -1,4 +1,7 @@
 removeYou(superClass, roles) ::= <<
+   <if(superClass)>
+   @Override
+   <endif>
    public void removeYou()
    {
       <if(superClass)>
