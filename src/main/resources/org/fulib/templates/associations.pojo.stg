@@ -11,9 +11,9 @@ collectionItf(role, other) ::= <%
 
 roleAttrDecl(role, other) ::= <<
 <if(role.toMany)>
-   private <collectionItf(role, other)> <role.name> = null;
+   private <collectionItf(role, other)> <role.name>;
 <else>
-   private <other.clazz.name> <role.name> = null;
+   private <other.clazz.name> <role.name>;
 <endif>
 >>
 
