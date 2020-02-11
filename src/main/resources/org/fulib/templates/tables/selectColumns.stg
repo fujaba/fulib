@@ -1,93 +1,90 @@
-
-selectColumns(className) ::=
-<<
+selectColumns(className) ::= <<
    public <className>Table selectColumns(String... columnNames)
    {
-      LinkedHashMap\<String, Integer> oldColumnMap = (LinkedHashMap\<String, Integer>) this.columnMap.clone();
+      Map\<String, Integer> oldColumnMap = new LinkedHashMap\<>(this.columnMap);
       this.columnMap.clear();
 
-      int i = 0;
-      for (String name : columnNames)
+      for (int i = 0; i \< columnNames.length; i++)
       {
+         String name = columnNames[i];
          if (oldColumnMap.get(name) == null)
+         {
             throw new IllegalArgumentException("unknown column name: " + name);
+         }
          this.columnMap.put(name, i);
-         i++;
       }
 
-      ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
 
-      LinkedHashSet\<ArrayList\<Object> > rowSet = new LinkedHashSet\<>();
-      for (ArrayList row : oldTable)
+      Set\<List\<Object>\> rowSet = new HashSet\<>();
+      for (List\<Object> row : oldTable)
       {
-         ArrayList newRow = new ArrayList();
+         List\<Object> newRow = new ArrayList\<>();
          for (String name : columnNames)
          {
             Object value = row.get(oldColumnMap.get(name));
             newRow.add(value);
          }
          if (rowSet.add(newRow))
+         {
             this.table.add(newRow);
+         }
       }
 
       return this;
    }
 >>
 
-
-
-dropColumns(className) ::=
-<<
+dropColumns(className) ::= <<
    public <className>Table dropColumns(String... columnNames)
    {
-      LinkedHashMap\<String, Integer> oldColumnMap = (LinkedHashMap\<String, Integer>) this.columnMap.clone();
+      Map\<String, Integer> oldColumnMap = new LinkedHashMap\<>(this.columnMap);
       this.columnMap.clear();
 
-      LinkedHashSet\<String> dropNames = new LinkedHashSet\<>();
-      dropNames.addAll(Arrays.asList(columnNames));
+      Set\<String> dropNames = new HashSet\<>(Arrays.asList(columnNames));
       int i = 0;
       for (String name : oldColumnMap.keySet())
       {
-         if ( ! dropNames.contains(name))
+         if (!dropNames.contains(name))
          {
             this.columnMap.put(name, i);
             i++;
          }
       }
 
-      ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
 
-      LinkedHashSet\<ArrayList\<Object> > rowSet = new LinkedHashSet\<>();
-      for (ArrayList row : oldTable)
+      Set\<List\<Object>\> rowSet = new HashSet\<>();
+      for (List\<Object> row : oldTable)
       {
-         ArrayList newRow = new ArrayList();
+         List\<Object> newRow = new ArrayList\<>();
          for (String name : this.columnMap.keySet())
          {
             Object value = row.get(oldColumnMap.get(name));
             newRow.add(value);
          }
          if (rowSet.add(newRow))
+         {
             this.table.add(newRow);
+         }
       }
 
       return this;
    }
 >>
 
-
-addColumn(className) ::=
-<<
-   public void addColumn(String columnName, java.util.function.Function\<java.util.LinkedHashMap\<String,Object>,Object> function)
+addColumn(className) ::= <<
+   public void addColumn(String columnName, Function\<? super Map\<String, Object>, ?> function)
    {
-      int newColumnNumber = this.table.size() > 0 ? this.table.get(0).size() : 0;
-      for (ArrayList\<Object> row : this.table)
+      int newColumnNumber = this.table.isEmpty() ? 0 : this.table.get(0).size();
+      for (List\<Object> row : this.table)
       {
-         java.util.LinkedHashMap\<String,Object> map = new java.util.LinkedHashMap\<>();
-         for (String key : columnMap.keySet())
+         Map\<String, Object> map = new LinkedHashMap\<>();
+         for (Map.Entry\<String, Integer> entry : this.columnMap.entrySet())
          {
-            map.put(key, row.get(columnMap.get(key)));
+            map.put(entry.getKey(), row.get(entry.getValue()));
          }
          Object result = function.apply(map);
          row.add(result);

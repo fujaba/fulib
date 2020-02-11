@@ -11,7 +11,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Objects;
 
 public class FileFragmentMap
 {
@@ -26,6 +25,14 @@ public class FileFragmentMap
    public static final String CLASS_BODY  = "classBody";
    public static final String CLASS_END   = "classEnd";
    public static final String GAP         = "gap:";
+
+   public static final int PACKAGE_NEWLINES     = 2;
+   public static final int IMPORT_NEWLINES      = 1;
+   public static final int CLASS_NEWLINES       = 2;
+   public static final int FIELD_NEWLINES       = 2;
+   public static final int CONSTRUCTOR_NEWLINES = 2;
+   public static final int METHOD_NEWLINES      = 2;
+   public static final int CLASS_END_NEWLINES   = 1;
 
    public static final String PROPERTY_fileName = "fileName";
 
@@ -113,9 +120,17 @@ public class FileFragmentMap
       return true;
    }
 
+   @Deprecated
+   @SuppressWarnings("unused")
+   public boolean classBodyIsEmpty(FileFragmentMap fragmentMap)
+   {
+      return this.isClassBodyEmpty();
+   }
+
    // =============== Static Methods ===============
 
-   public static String mergeClassDecl(String oldText, String newText)
+   // package-private for testability
+   static String mergeClassDecl(String oldText, String newText)
    {
       // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
       final Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
@@ -163,7 +178,9 @@ public class FileFragmentMap
       return newTextBuilder.toString();
    }
 
-   private static String mergeAttributeDecl(String oldText, String newText)
+   // package-private for testability
+   // TODO test
+   static String mergeAttributeDecl(String oldText, String newText)
    {
       // keep everything before public
       final int oldPublicPos = oldText.indexOf("public");
@@ -185,6 +202,8 @@ public class FileFragmentMap
    }
 
    // =============== Methods ===============
+
+   // --------------- Raw Modification ---------------
 
    public void add(CodeFragment fragment)
    {
@@ -210,17 +229,72 @@ public class FileFragmentMap
       }
    }
 
+   // --------------- Smart Modification ---------------
+
+   /**
+    * Adds or replaces the fragment with the given key, UNLESS it is marked as user-defined.
+    * When no old fragment exists, a gap with the specified number of newlines is added after the new fragment.
+    *
+    * @param key
+    *    the key
+    * @param newText
+    *    the new text
+    * @param newLines
+    *    the number of line breaks to insert after the text
+    *
+    * @return the old fragment, or {@code null} if not found
+    */
    public CodeFragment add(String key, String newText, int newLines)
    {
-      return this.add(key, newText, newLines, false);
+      return this.replace(key, newText, newLines);
    }
 
+   /**
+    * Removes the fragment with the given key, UNLESS it is marked as user-defined.
+    *
+    * @param key
+    *    the key
+    *
+    * @return the old fragment, or {@code null} if not found
+    *
+    * @since 1.2
+    */
+   public CodeFragment remove(String key)
+   {
+      return this.replace(key, null, 0);
+   }
+
+   /**
+    * Behaves like {@link #add(String, String, int)} when removeFragment is true,
+    * and like {@link #remove(String)} otherwise.
+    *
+    * @param key
+    *    the key
+    * @param newText
+    *    the new text (ignored if removeFragment is true)
+    * @param newLines
+    *    the number of line breaks to insert after the text (ignored if removeFragment is true)
+    * @param removeFragment
+    *    whether to remove the fragment associated with the key
+    *
+    * @return the old fragment, or {@code null} if not found
+    *
+    * @see #add(String, String, int)
+    * @see #remove(String)
+    * @deprecated since 1.2; use {@link #add(String, String, int)} or {@link #remove(String)} instead
+    */
+   @Deprecated
    public CodeFragment add(String key, String newText, int newLines, boolean removeFragment)
+   {
+      return this.replace(key, removeFragment ? null : newText, newLines);
+   }
+
+   private CodeFragment replace(String key, String newText, int newLines)
    {
       CodeFragment old = this.codeMap.get(key);
       if (old == null)
       {
-         if (removeFragment)
+         if (newText == null)
          {
             return null;
          }
@@ -236,7 +310,7 @@ public class FileFragmentMap
          return old;
       }
 
-      if (removeFragment)
+      if (newText == null)
       {
          this.remove(old);
          return old;
@@ -278,25 +352,14 @@ public class FileFragmentMap
 
       if (key.startsWith(IMPORT))
       {
-         CodeFragment oldFragment = this.codeMap.get(CLASS);
-         int pos = this.fragmentList.indexOf(oldFragment);
-
-         // go to the gap before this
-         pos--;
-
-         pos = Math.max(0, pos);
-
-         this.fragmentList.add(pos, gap);
-         pos++;
-         //         fragmentList.add(pos, gap);
-         //         pos++;
-         this.fragmentList.add(pos, result);
+         this.add(result, CLASS);
+         this.add(gap, CLASS);
 
          return result;
       }
 
       this.add(result);
-      this.add(gap, CLASS_END);
+      this.add(gap);
 
       return result;
    }
@@ -317,9 +380,9 @@ public class FileFragmentMap
 
    private void add(CodeFragment result, String posKey)
    {
-      CodeFragment oldFragment = this.codeMap.get(posKey);
-      int pos = this.fragmentList.indexOf(oldFragment);
-      if (pos == -1)
+      final CodeFragment oldFragment = this.codeMap.get(posKey);
+      final int pos;
+      if (oldFragment == null || (pos = this.fragmentList.indexOf(oldFragment)) < 0)
       {
          this.fragmentList.add(result);
       }
@@ -327,9 +390,9 @@ public class FileFragmentMap
       {
          this.fragmentList.add(pos, result);
       }
-
-      this.codeMap.put(result.getKey(), result);
    }
+
+   // --------------- Post-Processing ---------------
 
    public void compressBlankLines()
    {
@@ -365,6 +428,8 @@ public class FileFragmentMap
       }
    }
 
+   // --------------- Output ---------------
+
    public void writeFile()
    {
       final Path path = Paths.get(this.fileName);
@@ -391,13 +456,6 @@ public class FileFragmentMap
       {
          writer.write(fragment.getText());
       }
-   }
-
-   @Deprecated
-   @SuppressWarnings("unused")
-   public boolean classBodyIsEmpty(FileFragmentMap fragmentMap)
-   {
-      return this.isClassBodyEmpty();
    }
 
    // --------------- Property Change Support ---------------

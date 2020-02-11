@@ -1,18 +1,19 @@
 collectionImpl(role, other) ::= <%
-<other.clazz.name; format={<role.collectionType.implTemplate>}>
+<role.collectionType.simpleImplName>
+<if(role.collectionType.generic)>\<><endif>
 %>
 
 collectionItf(role, other) ::= <%
-<role.collectionType.itf.qualifiedName>\<<other.clazz.name>>
+<role.collectionType.itf.simpleName>\<<other.clazz.name>>
 %>
 
 // --------------- Declarations ---------------
 
 roleAttrDecl(role, other) ::= <<
 <if(role.toMany)>
-   private <collectionItf(role, other)> <role.name> = null;
+   private <collectionItf(role, other)> <role.name>;
 <else>
-   private <other.clazz.name> <role.name> = null;
+   private <other.clazz.name> <role.name>;
 <endif>
 >>
 
@@ -26,7 +27,7 @@ getMethod(role, other) ::= <<
 <if(role.toMany)>
    public <collectionItf(role, other)> get<role.name; format="cap">()
    {
-      return this.<role.name> != null ? java.util.Collections.unmodifiable<role.collectionType.itf.simpleName>(this.<role.name>) : java.util.Collections.empty<role.collectionType.itf.simpleName>();
+      return this.<role.name> != null ? Collections.unmodifiable<role.collectionType.itf.simpleName>(this.<role.name>) : Collections.empty<role.collectionType.itf.simpleName>();
    }
 <else>
    public <other.clazz.name> get<role.name; format="cap">()

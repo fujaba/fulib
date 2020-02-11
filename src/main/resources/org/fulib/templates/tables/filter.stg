@@ -1,13 +1,12 @@
-
-filter(className) ::=
-<<
-   public <className>Table filter(Predicate\< <className> > predicate)
+filter(className) ::= <<
+   public <className>Table filter(Predicate\<? super <className>\> predicate)
    {
-      ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();
+      int column = this.getColumn();
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
-      for (ArrayList\<Object> row : oldTable)
+      for (List\<Object> row : oldTable)
       {
-         <className> start = (<className>) row.get(columnMap.get(this.getColumnName()));
+         <className> start = (<className>) row.get(column);
          if (predicate.test(start))
          {
             this.table.add(row);
@@ -17,20 +16,17 @@ filter(className) ::=
    }
 >>
 
-
-
-filterRow(className) ::=
-<<
-   public <className>Table filterRow(Predicate\<LinkedHashMap\<String,Object> > predicate)
+filterRow(className) ::= <<
+   public <className>Table filterRow(Predicate\<? super Map\<String, Object>\> predicate)
    {
-      ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
-      for (ArrayList\<Object> row : oldTable)
+      for (List\<Object> row : oldTable)
       {
-         LinkedHashMap\<String,Object> map = new LinkedHashMap\< >();
-         for (String key : columnMap.keySet())
+         Map\<String, Object> map = new LinkedHashMap\<>();
+         for (Map.Entry\<String, Integer> entry : this.columnMap.entrySet())
          {
-            map.put(key, row.get(columnMap.get(key)));
+            map.put(entry.getKey(), row.get(entry.getValue()));
          }
          if (predicate.test(map))
          {

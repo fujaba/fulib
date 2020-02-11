@@ -1,57 +1,54 @@
-
-expandMethod(roleName,toMany,className,otherClassName) ::=
-<<
-   public <otherClassName>Table expand<cap(roleName)>(String... rowName)
+expandMethod(roleName, toMany, className, otherClassName) ::= <<
+   public <otherClassName>Table expand<roleName; format="cap">(String... rowName)
    {
       <otherClassName>Table result = new <otherClassName>Table();
       result.setColumnMap(this.columnMap);
-      result.setTable(table);
-      int newColumnNumber = this.table.size() > 0 ? this.table.get(0).size() : 0;
+      result.setTable(this.table);
+      int newColumnNumber = this.table.isEmpty() ? 0 : this.table.get(0).size();
 
       String newColumnName = rowName != null && rowName.length > 0 ? rowName[0] : "" + ((char)('A' + newColumnNumber));
       result.setColumnName(newColumnName);
-      columnMap.put(newColumnName, newColumnNumber);
+      this.columnMap.put(newColumnName, newColumnNumber);
 
-      ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();
+      int column = this.getColumn();
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
-      for (ArrayList\<Object> row : oldTable)
+      for (List\<Object> row : oldTable)
       {
-      <if(toMany)>
-         <className> start = (<className>) row.get(columnMap.get(this.getColumnName()));
-         for (<otherClassName> current : start.get<cap(roleName)>())
+         <className> start = (<className>) row.get(column);
+         <if(toMany)>
+         for (<otherClassName> current : start.get<roleName; format="cap">())
          {
-            ArrayList\<Object> newRow = (ArrayList\<Object>) row.clone();
+            List\<Object> newRow = new ArrayList\<>(row);
             newRow.add(current);
             this.table.add(newRow);
          }
-      <else>
-         <className> start = (<className>) row.get(columnMap.get(this.getColumnName()));
-         ArrayList\<Object> newRow = (ArrayList\<Object>) row.clone();
-         newRow.add(start.get<cap(roleName)>());
+         <else>
+         List\<Object> newRow = new ArrayList\<>(row);
+         newRow.add(start.get<roleName; format="cap">());
          this.table.add(newRow);
-      <endif>
+         <endif>
       }
       return result;
    }
 >>
 
-
-
-hasMethod(roleName,toMany,className,otherClassName) ::=
-<<
-   public <className>Table has<cap(roleName)>(<otherClassName>Table rowName)
+hasMethod(roleName, toMany, className, otherClassName) ::= <<
+   public <className>Table has<roleName; format="cap">(<otherClassName>Table rowName)
    {
-      ArrayList\<ArrayList\<Object> > oldTable = (ArrayList\<ArrayList\<Object> >) this.table.clone();
+      int column = this.getColumn();
+      int otherColumn = this.columnMap.get(rowName.getColumnName());
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
-      for (ArrayList\<Object> row : oldTable)
+      for (List\<Object> row : oldTable)
       {
-         <className> start = (<className>) row.get(columnMap.get(this.getColumnName()));
-         <otherClassName> other = (<otherClassName>) row.get(columnMap.get(rowName.getColumnName()));
-      <if(toMany)>
-         if (start.get<cap(roleName)>().contains(other))
-      <else>
-         if (start.get<cap(roleName)>() == other)
-      <endif>
+         <className> start = (<className>) row.get(column);
+         <otherClassName> other = (<otherClassName>) row.get(otherColumn);
+         <if(toMany)>
+         if (start.get<roleName; format="cap">().contains(other))
+         <else>
+         if (start.get<roleName; format="cap">() == other)
+         <endif>
          {
             this.table.add(row);
          }
@@ -59,10 +56,3 @@ hasMethod(roleName,toMany,className,otherClassName) ::=
       return this;
    }
 >>
-
-
-cap(n) ::=
-<%
-<n; format="cap">
-%>
-

@@ -13,6 +13,9 @@ import java.util.Objects;
 
 import static org.fulib.Parser.CLASS_END;
 
+/**
+ * @deprecated since 1.2; TypeScript support is no longer maintained by the Java implementation of Fulib
+ */
 @Deprecated
 public class TypeScriptParser
 {
@@ -25,7 +28,7 @@ public class TypeScriptParser
    public static final String IMPORT = "import";
 
    private FileFragmentMap fragmentMap;
-   private StringBuilder fileBody = null;
+   private StringBuilder fileBody;
    private String fileName;
    private int indexOfResult;
    private char currentChar;

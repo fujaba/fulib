@@ -1,112 +1,124 @@
-
-
-intTable(packageName,primitiveType,objectType) ::=
-<<
+intTable(packageName,primitiveType,objectType) ::= <<
 package <packageName>;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class <primitiveType>Table
 {
-   private ArrayList\<ArrayList\<Object> > table = new ArrayList\<>();
+   // =============== Fields ===============
 
-   public ArrayList\<ArrayList\<Object> > getTable()
+   private String columnName;
+   private List\<List\<Object>\> table = new ArrayList\<>();
+   private Map\<String, Integer> columnMap = new LinkedHashMap\<>();
+
+   // =============== Constructors ===============
+
+   public <primitiveType>Table(<objectType>... start)
    {
-      return table;
+      this.columnName = "A";
+      this.columnMap.put(this.columnName, 0);
+      for (<objectType> current : start)
+      {
+         List\<Object> row = new ArrayList\<>();
+         row.add(current);
+         this.table.add(row);
+      }
    }
 
-   public void setTable(ArrayList\<ArrayList\<Object> > table)
-   {
-      this.table = table;
-   }
-
-   private String columnName = null;
+   // =============== Properties ===============
 
    public String getColumnName()
    {
-      return columnName;
+      return this.columnName;
    }
 
    public void setColumnName(String columnName)
    {
       this.columnName = columnName;
    }
+   
+   public int getColumn()
+   {
+      return this.columnMap.get(this.columnName);
+   }
 
-   LinkedHashMap\<String, Integer> columnMap = new LinkedHashMap\<>();
+   public List\<List\<Object>\> getTable()
+   {
+      return this.table;
+   }
 
-   public void setColumnMap(LinkedHashMap\<String, Integer> columnMap)
+   public void setTable(List\<List\<Object>\> table)
+   {
+      this.table = table;
+   }
+
+   public void setColumnMap(Map\<String, Integer> columnMap)
    {
       this.columnMap = columnMap;
    }
 
-   public <primitiveType>Table(<objectType>... start)
-   {
-      columnName = "A";
-      columnMap.put(columnName, 0);
-      for (<objectType> current : start)
-      {
-         ArrayList\<Object> row = new ArrayList\<>();
-         row.add(current);
-         table.add(row);
-      }
-   }
+   // =============== Methods ===============
 
-
-   public <primitiveType> sum ()
+   public <primitiveType> sum()
    {
+      int column = this.getColumn();
       <primitiveType> result = 0;
-      for (ArrayList\<Object> row : table)
+      for (List\<Object> row : this.table)
       {
-         result += (<objectType>) row.get(columnMap.get(columnName));
+         result += (<objectType>) row.get(column);
       }
       return result;
    }
 
-
-   public <primitiveType> min ()
+   public <primitiveType> min()
    {
+      int column = this.getColumn();
       <primitiveType> result = <objectType>.MAX_VALUE;
-      for (ArrayList\<Object> row : table)
+      for (List\<Object> row : this.table)
       {
-         <primitiveType> value =  (<objectType>) row.get(columnMap.get(columnName));
+         <primitiveType> value = (<objectType>) row.get(column);
          if (value \< result)
+         {
             result = value;
+         }
       }
       return result;
    }
 
-
-   public <primitiveType> max ()
+   public <primitiveType> max()
    {
+      int column = this.getColumn();
       <primitiveType> result = <objectType>.MIN_VALUE;
-      for (ArrayList\<Object> row : table)
+      for (List\<Object> row : this.table)
       {
-         <primitiveType> value =  (<objectType>) row.get(columnMap.get(columnName));
+         <primitiveType> value = (<objectType>) row.get(column);
          if (value > result)
+         {
             result = value;
+         }
       }
       return result;
    }
 
-
-   public <primitiveType> median ()
+   public <primitiveType> median()
    {
-      ArrayList\< <objectType> > list = this.toList();
+      List\<<objectType>\> list = this.toList();
       Collections.sort(list);
       int index = list.size() / 2;
-      <primitiveType> result = list.get(index);
-      return result;
+      return list.get(index);
    }
 
-
-   public ArrayList\< <objectType> > toList()
+   public List\<<objectType>\> toList()
    {
-      ArrayList\< <objectType> > result = new ArrayList\<>();
-      for (ArrayList\<Object> row : table)
+      int column = this.getColumn();
+      List\<<objectType>\> result = new ArrayList\<>();
+      for (List\<Object> row : this.table)
       {
-         <primitiveType> value =  (<objectType>) row.get(columnMap.get(columnName));
+         <primitiveType> value = (<objectType>) row.get(column);
          result.add(value);
       }
       return result;
@@ -116,12 +128,12 @@ public class <primitiveType>Table
    public String toString()
    {
       StringBuilder buf = new StringBuilder();
-      for (String key : columnMap.keySet())
+      for (String key : this.columnMap.keySet())
       {
          buf.append(key).append(" \t");
       }
       buf.append("\n");
-      for (ArrayList\<Object> row : table)
+      for (List\<Object> row : this.table)
       {
          for (Object cell : row)
          {

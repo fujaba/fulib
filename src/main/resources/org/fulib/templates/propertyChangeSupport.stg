@@ -1,3 +1,7 @@
+listenersField() ::= <<
+   protected PropertyChangeSupport listeners;
+>>
+
 addPropertyChangeListener1() ::= <<
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {

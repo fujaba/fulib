@@ -15,8 +15,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Logger;
+
+import static org.fulib.classmodel.FileFragmentMap.*;
 
 public class Generator4TableClassFile extends AbstractGenerator
 {
@@ -36,32 +39,22 @@ public class Generator4TableClassFile extends AbstractGenerator
       String classFileName = clazz.getModel().getPackageSrcFolder() + "/tables/" + clazz.getName() + "Table.java";
       FileFragmentMap fragmentMap = FragmentMapBuilder.parse(classFileName);
 
-      // doGenerate code for class
       this.generatePackageDecl(clazz, fragmentMap);
-
+      this.generateImports(clazz, fragmentMap);
       this.generateClassDecl(clazz, fragmentMap);
-
       this.generateConstructor(clazz, fragmentMap);
-
       this.generateStandardAttributes(clazz, fragmentMap);
-
       this.generateAttributes(clazz, fragmentMap);
-
       this.generateAssociations(clazz, fragmentMap);
-
       this.generateSelectColumns(clazz, fragmentMap);
-
       this.generateAddColumn(clazz, fragmentMap);
-
       this.generateFilter(clazz, fragmentMap);
-
       this.generateToSet(clazz, fragmentMap);
-
       this.generateToString(clazz, fragmentMap);
 
-      fragmentMap.add(FileFragmentMap.CLASS_END, "}", 1);
+      fragmentMap.add(CLASS_END, "}", CLASS_END_NEWLINES);
 
-	   if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
+      if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
       {
          Path path = Paths.get(classFileName);
          try
@@ -82,216 +75,252 @@ public class Generator4TableClassFile extends AbstractGenerator
 
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      String result = String.format("package %s;", clazz.getModel().getPackageName() + ".tables");
-      fragmentMap.add(FileFragmentMap.PACKAGE, result, 2);
+      final STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
+
+      final ST packageDecl = group.getInstanceOf("packageDecl");
+      packageDecl.add("packageName", clazz.getModel().getPackageName() + ".tables");
+      fragmentMap.add(PACKAGE, packageDecl.render(), PACKAGE_NEWLINES);
+   }
+
+   private void generateImports(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      // needs to be sorted
+      final Set<String> qualifiedNames = new TreeSet<>();
+
+      this.collectImports(clazz, qualifiedNames);
+
+      // add fragments
+
+      final STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
+      for (final String qualifiedName : qualifiedNames)
+      {
+         final ST importDecl = group.getInstanceOf("importDecl");
+         importDecl.add("qualifiedName", qualifiedName);
+         fragmentMap.add(IMPORT + ":" + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
+      }
+   }
+
+   private void collectImports(Clazz clazz, Set<String> qualifiedNames)
+   {
+      qualifiedNames.add("java.util.Arrays");
+      qualifiedNames.add("java.util.List");
+      qualifiedNames.add("java.util.ArrayList");
+      qualifiedNames.add("java.util.function.Function");
+      qualifiedNames.add("java.util.function.Predicate");
+      qualifiedNames.add("java.util.Set");
+      qualifiedNames.add("java.util.HashSet");
+      qualifiedNames.add("java.util.LinkedHashSet");
+      qualifiedNames.add("java.util.Map");
+      qualifiedNames.add("java.util.LinkedHashMap");
+
+      // qualified name of the class
+      final String packageName = clazz.getModel().getPackageName();
+      qualifiedNames.add(packageName + "." + clazz.getName());
+
+      // qualified names of association target classes
+      for (final AssocRole role : clazz.getRoles())
+      {
+         final AssocRole other = role.getOther();
+         if (other.getName() == null)
+         {
+            continue;
+         }
+
+         final String otherClassName = other.getClazz().getName();
+         final String fullClassName = packageName + "." + otherClassName;
+         qualifiedNames.add(fullClassName);
+      }
    }
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
-      ST st = group.getInstanceOf("classDecl");
-      st.add("name", clazz.getName() + "Table");
-      st.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() + "Table" : null);
-      String result = st.render();
-      fragmentMap.add(FileFragmentMap.CLASS, result, 2);
+      final STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
+
+      final ST classDecl = group.getInstanceOf("classDecl");
+      classDecl.add("name", clazz.getName() + "Table");
+      classDecl.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() + "Table" : null);
+      fragmentMap.add(CLASS, classDecl.render(), CLASS_NEWLINES);
    }
 
    private void generateConstructor(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("org/fulib/templates/tables/constructor.stg");
-      ST st = group.getInstanceOf("constructor");
-      st.add("className", clazz.getName());
-      String result = st.render();
-      fragmentMap
-         .add(FileFragmentMap.CONSTRUCTOR + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)", result, 2,
-              clazz.getModified());
+      final STGroup group = this.getSTGroup("org/fulib/templates/tables/constructor.stg");
+
+      final ST constructor = group.getInstanceOf("constructor");
+      constructor.add("className", clazz.getName());
+      fragmentMap.add(CONSTRUCTOR + ":" + clazz.getName() + "Table(" + clazz.getName() + "...)", constructor.render(),
+                      CONSTRUCTOR_NEWLINES, clazz.getModified());
    }
 
    private void generateStandardAttributes(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("org/fulib/templates/attributes.pojo.stg");
-      ST attrTemplate;
-      String result;
-
-      fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.ArrayList", "import java.util.ArrayList;", 1);
-      fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.LinkedHashMap", "import java.util.LinkedHashMap;", 1);
-
-      ArrayList<Attribute> standardAttributes = new ArrayList<>();
-
-      standardAttributes.add(new Attribute().setName("table").setType("ArrayList<ArrayList<Object>>")
-                                            .setInitialization("new ArrayList<>()"));
-
-      standardAttributes.add(new Attribute().setName("columnName").setType("String").setInitialization("null"));
-
-      standardAttributes.add(new Attribute().setName("columnMap").setType("LinkedHashMap<String, Integer>")
-                                            .setInitialization("new LinkedHashMap<>()"));
+      final STGroup group = this.getSTGroup("org/fulib/templates/attributes.pojo.stg");
 
       // here so the attribute templates have a class name
-      new Clazz().setName(clazz.getName() + "Table").withAttributes(standardAttributes);
+      final Clazz owner = new Clazz().setName(clazz.getName() + "Table");
 
-      for (Attribute attr : standardAttributes)
-      {
-         attrTemplate = group.getInstanceOf("attrDecl").add("attr", attr);
-         result = attrTemplate.render();
+      final Attribute table = new Attribute();
+      table.setName("table");
+      table.setType("List<List<Object>>");
+      table.setInitialization("new ArrayList<>()");
+      table.setClazz(owner);
+      this.generateStandardAttribute(clazz, fragmentMap, group, table);
 
-         fragmentMap.add(FileFragmentMap.ATTRIBUTE + ":" + attr.getName(), result, 2, clazz.getModified());
+      final STGroup attributesGroup = this.getSTGroup("org/fulib/templates/tables/attributes.stg");
+      final ST getColumn = attributesGroup.getInstanceOf("getColumn");
+      fragmentMap.add(METHOD + ":getColumn()", getColumn.render(), METHOD_NEWLINES);
 
-         attrTemplate = group.getInstanceOf("attrGet").add("attr", attr);
-         result = attrTemplate.render();
+      final Attribute columnName = new Attribute();
+      columnName.setName("columnName");
+      columnName.setType("String");
+      columnName.setClazz(owner);
+      this.generateStandardAttribute(clazz, fragmentMap, group, columnName);
 
-         fragmentMap
-            .add(FileFragmentMap.METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", result, 2, attr.getModified());
+      final Attribute columnMap = new Attribute();
+      columnMap.setName("columnMap");
+      columnMap.setType("Map<String, Integer>");
+      columnMap.setInitialization("new LinkedHashMap<>()");
+      columnMap.setClazz(owner);
+      this.generateStandardAttribute(clazz, fragmentMap, group, columnMap);
+   }
 
-         attrTemplate = group.getInstanceOf("attrSet").add("attr", attr);
-         result = attrTemplate.render();
+   private void generateStandardAttribute(Clazz clazz, FileFragmentMap fragmentMap, STGroup group, Attribute attr)
+   {
+      final ST attrDecl = group.getInstanceOf("attrDecl");
+      attrDecl.add("attr", attr);
+      fragmentMap.add(ATTRIBUTE + ":" + attr.getName(), attrDecl.render(), FIELD_NEWLINES, clazz.getModified());
 
-         fragmentMap.add(
-            FileFragmentMap.METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType().replace(" ", "") + ")",
-            result, 3, attr.getModified());
-      }
+      final ST attrGet = group.getInstanceOf("attrGet");
+      attrGet.add("attr", attr);
+      fragmentMap.add(METHOD + ":get" + StrUtil.cap(attr.getName()) + "()", attrGet.render(), METHOD_NEWLINES,
+                      attr.getModified());
+
+      final ST attrSet = group.getInstanceOf("attrSet");
+      attrSet.add("attr", attr);
+      fragmentMap.add(METHOD + ":set" + StrUtil.cap(attr.getName()) + "(" + attr.getType().replace(" ", "") + ")",
+                      attrSet.render(), METHOD_NEWLINES, attr.getModified());
    }
 
    private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("org/fulib/templates/tables/attributes.stg");
-      ST attrTemplate;
-      String result;
+      final STGroup group = this.getSTGroup("org/fulib/templates/tables/attributes.stg");
 
       for (Attribute attr : clazz.getAttributes())
       {
-         attrTemplate = group.getInstanceOf("expandMethod");
-         attrTemplate.add("roleName", attr.getName());
-         attrTemplate.add("typeName", attr.getType());
-         attrTemplate.add("className", clazz.getName());
-         result = attrTemplate.render();
-
-         fragmentMap.add(FileFragmentMap.METHOD + ":expand" + StrUtil.cap(attr.getName()) + "(String...)", result, 2,
-                         attr.getModified());
+         final ST expandMethod = group.getInstanceOf("expandMethod");
+         expandMethod.add("roleName", attr.getName());
+         expandMethod.add("typeName", attr.getType());
+         expandMethod.add("className", clazz.getName());
+         fragmentMap.add(METHOD + ":expand" + StrUtil.cap(attr.getName()) + "(String...)", expandMethod.render(),
+                         METHOD_NEWLINES, attr.getModified());
       }
    }
 
    private void generateAssociations(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      String fullClassName = clazz.getModel().getPackageName() + "." + clazz.getName();
-      fragmentMap.add(FileFragmentMap.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
+      final STGroup group = this.getSTGroup("org/fulib/templates/tables/associations.stg");
 
-      STGroup group = this.getSTGroup("org/fulib/templates/tables/associations.stg");
-      String result;
-      ST st;
       for (AssocRole role : clazz.getRoles())
       {
          if (role.getName() == null)
          {
-            continue; //===================================
+            continue;
          }
 
          String otherClassName = role.getOther().getClazz().getName();
 
          // getMethod(roleName,toMany,className,otherClassName) ::=
-         st = group.getInstanceOf("expandMethod");
+         final ST st = group.getInstanceOf("expandMethod");
          st.add("roleName", role.getName());
          st.add("toMany", role.getCardinality() != Type.ONE);
          st.add("className", clazz.getName());
          st.add("otherClassName", otherClassName);
-         result = st.render();
-         fragmentMap.add(FileFragmentMap.METHOD + ":expand" + StrUtil.cap(role.getName()) + "(String...)", result, 2,
+         fragmentMap.add(METHOD + ":expand" + StrUtil.cap(role.getName()) + "(String...)", st.render(), METHOD_NEWLINES,
                          role.getModified());
 
          // hasMethod(roleName,toMany,className,otherClassName) ::=
-         st = group.getInstanceOf("hasMethod");
-         st.add("roleName", role.getName());
-         st.add("toMany", role.getCardinality() != Type.ONE);
-         st.add("className", clazz.getName());
-         st.add("otherClassName", otherClassName);
-         result = st.render();
+         final ST hasMethod = group.getInstanceOf("hasMethod");
+         hasMethod.add("roleName", role.getName());
+         hasMethod.add("toMany", role.getCardinality() != Type.ONE);
+         hasMethod.add("className", clazz.getName());
+         hasMethod.add("otherClassName", otherClassName);
          fragmentMap
-            .add(FileFragmentMap.METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)",
-                 result, 2, role.getModified());
-
-         fullClassName = clazz.getModel().getPackageName() + "." + otherClassName;
-         fragmentMap.add(FileFragmentMap.IMPORT + ":" + fullClassName, "import " + fullClassName + ";", 1);
+            .add(METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)", hasMethod.render(),
+                 METHOD_NEWLINES, role.getModified());
       }
    }
 
    private void generateSelectColumns(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.Arrays", "import java.util.Arrays;", 1);
+      final STGroup group = this.getSTGroup("org/fulib/templates/tables/selectColumns.stg");
 
-      String result;
-      STGroup group = this.getSTGroup("org/fulib/templates/tables/selectColumns.stg");
-      ST st = group.getInstanceOf("selectColumns");
-      st.add("className", clazz.getName());
-      result = st.render();
+      final ST selectColumns = group.getInstanceOf("selectColumns");
+      selectColumns.add("className", clazz.getName());
+      fragmentMap
+         .add(METHOD + ":selectColumns(String...)", selectColumns.render(), METHOD_NEWLINES, clazz.getModified());
 
-      fragmentMap.add(FileFragmentMap.METHOD + ":selectColumns(String...)", result, 2, clazz.getModified());
-
-      st = group.getInstanceOf("dropColumns");
-      st.add("className", clazz.getName());
-      result = st.render();
-
-      fragmentMap.add(FileFragmentMap.METHOD + ":dropColumns(String...)", result, 2, clazz.getModified());
+      final ST dropColumns = group.getInstanceOf("dropColumns");
+      dropColumns.add("className", clazz.getName());
+      fragmentMap.add(METHOD + ":dropColumns(String...)", dropColumns.render(), METHOD_NEWLINES, clazz.getModified());
    }
 
    private void generateAddColumn(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      String result;
-      STGroup group = this.getSTGroup("org/fulib/templates/tables/selectColumns.stg");
-      ST st = group.getInstanceOf("addColumn");
-      st.add("className", clazz.getName());
-      result = st.render();
+      final STGroup group = this.getSTGroup("org/fulib/templates/tables/selectColumns.stg");
 
-      fragmentMap.add(FileFragmentMap.METHOD
-                      + ":addColumn(String,java.util.function.Function<java.util.LinkedHashMap<String,Object>,Object>)",
-                      result, 2, clazz.getModified());
+      final ST addColumn = group.getInstanceOf("addColumn");
+      addColumn.add("className", clazz.getName());
+      fragmentMap
+         .add(METHOD + ":addColumn(String,Function<? super Map<String,Object>,?>)", addColumn.render(), METHOD_NEWLINES,
+              clazz.getModified());
    }
 
    private void generateFilter(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      fragmentMap
-         .add(FileFragmentMap.IMPORT + ":java.util.function.Predicate", "import java.util.function.Predicate;", 1);
+      final STGroup group = this.getSTGroup("org/fulib/templates/tables/filter.stg");
 
-      STGroup group = this.getSTGroup("org/fulib/templates/tables/filter.stg");
-      ST st = group.getInstanceOf("filter");
-      st.add("className", clazz.getName());
-
-      boolean modified = clazz.getModified();
-      if (clazz.getSuperClass() != null)
+      if (clazz.getModified() || clazz.getSuperClass() != null)
       {
          // do not generate filter method
-         modified = true;
+         fragmentMap.remove(METHOD + ":filter(Predicate<? super " + clazz.getName() + ">)");
       }
-      fragmentMap.add(FileFragmentMap.METHOD + ":filter(Predicate<" + clazz.getName() + ">)", st.render(), 2, modified);
+      else
+      {
+         final ST filter = group.getInstanceOf("filter");
+         filter.add("className", clazz.getName());
+         fragmentMap
+            .add(METHOD + ":filter(Predicate<? super " + clazz.getName() + ">)", filter.render(), METHOD_NEWLINES);
+      }
 
-      st = group.getInstanceOf("filterRow");
-      st.add("className", clazz.getName());
+      final ST filterRow = group.getInstanceOf("filterRow");
+      filterRow.add("className", clazz.getName());
 
-      fragmentMap.add(FileFragmentMap.METHOD + ":filterRow(Predicate<LinkedHashMap<String,Object>>)", st.render(), 2,
+      fragmentMap.add(METHOD + ":filterRow(Predicate<? super Map<String,Object>>)", filterRow.render(), METHOD_NEWLINES,
                       clazz.getModified());
    }
 
    private void generateToSet(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      fragmentMap.add(FileFragmentMap.IMPORT + ":java.util.LinkedHashSet", "import java.util.LinkedHashSet;", 1);
-
-      STGroup group = this.getSTGroup("org/fulib/templates/tables/toSet.stg");
-      ST st = group.getInstanceOf("toSet");
-      st.add("className", clazz.getName());
-
-      boolean modified = clazz.getModified();
-      if (clazz.getSuperClass() != null)
+      if (clazz.getModified() || clazz.getSuperClass() != null)
       {
          // do not generate toSet method
-         modified = true;
+         fragmentMap.remove(METHOD + ":toSet()");
       }
+      else
+      {
+         final STGroup group = this.getSTGroup("org/fulib/templates/tables/toSet.stg");
 
-      fragmentMap.add(FileFragmentMap.METHOD + ":toSet()", st.render(), 2, modified);
+         final ST st = group.getInstanceOf("toSet");
+         st.add("className", clazz.getName());
+         fragmentMap.add(METHOD + ":toSet()", st.render(), METHOD_NEWLINES);
+      }
    }
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      STGroup group = this.getSTGroup("org/fulib/templates/tables/toString.stg");
-      ST st = group.getInstanceOf("toString");
+      final STGroup group = this.getSTGroup("org/fulib/templates/tables/toString.stg");
 
-      fragmentMap.add(FileFragmentMap.METHOD + ":toString()", st.render(), 2, clazz.getModified());
+      final ST st = group.getInstanceOf("toString");
+      fragmentMap.add(METHOD + ":toString()", st.render(), METHOD_NEWLINES, clazz.getModified());
    }
 }

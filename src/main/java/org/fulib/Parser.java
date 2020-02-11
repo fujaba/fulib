@@ -65,9 +65,9 @@ public class Parser
 
    public static char NEW_LINE = '\n';
 
-   private StringBuilder fileBody = null;
+   private StringBuilder fileBody;
 
-   private Token lookAheadToken = null;
+   private Token lookAheadToken;
 
    private Token currentToken;
 
@@ -78,7 +78,7 @@ public class Parser
    private FileFragmentMap fragmentMap;
 
 
-   private boolean verbose = false;
+   private boolean verbose;
 
    private int endPos;
 

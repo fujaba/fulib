@@ -1,9 +1,10 @@
 collectionImpl(attr) ::= <%
-<attr.boxType; format={<attr.collectionType.implTemplate>}>
+<attr.collectionType.simpleImplName>
+<if(attr.collectionType.generic)>\<><endif>
 %>
 
 collectionItf(attr) ::= <%
-<attr.collectionType.itf.qualifiedName>\<<attr.boxType>>
+<attr.collectionType.itf.simpleName>\<<attr.boxType>>
 %>
 
 // --------------- Declarations ---------------
@@ -26,7 +27,7 @@ attrGet(attr) ::= <<
 <if(attr.collection)>
    public <collectionItf(attr)> get<attr.name; format="cap">()
    {
-      return this.<attr.name> != null ? java.util.Collections.unmodifiable<attr.collectionType.itf.simpleName>(this.<attr.name>) : java.util.Collections.empty<attr.collectionType.itf.simpleName>();
+      return this.<attr.name> != null ? Collections.unmodifiable<attr.collectionType.itf.simpleName>(this.<attr.name>) : Collections.empty<attr.collectionType.itf.simpleName>();
    }
 <else>
    public <attr.type> get<attr.name; format="cap">()
@@ -61,7 +62,7 @@ attrWithItem(attr) ::= <<
 attrWithArray(attr) ::= <<
    public <attr.clazz.name> with<attr.name; format="cap">(<attr.boxType>... value)
    {
-      this.with<attr.name; format="cap">(java.util.Arrays.asList(value));
+      this.with<attr.name; format="cap">(Arrays.asList(value));
       return this;
    }
 >>
@@ -86,7 +87,7 @@ attrWithColl(attr) ::= <<
 attrWithoutItem(attr) ::= <<
    public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType> value)
    {
-      this.<attr.name>.removeAll(java.util.Collections.singleton(value));
+      this.<attr.name>.removeAll(Collections.singleton(value));
       return this;
    }
 >>
@@ -94,7 +95,7 @@ attrWithoutItem(attr) ::= <<
 attrWithoutArray(attr) ::= <<
    public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType>... value)
    {
-      this.without<attr.name; format="cap">(java.util.Arrays.asList(value));
+      this.without<attr.name; format="cap">(Arrays.asList(value));
       return this;
    }
 >>

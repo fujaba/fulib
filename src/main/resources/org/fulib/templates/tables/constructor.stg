@@ -1,15 +1,13 @@
-
 constructor(className) ::= <<
    public <className>Table(<className>... start)
    {
       this.setColumnName("<className>");
-      columnMap.put(this.getColumnName(), 0);
+      this.columnMap.put("<className>", 0);
       for (<className> current : start)
       {
-         ArrayList\<Object> row = new ArrayList\<>();
+         List\<Object> row = new ArrayList\<>();
          row.add(current);
-         table.add(row);
+         this.table.add(row);
       }
    }
 >>
-

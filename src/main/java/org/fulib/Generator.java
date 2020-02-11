@@ -24,6 +24,10 @@ import java.util.logging.Logger;
  */
 public class Generator
 {
+   // =============== Constants ===============
+
+   private static final String MODEL_FILE_NAME = "classModel.yaml";
+
    // =============== Static Fields ===============
 
    private static Logger logger;
@@ -81,7 +85,7 @@ public class Generator
     */
    public void generate(ClassModel model)
    {
-      ClassModel oldModel = this.loadOldClassModel(model.getPackageSrcFolder());
+      ClassModel oldModel = loadClassModel(model.getPackageSrcFolder(), MODEL_FILE_NAME);
 
       if (oldModel != null)
       {
@@ -93,7 +97,7 @@ public class Generator
 
       this.generateClasses(model);
 
-      this.saveClassmodel(model);
+      saveNewClassModel(model, MODEL_FILE_NAME);
    }
 
    private void generateClasses(ClassModel model)
@@ -107,10 +111,9 @@ public class Generator
       }
    }
 
-   private ClassModel loadOldClassModel(String modelFolder)
+   static ClassModel loadClassModel(String modelFolder, String modelFileName)
    {
-      // store new model
-      String fileName = modelFolder + "/classModel.yaml";
+      String fileName = modelFolder + '/' + modelFileName;
       try
       {
          Path path = Paths.get(fileName);
@@ -134,15 +137,14 @@ public class Generator
       return null;
    }
 
-   private void saveClassmodel(ClassModel model)
+   static void saveNewClassModel(ClassModel model, String modelFileName)
    {
-      // store new model
       YamlIdMap idMap = new YamlIdMap(ClassModel.class.getPackage().getName());
       String yamlString = idMap.encode(model);
       try
       {
          String modelFolder = model.getPackageSrcFolder();
-         String fileName = modelFolder + "/classModel.yaml";
+         String fileName = modelFolder + '/' + modelFileName;
          Files.createDirectories(Paths.get(modelFolder));
          Files.write(Paths.get(fileName), yamlString.getBytes(), StandardOpenOption.CREATE,
                      StandardOpenOption.TRUNCATE_EXISTING);

@@ -39,7 +39,8 @@ enumConstants: enumConstant (COMMA enumConstant)*;
 enumConstant: annotation* IDENTIFIER balancedParens? balancedBraces?;
 
 // field: (modifier | annotation)* fieldMember;
-fieldMember: type IDENTIFIER arraySuffix* (EQ expr)? SEMI;
+fieldMember: type fieldNamePart (COMMA fieldNamePart)* SEMI;
+fieldNamePart: IDENTIFIER arraySuffix* (EQ expr)?;
 
 // method: (modifier | annotation)* methodMember;
 methodMember: (typeParamList annotatedType | type) IDENTIFIER
@@ -73,7 +74,7 @@ typeArgList: LANGLE (typeArg (COMMA typeArg)*)? RANGLE;
 modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT | VOLATILE | SYNCHRONIZED | NATIVE | STRICTFP | DEFAULT;
 annotation: AT qualifiedName balancedParens?;
 
-expr: (balancedBraces | ~SEMI)*;
+expr: (balancedBraces | ~(SEMI | COMMA))*;
 
 qualifiedName: IDENTIFIER (DOT IDENTIFIER)*;
 

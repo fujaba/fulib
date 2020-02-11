@@ -60,7 +60,12 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    private void addCodeFragment(String key, ParserRuleContext ctx)
    {
-      this.addCodeFragment(key, ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex());
+      this.addCodeFragment(key, ctx.getStart(), ctx.getStop());
+   }
+
+   private void addCodeFragment(String key, Token start, Token stop)
+   {
+      this.addCodeFragment(key, start.getStartIndex(), stop.getStopIndex());
    }
 
    private void addCodeFragment(String key, TerminalNode node)
@@ -126,8 +131,44 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    public void enterFieldMember(FieldMemberContext ctx)
    {
       final MemberContext memberCtx = (MemberContext) ctx.parent;
-      final String fieldName = ctx.IDENTIFIER().getText();
-      this.addCodeFragment(FileFragmentMap.ATTRIBUTE + ":" + fieldName, memberCtx);
+      final List<FieldNamePartContext> nameParts = ctx.fieldNamePart();
+      final int size = nameParts.size();
+
+      final String firstName = nameParts.get(0).IDENTIFIER().getText();
+      if (size == 1)
+      {
+         // only one field, straightforward (pass the whole ctx)
+         this.addCodeFragment(FileFragmentMap.ATTRIBUTE + ":" + firstName, memberCtx);
+         return;
+      }
+
+      // multiple fields in one declaration, e.g. int i = 0, j = 1, k = 2;
+      // encode as:
+      // 1) 'int i = 0,'
+      // gap: ' '
+      // 2) 'j = 1,'
+      // gap: ' '
+      // 3) 'k = 2;'
+      // we need to handle the case "ending with ," for 1)
+      // and "starting with ," for 2) and 3) when merging in FileFragmentMap
+
+      final List<TerminalNode> commas = ctx.COMMA();
+
+      // first part includes type and annotations and first comma
+      this.addCodeFragment(FileFragmentMap.ATTRIBUTE + ":" + firstName, memberCtx.getStart(), commas.get(0).getSymbol());
+
+      // all but the first and last part range from name to comma
+      for (int i = 1; i < size - 1; i++)
+      {
+         final FieldNamePartContext namePart = nameParts.get(i);
+         this.addCodeFragment(FileFragmentMap.ATTRIBUTE + ":" + namePart.IDENTIFIER().getText(), namePart.getStart(),
+                              commas.get(i).getSymbol());
+      }
+
+      // last part includes semicolon
+      final FieldNamePartContext lastPart = nameParts.get(size - 1);
+      this.addCodeFragment(FileFragmentMap.ATTRIBUTE + ":" + lastPart.IDENTIFIER().getText(), lastPart.getStart(),
+                           memberCtx.getStop());
    }
 
    @Override

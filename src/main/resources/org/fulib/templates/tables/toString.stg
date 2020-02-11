@@ -1,14 +1,13 @@
-
 toString() ::= <<
    public String toString()
    {
       StringBuilder buf = new StringBuilder();
-      for (String key : columnMap.keySet())
+      for (String key : this.columnMap.keySet())
       {
          buf.append(key).append(" \t");
       }
       buf.append("\n");
-      for (ArrayList\<Object> row : table)
+      for (List\<?> row : this.table)
       {
          for (Object cell : row)
          {
@@ -20,4 +19,3 @@ toString() ::= <<
       return buf.toString();
    }
 >>
-
