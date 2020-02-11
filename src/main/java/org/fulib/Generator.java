@@ -17,8 +17,8 @@ import java.util.logging.Logger;
  * The fulib Generator generates Java code from a class model
  * <pre>
  * <!-- insert_code_fragment: Fulib.createGenerator-->
- * ClassModel model = mb.getClassModel();
- * Fulib.generator().generate(model);
+      ClassModel model = mb.getClassModel();
+      Fulib.generator().generate(model);
  * <!-- end_code_fragment:  -->
  * </pre>
  */
@@ -50,9 +50,7 @@ public class Generator
     * Provide your templates for code generation as in:
     * <pre>
     * <!-- insert_code_fragment: testCustomTemplates -->
-    * Fulib.generator()
-    * .setCustomTemplatesFile("templates/custom.stg")
-    * .generate(model);
+      Fulib.generator().setCustomTemplatesFile("templates/custom.stg").generate(model);
     * <!-- end_code_fragment: testCustomTemplates -->
     * </pre>
     *
@@ -73,8 +71,8 @@ public class Generator
     * The fulib Generator generates Java code from a class model
     * <pre>
     * <!-- insert_code_fragment: Fulib.createGenerator-->
-    * ClassModel model = mb.getClassModel();
-    * Fulib.generator().generate(model);
+      ClassModel model = mb.getClassModel();
+      Fulib.generator().generate(model);
     * <!-- end_code_fragment:  -->
     * </pre>
     *

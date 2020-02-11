@@ -24,9 +24,9 @@ import static org.fulib.yaml.EventSource.EVENT_TYPE;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
- * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
- *
- * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", mb.STRING);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+
+      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
  */
@@ -148,9 +148,9 @@ public class ClassModelManager implements IModelManager
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-    *
-    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+
+      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *

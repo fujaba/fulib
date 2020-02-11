@@ -15,9 +15,9 @@ import java.util.Collection;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
- * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
- *
- * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+
+      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
  */
@@ -68,9 +68,9 @@ public class ClassModelBuilder
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-    *
-    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+
+      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -88,9 +88,9 @@ public class ClassModelBuilder
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-    *
-    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+
+      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *

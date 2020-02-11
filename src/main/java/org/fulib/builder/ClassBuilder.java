@@ -13,9 +13,9 @@ import org.fulib.util.Validator;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
- * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
- *
- * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+
+      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
  */
@@ -99,9 +99,9 @@ public class ClassBuilder
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-    *
-    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+
+      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -121,8 +121,7 @@ public class ClassBuilder
    /**
     * <pre>
     * <!-- insert_code_fragment: ClassBuilder.buildAttribute_init -->
-    * ClassBuilder student = mb.buildClass("Student")
-    * .buildAttribute("name", Type.STRING, "\"Karli\"");
+      ClassBuilder student = mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"");
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -156,7 +155,7 @@ public class ClassBuilder
    /**
     * <pre>
     * <!-- insert_code_fragment: ClassBuilder.buildAssociation -->
-    * universitiy.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
+      universitiy.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
     * <!-- end_code_fragment:  -->
     * </pre>
     *

@@ -10,9 +10,9 @@ public class Fulib
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName);
-    *
-    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+
+      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -55,8 +55,8 @@ public class Fulib
     * The fulib Generator generates Java code from a class model
     * <pre>
     * <!-- insert_code_fragment: Fulib.createGenerator-->
-    * ClassModel model = mb.getClassModel();
-    * Fulib.generator().generate(model);
+      ClassModel model = mb.getClassModel();
+      Fulib.generator().generate(model);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
