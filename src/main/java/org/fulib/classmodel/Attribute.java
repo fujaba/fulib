@@ -63,6 +63,16 @@ public class Attribute
       return this;
    }
 
+   public String getId() {
+      String id = this.getClazz() == null ? "___" : this.getClazz().getName();
+      id += "_" + this.getName();
+      return id;
+   }
+
+   public void setId() {
+      // id is derived, no set operation
+   }
+
    public String getName()
    {
       return this.name;

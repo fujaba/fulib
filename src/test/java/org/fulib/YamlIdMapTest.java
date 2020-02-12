@@ -45,9 +45,11 @@ class YamlIdMapTest
       // create example data
       ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", "tmp/src");
 
-      ClassBuilder university = mb.buildClass("University").buildAttribute("uniName", Type.STRING);
+      ClassBuilder university = mb.buildClass("University").buildAttribute("uniName", Type.STRING)
+         .buildAttribute("country", Type.STRING);
 
-      ClassBuilder student = mb.buildClass("Student").buildAttribute("studentId", Type.STRING);
+      ClassBuilder student = mb.buildClass("Student").buildAttribute("studentId", Type.STRING)
+         .buildAttribute("country", Type.STRING);
 
       university.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
 
