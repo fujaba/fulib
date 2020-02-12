@@ -174,31 +174,4 @@ public class TablesGenerator
          e.printStackTrace();
       }
    }
-
-
-
-   public String getCustomTemplateFile()
-   {
-      return customTemplateFile;
-   }
-
-   /**
-    * You may overwrite code generation templates within some custom template file. <br>
-    * Provide your templates for code generation as in:
-    * <pre>
-    * <!-- insert_code_fragment: testCustomTemplates -->
-      Fulib.generator().setCustomTemplatesFile("templates/custom.stg").generate(model);
-    * <!-- end_code_fragment: testCustomTemplates -->
-    * </pre>
-    *
-    * @param customFileName
-    *    the custom templates file name
-    *
-    * @return this instance, to allow call chaining.
-    */
-   public TablesGenerator setCustomTemplatesFile(String customFileName)
-   {
-      this.customTemplateFile = customFileName;
-      return this;
-   }
 }
