@@ -69,10 +69,6 @@ public class Attribute
       return className + "_" + this.getName();
    }
 
-   public void setId() {
-      // id is derived, no set operation
-   }
-
    public String getName()
    {
       return this.name;
