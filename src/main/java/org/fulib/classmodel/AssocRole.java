@@ -93,10 +93,10 @@ public class AssocRole
       return this;
    }
 
-   public String getId() {
-      String id = this.getClazz() == null ? "___" : this.getClazz().getName();
-      id += "_" + this.getName();
-      return id;
+   public String getId()
+   {
+      final String className = this.getClazz() == null ? "___" : this.getClazz().getName();
+      return className + "_" + this.getName();
    }
 
    public void setId() {
