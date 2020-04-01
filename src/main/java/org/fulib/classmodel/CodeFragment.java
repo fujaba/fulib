@@ -13,7 +13,7 @@ public class CodeFragment
 
    // =============== Fields ===============
 
-   protected PropertyChangeSupport listeners = null;
+   protected PropertyChangeSupport listeners;
 
    private String key;
    private String text;

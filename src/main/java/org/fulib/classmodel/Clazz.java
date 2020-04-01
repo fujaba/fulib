@@ -8,6 +8,10 @@ import java.util.Objects;
 /**
  * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
  */
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 public class Clazz
 {
    // =============== Constants ===============
@@ -34,15 +38,15 @@ public class Clazz
 
    // =============== Fields ===============
 
-   protected PropertyChangeSupport listeners = null;
+   protected PropertyChangeSupport listeners;
 
-   private ClassModel model = null;
+   private ClassModel model;
    private String name;
-   private Clazz superClass = null;
-   private java.util.ArrayList<Clazz> subClasses = null;
-   private java.util.ArrayList<Attribute> attributes = null;
-   private java.util.ArrayList<AssocRole> roles = null;
-   private java.util.ArrayList<FMethod> methods = null;
+   private Clazz superClass;
+   private List<Clazz> subClasses;
+   private List<Attribute> attributes;
+   private List<AssocRole> roles;
+   private List<FMethod> methods;
    private java.util.LinkedHashSet<String> importList = new java.util.LinkedHashSet<>();
    private String propertyStyle;
    private boolean modified;
@@ -121,9 +125,9 @@ public class Clazz
       return this;
    }
 
-   public java.util.ArrayList<Clazz> getSubClasses()
+   public List<Clazz> getSubClasses()
    {
-      return this.subClasses != null ? this.subClasses : EMPTY_subClasses;
+      return this.subClasses != null ? Collections.unmodifiableList(this.subClasses) : Collections.emptyList();
    }
 
    @Deprecated
@@ -159,7 +163,7 @@ public class Clazz
    {
       if (this.subClasses == null)
       {
-         this.subClasses = new java.util.ArrayList<Clazz>();
+         this.subClasses = new ArrayList<>();
       }
       if (!this.subClasses.contains(value))
       {
@@ -253,9 +257,9 @@ public class Clazz
       return null;
    }
 
-   public java.util.ArrayList<Attribute> getAttributes()
+   public List<Attribute> getAttributes()
    {
-      return this.attributes != null ? this.attributes : EMPTY_attributes;
+      return this.attributes != null ? Collections.unmodifiableList(this.attributes) : Collections.emptyList();
    }
 
    @Deprecated
@@ -291,7 +295,7 @@ public class Clazz
    {
       if (this.attributes == null)
       {
-         this.attributes = new java.util.ArrayList<Attribute>();
+         this.attributes = new ArrayList<>();
       }
       if (!this.attributes.contains(value))
       {
@@ -385,9 +389,9 @@ public class Clazz
       return null;
    }
 
-   public java.util.ArrayList<AssocRole> getRoles()
+   public List<AssocRole> getRoles()
    {
-      return this.roles != null ? this.roles : EMPTY_roles;
+      return this.roles != null ? Collections.unmodifiableList(this.roles) : Collections.emptyList();
    }
 
    @Deprecated
@@ -423,7 +427,7 @@ public class Clazz
    {
       if (this.roles == null)
       {
-         this.roles = new java.util.ArrayList<AssocRole>();
+         this.roles = new ArrayList<>();
       }
       if (!this.roles.contains(value))
       {
@@ -505,9 +509,9 @@ public class Clazz
       return this;
    }
 
-   public java.util.ArrayList<FMethod> getMethods()
+   public List<FMethod> getMethods()
    {
-      return this.methods != null ? this.methods : EMPTY_methods;
+      return this.methods != null ? Collections.unmodifiableList(this.methods) : Collections.emptyList();
    }
 
    @Deprecated
@@ -543,7 +547,7 @@ public class Clazz
    {
       if (this.methods == null)
       {
-         this.methods = new java.util.ArrayList<FMethod>();
+         this.methods = new ArrayList<>();
       }
       if (!this.methods.contains(value))
       {
@@ -737,11 +741,11 @@ public class Clazz
    public void removeYou()
    {
       this.setModel(null);
-      this.withoutAttributes(new java.util.ArrayList<>(this.getAttributes()));
-      this.withoutRoles(new java.util.ArrayList<>(this.getRoles()));
-      this.withoutMethods(new java.util.ArrayList<>(this.getMethods()));
+      this.withoutAttributes(new ArrayList<>(this.getAttributes()));
+      this.withoutRoles(new ArrayList<>(this.getRoles()));
+      this.withoutMethods(new ArrayList<>(this.getMethods()));
       this.setSuperClass(null);
-      this.withoutSubClasses(new java.util.ArrayList<>(this.getSubClasses()));
+      this.withoutSubClasses(new ArrayList<>(this.getSubClasses()));
    }
 
    @Override

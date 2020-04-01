@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.util.Objects;
 public class FileFragmentMap
 {
    // =============== Constants ===============
@@ -38,7 +39,7 @@ public class FileFragmentMap
 
    // =============== Fields ===============
 
-   protected PropertyChangeSupport listeners = null;
+   protected PropertyChangeSupport listeners;
 
    private String fileName;
 

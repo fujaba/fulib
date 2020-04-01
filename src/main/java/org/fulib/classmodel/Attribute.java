@@ -10,6 +10,8 @@ import java.util.Objects;
 /**
  * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
  */
+import java.util.ArrayList;
+import java.util.List;
 public class Attribute
 {
    // =============== Constants ===============
@@ -24,9 +26,9 @@ public class Attribute
 
    // =============== Fields ===============
 
-   protected PropertyChangeSupport listeners = null;
+   protected PropertyChangeSupport listeners;
 
-   private Clazz clazz = null;
+   private Clazz clazz;
    private String name;
    private String type;
    private CollectionType collectionType;

@@ -8,6 +8,10 @@ import java.util.Objects;
 /**
  * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
  */
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 public class ClassModel
 {
    // =============== Constants ===============
@@ -24,9 +28,9 @@ public class ClassModel
 
    // =============== Fields ===============
 
-   protected PropertyChangeSupport listeners = null;
+   protected PropertyChangeSupport listeners;
 
-   private java.util.ArrayList<Clazz> classes = null;
+   private List<Clazz> classes;
 
    private String mainJavaDir;
    private String packageName;
@@ -163,9 +167,9 @@ public class ClassModel
       return null;
    }
 
-   public java.util.ArrayList<Clazz> getClasses()
+   public List<Clazz> getClasses()
    {
-      return this.classes != null ? this.classes : EMPTY_classes;
+      return this.classes != null ? Collections.unmodifiableList(this.classes) : Collections.emptyList();
    }
 
    @Deprecated
@@ -201,7 +205,7 @@ public class ClassModel
    {
       if (this.classes == null)
       {
-         this.classes = new java.util.ArrayList<Clazz>();
+         this.classes = new ArrayList<>();
       }
       if (!this.classes.contains(value))
       {
@@ -335,7 +339,7 @@ public class ClassModel
 
    public void removeYou()
    {
-      this.withoutClasses(new java.util.ArrayList<>(this.getClasses()));
+      this.withoutClasses(new ArrayList<>(this.getClasses()));
    }
 
    @Override
@@ -344,7 +348,6 @@ public class ClassModel
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getPackageName());
       result.append(' ').append(this.getMainJavaDir());
-      result.append(' ').append(this.getDefaultCollectionType());
       result.append(' ').append(this.getDefaultPropertyStyle());
       return result.substring(1);
    }

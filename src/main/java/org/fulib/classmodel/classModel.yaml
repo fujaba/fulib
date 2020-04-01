@@ -1,417 +1,457 @@
-- c1: 	ClassModel
-  classes: 	classModel2 	clazz3 	attribute4 	assocRole5 	fMethod6 	fileFragmentMap7 	codeFragment8 	
-  defaultCollectionType: 	"java.util.ArrayList<%s>"
+- c: 	ClassModel
+  classes: 	classModel 	clazz 	attribute 	assocRole 	fMethod 	fileFragmentMap 	codeFragment 	
+  defaultCollectionType: 	c1
   defaultPropertyStyle: 	Bean
   defaultRoleType: 	"java.util.ArrayList<%s>"
   mainJavaDir: 	"src/main/java"
   packageName: 	org.fulib.classmodel
   packageSrcFolder: 	"src/main/java/org/fulib/classmodel"
 
-- classModel2: 	Clazz
-  attributes: 	packageName9 	mainJavaDir10 	defaultCollectionType11 	defaultPropertyStyle12 	
-  model: 	c1
+- classModel: 	Clazz
+  attributes: 	classModel_packageName 	classModel_mainJavaDir 	classModel_defaultCollectionType 	classModel_defaultPropertyStyle 	
+  model: 	c
   modified: 	false
   name: 	ClassModel
   propertyStyle: 	Bean
-  roles: 	classes13 	
+  roles: 	classModel_classes 	
 
-- clazz3: 	Clazz
-  attributes: 	name14 	propertyStyle15 	modified16 	importList17 	
-  model: 	c1
+- clazz: 	Clazz
+  attributes: 	clazz_name 	clazz_propertyStyle 	clazz_modified 	clazz_importList 	
+  model: 	c
   modified: 	false
   name: 	Clazz
   propertyStyle: 	Bean
-  roles: 	model18 	attributes19 	roles20 	methods21 	superClass22 	subClasses23 	
+  roles: 	clazz_model 	clazz_attributes 	clazz_roles 	clazz_methods 	clazz_superClass 	clazz_subClasses 	
 
-- attribute4: 	Clazz
-  attributes: 	name24 	type25 	collectionType26 	initialization27 	propertyStyle28 	modified29 	
-  model: 	c1
+- attribute: 	Clazz
+  attributes: 	attribute_name 	attribute_type 	attribute_collectionType 	attribute_initialization 	attribute_propertyStyle 	attribute_modified 	
+  model: 	c
   modified: 	false
   name: 	Attribute
   propertyStyle: 	Bean
-  roles: 	clazz30 	
+  roles: 	attribute_clazz 	
 
-- assocRole5: 	Clazz
-  attributes: 	name31 	cardinality32 	collectionType33 	aggregation34 	propertyStyle35 	modified36 	
-  model: 	c1
+- assocRole: 	Clazz
+  attributes: 	assocRole_name 	assocRole_cardinality 	assocRole_collectionType 	assocRole_aggregation 	assocRole_propertyStyle 	assocRole_modified 	
+  model: 	c
   modified: 	false
   name: 	AssocRole
   propertyStyle: 	Bean
-  roles: 	clazz37 	other38 	other39 	
+  roles: 	assocRole_clazz 	assocRole_other 	assocRole_other2 	
 
-- fMethod6: 	Clazz
-  attributes: 	methodBody40 	modified41 	annotations42 	
-  model: 	c1
+- fMethod: 	Clazz
+  attributes: 	fMethod_methodBody 	fMethod_modified 	fMethod_annotations 	
+  model: 	c
   modified: 	false
   name: 	FMethod
   propertyStyle: 	Bean
-  roles: 	clazz43 	
+  roles: 	fMethod_clazz 	
 
-- fileFragmentMap7: 	Clazz
-  attributes: 	fileName44 	
-  model: 	c1
+- fileFragmentMap: 	Clazz
+  attributes: 	fileFragmentMap_fileName 	
+  model: 	c
   modified: 	false
   name: 	FileFragmentMap
   propertyStyle: 	Bean
 
-- codeFragment8: 	Clazz
-  attributes: 	key45 	text46 	
-  model: 	c1
+- codeFragment: 	Clazz
+  attributes: 	codeFragment_key 	codeFragment_text 	
+  model: 	c
   modified: 	false
   name: 	CodeFragment
   propertyStyle: 	Bean
 
-- packageName9: 	Attribute
+- c1: 	CollectionType
+  implClass: 	class java.util.ArrayList
+  implTemplate: 	"java.util.ArrayList<%s>"
+  itf: 	c3
+  itfName: 	List
+  qualifiedImplName: 	java.util.ArrayList
+  simpleImplName: 	ArrayList
+
+- classModel_packageName: 	Attribute
   boxType: 	String
-  clazz: 	classModel2
+  clazz: 	classModel
+  id: 	ClassModel_packageName
   modified: 	false
   name: 	packageName
   propertyStyle: 	Bean
   type: 	String
 
-- mainJavaDir10: 	Attribute
+- classModel_mainJavaDir: 	Attribute
   boxType: 	String
-  clazz: 	classModel2
+  clazz: 	classModel
+  id: 	ClassModel_mainJavaDir
   modified: 	false
   name: 	mainJavaDir
   propertyStyle: 	Bean
   type: 	String
 
-- defaultCollectionType11: 	Attribute
+- classModel_defaultCollectionType: 	Attribute
   boxType: 	CollectionType
-  clazz: 	classModel2
+  clazz: 	classModel
+  id: 	ClassModel_defaultCollectionType
   modified: 	false
   name: 	defaultCollectionType
   propertyStyle: 	Bean
   type: 	CollectionType
 
-- defaultPropertyStyle12: 	Attribute
+- classModel_defaultPropertyStyle: 	Attribute
   boxType: 	String
-  clazz: 	classModel2
+  clazz: 	classModel
+  id: 	ClassModel_defaultPropertyStyle
   initialization: 	"\"POJO\""
   modified: 	false
   name: 	defaultPropertyStyle
   propertyStyle: 	Bean
   type: 	String
 
-- classes13: 	AssocRole
+- classModel_classes: 	AssocRole
   aggregation: 	false
   cardinality: 	42
-  clazz: 	classModel2
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	classModel
+  collectionType: 	c1
+  id: 	ClassModel_classes
   modified: 	false
   name: 	classes
-  other: 	model18
+  other: 	clazz_model
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- name14: 	Attribute
+- clazz_name: 	Attribute
   boxType: 	String
-  clazz: 	clazz3
+  clazz: 	clazz
+  id: 	Clazz_name
   modified: 	false
   name: 	name
   propertyStyle: 	Bean
   type: 	String
 
-- propertyStyle15: 	Attribute
+- clazz_propertyStyle: 	Attribute
   boxType: 	String
-  clazz: 	clazz3
+  clazz: 	clazz
+  id: 	Clazz_propertyStyle
   modified: 	false
   name: 	propertyStyle
   propertyStyle: 	Bean
   type: 	String
 
-- modified16: 	Attribute
+- clazz_modified: 	Attribute
   boxType: 	Boolean
-  clazz: 	clazz3
+  clazz: 	clazz
+  id: 	Clazz_modified
   modified: 	false
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
 
-- importList17: 	Attribute
+- clazz_importList: 	Attribute
   boxType: 	"java.util.LinkedHashSet<String>"
-  clazz: 	clazz3
+  clazz: 	clazz
+  id: 	Clazz_importList
   initialization: 	"new java.util.LinkedHashSet<>()"
   modified: 	false
   name: 	importList
   propertyStyle: 	Bean
   type: 	"java.util.LinkedHashSet<String>"
 
-- model18: 	AssocRole
+- clazz_model: 	AssocRole
   aggregation: 	false
   cardinality: 	1
-  clazz: 	clazz3
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	clazz
+  collectionType: 	c1
+  id: 	Clazz_model
   modified: 	false
   name: 	model
-  other: 	classes13
+  other: 	classModel_classes
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- attributes19: 	AssocRole
+- clazz_attributes: 	AssocRole
   aggregation: 	false
   cardinality: 	42
-  clazz: 	clazz3
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	clazz
+  collectionType: 	c1
+  id: 	Clazz_attributes
   modified: 	false
   name: 	attributes
-  other: 	clazz30
+  other: 	attribute_clazz
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- roles20: 	AssocRole
+- clazz_roles: 	AssocRole
   aggregation: 	false
   cardinality: 	42
-  clazz: 	clazz3
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	clazz
+  collectionType: 	c1
+  id: 	Clazz_roles
   modified: 	false
   name: 	roles
-  other: 	clazz37
+  other: 	assocRole_clazz
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- methods21: 	AssocRole
+- clazz_methods: 	AssocRole
   aggregation: 	false
   cardinality: 	42
-  clazz: 	clazz3
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	clazz
+  collectionType: 	c1
+  id: 	Clazz_methods
   modified: 	false
   name: 	methods
-  other: 	clazz43
+  other: 	fMethod_clazz
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- superClass22: 	AssocRole
+- clazz_superClass: 	AssocRole
   aggregation: 	false
   cardinality: 	1
-  clazz: 	clazz3
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	clazz
+  collectionType: 	c1
+  id: 	Clazz_superClass
   modified: 	false
   name: 	superClass
-  other: 	subClasses23
+  other: 	clazz_subClasses
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- subClasses23: 	AssocRole
+- clazz_subClasses: 	AssocRole
   aggregation: 	false
   cardinality: 	42
-  clazz: 	clazz3
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	clazz
+  collectionType: 	c1
+  id: 	Clazz_subClasses
   modified: 	false
   name: 	subClasses
-  other: 	superClass22
+  other: 	clazz_superClass
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- name24: 	Attribute
+- attribute_name: 	Attribute
   boxType: 	String
-  clazz: 	attribute4
+  clazz: 	attribute
+  id: 	Attribute_name
   modified: 	false
   name: 	name
   propertyStyle: 	Bean
   type: 	String
 
-- type25: 	Attribute
+- attribute_type: 	Attribute
   boxType: 	String
-  clazz: 	attribute4
+  clazz: 	attribute
+  id: 	Attribute_type
   modified: 	false
   name: 	type
   propertyStyle: 	Bean
   type: 	String
 
-- collectionType26: 	Attribute
+- attribute_collectionType: 	Attribute
   boxType: 	CollectionType
-  clazz: 	attribute4
+  clazz: 	attribute
+  id: 	Attribute_collectionType
   modified: 	false
   name: 	collectionType
   propertyStyle: 	Bean
   type: 	CollectionType
 
-- initialization27: 	Attribute
+- attribute_initialization: 	Attribute
   boxType: 	String
-  clazz: 	attribute4
+  clazz: 	attribute
+  id: 	Attribute_initialization
   modified: 	false
   name: 	initialization
   propertyStyle: 	Bean
   type: 	String
 
-- propertyStyle28: 	Attribute
+- attribute_propertyStyle: 	Attribute
   boxType: 	String
-  clazz: 	attribute4
+  clazz: 	attribute
+  id: 	Attribute_propertyStyle
   modified: 	false
   name: 	propertyStyle
   propertyStyle: 	Bean
   type: 	String
 
-- modified29: 	Attribute
+- attribute_modified: 	Attribute
   boxType: 	Boolean
-  clazz: 	attribute4
+  clazz: 	attribute
+  id: 	Attribute_modified
   modified: 	false
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
 
-- clazz30: 	AssocRole
+- attribute_clazz: 	AssocRole
   aggregation: 	false
   cardinality: 	1
-  clazz: 	attribute4
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	attribute
+  collectionType: 	c1
+  id: 	Attribute_clazz
   modified: 	false
   name: 	clazz
-  other: 	attributes19
+  other: 	clazz_attributes
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- name31: 	Attribute
+- assocRole_name: 	Attribute
   boxType: 	String
-  clazz: 	assocRole5
+  clazz: 	assocRole
+  id: 	AssocRole_name
   modified: 	false
   name: 	name
   propertyStyle: 	Bean
   type: 	String
 
-- cardinality32: 	Attribute
+- assocRole_cardinality: 	Attribute
   boxType: 	Integer
-  clazz: 	assocRole5
+  clazz: 	assocRole
+  id: 	AssocRole_cardinality
   modified: 	false
   name: 	cardinality
   propertyStyle: 	Bean
   type: 	int
 
-- collectionType33: 	Attribute
+- assocRole_collectionType: 	Attribute
   boxType: 	CollectionType
-  clazz: 	assocRole5
+  clazz: 	assocRole
+  id: 	AssocRole_collectionType
   modified: 	false
   name: 	collectionType
   propertyStyle: 	Bean
   type: 	CollectionType
 
-- aggregation34: 	Attribute
+- assocRole_aggregation: 	Attribute
   boxType: 	Boolean
-  clazz: 	assocRole5
+  clazz: 	assocRole
+  id: 	AssocRole_aggregation
   modified: 	false
   name: 	aggregation
   propertyStyle: 	Bean
   type: 	boolean
 
-- propertyStyle35: 	Attribute
+- assocRole_propertyStyle: 	Attribute
   boxType: 	String
-  clazz: 	assocRole5
+  clazz: 	assocRole
+  id: 	AssocRole_propertyStyle
   modified: 	false
   name: 	propertyStyle
   propertyStyle: 	Bean
   type: 	String
 
-- modified36: 	Attribute
+- assocRole_modified: 	Attribute
   boxType: 	Boolean
-  clazz: 	assocRole5
+  clazz: 	assocRole
+  id: 	AssocRole_modified
   modified: 	false
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
 
-- clazz37: 	AssocRole
+- assocRole_clazz: 	AssocRole
   aggregation: 	false
   cardinality: 	1
-  clazz: 	assocRole5
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	assocRole
+  collectionType: 	c1
+  id: 	AssocRole_clazz
   modified: 	false
   name: 	clazz
-  other: 	roles20
+  other: 	clazz_roles
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- other38: 	AssocRole
+- assocRole_other: 	AssocRole
   aggregation: 	false
   cardinality: 	1
-  clazz: 	assocRole5
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	assocRole
+  collectionType: 	c1
+  id: 	AssocRole_other
   modified: 	false
   name: 	other
-  other: 	other39
+  other: 	assocRole_other2
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- other39: 	AssocRole
+- assocRole_other2: 	AssocRole
   aggregation: 	false
   cardinality: 	1
-  clazz: 	assocRole5
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	assocRole
+  collectionType: 	c1
+  id: 	AssocRole_other
   modified: 	false
   name: 	other
-  other: 	other38
+  other: 	assocRole_other
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- methodBody40: 	Attribute
+- fMethod_methodBody: 	Attribute
   boxType: 	String
-  clazz: 	fMethod6
+  clazz: 	fMethod
+  id: 	FMethod_methodBody
   modified: 	false
   name: 	methodBody
   propertyStyle: 	Bean
   type: 	String
 
-- modified41: 	Attribute
+- fMethod_modified: 	Attribute
   boxType: 	Boolean
-  clazz: 	fMethod6
+  clazz: 	fMethod
+  id: 	FMethod_modified
   modified: 	false
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
 
-- annotations42: 	Attribute
+- fMethod_annotations: 	Attribute
   boxType: 	String
-  clazz: 	fMethod6
+  clazz: 	fMethod
+  id: 	FMethod_annotations
   modified: 	false
   name: 	annotations
   propertyStyle: 	Bean
   type: 	String
 
-- clazz43: 	AssocRole
+- fMethod_clazz: 	AssocRole
   aggregation: 	false
   cardinality: 	1
-  clazz: 	fMethod6
-  collectionInterfaceName: 	List
-  collectionType: 	"java.util.ArrayList<%s>"
+  clazz: 	fMethod
+  collectionType: 	c1
+  id: 	FMethod_clazz
   modified: 	false
   name: 	clazz
-  other: 	methods21
+  other: 	clazz_methods
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- fileName44: 	Attribute
+- fileFragmentMap_fileName: 	Attribute
   boxType: 	String
-  clazz: 	fileFragmentMap7
+  clazz: 	fileFragmentMap
+  id: 	FileFragmentMap_fileName
   modified: 	false
   name: 	fileName
   propertyStyle: 	Bean
   type: 	String
 
-- key45: 	Attribute
+- codeFragment_key: 	Attribute
   boxType: 	String
-  clazz: 	codeFragment8
+  clazz: 	codeFragment
+  id: 	CodeFragment_key
   modified: 	false
   name: 	key
   propertyStyle: 	Bean
   type: 	String
 
-- text46: 	Attribute
+- codeFragment_text: 	Attribute
   boxType: 	String
-  clazz: 	codeFragment8
+  clazz: 	codeFragment
+  id: 	CodeFragment_text
   modified: 	false
   name: 	text
   propertyStyle: 	Bean
   type: 	String
+
+- c3: 	CollectionItf
+  declaringClass: 	class org.fulib.classmodel.CollectionItf
+  itfClass: 	interface java.util.List
+  qualifiedName: 	java.util.List
+  simpleName: 	List
 

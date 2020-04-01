@@ -9,6 +9,8 @@ import java.util.Objects;
 /**
  * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
  */
+import java.util.ArrayList;
+import java.util.List;
 public class AssocRole
 {
    // =============== Constants ===============
@@ -26,10 +28,10 @@ public class AssocRole
 
    // =============== Fields ===============
 
-   protected PropertyChangeSupport listeners = null;
+   protected PropertyChangeSupport listeners;
 
-   private Clazz clazz = null;
-   private AssocRole other = null;
+   private Clazz clazz;
+   private AssocRole other;
    private String name;
    private int cardinality;
    private CollectionType collectionType;
@@ -320,6 +322,7 @@ public class AssocRole
    {
       this.setClazz(null);
       this.setOther(null);
+      this.setOther(null);
    }
 
    @Override
@@ -327,7 +330,6 @@ public class AssocRole
    {
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getName());
-      result.append(' ').append(this.getCollectionType());
       result.append(' ').append(this.getPropertyStyle());
       return result.substring(1);
    }
