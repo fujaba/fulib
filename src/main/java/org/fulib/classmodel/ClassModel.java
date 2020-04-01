@@ -30,7 +30,8 @@ public class ClassModel
 
    protected PropertyChangeSupport listeners;
 
-   private List<Clazz> classes;
+   private ArrayList<Clazz> // no fulib
+      classes;
 
    private String mainJavaDir;
    private String packageName;
@@ -167,9 +168,9 @@ public class ClassModel
       return null;
    }
 
-   public List<Clazz> getClasses()
+   public ArrayList<Clazz> getClasses() // no fulib
    {
-      return this.classes != null ? Collections.unmodifiableList(this.classes) : Collections.emptyList();
+      return this.classes != null ? this.classes : EMPTY_classes;
    }
 
    @Deprecated

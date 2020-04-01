@@ -43,10 +43,14 @@ public class Clazz
    private ClassModel model;
    private String name;
    private Clazz superClass;
-   private List<Clazz> subClasses;
-   private List<Attribute> attributes;
-   private List<AssocRole> roles;
-   private List<FMethod> methods;
+   private ArrayList<Clazz> // no fulib
+      subClasses;
+   private ArrayList<Attribute> // no fulib
+      attributes;
+   private ArrayList<AssocRole> // no fulib
+      roles;
+   private ArrayList<FMethod> // no fulib
+      methods;
    private java.util.LinkedHashSet<String> importList = new java.util.LinkedHashSet<>();
    private String propertyStyle;
    private boolean modified;
@@ -125,9 +129,9 @@ public class Clazz
       return this;
    }
 
-   public List<Clazz> getSubClasses()
+   public ArrayList<Clazz> getSubClasses() // no fulib
    {
-      return this.subClasses != null ? Collections.unmodifiableList(this.subClasses) : Collections.emptyList();
+      return this.subClasses != null ? this.subClasses : EMPTY_subClasses;
    }
 
    @Deprecated
@@ -257,9 +261,9 @@ public class Clazz
       return null;
    }
 
-   public List<Attribute> getAttributes()
+   public ArrayList<Attribute> getAttributes() // no fulib
    {
-      return this.attributes != null ? Collections.unmodifiableList(this.attributes) : Collections.emptyList();
+      return this.attributes != null ? this.attributes : EMPTY_attributes;
    }
 
    @Deprecated
@@ -389,9 +393,9 @@ public class Clazz
       return null;
    }
 
-   public List<AssocRole> getRoles()
+   public ArrayList<AssocRole> getRoles() // no fulib
    {
-      return this.roles != null ? Collections.unmodifiableList(this.roles) : Collections.emptyList();
+      return this.roles != null ? this.roles : EMPTY_roles;
    }
 
    @Deprecated
@@ -509,9 +513,9 @@ public class Clazz
       return this;
    }
 
-   public List<FMethod> getMethods()
+   public ArrayList<FMethod> getMethods() // no fulib
    {
-      return this.methods != null ? Collections.unmodifiableList(this.methods) : Collections.emptyList();
+      return this.methods != null ? this.methods : EMPTY_methods;
    }
 
    @Deprecated
