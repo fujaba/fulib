@@ -16,7 +16,7 @@
   roles: 	classModel_classes 	
 
 - clazz: 	Clazz
-  attributes: 	clazz_name 	clazz_propertyStyle 	clazz_modified 	clazz_importList 	
+  attributes: 	clazz_name 	clazz_propertyStyle 	clazz_modified 	clazz_imports 	
   model: 	c
   modified: 	false
   name: 	Clazz
@@ -145,15 +145,15 @@
   propertyStyle: 	Bean
   type: 	boolean
 
-- clazz_importList: 	Attribute
-  boxType: 	"java.util.LinkedHashSet<String>"
+- clazz_imports: 	Attribute
+  boxType: 	String
   clazz: 	clazz
-  id: 	Clazz_importList
-  initialization: 	"new java.util.LinkedHashSet<>()"
+  collectionType: 	c4
+  id: 	Clazz_imports
   modified: 	false
-  name: 	importList
+  name: 	imports
   propertyStyle: 	Bean
-  type: 	"java.util.LinkedHashSet<String>"
+  type: 	String
 
 - clazz_model: 	AssocRole
   aggregation: 	false
@@ -454,4 +454,18 @@
   itfClass: 	interface java.util.List
   qualifiedName: 	java.util.List
   simpleName: 	List
+
+- c4: 	CollectionType
+  implClass: 	class java.util.LinkedHashSet
+  implTemplate: 	"java.util.LinkedHashSet<%s>"
+  itf: 	c5
+  itfName: 	Set
+  qualifiedImplName: 	java.util.LinkedHashSet
+  simpleImplName: 	LinkedHashSet
+
+- c5: 	CollectionItf
+  declaringClass: 	class org.fulib.classmodel.CollectionItf
+  itfClass: 	interface java.util.Set
+  qualifiedName: 	java.util.Set
+  simpleName: 	Set
 

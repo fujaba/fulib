@@ -321,7 +321,7 @@ public class ClassModelManager implements IModelManager
 
    public void addImport(Clazz clazz, String qualifiedName)
    {
-      clazz.getImportList().add(qualifiedName);
+      clazz.withImports(qualifiedName);
 
       this.event(e -> {
          e.put(EVENT_TYPE, IMPORT);

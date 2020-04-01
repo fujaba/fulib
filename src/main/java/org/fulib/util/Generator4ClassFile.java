@@ -104,7 +104,7 @@ public class Generator4ClassFile extends AbstractGenerator
       final Set<String> staticImports = new TreeSet<>();
 
       // parse user-supplied imports
-      for (String importItem : clazz.getImportList())
+      for (String importItem : clazz.getImports())
       {
          if (importItem.startsWith("import "))
          {

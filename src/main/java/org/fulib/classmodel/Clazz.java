@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 public class Clazz
 {
    // =============== Constants ===============
@@ -31,6 +33,8 @@ public class Clazz
    public static final String PROPERTY_superClass = "superClass";
    public static final String PROPERTY_subClasses = "subClasses";
    public static final String PROPERTY_methods = "methods";
+   public static final String PROPERTY_imports = "imports";
+   @Deprecated
    public static final String PROPERTY_importList = "importList";
 
    // =============== Fields ===============
@@ -48,7 +52,8 @@ public class Clazz
       roles;
    private ArrayList<FMethod> // no fulib
       methods;
-   private java.util.LinkedHashSet<String> importList = new java.util.LinkedHashSet<>();
+   private LinkedHashSet<String> // no fulib
+      imports;
    private String propertyStyle;
    private boolean modified;
 
@@ -630,21 +635,79 @@ public class Clazz
       return this;
    }
 
-   public java.util.LinkedHashSet<String> getImportList()
+   @Deprecated
+   public LinkedHashSet<String> getImportList()
    {
-      return this.importList;
+      return this.imports;
    }
 
-   public Clazz setImportList(java.util.LinkedHashSet<String> value)
+   @Deprecated
+   public Clazz setImportList(LinkedHashSet<String> value)
    {
-      if (Objects.equals(value, this.importList))
-      {
-         return this;
-      }
+      this.imports = value;
+      return this;
+   }
 
-      final java.util.LinkedHashSet<String> oldValue = this.importList;
-      this.importList = value;
-      this.firePropertyChange(PROPERTY_importList, oldValue, value);
+   public Set<String> getImports()
+   {
+      return this.imports != null ? Collections.unmodifiableSet(this.imports) : Collections.emptySet();
+   }
+
+   public Clazz withImports(String value)
+   {
+      if (this.imports == null)
+      {
+         this.imports = new LinkedHashSet<>();
+      }
+      if (this.imports.add(value))
+      {
+         this.firePropertyChange(PROPERTY_imports, null, value);
+      }
+      return this;
+   }
+
+   public Clazz withImports(String... value)
+   {
+      for (final String item : value)
+      {
+         this.withImports(item);
+      }
+      return this;
+   }
+
+   public Clazz withImports(Collection<? extends String> value)
+   {
+      for (final String item : value)
+      {
+         this.withImports(item);
+      }
+      return this;
+   }
+
+   public Clazz withoutImports(String value)
+   {
+      if (this.imports != null && this.imports.removeAll(Collections.singleton(value)))
+      {
+         this.firePropertyChange(PROPERTY_imports, value, null);
+      }
+      return this;
+   }
+
+   public Clazz withoutImports(String... value)
+   {
+      for (final String item : value)
+      {
+         this.withoutImports(item);
+      }
+      return this;
+   }
+
+   public Clazz withoutImports(Collection<? extends String> value)
+   {
+      for (final String item : value)
+      {
+         this.withoutImports(item);
+      }
       return this;
    }
 
@@ -755,6 +818,7 @@ public class Clazz
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getName());
       result.append(' ').append(this.getPropertyStyle());
+      result.append(' ').append(this.getImports());
       return result.substring(1);
    }
 }

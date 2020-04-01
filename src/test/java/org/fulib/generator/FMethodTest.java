@@ -68,9 +68,9 @@ public class FMethodTest
       returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       assertThat("compiler return code: ", returnCode, is(0));
 
-      party.getImportList().add("import org.junit.jupiter.api.Test;");
-      party.getImportList().add("import static org.hamcrest.CoreMatchers.*;");
-      party.getImportList().add("import static org.hamcrest.MatcherAssert.assertThat;");
+      party.withImports("import org.junit.jupiter.api.Test;");
+      party.withImports("import static org.hamcrest.CoreMatchers.*;");
+      party.withImports("import static org.hamcrest.MatcherAssert.assertThat;");
 
       mm.haveMethod(party, "" + "@Test\n" + "public void testQuestion()",
                     "" + "      assertThat(theAnswer(21), equalTo(42));\n");

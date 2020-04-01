@@ -4,6 +4,7 @@ import org.fulib.builder.ClassModelDecorator;
 import org.fulib.builder.ClassModelManager;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
+import org.fulib.classmodel.CollectionType;
 
 import static org.fulib.builder.Type.*;
 
@@ -38,7 +39,7 @@ public class GenModel implements ClassModelDecorator
          c.attribute("name", STRING);
          c.attribute("propertyStyle", STRING);
          c.attribute("modified", BOOLEAN);
-         c.attribute("importList", "java.util.LinkedHashSet<String>", "new java.util.LinkedHashSet<>()");
+         c.attribute("imports", STRING).setCollectionType(CollectionType.LinkedHashSet);
       });
 
       final Clazz Attribute = mb.haveClass("Attribute", c -> {
