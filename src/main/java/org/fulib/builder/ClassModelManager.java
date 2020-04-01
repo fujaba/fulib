@@ -54,14 +54,14 @@ public class ClassModelManager implements IModelManager
          ClassModelManager.this.extend(this.clazz, superClazz);
       }
 
-      public void attribute(String name, String type)
+      public Attribute attribute(String name, String type)
       {
-         ClassModelManager.this.attribute(this.clazz, name, type);
+         return ClassModelManager.this.attribute(this.clazz, name, type);
       }
 
-      public void attribute(String name, String type, String init)
+      public Attribute attribute(String name, String type, String init)
       {
-         ClassModelManager.this.attribute(this.clazz, name, type, init);
+         return ClassModelManager.this.attribute(this.clazz, name, type, init);
       }
    }
 
