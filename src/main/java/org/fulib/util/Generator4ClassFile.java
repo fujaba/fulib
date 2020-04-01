@@ -182,7 +182,7 @@ public class Generator4ClassFile extends AbstractGenerator
       }
 
       // any to-n roles or to-n attributes
-      if (clazz.getRoles().stream().anyMatch(a -> a.getCardinality() != Type.ONE) //
+      if (clazz.getRoles().stream().anyMatch(AssocRole::isToMany) //
           || clazz.getAttributes().stream().anyMatch(Attribute::isCollection))
       {
          qualifiedNames.add("java.util.Collection");
@@ -192,22 +192,23 @@ public class Generator4ClassFile extends AbstractGenerator
 
       for (final AssocRole role : clazz.getRoles())
       {
-         this.addCollectionTypeImports(role.getCollectionType(), qualifiedNames);
+         if (role.isToMany())
+         {
+            this.addCollectionTypeImports(role.getCollectionType(), qualifiedNames);
+         }
       }
 
       for (final Attribute attribute : clazz.getAttributes())
       {
-         this.addCollectionTypeImports(attribute.getCollectionType(), qualifiedNames);
+         if (attribute.isCollection())
+         {
+            this.addCollectionTypeImports(attribute.getCollectionType(), qualifiedNames);
+         }
       }
    }
 
    private void addCollectionTypeImports(CollectionType collectionType, Set<String> qualifiedNames)
    {
-      if (collectionType == null)
-      {
-         return;
-      }
-
       qualifiedNames.add(collectionType.getItf().getQualifiedName());
       qualifiedNames.add(collectionType.getQualifiedImplName());
    }
