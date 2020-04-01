@@ -2,13 +2,10 @@ package org.fulib.classmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-/**
- * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
- */
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +13,7 @@ public class ClassModel
 {
    // =============== Constants ===============
 
-   public static final java.util.ArrayList<Clazz> EMPTY_classes = new java.util.ArrayList<Clazz>()
+   public static final ArrayList<Clazz> EMPTY_classes = new ArrayList<Clazz>()
    { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withClasses(obj)"); }};
    public static final String PROPERTY_packageName = "packageName";
    public static final String PROPERTY_mainJavaDir = "mainJavaDir";

@@ -2,13 +2,10 @@ package org.fulib.classmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-/**
- * <img src='doc-files/classDiagram.png' width='663' alt="doc-files/classDiagram.png">
- */
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,13 +13,13 @@ public class Clazz
 {
    // =============== Constants ===============
 
-   public static final java.util.ArrayList<Attribute> EMPTY_attributes = new java.util.ArrayList<Attribute>()
+   public static final ArrayList<Attribute> EMPTY_attributes = new ArrayList<Attribute>()
    { @Override public boolean add(Attribute value){ throw new UnsupportedOperationException("No direct add! Use xy.withAttributes(obj)"); }};
-   public static final java.util.ArrayList<AssocRole> EMPTY_roles = new java.util.ArrayList<AssocRole>()
+   public static final ArrayList<AssocRole> EMPTY_roles = new ArrayList<AssocRole>()
    { @Override public boolean add(AssocRole value){ throw new UnsupportedOperationException("No direct add! Use xy.withRoles(obj)"); }};
-   public static final java.util.ArrayList<Clazz> EMPTY_subClasses = new java.util.ArrayList<Clazz>()
+   public static final ArrayList<Clazz> EMPTY_subClasses = new ArrayList<Clazz>()
    { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withSubClasses(obj)"); }};
-   public static final java.util.ArrayList<FMethod> EMPTY_methods = new java.util.ArrayList<FMethod>()
+   public static final ArrayList<FMethod> EMPTY_methods = new ArrayList<FMethod>()
    { @Override public boolean add(FMethod value){ throw new UnsupportedOperationException("No direct add! Use xy.withMethods(obj)"); }};
 
    public static final String PROPERTY_name = "name";
