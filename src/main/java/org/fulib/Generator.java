@@ -221,27 +221,31 @@ public class Generator
 
       for (FMethod oldMethod : oldClazz.getMethods())
       {
-         boolean modified = newClazz == null;
-
-         if (!modified)
-         {
-            for (FMethod newMethod : newClazz.getMethods())
-            {
-               if (oldMethod.signatureMatches(newMethod))
-               {
-                  // FIXME this assignment is useless
-                  modified = false;
-                  break;
-               }
-            }
-            modified = true;
-         }
-
-         if (modified)
+         if (this.isModified(oldMethod, newClazz))
          {
             oldMethod.setModified(true);
             logger.info("\n   markedAsModified: method " + oldMethod.getDeclaration());
          }
       }
+   }
+
+   private boolean isModified(FMethod oldMethod, Clazz newClazz)
+   {
+      boolean modified = newClazz == null;
+
+      if (!modified)
+      {
+         for (FMethod newMethod : newClazz.getMethods())
+         {
+            if (oldMethod.signatureMatches(newMethod))
+            {
+               // FIXME this assignment is useless
+               modified = false;
+               break;
+            }
+         }
+         modified = true;
+      }
+      return modified;
    }
 }
