@@ -1,5 +1,5 @@
 - c: 	ClassModel
-  classes: 	classModel 	clazz 	attribute 	assocRole 	fMethod 	fileFragmentMap 	codeFragment 	
+  classes: 	classModel 	clazz 	attribute 	assocRole 	fMethod 	fileFragmentMap 	codeFragment
   defaultCollectionType: 	c1
   defaultPropertyStyle: 	Bean
   defaultRoleType: 	"java.util.ArrayList<%s>"
@@ -8,54 +8,54 @@
   packageSrcFolder: 	"src/main/java/org/fulib/classmodel"
 
 - classModel: 	Clazz
-  attributes: 	classModel_packageName 	classModel_mainJavaDir 	classModel_defaultCollectionType 	classModel_defaultPropertyStyle 	
+  attributes: 	classModel_packageName 	classModel_mainJavaDir 	classModel_defaultCollectionType 	classModel_defaultPropertyStyle
   model: 	c
   modified: 	false
   name: 	ClassModel
   propertyStyle: 	Bean
-  roles: 	classModel_classes 	
+  roles: 	classModel_classes
 
 - clazz: 	Clazz
-  attributes: 	clazz_name 	clazz_propertyStyle 	clazz_modified 	clazz_imports 	
+  attributes: 	clazz_name 	clazz_propertyStyle 	clazz_modified 	clazz_imports
   model: 	c
   modified: 	false
   name: 	Clazz
   propertyStyle: 	Bean
-  roles: 	clazz_model 	clazz_attributes 	clazz_roles 	clazz_methods 	clazz_superClass 	clazz_subClasses 	
+  roles: 	clazz_model 	clazz_attributes 	clazz_roles 	clazz_methods 	clazz_superClass 	clazz_subClasses
 
 - attribute: 	Clazz
-  attributes: 	attribute_name 	attribute_type 	attribute_collectionType 	attribute_initialization 	attribute_propertyStyle 	attribute_modified 	
+  attributes: 	attribute_name 	attribute_type 	attribute_collectionType 	attribute_initialization 	attribute_propertyStyle 	attribute_modified
   model: 	c
   modified: 	false
   name: 	Attribute
   propertyStyle: 	Bean
-  roles: 	attribute_clazz 	
+  roles: 	attribute_clazz
 
 - assocRole: 	Clazz
-  attributes: 	assocRole_name 	assocRole_cardinality 	assocRole_collectionType 	assocRole_aggregation 	assocRole_propertyStyle 	assocRole_modified 	
+  attributes: 	assocRole_name 	assocRole_cardinality 	assocRole_collectionType 	assocRole_aggregation 	assocRole_propertyStyle 	assocRole_modified
   model: 	c
   modified: 	false
   name: 	AssocRole
   propertyStyle: 	Bean
-  roles: 	assocRole_clazz 	assocRole_other 	assocRole_other2 	
+  roles: 	assocRole_clazz 	assocRole_other 	assocRole_other2
 
 - fMethod: 	Clazz
-  attributes: 	fMethod_methodBody 	fMethod_modified 	fMethod_annotations 	
+  attributes: 	fMethod_methodBody 	fMethod_modified 	fMethod_annotations
   model: 	c
   modified: 	false
   name: 	FMethod
   propertyStyle: 	Bean
-  roles: 	fMethod_clazz 	
+  roles: 	fMethod_clazz
 
 - fileFragmentMap: 	Clazz
-  attributes: 	fileFragmentMap_fileName 	
+  attributes: 	fileFragmentMap_fileName
   model: 	c
   modified: 	false
   name: 	FileFragmentMap
   propertyStyle: 	Bean
 
 - codeFragment: 	Clazz
-  attributes: 	codeFragment_key 	codeFragment_text 	
+  attributes: 	codeFragment_key 	codeFragment_text
   model: 	c
   modified: 	false
   name: 	CodeFragment
@@ -64,8 +64,7 @@
 - c1: 	CollectionType
   implClass: 	class java.util.ArrayList
   implTemplate: 	"java.util.ArrayList<%s>"
-  itf: 	c3
-  itfName: 	List
+  itf: 	org.fulib.classmodel.CollectionItf.List
   qualifiedImplName: 	java.util.ArrayList
   simpleImplName: 	ArrayList
 
@@ -449,23 +448,10 @@
   propertyStyle: 	Bean
   type: 	String
 
-- c3: 	CollectionItf
-  declaringClass: 	class org.fulib.classmodel.CollectionItf
-  itfClass: 	interface java.util.List
-  qualifiedName: 	java.util.List
-  simpleName: 	List
-
 - c4: 	CollectionType
   implClass: 	class java.util.LinkedHashSet
   implTemplate: 	"java.util.LinkedHashSet<%s>"
-  itf: 	c5
-  itfName: 	Set
+  itf: 	org.fulib.classmodel.CollectionItf.Set
   qualifiedImplName: 	java.util.LinkedHashSet
   simpleImplName: 	LinkedHashSet
-
-- c5: 	CollectionItf
-  declaringClass: 	class org.fulib.classmodel.CollectionItf
-  itfClass: 	interface java.util.Set
-  qualifiedName: 	java.util.Set
-  simpleName: 	Set
 
