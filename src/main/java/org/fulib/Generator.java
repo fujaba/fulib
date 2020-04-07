@@ -178,17 +178,7 @@ public class Generator
 
       for (Attribute oldAttr : oldClazz.getAttributes())
       {
-         boolean modified = newClazz == null;
-
-         if (!modified)
-         {
-            Attribute newAttr = newClazz.getAttribute(oldAttr.getName());
-
-            modified = newAttr == null || !Objects.equals(oldAttr.getType(), newAttr.getType()) || !Objects
-               .equals(oldAttr.getPropertyStyle(), newAttr.getPropertyStyle());
-         }
-
-         if (modified)
+         if (this.isModified(oldAttr, newClazz))
          {
             oldAttr.markAsModified();
             logger.info("\n   markedAsModified: attribute " + oldAttr.getName());
@@ -197,17 +187,7 @@ public class Generator
 
       for (AssocRole oldRole : oldClazz.getRoles())
       {
-         boolean modified = newClazz == null;
-
-         if (!modified)
-         {
-            AssocRole newRole = newClazz.getRole(oldRole.getName());
-
-            modified = newRole == null || oldRole.getCardinality() != newRole.getCardinality() || !Objects
-               .equals(oldRole.getPropertyStyle(), oldRole.getPropertyStyle());
-         }
-
-         if (modified)
+         if (this.isModified(oldRole, newClazz))
          {
             oldRole.markAsModified();
             logger.info("\n   markedAsModified: role " + oldRole.getName());
@@ -227,6 +207,31 @@ public class Generator
             logger.info("\n   markedAsModified: method " + oldMethod.getDeclaration());
          }
       }
+   }
+
+   private boolean isModified(Attribute oldAttr, Clazz newClazz)
+   {
+      if (newClazz == null)
+      {
+         return true;
+      }
+
+      final Attribute newAttr = newClazz.getAttribute(oldAttr.getName());
+      return newAttr == null || !Objects.equals(oldAttr.getType(), newAttr.getType()) || !Objects.equals(
+         oldAttr.getPropertyStyle(), newAttr.getPropertyStyle());
+   }
+
+   private boolean isModified(AssocRole oldRole, Clazz newClazz)
+   {
+      if (newClazz == null)
+      {
+         return true;
+      }
+
+      final AssocRole newRole = newClazz.getRole(oldRole.getName());
+
+      return newRole == null || oldRole.getCardinality() != newRole.getCardinality() || !Objects.equals(
+         oldRole.getPropertyStyle(), oldRole.getPropertyStyle());
    }
 
    private boolean isModified(FMethod oldMethod, Clazz newClazz)
