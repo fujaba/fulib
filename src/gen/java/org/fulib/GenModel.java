@@ -22,6 +22,8 @@ public class GenModel implements ClassModelDecorator
       ClassModel model = mb.getClassModel();
       Fulib.generator().generate(model);
       // end_code_fragment:
+
+      FulibTools.classDiagrams().dumpPng(model);
    }
 
    @Override
