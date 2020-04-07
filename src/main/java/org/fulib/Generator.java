@@ -231,21 +231,18 @@ public class Generator
 
    private boolean isModified(FMethod oldMethod, Clazz newClazz)
    {
-      boolean modified = newClazz == null;
-
-      if (!modified)
+      if (newClazz == null)
       {
-         for (FMethod newMethod : newClazz.getMethods())
-         {
-            if (oldMethod.signatureMatches(newMethod))
-            {
-               // FIXME this assignment is useless
-               modified = false;
-               break;
-            }
-         }
-         modified = true;
+         return true;
       }
-      return modified;
+
+      for (FMethod newMethod : newClazz.getMethods())
+      {
+         if (oldMethod.signatureMatches(newMethod))
+         {
+            return false;
+         }
+      }
+      return true;
    }
 }
