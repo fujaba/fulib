@@ -1,32 +1,17 @@
-package org.fulib;
+package org.fulib.classmodel;
 
+import org.fulib.builder.ClassModelDecorator;
 import org.fulib.builder.ClassModelManager;
-import org.fulib.classmodel.ClassModel;
-import org.fulib.classmodel.Clazz;
-import org.fulib.classmodel.CollectionType;
 
 import static org.fulib.builder.Type.*;
 
-public class GenModel
+public class GenModel implements ClassModelDecorator
 {
-   public static void main(String[] args)
-   {
-      final ClassModelManager mb = new ClassModelManager();
-      mb.setSourceFolder("src/main/java");
-      mb.setPackageName("org.fulib.classmodel");
-
-      new GenModel().decorate(mb);
-
-      // start_code_fragment: Fulib.createGenerator
-      ClassModel model = mb.getClassModel();
-      Fulib.generator().generate(model);
-      // end_code_fragment:
-
-      FulibTools.classDiagrams().dumpPng(model);
-   }
-
+   @Override
    public void decorate(ClassModelManager mb)
    {
+      System.out.println("hello from GenModel");
+
       // Classes
       final Clazz ClassModel = mb.haveClass("ClassModel", c -> {
          c.attribute("packageName", STRING);
