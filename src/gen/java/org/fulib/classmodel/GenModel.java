@@ -10,8 +10,6 @@ public class GenModel implements ClassModelDecorator
    @Override
    public void decorate(ClassModelManager mb)
    {
-      System.out.println("hello from GenModel");
-
       // Classes
       final Clazz ClassModel = mb.haveClass("ClassModel", c -> {
          c.attribute("packageName", STRING);

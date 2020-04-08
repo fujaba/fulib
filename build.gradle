@@ -22,7 +22,7 @@ plugins {
    id 'com.jfrog.bintray' version '1.8.4'
    id 'de.clashsoft.simple-publish' version '0.5.0'
    id 'com.palantir.revapi' version '1.1.2'
-   id 'org.fulib.fulibGradle' version '0.4.0-rc.4'
+   id 'org.fulib.fulibGradle' version '0.4.0-rc.5'
 }
 
 if (JavaVersion.current().java11Compatible) {
