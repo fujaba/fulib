@@ -1,114 +1,84 @@
 package org.fulib.builder;
 
-import org.fulib.Generator;
-
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DecoratorMain
 {
-   public static final String FALLBACK_DECORATOR_CLASS = "GenModel";
-
-   public static void main(String[] args)
+   public static void decorate(ClassModelManager manager, List<Class<? extends ClassModelDecorator>> decoratorClasses)
    {
-      if (args.length == 0)
+      final String packageName = manager.getClassModel().getPackageName();
+      final List<Class<? extends ClassModelDecorator>> filteredDecoratorClasses = getDecoratorClassesForPackage(
+         packageName, decoratorClasses);
+
+      RuntimeException failure = null;
+
+      for (final Class<? extends ClassModelDecorator> decoratorClass : filteredDecoratorClasses)
       {
-         System.err.println("usage: decorator <srcFolder> <package>...\n"
-                            + "<srcFolder> - the source directory to generate classes into, e.g. 'src/main/java'\n"
-                            + "<package>   - the fully qualified package name, e.g. 'org.example'");
-         System.exit(1);
-         return;
-      }
-
-      final String sourceFolder = args[0];
-
-      for (int i = 1; i < args.length; i++)
-      {
-         final String packageName = args[i];
-         run(sourceFolder, packageName);
-      }
-   }
-
-   private static void run(String sourceFolder, String packageName)
-   {
-      final List<Class<? extends ClassModelDecorator>> decoratorClasses = getDecoratorClasses(packageName);
-      if (decoratorClasses.isEmpty())
-      {
-         return;
-      }
-
-      final ClassModelManager manager = new ClassModelManager();
-      manager.setSourceFolder(sourceFolder);
-      manager.setPackageName(packageName);
-
-      // if any decorator errors, we do not generate the model
-      boolean shouldGenerate = true;
-
-      for (final Class<? extends ClassModelDecorator> decoratorClass : decoratorClasses)
-      {
-         final ClassModelDecorator decorator;
          try
          {
-            decorator = decoratorClass.getConstructor().newInstance();
-         }
-         catch (ReflectiveOperationException e)
-         {
-            System.err.println("failed to instantiate decorator '" + decoratorClass.getName() + "':");
-            e.printStackTrace();
-            shouldGenerate = false;
-            continue;
-         }
-
-         try
-         {
+            final ClassModelDecorator decorator = decoratorClass.newInstance();
             decorator.decorate(manager);
          }
          catch (Exception e)
          {
-            System.err.println(
-               "failed to run decorator'" + decorator.getClass().getName() + "' failed in package '" + packageName
-               + "':");
-            e.printStackTrace();
-            shouldGenerate = false;
+            if (failure == null)
+            {
+               failure = new RuntimeException("class model decoration failed");
+            }
+            failure.addSuppressed(e);
          }
       }
 
-      if (shouldGenerate)
+      if (failure != null)
       {
-         new Generator().generate(manager.getClassModel());
+         throw failure;
       }
    }
 
-   public static List<Class<? extends ClassModelDecorator>> getDecoratorClasses(String packageName)
+   private static List<Class<? extends ClassModelDecorator>> getDecoratorClassesForPackage(String packageName,
+      List<Class<? extends ClassModelDecorator>> decoratorClasses)
    {
-      try
+      final Package thePackage = Package.getPackage(packageName);
+      if (thePackage != null)
       {
-         final Class<?> packageInfoClass = Class.forName(packageName + ".package-info");
-         final ClassModelDecorators annotation = packageInfoClass.getAnnotation(ClassModelDecorators.class);
-         if (annotation != null)
+         final ClassModelDecorators decorators = thePackage.getAnnotation(ClassModelDecorators.class);
+         if (decorators != null)
          {
-            return Arrays.asList(annotation.value());
+            return Arrays.asList(decorators.value());
          }
       }
-      catch (ClassNotFoundException ignored)
-      {
-         // fallthrough
-      }
 
-      try
+      return decoratorClasses
+         .stream()
+         .filter(c -> packageName.equals(c.getPackage().getName()))
+         .collect(Collectors.toList());
+   }
+
+   public static List<Class<? extends ClassModelDecorator>> resolveDecoratorClasses(Set<String> decoratorClassNames)
+   {
+      final List<Class<? extends ClassModelDecorator>> result = new ArrayList<>();
+      for (String decoratorClassName : decoratorClassNames)
       {
-         final Class<?> genModelClass = Class.forName(packageName + "." + FALLBACK_DECORATOR_CLASS);
-         if (ClassModelDecorator.class.isAssignableFrom(genModelClass))
+         final Class<?> decoratorClass;
+         try
          {
-            return Collections.singletonList((Class<? extends ClassModelDecorator>) genModelClass);
+            decoratorClass = Class.forName(decoratorClassName);
+         }
+         catch (ClassNotFoundException ignored)
+         {
+            continue;
+         }
+
+         if (ClassModelDecorator.class.isAssignableFrom(decoratorClass))
+         {
+            result.add((Class<? extends ClassModelDecorator>) decoratorClass);
          }
       }
-      catch (ClassNotFoundException e)
-      {
-         // fallthrough
-      }
 
-      return Collections.emptyList();
+      return result;
    }
 }
