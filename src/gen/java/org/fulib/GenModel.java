@@ -1,6 +1,5 @@
 package org.fulib;
 
-import org.fulib.builder.ClassModelDecorator;
 import org.fulib.builder.ClassModelManager;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
@@ -8,7 +7,7 @@ import org.fulib.classmodel.CollectionType;
 
 import static org.fulib.builder.Type.*;
 
-public class GenModel implements ClassModelDecorator
+public class GenModel
 {
    public static void main(String[] args)
    {
@@ -26,7 +25,6 @@ public class GenModel implements ClassModelDecorator
       FulibTools.classDiagrams().dumpPng(model);
    }
 
-   @Override
    public void decorate(ClassModelManager mb)
    {
       // Classes
