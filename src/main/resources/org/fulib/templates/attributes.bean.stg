@@ -103,19 +103,6 @@ attrSetAllArray(attr) ::= <<
 attrSetAllColl(attr) ::= <<
    public <attr.clazz.name> set<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
    {
-      if (value == null)
-      {
-         if (this.<attr.name> != null)
-         {
-            for (final <attr.boxType> oldItem : this.<attr.name>)
-            {
-               this.firePropertyChange(PROPERTY_<attr.name>, oldItem, null);
-            }
-         }
-         this.<attr.name> = null;
-         return this;
-      }
-
       if (this.<attr.name> == null)
       {
          this.<attr.name> = new <collectionImpl(attr)>(value);
@@ -135,7 +122,7 @@ attrSetAllColl(attr) ::= <<
       {
          if (!value.contains(oldItem))
          {
-            this.firePropertyChange(PROPERTY_methods, oldItem, null);
+            this.firePropertyChange(PROPERTY_<attr.name>, oldItem, null);
          }
       }
 
