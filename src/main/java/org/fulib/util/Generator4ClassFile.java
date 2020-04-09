@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -239,11 +240,18 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateAttribute(FileFragmentMap fragmentMap, Attribute attr)
    {
-      final boolean modified = attr.getModified();
-
       final STGroup group = this.getSTGroup(
          "org/fulib/templates/attributes." + attr.getPropertyStyle().toLowerCase() + ".stg");
-      final String signatureString = group.getInstanceOf("attrSignatures").add("attr", attr).render();
+
+      this.generateFromSignatures(fragmentMap, group, "attrSignatures", attr.getModified(), st -> st.add("attr", attr));
+   }
+
+   private void generateFromSignatures(FileFragmentMap fragmentMap, STGroup group, String signaturesTemplate,
+      boolean targetModified, Consumer<? super ST> addTarget)
+   {
+      final ST signatureST = group.getInstanceOf(signaturesTemplate);
+      addTarget.accept(signatureST);
+      final String signatureString = signatureST.render();
 
       for (final String line : signatureString.split("\n"))
       {
@@ -256,7 +264,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
          final String signature = matcher.group(2);
 
-         if (modified)
+         if (targetModified)
          {
             fragmentMap.remove(signature);
          }
@@ -264,7 +272,9 @@ public class Generator4ClassFile extends AbstractGenerator
          {
             final String templateName = matcher.group(1);
             final int newLines = signature.startsWith("attribute:") ? FIELD_NEWLINES : METHOD_NEWLINES;
-            fragmentMap.add(signature, group.getInstanceOf(templateName).add("attr", attr).render(), newLines);
+            final ST namedST = group.getInstanceOf(templateName);
+            addTarget.accept(namedST);
+            fragmentMap.add(signature, namedST.render(), newLines);
          }
       }
    }
