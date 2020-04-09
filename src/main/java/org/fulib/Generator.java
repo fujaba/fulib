@@ -219,6 +219,8 @@ public class Generator
       final Attribute newAttr = newClazz.getAttribute(oldAttr.getName());
       return newAttr == null || !Objects.equals(oldAttr.getType(), newAttr.getType()) //
              || !Objects.equals(oldAttr.getPropertyStyle(), newAttr.getPropertyStyle()) //
+             // FIXME equals not implemented, but must be identity based for IdMap to work.
+             //       thus, need to implement equality here
              || !Objects.equals(oldAttr.getCollectionType(), newAttr.getCollectionType());
    }
 
@@ -233,6 +235,7 @@ public class Generator
 
       return newRole == null || oldRole.getCardinality() != newRole.getCardinality() //
              || !Objects.equals(oldRole.getPropertyStyle(), oldRole.getPropertyStyle()) //
+             // FIXME same problem as with attributes
              || !Objects.equals(oldRole.getCollectionType(), newRole.getCollectionType());
    }
 
