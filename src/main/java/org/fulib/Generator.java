@@ -1,6 +1,7 @@
 package org.fulib;
 
 import org.fulib.classmodel.*;
+import org.fulib.parser.FragmentMapBuilder;
 import org.fulib.util.Generator4ClassFile;
 import org.fulib.yaml.YamlIdMap;
 
@@ -9,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,27 +90,61 @@ public class Generator
    {
       ClassModel oldModel = loadClassModel(model.getPackageSrcFolder(), MODEL_FILE_NAME);
 
+      final Map<String, FileFragmentMap> files = new HashMap<>();
+
       if (oldModel != null)
       {
          this.markModifiedElementsInOldModel(oldModel, model);
 
-         // remove code of modfiedElements
-         this.generateClasses(oldModel);
+         // remove code of modified elements
+         this.generateClasses(oldModel, files);
+
+         this.deleteRemovedClassFiles(oldModel, files);
       }
 
-      this.generateClasses(model);
+      this.generateClasses(model, files);
+
+      for (final FileFragmentMap fragmentMap : files.values())
+      {
+         fragmentMap.compressBlankLines();
+         fragmentMap.writeFile();
+      }
 
       saveNewClassModel(model, MODEL_FILE_NAME);
    }
 
-   private void generateClasses(ClassModel model)
+   private void deleteRemovedClassFiles(ClassModel oldModel, Map<String, FileFragmentMap> files)
+   {
+      for (final Clazz clazz : oldModel.getClasses())
+      {
+         if (clazz.getModified() && files.get(clazz.getName()).isClassBodyEmpty())
+         {
+            files.remove(clazz.getName());
+
+            final String classFileName = clazz.getSourceFileName();
+            final Path path = Paths.get(classFileName);
+            try
+            {
+               Files.deleteIfExists(path);
+               Logger.getLogger(Generator.class.getName()).info("\n   deleting empty file " + classFileName);
+            }
+            catch (IOException e)
+            {
+               e.printStackTrace();
+            }
+         }
+      }
+   }
+
+   private void generateClasses(ClassModel model, Map<String, FileFragmentMap> files)
    {
       final Generator4ClassFile generator = new Generator4ClassFile()
          .setCustomTemplatesFile(this.getCustomTemplateFile());
 
       for (Clazz clazz : model.getClasses())
       {
-         generator.generate(clazz);
+         generator.generate(clazz, files.computeIfAbsent(clazz.getName(),
+                                                         s -> FragmentMapBuilder.parse(clazz.getSourceFileName())));
       }
    }
 
