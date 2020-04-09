@@ -217,8 +217,9 @@ public class Generator
       }
 
       final Attribute newAttr = newClazz.getAttribute(oldAttr.getName());
-      return newAttr == null || !Objects.equals(oldAttr.getType(), newAttr.getType()) || !Objects.equals(
-         oldAttr.getPropertyStyle(), newAttr.getPropertyStyle());
+      return newAttr == null || !Objects.equals(oldAttr.getType(), newAttr.getType()) //
+             || !Objects.equals(oldAttr.getPropertyStyle(), newAttr.getPropertyStyle()) //
+             || !Objects.equals(oldAttr.getCollectionType(), newAttr.getCollectionType());
    }
 
    private boolean isModified(AssocRole oldRole, Clazz newClazz)
@@ -230,8 +231,9 @@ public class Generator
 
       final AssocRole newRole = newClazz.getRole(oldRole.getName());
 
-      return newRole == null || oldRole.getCardinality() != newRole.getCardinality() || !Objects.equals(
-         oldRole.getPropertyStyle(), oldRole.getPropertyStyle());
+      return newRole == null || oldRole.getCardinality() != newRole.getCardinality() //
+             || !Objects.equals(oldRole.getPropertyStyle(), oldRole.getPropertyStyle()) //
+             || !Objects.equals(oldRole.getCollectionType(), newRole.getCollectionType());
    }
 
    private boolean isModified(FMethod oldMethod, Clazz newClazz)
