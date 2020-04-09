@@ -44,6 +44,10 @@ public class Generator4ClassFile extends AbstractGenerator
 
    // =============== Methods ===============
 
+   /**
+    * @deprecated since 1.2
+    */
+   @Deprecated
    public void generate(Clazz clazz)
    {
       final String classFileName = clazz.getSourceFileName();
