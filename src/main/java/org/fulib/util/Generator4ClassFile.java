@@ -49,26 +49,7 @@ public class Generator4ClassFile extends AbstractGenerator
       String classFileName = clazz.getModel().getPackageSrcFolder() + "/" + clazz.getName() + ".java";
       FileFragmentMap fragmentMap = FragmentMapBuilder.parse(classFileName);
 
-      // doGenerate code for class
-      this.generatePackageDecl(clazz, fragmentMap);
-
-      this.generateClassDecl(clazz, fragmentMap);
-
-      this.generateAttributes(clazz, fragmentMap);
-
-      this.generateAssociations(clazz, fragmentMap);
-
-      this.generateMethods(clazz, fragmentMap);
-
-      this.generatePropertyChangeSupport(clazz, fragmentMap);
-
-      this.generateToString(clazz, fragmentMap);
-
-      this.generateRemoveYou(clazz, fragmentMap);
-
-      fragmentMap.add(CLASS_END, "}", CLASS_END_NEWLINES);
-
-      this.generateImports(clazz, fragmentMap);
+      this.generate(clazz, fragmentMap);
 
       if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
       {
@@ -88,6 +69,32 @@ public class Generator4ClassFile extends AbstractGenerator
          fragmentMap.compressBlankLines();
          fragmentMap.writeFile();
       }
+   }
+
+   /**
+    * @since 1.2
+    */
+   public void generate(Clazz clazz, FileFragmentMap fragmentMap)
+   {
+      this.generatePackageDecl(clazz, fragmentMap);
+
+      this.generateClassDecl(clazz, fragmentMap);
+
+      this.generateAttributes(clazz, fragmentMap);
+
+      this.generateAssociations(clazz, fragmentMap);
+
+      this.generateMethods(clazz, fragmentMap);
+
+      this.generatePropertyChangeSupport(clazz, fragmentMap);
+
+      this.generateToString(clazz, fragmentMap);
+
+      this.generateRemoveYou(clazz, fragmentMap);
+
+      fragmentMap.add(CLASS_END, "}", CLASS_END_NEWLINES);
+
+      this.generateImports(clazz, fragmentMap);
    }
 
    // --------------- Declarations ---------------
