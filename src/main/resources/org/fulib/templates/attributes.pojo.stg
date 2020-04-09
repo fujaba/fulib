@@ -9,6 +9,26 @@ collectionItf(attr) ::= <%
 
 // --------------- Declarations ---------------
 
+attrSignatures(attr) ::= <<
+   propertyDecl:     attribute:PROPERTY_<attr.name>
+   attrDecl:         attribute:<attr.name>
+   attrGet:          method:get<attr.name; format="cap">()
+   <if(attr.javaFX)>
+   initMethod:       method:_init<attr.name; format="cap">()
+   propertyGet:      method:<attr.name>Property()
+   <endif>
+   <if(attr.collection)>
+   attrWithItem:     method:with<attr.name; format="cap">(<attr.boxType>)
+   attrWithArray:    method:with<attr.name; format="cap">(<attr.boxType>...)
+   attrWithColl:     method:with<attr.name; format="cap">(Collection\<? extends <attr.boxType>\>)
+   attrWithoutItem:  method:without<attr.name; format="cap">(<attr.boxType>)
+   attrWithoutArray: method:without<attr.name; format="cap">(<attr.boxType>...)
+   attrWithoutColl:  method:without<attr.name; format="cap">(Collection\<? extends <attr.boxType>\>)
+   <else>
+   attrSet:          method:set<attr.name; format="cap">(<attr.type>)
+   <endif>
+>>
+
 attrDecl(attr) ::= <<
 <if(attr.collection)>
    private <collectionItf(attr)> <attr.name><if(attr.initialization)> = <attr.initialization><endif>;

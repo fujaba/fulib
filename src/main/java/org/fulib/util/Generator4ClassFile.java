@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.fulib.classmodel.FileFragmentMap.*;
 
@@ -27,6 +29,8 @@ public class Generator4ClassFile extends AbstractGenerator
    // indentation used for method bodies.
    // Used by generateMethod to normalize method bodies in preparation for ST's automatic indentation.
    private static final String METHOD_BODY_INDENT = "      ";
+
+   private static final Pattern SIGNATURE_PATTERN = Pattern.compile("^\\s*(\\w+)\\s*:\\s*(.*)\\s*$");
 
    // =============== Properties ===============
 
@@ -235,81 +239,33 @@ public class Generator4ClassFile extends AbstractGenerator
 
    private void generateAttribute(FileFragmentMap fragmentMap, Attribute attr)
    {
-      final STGroup group = this.getSTGroup(
-         "org/fulib/templates/attributes." + attr.getPropertyStyle().toLowerCase() + ".stg");
-
-      final String baseType = attr.getType();
-      final String boxType = attr.getBoxType();
-
-      final String attrName = attr.getName();
-      final String capAttrName = StrUtil.cap(attrName);
       final boolean modified = attr.getModified();
 
-      addOrRemove(fragmentMap, ATTRIBUTE + ":PROPERTY_" + attrName, FIELD_NEWLINES, modified,
-                  () -> group.getInstanceOf("propertyDecl").add("attr", attr).render());
+      final STGroup group = this.getSTGroup(
+         "org/fulib/templates/attributes." + attr.getPropertyStyle().toLowerCase() + ".stg");
+      final String signatureString = group.getInstanceOf("attrSignatures").add("attr", attr).render();
 
-      addOrRemove(fragmentMap, ATTRIBUTE + ":" + attrName, FIELD_NEWLINES, modified,
-                  () -> group.getInstanceOf("attrDecl").add("attr", attr).render());
-
-      if (attr.isJavaFX())
+      for (final String line : signatureString.split("\n"))
       {
-         addOrRemove(fragmentMap, METHOD + ":_init" + capAttrName + "()", METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("initMethod").add("attr", attr).render());
-      }
-      else
-      {
-         fragmentMap.remove(METHOD + ":_init" + capAttrName + "()");
-      }
+         final Matcher matcher = SIGNATURE_PATTERN.matcher(line);
+         if (!matcher.matches())
+         {
+            System.err.println("invalid signature, ignoring: " + line);
+            continue;
+         }
 
-      addOrRemove(fragmentMap, METHOD + ":get" + capAttrName + "()", METHOD_NEWLINES, modified,
-                  () -> group.getInstanceOf("attrGet").add("attr", attr).render());
+         final String signature = matcher.group(2);
 
-      if (attr.isCollection())
-      {
-         addOrRemove(fragmentMap, METHOD + ":with" + capAttrName + "(" + boxType + ")", METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("attrWithItem").add("attr", attr).render());
-
-         addOrRemove(fragmentMap, METHOD + ":with" + capAttrName + "(" + boxType + "...)", METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("attrWithArray").add("attr", attr).render());
-
-         addOrRemove(fragmentMap, METHOD + ":with" + capAttrName + "(Collection<? extends " + boxType + ">)",
-                     METHOD_NEWLINES, modified, () -> group.getInstanceOf("attrWithColl").add("attr", attr).render());
-
-         addOrRemove(fragmentMap, METHOD + ":without" + capAttrName + "(" + boxType + ")", METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("attrWithoutItem").add("attr", attr).render());
-
-         addOrRemove(fragmentMap, METHOD + ":without" + capAttrName + "(" + boxType + "...)", METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("attrWithoutArray").add("attr", attr).render());
-
-         addOrRemove(fragmentMap, METHOD + ":without" + capAttrName + "(Collection<? extends " + boxType + ">)",
-                     METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("attrWithoutColl").add("attr", attr).render());
-
-         // remove "set" method
-         fragmentMap.remove(METHOD + ":set" + capAttrName + "(" + baseType + ")");
-      }
-      else // usual attribute
-      {
-         addOrRemove(fragmentMap, METHOD + ":set" + capAttrName + "(" + baseType + ")", METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("attrSet").add("attr", attr).render());
-
-         // remove "with" and "without" methods
-         fragmentMap.remove(METHOD + ":with" + capAttrName + "(" + boxType + ")");
-         fragmentMap.remove(METHOD + ":with" + capAttrName + "(" + boxType + "...)");
-         fragmentMap.remove(METHOD + ":with" + capAttrName + "(Collection<? extends " + boxType + ">)");
-         fragmentMap.remove(METHOD + ":without" + capAttrName + "(" + boxType + ")");
-         fragmentMap.remove(METHOD + ":without" + capAttrName + "(" + boxType + "...)");
-         fragmentMap.remove(METHOD + ":without" + capAttrName + "(Collection<? extends " + boxType + ">)");
-      }
-
-      if (attr.isJavaFX())
-      {
-         addOrRemove(fragmentMap, METHOD + ":" + attrName + "Property()", METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("propertyGet").add("attr", attr).render());
-      }
-      else
-      {
-         fragmentMap.remove(METHOD + ":" + attrName + "Property()");
+         if (modified)
+         {
+            fragmentMap.remove(signature);
+         }
+         else
+         {
+            final String templateName = matcher.group(1);
+            final int newLines = signature.startsWith("attribute:") ? FIELD_NEWLINES : METHOD_NEWLINES;
+            fragmentMap.add(signature, group.getInstanceOf(templateName).add("attr", attr).render(), newLines);
+         }
       }
    }
 
