@@ -219,9 +219,13 @@ public class Generator
       final Attribute newAttr = newClazz.getAttribute(oldAttr.getName());
       return newAttr == null || !Objects.equals(oldAttr.getType(), newAttr.getType()) //
              || !Objects.equals(oldAttr.getPropertyStyle(), newAttr.getPropertyStyle()) //
-             // FIXME equals not implemented, but must be identity based for IdMap to work.
-             //       thus, need to implement equality here
-             || !Objects.equals(oldAttr.getCollectionType(), newAttr.getCollectionType());
+             || !collectionTypeMatches(oldAttr.getCollectionType(), newAttr.getCollectionType());
+   }
+
+   private static boolean collectionTypeMatches(CollectionType a, CollectionType b)
+   {
+      return a == b //
+             || a != null && b != null && a.getItf() == b.getItf() && a.getImplTemplate().equals(b.getImplTemplate());
    }
 
    private boolean isModified(AssocRole oldRole, Clazz newClazz)
@@ -235,8 +239,7 @@ public class Generator
 
       return newRole == null || oldRole.getCardinality() != newRole.getCardinality() //
              || !Objects.equals(oldRole.getPropertyStyle(), oldRole.getPropertyStyle()) //
-             // FIXME same problem as with attributes
-             || !Objects.equals(oldRole.getCollectionType(), newRole.getCollectionType());
+             || !collectionTypeMatches(oldRole.getCollectionType(), newRole.getCollectionType());
    }
 
    private boolean isModified(FMethod oldMethod, Clazz newClazz)
