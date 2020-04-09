@@ -104,6 +104,14 @@ public class Clazz
       return this;
    }
 
+   /**
+    * @since 1.2
+    */
+   public String getSourceFileName()
+   {
+      return this.getModel().getPackageSrcFolder() + "/" + this.getName() + ".java";
+   }
+
    public Clazz getSuperClass()
    {
       return this.superClass;

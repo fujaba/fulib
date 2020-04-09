@@ -46,7 +46,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
    public void generate(Clazz clazz)
    {
-      String classFileName = clazz.getModel().getPackageSrcFolder() + "/" + clazz.getName() + ".java";
+      final String classFileName = clazz.getSourceFileName();
       FileFragmentMap fragmentMap = FragmentMapBuilder.parse(classFileName);
 
       this.generate(clazz, fragmentMap);
