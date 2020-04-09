@@ -9,6 +9,28 @@ collectionItf(role, other) ::= <%
 
 // --------------- Declarations ---------------
 
+roleSignatures(role, other) ::= <<
+   propertyDecl:           attribute:PROPERTY_<role.name>
+   roleAttrDecl:           attribute:<role.name>
+   getMethod:              method:get<role.name; format="cap">()
+   <if(role.javaFX)>
+      initMethod:          method:_init<role.name; format="cap">()
+      <if(!role.toMany)>
+         propertyMethod:   method:<role.name>Property()
+      <endif>
+   <endif>
+   <if(role.toMany)>
+      withItem:            method:with<role.name; format="cap">(<other.clazz.name>)
+      withArray:           method:with<role.name; format="cap">(<other.clazz.name>...)
+      withColl:            method:with<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
+      withoutItem:         method:without<role.name; format="cap">(<other.clazz.name>)
+      withoutArray:        method:without<role.name; format="cap">(<other.clazz.name>...)
+      withoutColl:         method:without<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
+   <else>
+      setMethod:           method:set<role.name; format="cap">(<other.clazz.name>)
+   <endif>
+>>
+
 roleAttrDecl(role, other) ::= <<
 <if(role.toMany)>
    private <collectionItf(role, other)> <role.name>;

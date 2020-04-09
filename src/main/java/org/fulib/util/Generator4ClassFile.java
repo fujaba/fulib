@@ -298,86 +298,9 @@ public class Generator4ClassFile extends AbstractGenerator
    {
       final STGroup group = this.getSTGroup(
          "org/fulib/templates/associations." + role.getPropertyStyle().toLowerCase() + ".stg");
-      final boolean javaFX = role.isJavaFX();
 
-      final String roleName = role.getName();
-      final String capRoleName = StrUtil.cap(roleName);
-      final boolean toMany = role.isToMany();
-      final boolean modified = role.getModified();
-
-      final AssocRole other = role.getOther();
-      final String otherClassName = other.getClazz().getName();
-
-      addOrRemove(fragmentMap, ATTRIBUTE + ":PROPERTY_" + roleName, FIELD_NEWLINES, modified,
-                  () -> group.getInstanceOf("propertyDecl").add("role", role).add("other", other).render());
-
-      addOrRemove(fragmentMap, ATTRIBUTE + ":" + roleName, FIELD_NEWLINES, modified,
-                  () -> group.getInstanceOf("roleAttrDecl").add("role", role).add("other", other).render());
-
-      if (javaFX)
-      {
-         // add _init method
-         addOrRemove(fragmentMap, METHOD + ":_init" + capRoleName + "()", METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("initMethod").add("role", role).add("other", other).render());
-      }
-      else
-      {
-         // remove _init method
-         fragmentMap.remove(METHOD + ":_init" + capRoleName + "()");
-      }
-
-      addOrRemove(fragmentMap, METHOD + ":get" + capRoleName + "()", METHOD_NEWLINES, modified,
-                  () -> group.getInstanceOf("getMethod").add("role", role).add("other", other).render());
-
-      if (toMany)
-      {
-         addOrRemove(fragmentMap, METHOD + ":with" + capRoleName + "(" + otherClassName + ")", METHOD_NEWLINES,
-                     modified, () -> group.getInstanceOf("withItem").add("role", role).add("other", other).render());
-
-         addOrRemove(fragmentMap, METHOD + ":with" + capRoleName + "(" + otherClassName + "...)", METHOD_NEWLINES,
-                     modified, () -> group.getInstanceOf("withArray").add("role", role).add("other", other).render());
-
-         addOrRemove(fragmentMap, METHOD + ":with" + capRoleName + "(Collection<? extends " + otherClassName + ">)",
-                     METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("withColl").add("role", role).add("other", other).render());
-
-         addOrRemove(fragmentMap, METHOD + ":without" + capRoleName + "(" + otherClassName + ")", METHOD_NEWLINES,
-                     modified, () -> group.getInstanceOf("withoutItem").add("role", role).add("other", other).render());
-
-         addOrRemove(fragmentMap, METHOD + ":without" + capRoleName + "(" + otherClassName + "...)", METHOD_NEWLINES,
-                     modified,
-                     () -> group.getInstanceOf("withoutArray").add("role", role).add("other", other).render());
-
-         addOrRemove(fragmentMap, METHOD + ":without" + capRoleName + "(Collection<? extends " + otherClassName + ">)",
-                     METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("withoutColl").add("role", role).add("other", other).render());
-
-         // remove "set" method
-         fragmentMap.remove(METHOD + ":set" + capRoleName + "(" + otherClassName + ")");
-      }
-      else
-      {
-         addOrRemove(fragmentMap, METHOD + ":set" + capRoleName + "(" + otherClassName + ")", METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("setMethod").add("role", role).add("other", other).render());
-
-         // remove "with" and "without" methods
-         fragmentMap.remove(METHOD + ":with" + capRoleName + "(" + otherClassName + ")");
-         fragmentMap.remove(METHOD + ":with" + capRoleName + "(" + otherClassName + "...)");
-         fragmentMap.remove(METHOD + ":with" + capRoleName + "(Collection<? extends " + otherClassName + ">)");
-         fragmentMap.remove(METHOD + ":without" + capRoleName + "(" + otherClassName + ")");
-         fragmentMap.remove(METHOD + ":without" + capRoleName + "(" + otherClassName + "...)");
-         fragmentMap.remove(METHOD + ":without" + capRoleName + "(Collection<? extends " + otherClassName + ">)");
-      }
-
-      if (javaFX && !toMany)
-      {
-         addOrRemove(fragmentMap, METHOD + ":" + roleName + "Property()", METHOD_NEWLINES, modified,
-                     () -> group.getInstanceOf("propertyMethod").add("role", role).add("other", other).render());
-      }
-      else
-      {
-         fragmentMap.remove(METHOD + ":" + roleName + "Property()");
-      }
+      this.generateFromSignatures(fragmentMap, group, "roleSignatures", role.getModified(),
+                                  st -> st.add("role", role).add("other", role.getOther()));
    }
 
    // --------------- Methods ---------------
