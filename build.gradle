@@ -118,6 +118,11 @@ if (JavaVersion.current().java11Compatible) {
 // Now the task needs to be run manually.
 compileJava.dependsOn = compileJava.dependsOn - 'generateScenarioSource'
 
+generateScenarioSource.enabled = false
+tasks.register('genModel', JavaExec) {
+   generateScenarioSource.copyTo(it)
+}
+
 test {
    useJUnitPlatform()
    testLogging.showStandardStreams = true
