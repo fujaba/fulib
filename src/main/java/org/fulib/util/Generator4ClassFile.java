@@ -8,9 +8,6 @@ import org.stringtemplate.v4.STGroup;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.fulib.classmodel.FileFragmentMap.*;
@@ -22,8 +19,6 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
    // indentation used for method bodies.
    // Used by generateMethod to normalize method bodies in preparation for ST's automatic indentation.
    private static final String METHOD_BODY_INDENT = "      ";
-
-   private static final Pattern SIGNATURE_PATTERN = Pattern.compile("^\\s*(\\w+)\\s*:\\s*(.*)\\s*$");
 
    // =============== Properties ===============
 
@@ -220,39 +215,6 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
          "org/fulib/templates/attributes." + attr.getPropertyStyle().toLowerCase() + ".stg");
 
       this.generateFromSignatures(fragmentMap, group, "attrSignatures", attr.getModified(), st -> st.add("attr", attr));
-   }
-
-   private void generateFromSignatures(FileFragmentMap fragmentMap, STGroup group, String signaturesTemplate,
-      boolean targetModified, Consumer<? super ST> addTarget)
-   {
-      final ST signatureST = group.getInstanceOf(signaturesTemplate);
-      addTarget.accept(signatureST);
-      final String signatureString = signatureST.render();
-
-      for (final String line : signatureString.split("\n"))
-      {
-         final Matcher matcher = SIGNATURE_PATTERN.matcher(line);
-         if (!matcher.matches())
-         {
-            System.err.println("invalid signature, ignoring: " + line);
-            continue;
-         }
-
-         final String signature = matcher.group(2);
-
-         if (targetModified)
-         {
-            fragmentMap.remove(signature);
-         }
-         else
-         {
-            final String templateName = matcher.group(1);
-            final int newLines = signature.startsWith("attribute:") ? FIELD_NEWLINES : METHOD_NEWLINES;
-            final ST namedST = group.getInstanceOf(templateName);
-            addTarget.accept(namedST);
-            fragmentMap.add(signature, namedST.render(), newLines);
-         }
-      }
    }
 
    // --------------- Associations ---------------

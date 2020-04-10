@@ -4,6 +4,7 @@ import org.fulib.Generator;
 import org.fulib.classmodel.Clazz;
 import org.fulib.classmodel.FileFragmentMap;
 import org.fulib.parser.FragmentMapBuilder;
+import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 import org.stringtemplate.v4.StringRenderer;
@@ -14,7 +15,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.fulib.classmodel.FileFragmentMap.FIELD_NEWLINES;
+import static org.fulib.classmodel.FileFragmentMap.METHOD_NEWLINES;
 
 /**
  * @author Adrian Kunz
@@ -23,6 +30,10 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractGenerator4ClassFile
 {
+   // =============== Constants ===============
+
+   private static final Pattern SIGNATURE_PATTERN = Pattern.compile("^\\s*(\\w+)\\s*:\\s*(.*)\\s*$");
+
    // =============== Fields ===============
 
    private String customTemplatesFile;
@@ -117,5 +128,38 @@ public abstract class AbstractGenerator4ClassFile
       }
       group.registerRenderer(String.class, new StringRenderer());
       return group;
+   }
+
+   protected void generateFromSignatures(FileFragmentMap fragmentMap, STGroup group, String signaturesTemplate,
+      boolean targetModified, Consumer<? super ST> addTarget)
+   {
+      final ST signatureST = group.getInstanceOf(signaturesTemplate);
+      addTarget.accept(signatureST);
+      final String signatureString = signatureST.render();
+
+      for (final String line : signatureString.split("\n"))
+      {
+         final Matcher matcher = SIGNATURE_PATTERN.matcher(line);
+         if (!matcher.matches())
+         {
+            System.err.println("invalid signature, ignoring: " + line);
+            continue;
+         }
+
+         final String signature = matcher.group(2);
+
+         if (targetModified)
+         {
+            fragmentMap.remove(signature);
+         }
+         else
+         {
+            final String templateName = matcher.group(1);
+            final int newLines = signature.startsWith("attribute:") ? FIELD_NEWLINES : METHOD_NEWLINES;
+            final ST namedST = group.getInstanceOf(templateName);
+            addTarget.accept(namedST);
+            fragmentMap.add(signature, namedST.render(), newLines);
+         }
+      }
    }
 }
