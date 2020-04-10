@@ -51,7 +51,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
 
       fragmentMap.add(FileFragmentMap.CLASS_END, "}", 1);
 
-	   if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
+      if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
       {
          Path path = Paths.get(classFileName);
          try
@@ -232,7 +232,11 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
          }
          else
          {
-            buf.append("this.without").append(StrUtil.cap(role.getName())).append("(this._").append(role.getName())
+            buf
+               .append("this.without")
+               .append(StrUtil.cap(role.getName()))
+               .append("(this._")
+               .append(role.getName())
                .append(");\n");
          }
       }
