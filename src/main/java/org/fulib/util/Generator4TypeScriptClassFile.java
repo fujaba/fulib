@@ -34,11 +34,15 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
 
    // =============== Methods ===============
 
-   public void generate(Clazz clazz)
+   @Override
+   protected String getSourceFileName(Clazz clazz)
    {
-      String classFileName = clazz.getModel().getPackageSrcFolder() + "/" + clazz.getName() + ".ts";
-      FileFragmentMap fragmentMap = TypeScriptParser.parse(classFileName);
+      return clazz.getModel().getPackageSrcFolder() + "/" + clazz.getName() + ".ts";
+   }
 
+   @Override
+   public void generate(Clazz clazz, FileFragmentMap fragmentMap)
+   {
       this.generateClassDecl(clazz, fragmentMap);
 
       this.generateAttributes(clazz, fragmentMap);
@@ -50,24 +54,6 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
       this.generateRemoveYou(clazz, fragmentMap);
 
       fragmentMap.add(FileFragmentMap.CLASS_END, "}", 1);
-
-      if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
-      {
-         Path path = Paths.get(classFileName);
-         try
-         {
-            Files.deleteIfExists(path);
-            Logger.getLogger(Generator.class.getName()).info("\n   deleting empty file " + classFileName);
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-      }
-      else
-      {
-         fragmentMap.writeFile();
-      }
    }
 
    private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)

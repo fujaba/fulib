@@ -44,40 +44,7 @@ public class Generator4ClassFile extends AbstractGenerator
 
    // =============== Methods ===============
 
-   /**
-    * @deprecated since 1.2
-    */
-   @Deprecated
-   public void generate(Clazz clazz)
-   {
-      final String classFileName = clazz.getSourceFileName();
-      FileFragmentMap fragmentMap = FragmentMapBuilder.parse(classFileName);
-
-      this.generate(clazz, fragmentMap);
-
-      if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
-      {
-         Path path = Paths.get(classFileName);
-         try
-         {
-            Files.deleteIfExists(path);
-            Logger.getLogger(Generator.class.getName()).info("\n   deleting empty file " + classFileName);
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-      }
-      else
-      {
-         fragmentMap.compressBlankLines();
-         fragmentMap.writeFile();
-      }
-   }
-
-   /**
-    * @since 1.2
-    */
+   @Override
    public void generate(Clazz clazz, FileFragmentMap fragmentMap)
    {
       this.generatePackageDecl(clazz, fragmentMap);

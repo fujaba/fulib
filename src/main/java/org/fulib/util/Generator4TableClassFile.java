@@ -34,11 +34,15 @@ public class Generator4TableClassFile extends AbstractGenerator
 
    // =============== Methods ===============
 
-   public void generate(Clazz clazz)
+   @Override
+   protected String getSourceFileName(Clazz clazz)
    {
-      String classFileName = clazz.getModel().getPackageSrcFolder() + "/tables/" + clazz.getName() + "Table.java";
-      FileFragmentMap fragmentMap = FragmentMapBuilder.parse(classFileName);
+      return clazz.getModel().getPackageSrcFolder() + "/tables/" + clazz.getName() + "Table.java";
+   }
 
+   @Override
+   public void generate(Clazz clazz, FileFragmentMap fragmentMap)
+   {
       this.generatePackageDecl(clazz, fragmentMap);
       this.generateImports(clazz, fragmentMap);
       this.generateClassDecl(clazz, fragmentMap);
@@ -53,24 +57,6 @@ public class Generator4TableClassFile extends AbstractGenerator
       this.generateToString(clazz, fragmentMap);
 
       fragmentMap.add(CLASS_END, "}", CLASS_END_NEWLINES);
-
-      if (clazz.getModified() && fragmentMap.isClassBodyEmpty())
-      {
-         Path path = Paths.get(classFileName);
-         try
-         {
-            Files.deleteIfExists(path);
-            Logger.getLogger(Generator.class.getName()).info("\n   deleting empty file " + classFileName);
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-      }
-      else
-      {
-         fragmentMap.writeFile();
-      }
    }
 
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap)
