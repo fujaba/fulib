@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 import static org.fulib.classmodel.FileFragmentMap.*;
 
-public class Generator4ClassFile extends AbstractGenerator
+public class Generator4ClassFile extends AbstractGenerator4ClassFile
 {
    // =============== Constants ===============
 

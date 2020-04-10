@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @since 1.2
  */
-public abstract class AbstractGenerator
+public abstract class AbstractGenerator4ClassFile
 {
    // =============== Fields ===============
 
@@ -36,7 +36,7 @@ public abstract class AbstractGenerator
       return this.customTemplatesFile;
    }
 
-   public AbstractGenerator setCustomTemplatesFile(String customTemplatesFile)
+   public AbstractGenerator4ClassFile setCustomTemplatesFile(String customTemplatesFile)
    {
       this.customTemplatesFile = customTemplatesFile;
       return this;

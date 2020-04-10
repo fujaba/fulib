@@ -14,7 +14,7 @@ import java.util.TreeSet;
 
 import static org.fulib.classmodel.FileFragmentMap.*;
 
-public class Generator4TableClassFile extends AbstractGenerator
+public class Generator4TableClassFile extends AbstractGenerator4ClassFile
 {
    // =============== Properties ===============
 

@@ -13,7 +13,7 @@ import org.stringtemplate.v4.STGroup;
  * @deprecated since 1.2; TypeScript support is no longer maintained by the Java implementation of Fulib
  */
 @Deprecated
-public class Generator4TypeScriptClassFile extends AbstractGenerator
+public class Generator4TypeScriptClassFile extends AbstractGenerator4ClassFile
 {
    // =============== Properties ===============
 
