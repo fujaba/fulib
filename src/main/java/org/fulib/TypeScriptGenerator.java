@@ -17,35 +17,18 @@ import org.fulib.util.Generator4TypeScriptClassFile;
  * @deprecated since 1.2; TypeScript support is no longer maintained by the Java implementation of Fulib
  */
 @Deprecated
-public class TypeScriptGenerator
+public class TypeScriptGenerator extends AbstractGenerator
 {
    // =============== Constants ===============
 
    private static final String MODEL_FILE_NAME = "typeScriptClassModel.yaml";
 
-   // =============== Fields ===============
-
-   private String customTemplateFile;
-
    // =============== Properties ===============
 
-   public String getCustomTemplateFile()
-   {
-      return this.customTemplateFile;
-   }
-
-   /**
-    * You may overwrite code generation templates within some custom template file. <br>
-    * Provide your templates for code generation as in:
-    *
-    * @param customFileName
-    *    the custom templates file name
-    *
-    * @return this instance, to allow call chaining
-    */
+   @Override
    public TypeScriptGenerator setCustomTemplatesFile(String customFileName)
    {
-      this.customTemplateFile = customFileName;
+      super.setCustomTemplatesFile(customFileName);
       return this;
    }
 
