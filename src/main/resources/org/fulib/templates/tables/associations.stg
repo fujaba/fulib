@@ -1,7 +1,12 @@
-expandMethod(roleName, toMany, className, otherClassName) ::= <<
-   public <otherClassName>Table expand<roleName; format="cap">(String... rowName)
+tableRoleSignatures(role, other) ::= <<
+   expandMethod:  method:expand<role.name; format="cap">(String...)
+   hasMethod:     method:has<role.name; format="cap">(<other.clazz.name>Table)
+>>
+
+expandMethod(role, other) ::= <<
+   public <other.clazz.name>Table expand<role.name; format="cap">(String... rowName)
    {
-      <otherClassName>Table result = new <otherClassName>Table();
+      <other.clazz.name>Table result = new <other.clazz.name>Table();
       result.setColumnMap(this.columnMap);
       result.setTable(this.table);
       int newColumnNumber = this.table.isEmpty() ? 0 : this.table.get(0).size();
@@ -15,9 +20,9 @@ expandMethod(roleName, toMany, className, otherClassName) ::= <<
       this.table.clear();
       for (List\<Object> row : oldTable)
       {
-         <className> start = (<className>) row.get(column);
-         <if(toMany)>
-         for (<otherClassName> current : start.get<roleName; format="cap">())
+         <role.clazz.name> start = (<role.clazz.name>) row.get(column);
+         <if(role.toMany)>
+         for (<other.clazz.name> current : start.get<role.name; format="cap">())
          {
             List\<Object> newRow = new ArrayList\<>(row);
             newRow.add(current);
@@ -25,7 +30,7 @@ expandMethod(roleName, toMany, className, otherClassName) ::= <<
          }
          <else>
          List\<Object> newRow = new ArrayList\<>(row);
-         newRow.add(start.get<roleName; format="cap">());
+         newRow.add(start.get<role.name; format="cap">());
          this.table.add(newRow);
          <endif>
       }
@@ -33,8 +38,8 @@ expandMethod(roleName, toMany, className, otherClassName) ::= <<
    }
 >>
 
-hasMethod(roleName, toMany, className, otherClassName) ::= <<
-   public <className>Table has<roleName; format="cap">(<otherClassName>Table rowName)
+hasMethod(role, other) ::= <<
+   public <role.clazz.name>Table has<role.name; format="cap">(<other.clazz.name>Table rowName)
    {
       int column = this.getColumn();
       int otherColumn = this.columnMap.get(rowName.getColumnName());
@@ -42,12 +47,12 @@ hasMethod(roleName, toMany, className, otherClassName) ::= <<
       this.table.clear();
       for (List\<Object> row : oldTable)
       {
-         <className> start = (<className>) row.get(column);
-         <otherClassName> other = (<otherClassName>) row.get(otherColumn);
-         <if(toMany)>
-         if (start.get<roleName; format="cap">().contains(other))
+         <role.clazz.name> start = (<role.clazz.name>) row.get(column);
+         <other.clazz.name> other = (<other.clazz.name>) row.get(otherColumn);
+         <if(role.toMany)>
+         if (start.get<role.name; format="cap">().contains(other))
          <else>
-         if (start.get<roleName; format="cap">() == other)
+         if (start.get<role.name; format="cap">() == other)
          <endif>
          {
             this.table.add(row);

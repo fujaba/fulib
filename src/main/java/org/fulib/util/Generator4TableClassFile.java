@@ -1,7 +1,6 @@
 package org.fulib.util;
 
 import org.fulib.StrUtil;
-import org.fulib.builder.Type;
 import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.Clazz;
@@ -194,25 +193,8 @@ public class Generator4TableClassFile extends AbstractGenerator4ClassFile
             continue;
          }
 
-         String otherClassName = role.getOther().getClazz().getName();
-
-         // getMethod(roleName,toMany,className,otherClassName) ::=
-         final ST st = group.getInstanceOf("expandMethod");
-         st.add("roleName", role.getName());
-         st.add("toMany", role.getCardinality() != Type.ONE);
-         st.add("className", clazz.getName());
-         st.add("otherClassName", otherClassName);
-         fragmentMap.add(METHOD + ":expand" + StrUtil.cap(role.getName()) + "(String...)", st.render(), METHOD_NEWLINES,
-                         role.getModified());
-
-         // hasMethod(roleName,toMany,className,otherClassName) ::=
-         final ST hasMethod = group.getInstanceOf("hasMethod");
-         hasMethod.add("roleName", role.getName());
-         hasMethod.add("toMany", role.getCardinality() != Type.ONE);
-         hasMethod.add("className", clazz.getName());
-         hasMethod.add("otherClassName", otherClassName);
-         fragmentMap.add(METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)",
-                         hasMethod.render(), METHOD_NEWLINES, role.getModified());
+         this.generateFromSignatures(fragmentMap, group, "tableRoleSignatures", role.getModified(),
+                                     st -> st.add("role", role).add("other", role.getOther()));
       }
    }
 }
