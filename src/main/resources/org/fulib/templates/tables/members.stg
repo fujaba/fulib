@@ -1,0 +1,198 @@
+tableSignatures(class) ::= <<
+   constructor:   constructor:<class.name>Table(<class.name>...)
+   selectColumns: method:selectColumns(String...)
+   dropColumns:   method:dropColumns(String...)
+   addColumn:     method:addColumn(String,Function\<? super Map\<String,Object>,?>)
+   <if(!class.superClass)>
+      filter:     method:filter(Predicate\<? super <class.name>\>)
+   <endif>
+   filterRow:     method:filterRow(Predicate\<? super Map\<String,Object>\>)
+   <if(!class.superClass)>
+      toSet:      method:toSet()
+   <endif>
+   tableToString: method:toString()
+>>
+
+constructor(class) ::= <<
+   public <class.name>Table(<class.name>... start)
+   {
+      this.setColumnName("<class.name>");
+      this.columnMap.put("<class.name>", 0);
+      for (<class.name> current : start)
+      {
+         List\<Object> row = new ArrayList\<>();
+         row.add(current);
+         this.table.add(row);
+      }
+   }
+>>
+
+selectColumns(class) ::= <<
+   public <class.name>Table selectColumns(String... columnNames)
+   {
+      Map\<String, Integer> oldColumnMap = new LinkedHashMap\<>(this.columnMap);
+      this.columnMap.clear();
+
+      for (int i = 0; i \< columnNames.length; i++)
+      {
+         String name = columnNames[i];
+         if (oldColumnMap.get(name) == null)
+         {
+            throw new IllegalArgumentException("unknown column name: " + name);
+         }
+         this.columnMap.put(name, i);
+      }
+
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
+      this.table.clear();
+
+      Set\<List\<Object>\> rowSet = new HashSet\<>();
+      for (List\<Object> row : oldTable)
+      {
+         List\<Object> newRow = new ArrayList\<>();
+         for (String name : columnNames)
+         {
+            Object value = row.get(oldColumnMap.get(name));
+            newRow.add(value);
+         }
+         if (rowSet.add(newRow))
+         {
+            this.table.add(newRow);
+         }
+      }
+
+      return this;
+   }
+>>
+
+dropColumns(class) ::= <<
+   public <class.name>Table dropColumns(String... columnNames)
+   {
+      Map\<String, Integer> oldColumnMap = new LinkedHashMap\<>(this.columnMap);
+      this.columnMap.clear();
+
+      Set\<String> dropNames = new HashSet\<>(Arrays.asList(columnNames));
+      int i = 0;
+      for (String name : oldColumnMap.keySet())
+      {
+         if (!dropNames.contains(name))
+         {
+            this.columnMap.put(name, i);
+            i++;
+         }
+      }
+
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
+      this.table.clear();
+
+      Set\<List\<Object>\> rowSet = new HashSet\<>();
+      for (List\<Object> row : oldTable)
+      {
+         List\<Object> newRow = new ArrayList\<>();
+         for (String name : this.columnMap.keySet())
+         {
+            Object value = row.get(oldColumnMap.get(name));
+            newRow.add(value);
+         }
+         if (rowSet.add(newRow))
+         {
+            this.table.add(newRow);
+         }
+      }
+
+      return this;
+   }
+>>
+
+addColumn(class) ::= <<
+   public void addColumn(String columnName, Function\<? super Map\<String, Object>, ?> function)
+   {
+      int newColumnNumber = this.table.isEmpty() ? 0 : this.table.get(0).size();
+      for (List\<Object> row : this.table)
+      {
+         Map\<String, Object> map = new LinkedHashMap\<>();
+         for (Map.Entry\<String, Integer> entry : this.columnMap.entrySet())
+         {
+            map.put(entry.getKey(), row.get(entry.getValue()));
+         }
+         Object result = function.apply(map);
+         row.add(result);
+      }
+      this.columnMap.put(columnName, newColumnNumber);
+   }
+>>
+
+filter(class) ::= <<
+   public <class.name>Table filter(Predicate\<? super <class.name>\> predicate)
+   {
+      int column = this.getColumn();
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
+      this.table.clear();
+      for (List\<Object> row : oldTable)
+      {
+         <class.name> start = (<class.name>) row.get(column);
+         if (predicate.test(start))
+         {
+            this.table.add(row);
+         }
+      }
+      return this;
+   }
+>>
+
+filterRow(class) ::= <<
+   public <class.name>Table filterRow(Predicate\<? super Map\<String, Object>\> predicate)
+   {
+      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
+      this.table.clear();
+      for (List\<Object> row : oldTable)
+      {
+         Map\<String, Object> map = new LinkedHashMap\<>();
+         for (Map.Entry\<String, Integer> entry : this.columnMap.entrySet())
+         {
+            map.put(entry.getKey(), row.get(entry.getValue()));
+         }
+         if (predicate.test(map))
+         {
+            this.table.add(row);
+         }
+      }
+      return this;
+   }
+>>
+
+toSet(class) ::= <<
+   public Set\<<class.name>\> toSet()
+   {
+      int column = this.getColumn();
+      Set\<<class.name>\> result = new LinkedHashSet\<>(this.table.size());
+      for (List\<?> row : this.table)
+      {
+         <class.name> value = (<class.name>) row.get(column);
+         result.add(value);
+      }
+      return result;
+   }
+>>
+
+tableToString(class) ::= <<
+   public String toString()
+   {
+      StringBuilder buf = new StringBuilder();
+      for (String key : this.columnMap.keySet())
+      {
+         buf.append(key).append(" \t");
+      }
+      buf.append("\n");
+      for (List\<?> row : this.table)
+      {
+         for (Object cell : row)
+         {
+            buf.append(cell).append(" \t");
+         }
+         buf.append("\n");
+      }
+      buf.append("\n");
+      return buf.toString();
+   }
+>>
