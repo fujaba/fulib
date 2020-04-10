@@ -35,7 +35,7 @@ public class Generator4TypeScriptClassFile extends AbstractGenerator
    // =============== Methods ===============
 
    @Override
-   protected String getSourceFileName(Clazz clazz)
+   public String getSourceFileName(Clazz clazz)
    {
       return clazz.getModel().getPackageSrcFolder() + "/" + clazz.getName() + ".ts";
    }
