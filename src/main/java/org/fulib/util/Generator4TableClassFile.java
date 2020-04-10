@@ -143,7 +143,7 @@ public class Generator4TableClassFile extends AbstractGenerator4ClassFile
 
       final Attribute columnMap = new Attribute();
       columnMap.setName("columnMap");
-      columnMap.setType("Map<String, Integer>");
+      columnMap.setType("Map<String,Integer>");
       columnMap.setInitialization("new LinkedHashMap<>()");
       columnMap.setClazz(owner);
       this.generateStandardAttribute(fragmentMap, group, columnMap);
