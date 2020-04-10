@@ -92,17 +92,20 @@ public class Generator
 
       final Map<String, FileFragmentMap> files = new HashMap<>();
 
+      final Generator4ClassFile generator = new Generator4ClassFile().setCustomTemplatesFile(
+         this.getCustomTemplateFile());
+
       if (oldModel != null)
       {
          this.markModifiedElementsInOldModel(oldModel, model);
 
          // remove code of modified elements
-         this.generateClasses(oldModel, files);
+         this.generateClasses(oldModel, files, generator);
 
          this.deleteRemovedClassFiles(oldModel, files);
       }
 
-      this.generateClasses(model, files);
+      this.generateClasses(model, files, generator);
 
       for (final FileFragmentMap fragmentMap : files.values())
       {
@@ -136,11 +139,8 @@ public class Generator
       }
    }
 
-   private void generateClasses(ClassModel model, Map<String, FileFragmentMap> files)
+   private void generateClasses(ClassModel model, Map<String, FileFragmentMap> files, Generator4ClassFile generator)
    {
-      final Generator4ClassFile generator = new Generator4ClassFile()
-         .setCustomTemplatesFile(this.getCustomTemplateFile());
-
       for (Clazz clazz : model.getClasses())
       {
          generator.generate(clazz, files.computeIfAbsent(clazz.getName(),
