@@ -5,13 +5,13 @@ import org.fulib.classmodel.*;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.fulib.classmodel.FileFragmentMap.*;
 
@@ -337,36 +337,30 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      ArrayList<String> nameList = new ArrayList<>();
-      boolean modified = false;
-      for (Attribute attr : clazz.getAttributes())
+      if (clazz.getAttributes().stream().anyMatch(Attribute::getModified))
       {
-         if (attr.getType().equals(Type.STRING))
-         {
-            nameList.add(attr.getName());
-         }
-
-         if (!modified && attr.getModified())
-         {
-            modified = true;
-         }
+         fragmentMap.remove(METHOD + ":toString()");
+         return;
       }
 
-      final String fragment;
+      final List<String> nameList = clazz
+         .getAttributes()
+         .stream()
+         .filter(a -> Type.STRING.equals(a.getType()))
+         .map(Attribute::getName)
+         .collect(Collectors.toList());
+
       if (nameList.isEmpty())
       {
-         fragment = "";
-      }
-      else
-      {
-         final STGroup group = this.getSTGroup("org/fulib/templates/toString.stg");
-         final ST toString = group.getInstanceOf("toString");
-         toString.add("names", nameList);
-         toString.add("superClass", clazz.getSuperClass() != null);
-         fragment = toString.render();
+         fragmentMap.remove(METHOD + ":toString()");
+         return;
       }
 
-      fragmentMap.add(METHOD + ":toString()", fragment, METHOD_NEWLINES, modified);
+      final STGroup group = this.getSTGroup("org/fulib/templates/toString.stg");
+      final ST toString = group.getInstanceOf("toString");
+      toString.add("names", nameList);
+      toString.add("superClass", clazz.getSuperClass() != null);
+      fragmentMap.add(METHOD + ":toString()", toString.render(), METHOD_NEWLINES);
    }
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
