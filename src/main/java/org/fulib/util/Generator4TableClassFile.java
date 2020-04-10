@@ -173,12 +173,8 @@ public class Generator4TableClassFile extends AbstractGenerator4ClassFile
 
       for (Attribute attr : clazz.getAttributes())
       {
-         final ST expandMethod = group.getInstanceOf("expandMethod");
-         expandMethod.add("roleName", attr.getName());
-         expandMethod.add("typeName", attr.getType());
-         expandMethod.add("className", clazz.getName());
-         fragmentMap.add(METHOD + ":expand" + StrUtil.cap(attr.getName()) + "(String...)", expandMethod.render(),
-                         METHOD_NEWLINES, attr.getModified());
+         this.generateFromSignatures(fragmentMap, group, "tableAttributeSignatures", attr.getModified(),
+                                     st -> st.add("attr", attr));
       }
    }
 

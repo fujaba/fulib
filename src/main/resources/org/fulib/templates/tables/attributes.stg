@@ -1,3 +1,7 @@
+tableAttributeSignatures(attr) ::= <<
+   expandMethod: method:expand<attr.name; format="cap">(String...)
+>>
+
 getColumn() ::= <<
    public int getColumn()
    {
@@ -5,10 +9,10 @@ getColumn() ::= <<
    }
 >>
 
-expandMethod(roleName,typeName,className) ::= <<
-   public <typeName>Table expand<roleName; format="cap">(String... rowName)
+expandMethod(attr) ::= <<
+   public <attr.type>Table expand<attr.name; format="cap">(String... rowName)
    {
-      <typeName>Table result = new <typeName>Table();
+      <attr.type>Table result = new <attr.type>Table();
       result.setColumnMap(this.columnMap);
       result.setTable(this.table);
       int newColumnNumber = this.table.isEmpty() ? 0 : this.table.get(0).size();
@@ -21,9 +25,9 @@ expandMethod(roleName,typeName,className) ::= <<
       this.table.clear();
       for (List\<Object> row : oldTable)
       {
-         <className> start = (<className>) row.get(column);
+         <attr.clazz.name> start = (<attr.clazz.name>) row.get(column);
          List\<Object> newRow = new ArrayList\<>(row);
-         newRow.add(start.get<roleName; format="cap">());
+         newRow.add(start.get<attr.name; format="cap">());
          this.table.add(newRow);
       }
       return result;
