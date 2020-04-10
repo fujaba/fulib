@@ -76,10 +76,7 @@ public abstract class AbstractGenerator
       }
    }
 
-   protected String getSourceFileName(Clazz clazz)
-   {
-      return clazz.getSourceFileName();
-   }
+   public abstract String getSourceFileName(Clazz clazz);
 
    /**
     * @since 1.2

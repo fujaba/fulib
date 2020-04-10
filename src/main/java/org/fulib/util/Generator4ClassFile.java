@@ -1,23 +1,15 @@
 package org.fulib.util;
 
-import org.fulib.Generator;
-import org.fulib.StrUtil;
 import org.fulib.builder.Type;
 import org.fulib.classmodel.*;
-import org.fulib.parser.FragmentMapBuilder;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +35,12 @@ public class Generator4ClassFile extends AbstractGenerator
    }
 
    // =============== Methods ===============
+
+   @Override
+   public String getSourceFileName(Clazz clazz)
+   {
+      return clazz.getModel().getPackageSrcFolder() + "/" + clazz.getName() + ".java";
+   }
 
    @Override
    public void generate(Clazz clazz, FileFragmentMap fragmentMap)

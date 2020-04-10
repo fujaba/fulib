@@ -124,7 +124,7 @@ public class Generator
          {
             files.remove(clazz.getName());
 
-            final String classFileName = clazz.getSourceFileName();
+            final String classFileName = clazz.getModel().getPackageSrcFolder() + "/" + clazz.getName() + ".java";
             final Path path = Paths.get(classFileName);
             try
             {
@@ -143,8 +143,9 @@ public class Generator
    {
       for (Clazz clazz : model.getClasses())
       {
-         generator.generate(clazz, files.computeIfAbsent(clazz.getName(),
-                                                         s -> FragmentMapBuilder.parse(clazz.getSourceFileName())));
+         final FileFragmentMap fragmentMap = files.computeIfAbsent(clazz.getName(), s -> FragmentMapBuilder.parse(
+            generator.getSourceFileName(clazz)));
+         generator.generate(clazz, fragmentMap);
       }
    }
 
