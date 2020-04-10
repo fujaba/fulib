@@ -1,8 +1,6 @@
 package org.fulib.util;
 
-import org.fulib.Generator;
 import org.fulib.StrUtil;
-import org.fulib.TypeScriptParser;
 import org.fulib.builder.Type;
 import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
@@ -10,12 +8,6 @@ import org.fulib.classmodel.Clazz;
 import org.fulib.classmodel.FileFragmentMap;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.logging.Logger;
 
 /**
  * @deprecated since 1.2; TypeScript support is no longer maintained by the Java implementation of Fulib
