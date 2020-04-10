@@ -307,10 +307,19 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
          body = body.substring(0, body.length() - 1);
       }
 
-      final String finalBody = body;
-      final STGroup group = this.getSTGroup("org/fulib/templates/method.stg");
-      addOrRemove(fragmentMap, method.getSignature(), METHOD_NEWLINES, method.getModified(),
-                  () -> group.getInstanceOf("method").add("method", method).add("body", finalBody).render());
+      final String signature = method.getSignature();
+      if (method.getModified())
+      {
+         fragmentMap.remove(signature);
+      }
+      else
+      {
+         final STGroup group = this.getSTGroup("org/fulib/templates/method.stg");
+         final ST method1 = group.getInstanceOf("method");
+         method1.add("method", method);
+         method1.add("body", body);
+         fragmentMap.add(signature, method1.render(), METHOD_NEWLINES);
+      }
    }
 
    // --------------- Additional Fragments ---------------
@@ -362,26 +371,17 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      final STGroup group = this.getSTGroup("org/fulib/templates/removeYou.stg");
-      addOrRemove(fragmentMap, METHOD + ":removeYou()", METHOD_NEWLINES, clazz.getModified(), () -> group
-         .getInstanceOf("removeYou")
-         .add("superClass", clazz.getSuperClass() != null)
-         .add("roles", clazz.getRoles().stream().filter(r -> r.getName() != null).toArray())
-         .render());
-   }
-
-   // --------------- Helpers ---------------
-
-   private static void addOrRemove(FileFragmentMap map, String key, int newLines, boolean modified,
-      Supplier<? extends String> template)
-   {
-      if (modified)
+      if (clazz.getModified())
       {
-         map.remove(key);
+         fragmentMap.remove(METHOD + ":removeYou()");
       }
       else
       {
-         map.add(key, template.get(), newLines);
+         final STGroup group = this.getSTGroup("org/fulib/templates/removeYou.stg");
+         final ST removeYou = group.getInstanceOf("removeYou");
+         removeYou.add("superClass", clazz.getSuperClass() != null);
+         removeYou.add("roles", clazz.getRoles().stream().filter(r -> r.getName() != null).toArray());
+         fragmentMap.add(METHOD + ":removeYou()", removeYou.render(), METHOD_NEWLINES);
       }
    }
 }
