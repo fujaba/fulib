@@ -2,6 +2,7 @@ package org.fulib;
 
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
+import org.fulib.util.AbstractGenerator4ClassFile;
 import org.fulib.util.Generator4TableClassFile;
 import org.stringtemplate.v4.AutoIndentWriter;
 import org.stringtemplate.v4.ST;
@@ -39,65 +40,38 @@ public class TablesGenerator extends AbstractGenerator
       return this;
    }
 
-   // =============== Methods ===============
-
-   /**
-    * The fulib TablesGenerator generates Table classes from a class model.
-    * Table classes are used for relational model queries.
-    * <pre>
-    * <!-- insert_code_fragment: Fulib.tablesGenerator-->
-    * ClassModel model = mb.getClassModel();
-    * Fulib.tablesGenerator().generate(model);
-    * <!-- end_code_fragment:  -->
-    * </pre>
-    *
-    * @param model
-    *    the class model
-    */
-   public void generate(ClassModel model)
+   @Override
+   protected String getModelFileName()
    {
-      ClassModel oldModel = Generator.loadClassModel(model.getPackageSrcFolder(), MODEL_FILE_NAME);
-
-      if (oldModel != null)
-      {
-         Fulib.generator().markModifiedElementsInOldModel(oldModel, model);
-
-         // remove code of modfiedElements
-         this.generateClasses(oldModel);
-      }
-
-      this.generateClasses(model);
-
-      Generator.saveNewClassModel(model, MODEL_FILE_NAME);
+      return MODEL_FILE_NAME;
    }
 
-   private void generateClasses(ClassModel model)
+   @Override
+   protected AbstractGenerator4ClassFile createGenerator4ClassFile()
    {
-      // loop through all classes
-      for (Clazz clazz : model.getClasses())
-      {
-         new Generator4TableClassFile().setCustomTemplatesFile(this.getCustomTemplateFile()).generate(clazz);
-      }
+      return new Generator4TableClassFile();
+   }
 
-      // generate primitive tables
-      Generator4TableClassFile generator4TableClassFile = new Generator4TableClassFile()
-         .setCustomTemplatesFile(this.getCustomTemplateFile());
+   // =============== Methods ===============
 
-      this.generatePrimitiveTable(model, generator4TableClassFile, "int", "Integer");
-      this.generatePrimitiveTable(model, generator4TableClassFile, "long", "Long");
-      this.generatePrimitiveTable(model, generator4TableClassFile, "double", "Double");
-      this.generatePrimitiveTable(model, generator4TableClassFile, "float", "Float");
+   @Override
+   protected void generateExtraClasses(ClassModel model, AbstractGenerator4ClassFile generator)
+   {
+      this.generatePrimitiveTable(model, generator, "int", "Integer");
+      this.generatePrimitiveTable(model, generator, "long", "Long");
+      this.generatePrimitiveTable(model, generator, "double", "Double");
+      this.generatePrimitiveTable(model, generator, "float", "Float");
 
-      STGroup group = generator4TableClassFile.getSTGroup("org/fulib/templates/tables/StringTable.stg");
+      STGroup group = generator.getSTGroup("org/fulib/templates/tables/StringTable.stg");
       ST st = group.getInstanceOf("StringTable");
       st.add("packageName", model.getPackageName() + ".tables");
       this.writeToFile(model.getPackageSrcFolder() + "/tables/StringTable.java", st);
    }
 
-   private void generatePrimitiveTable(ClassModel model, Generator4TableClassFile generator4TableClassFile,
-      String primitiveType, String objectType)
+   private void generatePrimitiveTable(ClassModel model, AbstractGenerator4ClassFile generator, String primitiveType,
+      String objectType)
    {
-      STGroup group = generator4TableClassFile.getSTGroup("org/fulib/templates/tables/intTable.stg");
+      STGroup group = generator.getSTGroup("org/fulib/templates/tables/intTable.stg");
       ST st = group.getInstanceOf("intTable");
       st.add("packageName", model.getPackageName() + ".tables");
       st.add("primitiveType", primitiveType);

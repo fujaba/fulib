@@ -1,7 +1,6 @@
 package org.fulib;
 
-import org.fulib.classmodel.ClassModel;
-import org.fulib.classmodel.Clazz;
+import org.fulib.util.AbstractGenerator4ClassFile;
 import org.fulib.util.Generator4TypeScriptClassFile;
 
 /**
@@ -32,37 +31,15 @@ public class TypeScriptGenerator extends AbstractGenerator
       return this;
    }
 
-   // =============== Methods ===============
-
-   /**
-    * The fulib TypeScriptGenerator generates testCompile classes from a class model.
-    *
-    * @param model
-    *    the class model
-    */
-   public void generate(ClassModel model)
+   @Override
+   protected String getModelFileName()
    {
-      ClassModel oldModel = Generator.loadClassModel(model.getPackageSrcFolder(), MODEL_FILE_NAME);
-
-      if (oldModel != null)
-      {
-         Fulib.generator().markModifiedElementsInOldModel(oldModel, model);
-
-         // remove code of modfiedElements
-         this.generateClasses(oldModel);
-      }
-
-      this.generateClasses(model);
-
-      Generator.saveNewClassModel(model, MODEL_FILE_NAME);
+      return MODEL_FILE_NAME;
    }
 
-   private void generateClasses(ClassModel model)
+   @Override
+   protected AbstractGenerator4ClassFile createGenerator4ClassFile()
    {
-      // loop through all classes
-      for (Clazz clazz : model.getClasses())
-      {
-         new Generator4TypeScriptClassFile().setCustomTemplatesFile(this.getCustomTemplateFile()).generate(clazz);
-      }
+      return new Generator4TypeScriptClassFile();
    }
 }
