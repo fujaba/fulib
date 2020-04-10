@@ -1,23 +1,16 @@
 package org.fulib.util;
 
-import org.fulib.Generator;
 import org.fulib.StrUtil;
 import org.fulib.builder.Type;
 import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.Clazz;
 import org.fulib.classmodel.FileFragmentMap;
-import org.fulib.parser.FragmentMapBuilder;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Logger;
 
 import static org.fulib.classmodel.FileFragmentMap.*;
 
@@ -230,9 +223,8 @@ public class Generator4TableClassFile extends AbstractGenerator
          hasMethod.add("toMany", role.getCardinality() != Type.ONE);
          hasMethod.add("className", clazz.getName());
          hasMethod.add("otherClassName", otherClassName);
-         fragmentMap
-            .add(METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)", hasMethod.render(),
-                 METHOD_NEWLINES, role.getModified());
+         fragmentMap.add(METHOD + ":has" + StrUtil.cap(role.getName()) + "(" + otherClassName + "Table)",
+                         hasMethod.render(), METHOD_NEWLINES, role.getModified());
       }
    }
 
@@ -242,8 +234,8 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       final ST selectColumns = group.getInstanceOf("selectColumns");
       selectColumns.add("className", clazz.getName());
-      fragmentMap
-         .add(METHOD + ":selectColumns(String...)", selectColumns.render(), METHOD_NEWLINES, clazz.getModified());
+      fragmentMap.add(METHOD + ":selectColumns(String...)", selectColumns.render(), METHOD_NEWLINES,
+                      clazz.getModified());
 
       final ST dropColumns = group.getInstanceOf("dropColumns");
       dropColumns.add("className", clazz.getName());
@@ -256,9 +248,8 @@ public class Generator4TableClassFile extends AbstractGenerator
 
       final ST addColumn = group.getInstanceOf("addColumn");
       addColumn.add("className", clazz.getName());
-      fragmentMap
-         .add(METHOD + ":addColumn(String,Function<? super Map<String,Object>,?>)", addColumn.render(), METHOD_NEWLINES,
-              clazz.getModified());
+      fragmentMap.add(METHOD + ":addColumn(String,Function<? super Map<String,Object>,?>)", addColumn.render(),
+                      METHOD_NEWLINES, clazz.getModified());
    }
 
    private void generateFilter(Clazz clazz, FileFragmentMap fragmentMap)
@@ -274,8 +265,8 @@ public class Generator4TableClassFile extends AbstractGenerator
       {
          final ST filter = group.getInstanceOf("filter");
          filter.add("className", clazz.getName());
-         fragmentMap
-            .add(METHOD + ":filter(Predicate<? super " + clazz.getName() + ">)", filter.render(), METHOD_NEWLINES);
+         fragmentMap.add(METHOD + ":filter(Predicate<? super " + clazz.getName() + ">)", filter.render(),
+                         METHOD_NEWLINES);
       }
 
       final ST filterRow = group.getInstanceOf("filterRow");
