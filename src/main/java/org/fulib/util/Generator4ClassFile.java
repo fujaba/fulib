@@ -323,24 +323,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       }
 
       final STGroup group = this.getSTGroup("org/fulib/templates/propertyChangeSupport.stg");
-
-      addOrRemove(fragmentMap, ATTRIBUTE + ":listeners", FIELD_NEWLINES, clazz.getModified(),
-                  () -> group.getInstanceOf("listenersField").render());
-
-      addOrRemove(fragmentMap, METHOD + ":firePropertyChange(String,Object,Object)", METHOD_NEWLINES,
-                  clazz.getModified(), () -> group.getInstanceOf("firePropertyChange").render());
-
-      addOrRemove(fragmentMap, METHOD + ":addPropertyChangeListener(PropertyChangeListener)", METHOD_NEWLINES,
-                  clazz.getModified(), () -> group.getInstanceOf("addPropertyChangeListener1").render());
-
-      addOrRemove(fragmentMap, METHOD + ":addPropertyChangeListener(String,PropertyChangeListener)", METHOD_NEWLINES,
-                  clazz.getModified(), () -> group.getInstanceOf("addPropertyChangeListener2").render());
-
-      addOrRemove(fragmentMap, METHOD + ":removePropertyChangeListener(PropertyChangeListener)", METHOD_NEWLINES,
-                  clazz.getModified(), () -> group.getInstanceOf("removePropertyChangeListener1").render());
-
-      addOrRemove(fragmentMap, METHOD + ":removePropertyChangeListener(String,PropertyChangeListener)", METHOD_NEWLINES,
-                  clazz.getModified(), () -> group.getInstanceOf("removePropertyChangeListener2").render());
+      this.generateFromSignatures(fragmentMap, group, "propertyChangeSignatures", clazz.getModified(), st -> {});
    }
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)

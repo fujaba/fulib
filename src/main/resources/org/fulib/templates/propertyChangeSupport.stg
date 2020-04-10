@@ -1,3 +1,12 @@
+propertyChangeSignatures() ::= <<
+   listenersField:                  attribute:listeners
+   firePropertyChange:              method:firePropertyChange(String,Object,Object)
+   addPropertyChangeListener1:      method:addPropertyChangeListener(PropertyChangeListener)
+   addPropertyChangeListener2:      method:addPropertyChangeListener(String,PropertyChangeListener)
+   removePropertyChangeListener1:   method:removePropertyChangeListener(PropertyChangeListener)
+   removePropertyChangeListener2:   method:removePropertyChangeListener(String,PropertyChangeListener)
+>>
+
 listenersField() ::= <<
    protected PropertyChangeSupport listeners;
 >>
