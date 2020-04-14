@@ -257,23 +257,27 @@ public class FileFragmentMap
       {
          final String key = path[i];
          final List<Fragment> children = parent.getChildren();
-         final Fragment lastChild = children.get(children.size() - 1);
 
+         if (children.isEmpty())
+         {
+            parent = new CompoundFragment().setKey(key).setParent(parent);
+            continue;
+         }
+
+         final Fragment lastChild = children.get(children.size() - 1);
          if (!key.equals(lastChild.getKey()))
          {
-            final CompoundFragment newChild = new CompoundFragment();
-            newChild.setKey(key);
-            parent.withChildren(newChild);
-            parent = newChild;
+            parent = new CompoundFragment().setKey(key).setParent(parent);
+            continue;
          }
-         else if (lastChild instanceof CompoundFragment)
+
+         if (lastChild instanceof CompoundFragment)
          {
             parent = (CompoundFragment) lastChild;
+            continue;
          }
-         else
-         {
-            throw illegalAppend(path, i);
-         }
+
+         throw illegalAppend(path, i);
       }
 
       parent.withChildren(fragment);
