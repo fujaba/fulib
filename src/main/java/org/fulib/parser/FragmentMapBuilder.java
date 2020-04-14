@@ -111,6 +111,8 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    public void enterPackageDecl(PackageDeclContext ctx)
    {
       this.addCodeFragment(PACKAGE, ctx);
+      // make sure the import/ section gets created by adding a dummy
+      this.map.append(new CodeFragment().setKey(IMPORT + "/#start").setText(""));
    }
 
    @Override
