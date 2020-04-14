@@ -96,7 +96,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       // if (startPos - this.lastFragmentEndPos > 1)
       {
          final String gapText = this.input.getText(Interval.of(this.lastFragmentEndPos + 1, startPos - 1));
-         final CodeFragment gap = new CodeFragment().setKey(GAP).setText(gapText);
+         final CodeFragment gap = new CodeFragment().setKey(key + "#gap-before").setText(gapText);
          this.map.append(gap);
       }
 
@@ -339,6 +339,6 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    public void exitFile(FileContext ctx)
    {
       // TODO this adds two gaps. Not sure if FileFragmentMap can handle only one, so leaving it at that for now.
-      this.addCodeFragment(GAP, this.lastFragmentEndPos + 1, this.input.size());
+      this.addCodeFragment(EOF, this.lastFragmentEndPos + 1, this.input.size());
    }
 }

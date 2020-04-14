@@ -30,6 +30,7 @@ public class FileFragmentMap
    public static final String CLASS_DECL  = "classDecl";
    public static final String CLASS_END   = "classEnd";
    public static final String GAP         = "gap:";
+   public static final String EOF         = "eof";
 
    public static final int PACKAGE_NEWLINES     = 2;
    public static final int IMPORT_NEWLINES      = 1;
