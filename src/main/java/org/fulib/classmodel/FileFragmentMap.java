@@ -9,10 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -452,58 +449,14 @@ public class FileFragmentMap
 
    private CodeFragment addNew(String key, String newText, int newLines)
    {
-      final CodeFragment gap = this.getNewLineGapFragment(newLines);
       final CodeFragment result = new CodeFragment().setKey(key).setText(newText);
+      final String newLinesStr = String.join("", Collections.nCopies(newLines, "\n"));
+      final CodeFragment gap = new CodeFragment().setKey(key + "#newLines").setText(newLinesStr);
 
-      if (key.startsWith(ATTRIBUTE) || key.startsWith(METHOD) || key.startsWith(CONSTRUCTOR))
-      {
-         this.add(result, CLASS_END);
-         this.add(gap, CLASS_END);
-
-         return result;
-      }
-
-      if (key.startsWith(IMPORT))
-      {
-         this.add(result, CLASS);
-         this.add(gap, CLASS);
-
-         return result;
-      }
-
-      this.add(result);
-      this.add(gap);
+      this.insert(result);
+      this.insert(gap);
 
       return result;
-   }
-
-   private CodeFragment getNewLineGapFragment(int newLines)
-   {
-      CodeFragment gap = new CodeFragment().setKey("gap:");
-
-      StringBuilder text = new StringBuilder();
-      for (int i = 0; i < newLines; i++)
-      {
-         text.append("\n");
-      }
-
-      gap.setText(text.toString());
-      return gap;
-   }
-
-   private void add(CodeFragment newFragment, String before)
-   {
-      final String[] path = this.getPath(before);
-      final Fragment sibling = this.root.getAncestor(path);
-      if (sibling == null)
-      {
-         this.add(newFragment);
-         return;
-      }
-
-      final CompoundFragment parent = sibling.getParent();
-      final int index = parent.getChildren().indexOf(sibling);
-      parent.withChildren(index, newFragment);
    }
 
    // --------------- Post-Processing ---------------
