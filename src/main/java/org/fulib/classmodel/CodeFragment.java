@@ -2,6 +2,8 @@ package org.fulib.classmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Objects;
 
 public class CodeFragment extends Fragment
@@ -47,6 +49,12 @@ public class CodeFragment extends Fragment
    }
 
    // =============== Methods ===============
+
+   @Override
+   public void write(Writer writer) throws IOException
+   {
+      writer.write(this.getText());
+   }
 
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {

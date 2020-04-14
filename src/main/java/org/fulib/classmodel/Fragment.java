@@ -2,6 +2,8 @@ package org.fulib.classmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Objects;
 
 public class Fragment
@@ -66,6 +68,11 @@ public class Fragment
    }
 
    // =============== Methods ===============
+
+   public void write(Writer writer) throws IOException
+   {
+      throw new AbstractMethodError();
+   }
 
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {

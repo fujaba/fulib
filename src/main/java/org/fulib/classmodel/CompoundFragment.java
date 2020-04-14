@@ -2,6 +2,8 @@ package org.fulib.classmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -88,6 +90,15 @@ public class CompoundFragment extends Fragment
    }
 
    // =============== Methods ===============
+
+   @Override
+   public void write(Writer writer) throws IOException
+   {
+      for (final Fragment child : this.children)
+      {
+         child.write(writer);
+      }
+   }
 
    public Fragment getChild(String key)
    {
