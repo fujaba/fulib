@@ -20,6 +20,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    private final FileFragmentMap map;
 
    private int lastFragmentEndPos = -1;
+   private String className;
 
    // =============== Constructors ===============
 
@@ -117,14 +118,17 @@ public class FragmentMapBuilder extends FulibClassBaseListener
          typeName += ".*";
       }
 
-      this.addCodeFragment(FileFragmentMap.IMPORT + ":" + typeName, ctx);
+      this.addCodeFragment(FileFragmentMap.IMPORT + '/' + typeName, ctx);
    }
 
    @Override
    public void enterClassDecl(ClassDeclContext ctx)
    {
-      this.addCodeFragment(FileFragmentMap.CLASS, ctx.getStart().getStartIndex(),
-                           ctx.classMember().classBody().LBRACE().getSymbol().getStopIndex());
+      final ClassMemberContext classMemberCtx = ctx.classMember();
+      this.className = classMemberCtx.IDENTIFIER().getText();
+      this.addCodeFragment(FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.CLASS_DECL,
+                           ctx.getStart().getStartIndex(),
+                           classMemberCtx.classBody().LBRACE().getSymbol().getStopIndex());
    }
 
    @Override
@@ -138,7 +142,9 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       if (size == 1)
       {
          // only one field, straightforward (pass the whole ctx)
-         this.addCodeFragment(FileFragmentMap.ATTRIBUTE + ":" + firstName, memberCtx);
+         this.addCodeFragment(
+            FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.ATTRIBUTE + '/' + firstName,
+            memberCtx);
          return;
       }
 
@@ -155,32 +161,41 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final List<TerminalNode> commas = ctx.COMMA();
 
       // first part includes type and annotations and first comma
-      this.addCodeFragment(FileFragmentMap.ATTRIBUTE + ":" + firstName, memberCtx.getStart(), commas.get(0).getSymbol());
+      this.addCodeFragment(
+         FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.ATTRIBUTE + '/' + firstName,
+         memberCtx.getStart(), commas.get(0).getSymbol());
 
       // all but the first and last part range from name to comma
       for (int i = 1; i < size - 1; i++)
       {
          final FieldNamePartContext namePart = nameParts.get(i);
-         this.addCodeFragment(FileFragmentMap.ATTRIBUTE + ":" + namePart.IDENTIFIER().getText(), namePart.getStart(),
-                              commas.get(i).getSymbol());
+         this.addCodeFragment(
+            FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.ATTRIBUTE + '/' + namePart
+               .IDENTIFIER()
+               .getText(), namePart.getStart(), commas.get(i).getSymbol());
       }
 
       // last part includes semicolon
       final FieldNamePartContext lastPart = nameParts.get(size - 1);
-      this.addCodeFragment(FileFragmentMap.ATTRIBUTE + ":" + lastPart.IDENTIFIER().getText(), lastPart.getStart(),
-                           memberCtx.getStop());
+      this.addCodeFragment(
+         FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.ATTRIBUTE + '/' + lastPart
+            .IDENTIFIER()
+            .getText(), lastPart.getStart(), memberCtx.getStop());
    }
 
    @Override
    public void enterConstructorMember(ConstructorMemberContext ctx)
    {
       final MemberContext memberCtx = (MemberContext) ctx.parent;
-      final String className = ctx.IDENTIFIER().getText();
 
       final StringBuilder signature = new StringBuilder();
+      signature.append(FileFragmentMap.CLASS);
+      signature.append('/');
+      signature.append(this.className);
+      signature.append('/');
       signature.append(FileFragmentMap.CONSTRUCTOR);
-      signature.append(':');
-      signature.append(className);
+      signature.append('/');
+      signature.append(this.className);
       writeParams(signature, ctx.parameterList());
 
       this.addCodeFragment(signature.toString(), memberCtx);
@@ -193,8 +208,13 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final String methodName = ctx.IDENTIFIER().getText();
 
       final StringBuilder signature = new StringBuilder();
+
+      signature.append(FileFragmentMap.CLASS);
+      signature.append('/');
+      signature.append(this.className);
+      signature.append('/');
       signature.append(FileFragmentMap.METHOD);
-      signature.append(':');
+      signature.append('/');
       signature.append(methodName);
       writeParams(signature, ctx.parameterList());
 
@@ -316,7 +336,8 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    @Override
    public void exitClassDecl(ClassDeclContext ctx)
    {
-      this.addCodeFragment(FileFragmentMap.CLASS_END, ctx.classMember().classBody().RBRACE());
+      this.addCodeFragment(FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.CLASS_END,
+                           ctx.classMember().classBody().RBRACE());
    }
 
    @Override

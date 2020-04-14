@@ -29,6 +29,7 @@ public class FileFragmentMap
    public static final String METHOD      = "method";
    public static final String IMPORT      = "import";
    public static final String CLASS_BODY  = "classBody";
+   public static final String CLASS_DECL  = "classDecl";
    public static final String CLASS_END   = "classEnd";
    public static final String GAP         = "gap:";
 
