@@ -107,6 +107,10 @@ public class CompoundFragment extends Fragment
    @Override
    public void write(Writer writer) throws IOException
    {
+      if (this.children == null)
+      {
+         return;
+      }
       for (final Fragment child : this.children)
       {
          child.write(writer);
@@ -115,6 +119,10 @@ public class CompoundFragment extends Fragment
 
    public Fragment getChild(String key)
    {
+      if (this.children == null)
+      {
+         return null;
+      }
       for (final Fragment child : this.children)
       {
          if (key.equals(child.getKey()))
