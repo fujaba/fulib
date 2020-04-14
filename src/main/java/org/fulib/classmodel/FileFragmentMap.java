@@ -123,6 +123,16 @@ public class FileFragmentMap
       return key.split("/");
    }
 
+   private String[] getParentKeys(String fullKey)
+   {
+      final List<String> result = new ArrayList<>();
+      for (int i = fullKey.indexOf('/'); 0 <= i && i < fullKey.length(); i = fullKey.indexOf('/', i + 1))
+      {
+         result.add(fullKey.substring(0, i));
+      }
+      return result.toArray(new String[0]);
+   }
+
    public boolean isClassBodyEmpty()
    {
       final AtomicBoolean inClassBody = new AtomicBoolean();
@@ -253,76 +263,58 @@ public class FileFragmentMap
 
    public void append(CodeFragment fragment)
    {
-      final String[] path = this.getPath(fragment.getKey());
-      CompoundFragment parent = this.root;
+      final String fullKey = fragment.getKey();
+      CompoundFragment next = this.root;
 
-      for (int i = 0; i < path.length - 1; i++)
+      for (final String subKey : this.getParentKeys(fullKey))
       {
-         final String key = path[i];
-         final List<Fragment> children = parent.getChildren();
+         final List<Fragment> children = next.getChildren();
 
          if (children.isEmpty())
          {
-            parent = createCompoundFragment(parent, path, i);
+            next = new CompoundFragment().setKey(subKey).setParent(next);
             continue;
          }
 
          final Fragment lastChild = children.get(children.size() - 1);
-         if (!key.equals(lastChild.getKey()))
+         if (!subKey.equals(lastChild.getKey()))
          {
-            parent = createCompoundFragment(parent, path, i);
+            next = new CompoundFragment().setKey(subKey).setParent(next);
             continue;
          }
 
          if (lastChild instanceof CompoundFragment)
          {
-            parent = (CompoundFragment) lastChild;
+            next = (CompoundFragment) lastChild;
             continue;
          }
 
-         throw illegalAppend(path, i);
+         throw new IllegalStateException(
+            String.format("cannot add child '%s' as '%s' is not a compound fragment", fullKey, subKey));
       }
 
-      parent.withChildren(fragment);
-   }
-
-   private static CompoundFragment createCompoundFragment(CompoundFragment parent, String[] path, int index)
-   {
-      final String key = Arrays.stream(path, 0, index + 1).collect(Collectors.joining("/"));
-      return new CompoundFragment().setKey(key).setParent(parent);
-   }
-
-   private static IllegalStateException illegalAppend(String[] path, int index)
-   {
-      final String fullPath = String.join("/", path);
-      final String errorPath = Arrays.stream(path, 0, index + 1).collect(Collectors.joining("/"));
-      throw new IllegalStateException(
-         String.format("cannot add child '%s' as '%s' is not a compound fragment", fullPath, errorPath));
+      next.withChildren(fragment);
    }
 
    public void insert(CodeFragment fragment)
    {
-      final String[] path = this.getPath(fragment.getKey());
-
       CompoundFragment parent = this.root;
-      for (int i = 0; i < path.length - 1; i++)
+      final String fullKey = fragment.getKey();
+      for (final String subKey : this.getParentKeys(fullKey))
       {
-         final String key = path[i];
-         final Fragment child = parent.getChild(key);
-         if (child == null)
+         final Fragment next = parent.getChildWithKey(subKey);
+         if (next == null)
          {
-            final CompoundFragment newChild = new CompoundFragment();
-            newChild.setKey(key);
-            parent.withChildren(newChild);
-            parent = newChild;
+            parent = new CompoundFragment().setKey(subKey).setParent(parent);
          }
-         else if (child instanceof CompoundFragment)
+         else if (next instanceof CompoundFragment)
          {
-            parent = (CompoundFragment) child;
+            parent = (CompoundFragment) next;
          }
          else
          {
-            throw illegalAppend(path, i);
+            throw new IllegalStateException(
+               String.format("cannot add child '%s' as '%s' is not a compound fragment", fullKey, subKey));
          }
       }
 
