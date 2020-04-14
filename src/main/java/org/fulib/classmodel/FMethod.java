@@ -196,7 +196,8 @@ public class FMethod
    {
       String paramTypes = this.getParams().entrySet().stream().filter(e -> !"this".equals(e.getKey()))
                               .map(Map.Entry::getValue).collect(Collectors.joining(","));
-      return FileFragmentMap.METHOD + ":" + this.getName() + "(" + paramTypes + ")";
+      return FileFragmentMap.CLASS + '/' + this.getClazz().getName() + '/' + FileFragmentMap.METHOD + '/'
+             + this.getName() + '(' + paramTypes + ')';
    }
 
    public String getReturnType()

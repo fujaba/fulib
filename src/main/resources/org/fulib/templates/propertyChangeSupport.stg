@@ -1,17 +1,17 @@
-propertyChangeSignatures() ::= <<
-   listenersField:                  attribute:listeners
-   firePropertyChange:              method:firePropertyChange(String,Object,Object)
-   addPropertyChangeListener1:      method:addPropertyChangeListener(PropertyChangeListener)
-   addPropertyChangeListener2:      method:addPropertyChangeListener(String,PropertyChangeListener)
-   removePropertyChangeListener1:   method:removePropertyChangeListener(PropertyChangeListener)
-   removePropertyChangeListener2:   method:removePropertyChangeListener(String,PropertyChangeListener)
+propertyChangeSignatures(clazz) ::= <<
+   listenersField:                  class/<clazz.name>/attribute/listeners
+   firePropertyChange:              class/<clazz.name>/method/firePropertyChange(String,Object,Object)
+   addPropertyChangeListener1:      class/<clazz.name>/method/addPropertyChangeListener(PropertyChangeListener)
+   addPropertyChangeListener2:      class/<clazz.name>/method/addPropertyChangeListener(String,PropertyChangeListener)
+   removePropertyChangeListener1:   class/<clazz.name>/method/removePropertyChangeListener(PropertyChangeListener)
+   removePropertyChangeListener2:   class/<clazz.name>/method/removePropertyChangeListener(String,PropertyChangeListener)
 >>
 
-listenersField() ::= <<
+listenersField(class) ::= <<
    protected PropertyChangeSupport listeners;
 >>
 
-addPropertyChangeListener1() ::= <<
+addPropertyChangeListener1(clazz) ::= <<
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {
       if (this.listeners == null)
@@ -23,7 +23,7 @@ addPropertyChangeListener1() ::= <<
    }
 >>
 
-addPropertyChangeListener2() ::= <<
+addPropertyChangeListener2(clazz) ::= <<
    public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
       if (this.listeners == null)
@@ -35,7 +35,7 @@ addPropertyChangeListener2() ::= <<
    }
 >>
 
-removePropertyChangeListener1() ::= <<
+removePropertyChangeListener1(clazz) ::= <<
    public boolean removePropertyChangeListener(PropertyChangeListener listener)
    {
       if (this.listeners != null)
@@ -46,7 +46,7 @@ removePropertyChangeListener1() ::= <<
    }
 >>
 
-removePropertyChangeListener2() ::= <<
+removePropertyChangeListener2(clazz) ::= <<
    public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
    {
       if (this.listeners != null)
@@ -57,7 +57,7 @@ removePropertyChangeListener2() ::= <<
    }
 >>
 
-firePropertyChange() ::= <<
+firePropertyChange(clazz) ::= <<
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {
       if (this.listeners != null)

@@ -56,7 +56,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
       this.generateRemoveYou(clazz, fragmentMap);
 
-      fragmentMap.add(CLASS_END, "}", CLASS_END_NEWLINES);
+      fragmentMap.add(CLASS + '/' + clazz.getName() + '/' + CLASS_END, "}", CLASS_END_NEWLINES);
 
       this.generateImports(clazz, fragmentMap);
    }
@@ -118,7 +118,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       {
          final ST importDecl = group.getInstanceOf("importDecl");
          importDecl.add("qualifiedName", qualifiedName);
-         fragmentMap.add(IMPORT + ":" + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
+         fragmentMap.add(IMPORT + '/' + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
       }
 
       for (final String qualifiedName : staticImports)
@@ -126,7 +126,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
          final ST importDecl = group.getInstanceOf("importDecl");
          importDecl.add("qualifiedName", qualifiedName);
          importDecl.add("static", true);
-         fragmentMap.add(IMPORT + ":" + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
+         fragmentMap.add(IMPORT + '/' + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
       }
    }
 
@@ -196,7 +196,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       final ST classDecl = group.getInstanceOf("classDecl");
       classDecl.add("name", clazz.getName());
       classDecl.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() : null);
-      fragmentMap.add(CLASS, classDecl.render(), CLASS_NEWLINES);
+      fragmentMap.add(CLASS + '/' + clazz.getName() + '/' + CLASS_DECL, classDecl.render(), CLASS_NEWLINES);
    }
 
    // --------------- Attributes ---------------
@@ -294,14 +294,16 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       }
 
       final STGroup group = this.getSTGroup("org/fulib/templates/propertyChangeSupport.stg");
-      this.generateFromSignatures(fragmentMap, group, "propertyChangeSignatures", clazz.getModified(), st -> {});
+      this.generateFromSignatures(fragmentMap, group, "propertyChangeSignatures", clazz.getModified(),
+                                  st -> st.add("clazz", clazz));
    }
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
    {
+      final String key = CLASS + '/' + clazz.getName() + '/' + METHOD + "/toString()";
       if (clazz.getAttributes().stream().anyMatch(Attribute::getModified))
       {
-         fragmentMap.remove(METHOD + ":toString()");
+         fragmentMap.remove(key);
          return;
       }
 
@@ -314,7 +316,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
       if (nameList.isEmpty())
       {
-         fragmentMap.remove(METHOD + ":toString()");
+         fragmentMap.remove(key);
          return;
       }
 
@@ -322,14 +324,15 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       final ST toString = group.getInstanceOf("toString");
       toString.add("names", nameList);
       toString.add("superClass", clazz.getSuperClass() != null);
-      fragmentMap.add(METHOD + ":toString()", toString.render(), METHOD_NEWLINES);
+      fragmentMap.add(key, toString.render(), METHOD_NEWLINES);
    }
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
    {
+      final String key = CLASS + '/' + clazz.getName() + '/' + METHOD + "/removeYou()";
       if (clazz.getModified())
       {
-         fragmentMap.remove(METHOD + ":removeYou()");
+         fragmentMap.remove(key);
       }
       else
       {
@@ -337,7 +340,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
          final ST removeYou = group.getInstanceOf("removeYou");
          removeYou.add("superClass", clazz.getSuperClass() != null);
          removeYou.add("roles", clazz.getRoles().stream().filter(r -> r.getName() != null).toArray());
-         fragmentMap.add(METHOD + ":removeYou()", removeYou.render(), METHOD_NEWLINES);
+         fragmentMap.add(key, removeYou.render(), METHOD_NEWLINES);
       }
    }
 }
