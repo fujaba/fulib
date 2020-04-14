@@ -41,24 +41,17 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
    public void generate(Clazz clazz, FileFragmentMap fragmentMap)
    {
       this.generatePackageDecl(clazz, fragmentMap);
-
+      this.generateImports(clazz, fragmentMap);
       this.generateClassDecl(clazz, fragmentMap);
 
       this.generateAttributes(clazz, fragmentMap);
-
       this.generateAssociations(clazz, fragmentMap);
-
       this.generateMethods(clazz, fragmentMap);
-
       this.generatePropertyChangeSupport(clazz, fragmentMap);
-
       this.generateToString(clazz, fragmentMap);
-
       this.generateRemoveYou(clazz, fragmentMap);
 
       fragmentMap.add(CLASS + '/' + clazz.getName() + '/' + CLASS_END, "}", CLASS_END_NEWLINES);
-
-      this.generateImports(clazz, fragmentMap);
    }
 
    // --------------- Declarations ---------------
