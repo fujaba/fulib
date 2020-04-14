@@ -3,15 +3,20 @@ package org.fulib.classmodel;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FileFragmentMap
 {
@@ -43,16 +48,14 @@ public class FileFragmentMap
 
    private String fileName;
 
-   private ArrayList<CodeFragment> fragmentList = new ArrayList<>();
-
-   private LinkedHashMap<String, CodeFragment> codeMap = new LinkedHashMap<>();
+   private CompoundFragment root;
 
    // =============== Constructors ===============
 
    public FileFragmentMap()
    {
-      CodeFragment startFragment = new CodeFragment().setKey("start:").setText("");
-      this.fragmentList.add(startFragment);
+      this.root = new CompoundFragment();
+      this.root.setKey("root");
    }
 
    public FileFragmentMap(String fileName)
@@ -80,38 +83,59 @@ public class FileFragmentMap
       return this;
    }
 
-   public List<CodeFragment> getFragments()
+   public Stream<CodeFragment> codeFragments()
    {
-      return Collections.unmodifiableList(this.fragmentList);
+      return codeFragments(this.root);
    }
 
    @Deprecated
    public ArrayList<CodeFragment> getFragmentList()
    {
-      return this.fragmentList;
+      return this.codeFragments().collect(Collectors.toCollection(ArrayList::new));
+   }
+
+   private static Stream<CodeFragment> codeFragments(Fragment fragment)
+   {
+      if (fragment instanceof CodeFragment)
+      {
+         return Stream.of((CodeFragment) fragment);
+      }
+      else if (fragment instanceof CompoundFragment)
+      {
+         return ((CompoundFragment) fragment).getChildren().stream().flatMap(FileFragmentMap::codeFragments);
+      }
+      else
+      {
+         throw new AssertionError("cannot handle " + fragment.getClass().getName());
+      }
    }
 
    public CodeFragment getFragment(String key)
    {
-      return this.codeMap.get(key);
+      // TODO paths separated by /
+      final Fragment ancestor = this.root.getChild(key);
+      return ancestor instanceof CodeFragment ? (CodeFragment) ancestor : null;
    }
 
    public boolean isClassBodyEmpty()
    {
-      final CodeFragment startFragment = this.codeMap.get(CLASS);
-      final CodeFragment endFragment = this.codeMap.get(CLASS_END);
+      // TODO inefficient
+      final CodeFragment startFragment = this.getFragment(CLASS);
+      final CodeFragment endFragment = this.getFragment(CLASS_END);
 
       if (startFragment == null || endFragment == null)
       {
          return true;
       }
 
-      final int startPos = this.fragmentList.indexOf(startFragment) + 1;
-      final int endPos = this.fragmentList.lastIndexOf(endFragment);
+      final List<CodeFragment> fragmentList = this.getFragmentList();
+
+      final int startPos = fragmentList.indexOf(startFragment) + 1;
+      final int endPos = fragmentList.lastIndexOf(endFragment);
 
       for (int i = startPos; i < endPos; i++)
       {
-         CodeFragment fragment = this.fragmentList.get(i);
+         final CodeFragment fragment = fragmentList.get(i);
          if (!Objects.equals(fragment.getKey(), GAP))
          {
             return false;
@@ -208,26 +232,27 @@ public class FileFragmentMap
 
    public void add(CodeFragment fragment)
    {
-      this.fragmentList.add(fragment);
-      this.codeMap.put(fragment.getKey(), fragment);
+      // TODO does not support nested fragments
+      this.root.withChildren(fragment);
    }
 
    public void remove(CodeFragment fragment)
    {
-      final int pos = this.fragmentList.indexOf(fragment);
+      // TODO does not supported nested fragments
+      final List<Fragment> rootChildren = this.root.getChildren();
+      final int pos = rootChildren.indexOf(fragment);
       if (pos < 0)
       {
          return;
       }
 
-      this.fragmentList.remove(pos);
-      this.codeMap.remove(fragment.getKey());
-
-      final CodeFragment gap = this.fragmentList.get(pos - 1);
+      final Fragment gap = rootChildren.get(pos - 1);
       if (Objects.equals(gap.getKey(), GAP))
       {
-         this.fragmentList.remove(pos - 1);
+         this.root.withoutChildren(gap);
       }
+
+      this.root.withoutChildren(rootChildren);
    }
 
    // --------------- Smart Modification ---------------
@@ -292,7 +317,7 @@ public class FileFragmentMap
 
    private CodeFragment replace(String key, String newText, int newLines)
    {
-      CodeFragment old = this.codeMap.get(key);
+      CodeFragment old = this.getFragment(key);
       if (old == null)
       {
          if (newText == null)
@@ -341,7 +366,6 @@ public class FileFragmentMap
    {
       final CodeFragment gap = this.getNewLineGapFragment(newLines);
       final CodeFragment result = new CodeFragment().setKey(key).setText(newText);
-      this.codeMap.put(key, result);
 
       if (key.startsWith(ATTRIBUTE) || key.startsWith(METHOD) || key.startsWith(CONSTRUCTOR))
       {
@@ -381,52 +405,53 @@ public class FileFragmentMap
 
    private void add(CodeFragment result, String posKey)
    {
-      final CodeFragment oldFragment = this.codeMap.get(posKey);
-      final int pos;
-      if (oldFragment == null || (pos = this.fragmentList.indexOf(oldFragment)) < 0)
+      // TODO does not support nested fragments
+      final Fragment child = this.root.getChild(posKey);
+      if (child == null)
       {
-         this.fragmentList.add(result);
+         this.add(result);
+         return;
       }
-      else
-      {
-         this.fragmentList.add(pos, result);
-      }
+
+      final CompoundFragment parent = child.getParent();
+      final int index = parent.getChildren().indexOf(child);
+      parent.withChildren(index, result);
    }
 
    // --------------- Post-Processing ---------------
 
    public void compressBlankLines()
    {
-      int noOfBlankLines = 0;
+      final AtomicInteger noOfBlankLines = new AtomicInteger();
 
-      for (CodeFragment firstFragment : this.fragmentList)
-      {
-         if (!firstFragment.getText().matches("\\s*"))
+      this.codeFragments().forEach(firstFragment -> {
+         final String text = firstFragment.getText();
+         if (!text.matches("\\s*"))
          {
-            noOfBlankLines = 0;
-            continue;
+            noOfBlankLines.set(0);
+            return;
          }
 
-         for (int pos = firstFragment.getText().length() - 1; pos >= 0; pos--)
+         for (int pos = text.length() - 1; pos >= 0; pos--)
          {
-            if (firstFragment.getText().charAt(pos) != '\n')
+            if (text.charAt(pos) != '\n')
             {
                continue;
             }
 
-            noOfBlankLines++;
-            if (noOfBlankLines == 2)
+            noOfBlankLines.getAndIncrement();
+            if (noOfBlankLines.get() == 2)
             {
-               firstFragment.setText(firstFragment.getText().substring(pos));
+               firstFragment.setText(text.substring(pos));
                break;
             }
-            if (noOfBlankLines > 2)
+            if (noOfBlankLines.get() > 2)
             {
-               firstFragment.setText(firstFragment.getText().substring(pos + 1));
+               firstFragment.setText(text.substring(pos + 1));
                break;
             }
          }
-      }
+      });
    }
 
    // --------------- Output ---------------
@@ -453,10 +478,7 @@ public class FileFragmentMap
 
    public void write(Writer writer) throws IOException
    {
-      for (final CodeFragment fragment : this.fragmentList)
-      {
-         writer.write(fragment.getText());
-      }
+      this.root.write(writer);
    }
 
    // --------------- Property Change Support ---------------
@@ -518,12 +540,14 @@ public class FileFragmentMap
    @Override // no fulib
    public String toString()
    {
-      final StringBuilder result = new StringBuilder();
+      final StringWriter result = new StringWriter();
 
-      result.append(this.getFileName()).append('\n');
-      for (final CodeFragment fragment : this.fragmentList)
+      try
       {
-         result.append(fragment.getText());
+         this.write(result);
+      }
+      catch (IOException ignored)
+      {
       }
 
       return result.toString();
