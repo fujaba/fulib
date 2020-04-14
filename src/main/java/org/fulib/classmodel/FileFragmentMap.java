@@ -61,6 +61,7 @@ public class FileFragmentMap
 
    public FileFragmentMap(String fileName)
    {
+      this();
       this.setFileName(fileName);
    }
 
