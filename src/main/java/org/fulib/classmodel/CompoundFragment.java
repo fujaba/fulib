@@ -89,6 +89,35 @@ public class CompoundFragment extends Fragment
 
    // =============== Methods ===============
 
+   public Fragment getChild(String key)
+   {
+      for (final Fragment child : this.children)
+      {
+         if (key.equals(child.getKey()))
+         {
+            return child;
+         }
+      }
+      return null;
+   }
+
+   public Fragment getAncestor(String... path)
+   {
+      Fragment ctx = this;
+      for (final String key : path)
+      {
+         if (ctx instanceof CompoundFragment)
+         {
+            ctx = ((CompoundFragment) ctx).getChild(key);
+         }
+         else
+         {
+            return null;
+         }
+      }
+      return ctx;
+   }
+
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {
       if (this.listeners != null)
