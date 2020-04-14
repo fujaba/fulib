@@ -21,6 +21,20 @@ public class CompoundFragment extends Fragment
 
    // =============== Properties ===============
 
+   @Override
+   public CompoundFragment setKey(String value)
+   {
+      super.setKey(value);
+      return this;
+   }
+
+   @Override
+   public CompoundFragment setParent(CompoundFragment value)
+   {
+      super.setParent(value);
+      return this;
+   }
+
    public List<Fragment> getChildren()
    {
       return this.children != null ? Collections.unmodifiableList(this.children) : Collections.emptyList();
