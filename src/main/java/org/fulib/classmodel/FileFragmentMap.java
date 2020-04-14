@@ -329,20 +329,13 @@ public class FileFragmentMap
          return;
       }
 
-      final List<Fragment> children = parent.getChildren();
-      final int pos = children.indexOf(fragment);
-      if (pos < 0)
+      final Fragment gapBefore = parent.getChild(fragment.getKey() + "#gap-before");
+      if (gapBefore != null)
       {
-         return;
+         this.root.withoutChildren(gapBefore);
       }
 
-      final Fragment gap = children.get(pos - 1);
-      if (GAP.equals(gap.getKey()))
-      {
-         this.root.withoutChildren(gap);
-      }
-
-      this.root.withoutChildren(children);
+      this.root.withoutChildren(fragment);
    }
 
    // --------------- Smart Modification ---------------
