@@ -97,12 +97,12 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       {
          final String gapText = this.input.getText(Interval.of(this.lastFragmentEndPos + 1, startPos - 1));
          final CodeFragment gap = new CodeFragment().setKey(GAP).setText(gapText);
-         this.map.add(gap);
+         this.map.append(gap);
       }
 
       final String text = this.input.getText(pos);
       final CodeFragment codeFragment = new CodeFragment().setKey(key).setText(text);
-      this.map.add(codeFragment);
+      this.map.append(codeFragment);
 
       this.lastFragmentEndPos = endPos;
    }
