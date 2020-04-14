@@ -133,35 +133,6 @@ public class CompoundFragment extends Fragment
       return null;
    }
 
-   public CompoundFragment getOrCreateParent(String... path)
-   {
-      CompoundFragment parent = this;
-      for (int i = 0; i < path.length - 1; i++)
-      {
-         final String key = path[i];
-         final Fragment child = parent.getChild(key);
-         if (child == null)
-         {
-            final CompoundFragment newChild = new CompoundFragment();
-            newChild.setKey(key);
-            parent.withChildren(newChild);
-            parent = newChild;
-         }
-         else if (child instanceof CompoundFragment)
-         {
-            parent = (CompoundFragment) child;
-         }
-         else
-         {
-            final String fullPath = String.join("/", path);
-            final String errorPath = Arrays.stream(path, 0, i + 1).collect(Collectors.joining("/"));
-            throw new IllegalStateException(
-               String.format("cannot add child '%s' as '%s' is not a compound fragment", fullPath, errorPath));
-         }
-      }
-      return parent;
-   }
-
    public Fragment getAncestor(String... path)
    {
       Fragment ctx = this;

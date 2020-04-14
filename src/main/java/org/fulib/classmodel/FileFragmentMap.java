@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -237,10 +238,84 @@ public class FileFragmentMap
 
    // --------------- Raw Modification ---------------
 
+   /**
+    * @see #append(CodeFragment)
+    *
+    * @deprecated since 1.2; this method is ambiguous.
+    * Use {@link #append(CodeFragment)} to add a fragment to the end,
+    * or {@link #insert(CodeFragment)} to intelligently insert it in a fitting place.
+    */
+   @Deprecated
    public void add(CodeFragment fragment)
    {
+      this.append(fragment);
+   }
+
+   public void append(CodeFragment fragment)
+   {
       final String[] path = this.getPath(fragment.getKey());
-      final CompoundFragment parent = this.root.getOrCreateParent(path);
+      CompoundFragment parent = this.root;
+
+      for (int i = 0; i < path.length - 1; i++)
+      {
+         final String key = path[i];
+         final List<Fragment> children = parent.getChildren();
+         final Fragment lastChild = children.get(children.size() - 1);
+
+         if (!key.equals(lastChild.getKey()))
+         {
+            final CompoundFragment newChild = new CompoundFragment();
+            newChild.setKey(key);
+            parent.withChildren(newChild);
+            parent = newChild;
+         }
+         else if (lastChild instanceof CompoundFragment)
+         {
+            parent = (CompoundFragment) lastChild;
+         }
+         else
+         {
+            throw illegalAppend(path, i);
+         }
+      }
+
+      parent.withChildren(fragment);
+   }
+
+   private static IllegalStateException illegalAppend(String[] path, int index)
+   {
+      final String fullPath = String.join("/", path);
+      final String errorPath = Arrays.stream(path, 0, index + 1).collect(Collectors.joining("/"));
+      throw new IllegalStateException(
+         String.format("cannot add child '%s' as '%s' is not a compound fragment", fullPath, errorPath));
+   }
+
+   public void insert(CodeFragment fragment)
+   {
+      final String[] path = this.getPath(fragment.getKey());
+
+      CompoundFragment parent = this.root;
+      for (int i = 0; i < path.length - 1; i++)
+      {
+         final String key = path[i];
+         final Fragment child = parent.getChild(key);
+         if (child == null)
+         {
+            final CompoundFragment newChild = new CompoundFragment();
+            newChild.setKey(key);
+            parent.withChildren(newChild);
+            parent = newChild;
+         }
+         else if (child instanceof CompoundFragment)
+         {
+            parent = (CompoundFragment) child;
+         }
+         else
+         {
+            throw illegalAppend(path, i);
+         }
+      }
+
       parent.withChildren(fragment);
    }
 
