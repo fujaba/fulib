@@ -6,11 +6,10 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.fulib.classmodel.CodeFragment;
 import org.fulib.classmodel.FileFragmentMap;
+import org.fulib.parser.FulibClassParser.*;
 
 import java.io.IOException;
 import java.util.List;
-
-import static org.fulib.parser.FulibClassParser.*;
 
 public class FragmentMapBuilder extends FulibClassBaseListener
 {
