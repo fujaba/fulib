@@ -7,7 +7,7 @@ propertyChangeSignatures(clazz) ::= <<
    removePropertyChangeListener2:   class/<clazz.name>/method/removePropertyChangeListener(String,PropertyChangeListener)
 >>
 
-listenersField(class) ::= <<
+listenersField(clazz) ::= <<
    protected PropertyChangeSupport listeners;
 >>
 
