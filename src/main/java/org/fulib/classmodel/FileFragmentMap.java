@@ -264,14 +264,14 @@ public class FileFragmentMap
 
          if (children.isEmpty())
          {
-            parent = new CompoundFragment().setKey(key).setParent(parent);
+            parent = createCompoundFragment(parent, path, i);
             continue;
          }
 
          final Fragment lastChild = children.get(children.size() - 1);
          if (!key.equals(lastChild.getKey()))
          {
-            parent = new CompoundFragment().setKey(key).setParent(parent);
+            parent = createCompoundFragment(parent, path, i);
             continue;
          }
 
@@ -285,6 +285,12 @@ public class FileFragmentMap
       }
 
       parent.withChildren(fragment);
+   }
+
+   private static CompoundFragment createCompoundFragment(CompoundFragment parent, String[] path, int index)
+   {
+      final String key = Arrays.stream(path, 0, index + 1).collect(Collectors.joining("/"));
+      return new CompoundFragment().setKey(key).setParent(parent);
    }
 
    private static IllegalStateException illegalAppend(String[] path, int index)
