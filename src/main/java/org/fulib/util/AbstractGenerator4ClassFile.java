@@ -155,7 +155,7 @@ public abstract class AbstractGenerator4ClassFile
          else
          {
             final String templateName = matcher.group(1);
-            final int newLines = signature.startsWith("attribute:") ? FIELD_NEWLINES : METHOD_NEWLINES;
+            final int newLines = signature.contains("/attribute/") ? FIELD_NEWLINES : METHOD_NEWLINES;
             final ST namedST = group.getInstanceOf(templateName);
             addTarget.accept(namedST);
             fragmentMap.add(signature, namedST.render(), newLines);
