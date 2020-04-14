@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -125,30 +126,32 @@ public class FileFragmentMap
 
    public boolean isClassBodyEmpty()
    {
-      // TODO inefficient
-      final CodeFragment startFragment = this.getFragment(CLASS);
-      final CodeFragment endFragment = this.getFragment(CLASS_END);
+      final AtomicBoolean inClassBody = new AtomicBoolean();
+      final AtomicBoolean foundContent = new AtomicBoolean();
 
-      if (startFragment == null || endFragment == null)
-      {
-         return true;
-      }
-
-      final List<CodeFragment> fragmentList = this.getFragmentList();
-
-      final int startPos = fragmentList.indexOf(startFragment) + 1;
-      final int endPos = fragmentList.lastIndexOf(endFragment);
-
-      for (int i = startPos; i < endPos; i++)
-      {
-         final CodeFragment fragment = fragmentList.get(i);
-         if (!Objects.equals(fragment.getKey(), GAP))
+      this.codeFragments().forEach(fragment -> {
+         if (foundContent.get())
          {
-            return false;
+            // short-circuit
+            return;
          }
-      }
 
-      return true;
+         final String key = fragment.getKey();
+         if (key.matches("^" + CLASS + "/(\\w+)/" + CLASS_DECL + "$"))
+         {
+            inClassBody.set(true);
+         }
+         else if (key.matches("^" + CLASS + "/(\\w+)/" + CLASS_END + "$"))
+         {
+            inClassBody.set(false);
+         }
+         else if (inClassBody.get() && key.endsWith("#gap-before") || key.endsWith("#gap-after"))
+         {
+            foundContent.set(true);
+         }
+      });
+
+      return foundContent.get();
    }
 
    @Deprecated
