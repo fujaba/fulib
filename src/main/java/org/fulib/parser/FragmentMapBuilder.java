@@ -11,6 +11,11 @@ import org.fulib.parser.FulibClassParser.*;
 import java.io.IOException;
 import java.util.List;
 
+import static org.fulib.classmodel.FileFragmentMap.CLASS;
+import static org.fulib.classmodel.FileFragmentMap.IMPORT;
+import static org.fulib.classmodel.FileFragmentMap.PACKAGE;
+import static org.fulib.classmodel.FileFragmentMap.*;
+
 public class FragmentMapBuilder extends FulibClassBaseListener
 {
    // =============== Fields ===============
@@ -91,7 +96,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       // if (startPos - this.lastFragmentEndPos > 1)
       {
          final String gapText = this.input.getText(Interval.of(this.lastFragmentEndPos + 1, startPos - 1));
-         final CodeFragment gap = new CodeFragment().setKey(FileFragmentMap.GAP).setText(gapText);
+         final CodeFragment gap = new CodeFragment().setKey(GAP).setText(gapText);
          this.map.add(gap);
       }
 
@@ -105,7 +110,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    @Override
    public void enterPackageDecl(PackageDeclContext ctx)
    {
-      this.addCodeFragment(FileFragmentMap.PACKAGE, ctx);
+      this.addCodeFragment(PACKAGE, ctx);
    }
 
    @Override
@@ -117,7 +122,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
          typeName += ".*";
       }
 
-      this.addCodeFragment(FileFragmentMap.IMPORT + '/' + typeName, ctx);
+      this.addCodeFragment(IMPORT + '/' + typeName, ctx);
    }
 
    @Override
@@ -125,8 +130,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    {
       final ClassMemberContext classMemberCtx = ctx.classMember();
       this.className = classMemberCtx.IDENTIFIER().getText();
-      this.addCodeFragment(FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.CLASS_DECL,
-                           ctx.getStart().getStartIndex(),
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + CLASS_DECL, ctx.getStart().getStartIndex(),
                            classMemberCtx.classBody().LBRACE().getSymbol().getStopIndex());
    }
 
@@ -141,9 +145,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       if (size == 1)
       {
          // only one field, straightforward (pass the whole ctx)
-         this.addCodeFragment(
-            FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.ATTRIBUTE + '/' + firstName,
-            memberCtx);
+         this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName, memberCtx);
          return;
       }
 
@@ -160,26 +162,21 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final List<TerminalNode> commas = ctx.COMMA();
 
       // first part includes type and annotations and first comma
-      this.addCodeFragment(
-         FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.ATTRIBUTE + '/' + firstName,
-         memberCtx.getStart(), commas.get(0).getSymbol());
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName, memberCtx.getStart(),
+                           commas.get(0).getSymbol());
 
       // all but the first and last part range from name to comma
       for (int i = 1; i < size - 1; i++)
       {
          final FieldNamePartContext namePart = nameParts.get(i);
-         this.addCodeFragment(
-            FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.ATTRIBUTE + '/' + namePart
-               .IDENTIFIER()
-               .getText(), namePart.getStart(), commas.get(i).getSymbol());
+         this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + namePart.IDENTIFIER().getText(),
+                              namePart.getStart(), commas.get(i).getSymbol());
       }
 
       // last part includes semicolon
       final FieldNamePartContext lastPart = nameParts.get(size - 1);
-      this.addCodeFragment(
-         FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.ATTRIBUTE + '/' + lastPart
-            .IDENTIFIER()
-            .getText(), lastPart.getStart(), memberCtx.getStop());
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + lastPart.IDENTIFIER().getText(),
+                           lastPart.getStart(), memberCtx.getStop());
    }
 
    @Override
@@ -188,11 +185,11 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final MemberContext memberCtx = (MemberContext) ctx.parent;
 
       final StringBuilder signature = new StringBuilder();
-      signature.append(FileFragmentMap.CLASS);
+      signature.append(CLASS);
       signature.append('/');
       signature.append(this.className);
       signature.append('/');
-      signature.append(FileFragmentMap.CONSTRUCTOR);
+      signature.append(CONSTRUCTOR);
       signature.append('/');
       signature.append(this.className);
       writeParams(signature, ctx.parameterList());
@@ -208,11 +205,11 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
       final StringBuilder signature = new StringBuilder();
 
-      signature.append(FileFragmentMap.CLASS);
+      signature.append(CLASS);
       signature.append('/');
       signature.append(this.className);
       signature.append('/');
-      signature.append(FileFragmentMap.METHOD);
+      signature.append(METHOD);
       signature.append('/');
       signature.append(methodName);
       writeParams(signature, ctx.parameterList());
@@ -335,14 +332,13 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    @Override
    public void exitClassDecl(ClassDeclContext ctx)
    {
-      this.addCodeFragment(FileFragmentMap.CLASS + '/' + this.className + '/' + FileFragmentMap.CLASS_END,
-                           ctx.classMember().classBody().RBRACE());
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + CLASS_END, ctx.classMember().classBody().RBRACE());
    }
 
    @Override
    public void exitFile(FileContext ctx)
    {
       // TODO this adds two gaps. Not sure if FileFragmentMap can handle only one, so leaving it at that for now.
-      this.addCodeFragment(FileFragmentMap.GAP, this.lastFragmentEndPos + 1, this.input.size());
+      this.addCodeFragment(GAP, this.lastFragmentEndPos + 1, this.input.size());
    }
 }
