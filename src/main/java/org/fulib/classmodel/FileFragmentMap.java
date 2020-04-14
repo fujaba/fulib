@@ -56,7 +56,6 @@ public class FileFragmentMap
    public FileFragmentMap()
    {
       this.root = new CompoundFragment();
-      this.root.setKey("root");
    }
 
    public FileFragmentMap(String fileName)

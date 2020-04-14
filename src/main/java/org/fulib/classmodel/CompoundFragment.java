@@ -138,7 +138,23 @@ public class CompoundFragment extends Fragment
          return null;
       }
 
-      final String absoluteKey = this.getKey() + '/' + relativeKey;
+      final String absoluteKey = this.makeAbsolute(relativeKey);
+      return this.getChildWithKey(absoluteKey);
+   }
+
+   private String makeAbsolute(String relativeKey)
+   {
+      final String key = this.getKey();
+      return key == null ? relativeKey : key + '/' + relativeKey;
+   }
+
+   public Fragment getChildWithKey(String absoluteKey)
+   {
+      if (this.children == null)
+      {
+         return null;
+      }
+
       for (final Fragment child : this.children)
       {
          if (absoluteKey.equals(child.getKey()))
