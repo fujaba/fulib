@@ -131,15 +131,17 @@ public class CompoundFragment extends Fragment
       }
    }
 
-   public Fragment getChild(String key)
+   public Fragment getChild(String relativeKey)
    {
-      if (this.children == null)
+      if (this.children == null || this.children.isEmpty())
       {
          return null;
       }
+
+      final String absoluteKey = this.getKey() + '/' + relativeKey;
       for (final Fragment child : this.children)
       {
-         if (key.equals(child.getKey()))
+         if (absoluteKey.equals(child.getKey()))
          {
             return child;
          }
