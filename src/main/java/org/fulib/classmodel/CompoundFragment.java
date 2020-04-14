@@ -28,6 +28,21 @@ public class CompoundFragment extends Fragment
       return this.children != null ? Collections.unmodifiableList(this.children) : Collections.emptyList();
    }
 
+   public CompoundFragment withChildren(int index, Fragment value)
+   {
+      if (this.children == null)
+      {
+         this.children = new ArrayList<>();
+      }
+      if (!this.children.contains(value))
+      {
+         this.children.add(index, value);
+         value.setParent(this);
+         this.firePropertyChange(PROPERTY_children, null, value);
+      }
+      return this;
+   }
+
    public CompoundFragment withChildren(Fragment value)
    {
       if (this.children == null)
