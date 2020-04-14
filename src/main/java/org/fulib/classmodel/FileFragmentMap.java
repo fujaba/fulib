@@ -112,9 +112,14 @@ public class FileFragmentMap
 
    public CodeFragment getFragment(String key)
    {
-      // TODO paths separated by /
-      final Fragment ancestor = this.root.getChild(key);
+      final String[] path = this.getPath(key);
+      final Fragment ancestor = this.root.getAncestor(path);
       return ancestor instanceof CodeFragment ? (CodeFragment) ancestor : null;
+   }
+
+   private String[] getPath(String key)
+   {
+      return key.split("/");
    }
 
    public boolean isClassBodyEmpty()
@@ -232,27 +237,33 @@ public class FileFragmentMap
 
    public void add(CodeFragment fragment)
    {
-      // TODO does not support nested fragments
-      this.root.withChildren(fragment);
+      final String[] path = this.getPath(fragment.getKey());
+      final CompoundFragment parent = this.root.getOrCreateParent(path);
+      parent.withChildren(fragment);
    }
 
    public void remove(CodeFragment fragment)
    {
-      // TODO does not supported nested fragments
-      final List<Fragment> rootChildren = this.root.getChildren();
-      final int pos = rootChildren.indexOf(fragment);
+      final CompoundFragment parent = fragment.getParent();
+      if (parent == null)
+      {
+         return;
+      }
+
+      final List<Fragment> children = parent.getChildren();
+      final int pos = children.indexOf(fragment);
       if (pos < 0)
       {
          return;
       }
 
-      final Fragment gap = rootChildren.get(pos - 1);
-      if (Objects.equals(gap.getKey(), GAP))
+      final Fragment gap = children.get(pos - 1);
+      if (GAP.equals(gap.getKey()))
       {
          this.root.withoutChildren(gap);
       }
 
-      this.root.withoutChildren(rootChildren);
+      this.root.withoutChildren(children);
    }
 
    // --------------- Smart Modification ---------------
@@ -403,19 +414,19 @@ public class FileFragmentMap
       return gap;
    }
 
-   private void add(CodeFragment result, String posKey)
+   private void add(CodeFragment newFragment, String before)
    {
-      // TODO does not support nested fragments
-      final Fragment child = this.root.getChild(posKey);
-      if (child == null)
+      final String[] path = this.getPath(before);
+      final Fragment sibling = this.root.getAncestor(path);
+      if (sibling == null)
       {
-         this.add(result);
+         this.add(newFragment);
          return;
       }
 
-      final CompoundFragment parent = child.getParent();
-      final int index = parent.getChildren().indexOf(child);
-      parent.withChildren(index, result);
+      final CompoundFragment parent = sibling.getParent();
+      final int index = parent.getChildren().indexOf(sibling);
+      parent.withChildren(index, newFragment);
    }
 
    // --------------- Post-Processing ---------------
