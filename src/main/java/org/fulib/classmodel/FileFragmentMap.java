@@ -113,17 +113,17 @@ public class FileFragmentMap
 
    public CodeFragment getFragment(String key)
    {
-      final String[] path = this.getPath(key);
+      final String[] path = getPath(key);
       final Fragment ancestor = this.root.getAncestor(path);
       return ancestor instanceof CodeFragment ? (CodeFragment) ancestor : null;
    }
 
-   private String[] getPath(String key)
+   static String[] getPath(String key)
    {
       return key.split("/");
    }
 
-   private String[] getParentKeys(String fullKey)
+   static String[] getParentKeys(String fullKey)
    {
       final List<String> result = new ArrayList<>();
       for (int i = fullKey.indexOf('/'); 0 <= i && i < fullKey.length(); i = fullKey.indexOf('/', i + 1))
@@ -266,7 +266,7 @@ public class FileFragmentMap
       final String fullKey = fragment.getKey();
       CompoundFragment next = this.root;
 
-      for (final String subKey : this.getParentKeys(fullKey))
+      for (final String subKey : getParentKeys(fullKey))
       {
          final List<Fragment> children = next.getChildren();
 
