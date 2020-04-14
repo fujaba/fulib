@@ -65,9 +65,19 @@ public class GenModel implements ClassModelDecorator
          c.attribute("fileName", STRING);
       });
 
-      mb.haveClass("CodeFragment", c -> {
+      final Clazz Fragment = mb.haveClass("Fragment", c -> {
          c.attribute("key", STRING);
+      });
+
+      mb.haveClass("CodeFragment", c -> {
+         c.extend(Fragment);
          c.attribute("text", STRING);
       });
+
+      final Clazz CompoundFragment = mb.haveClass("CompoundFragment", c -> {
+         c.extend(Fragment);
+      });
+
+      mb.associate(CompoundFragment, "children", MANY, Fragment, "parent", ONE);
    }
 }

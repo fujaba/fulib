@@ -1,5 +1,5 @@
 - c: 	ClassModel
-  classes: 	classModel 	clazz 	attribute 	assocRole 	fMethod 	fileFragmentMap 	codeFragment
+  classes: 	classModel 	clazz 	attribute 	assocRole 	fMethod 	fileFragmentMap 	fragment 	codeFragment 	compoundFragment
   defaultCollectionType: 	c1
   defaultPropertyStyle: 	Bean
   defaultRoleType: 	"java.util.ArrayList<%s>"
@@ -54,12 +54,30 @@
   name: 	FileFragmentMap
   propertyStyle: 	Bean
 
+- fragment: 	Clazz
+  attributes: 	fragment_key
+  model: 	c
+  modified: 	false
+  name: 	Fragment
+  propertyStyle: 	Bean
+  roles: 	fragment_parent
+  subClasses: 	codeFragment 	compoundFragment
+
 - codeFragment: 	Clazz
-  attributes: 	codeFragment_key 	codeFragment_text
+  attributes: 	codeFragment_text
   model: 	c
   modified: 	false
   name: 	CodeFragment
   propertyStyle: 	Bean
+  superClass: 	fragment
+
+- compoundFragment: 	Clazz
+  model: 	c
+  modified: 	false
+  name: 	CompoundFragment
+  propertyStyle: 	Bean
+  roles: 	compoundFragment_children
+  superClass: 	fragment
 
 - c1: 	CollectionType
   implClass: 	class java.util.ArrayList
@@ -430,14 +448,26 @@
   propertyStyle: 	Bean
   type: 	String
 
-- codeFragment_key: 	Attribute
+- fragment_key: 	Attribute
   boxType: 	String
-  clazz: 	codeFragment
-  id: 	CodeFragment_key
+  clazz: 	fragment
+  id: 	Fragment_key
   modified: 	false
   name: 	key
   propertyStyle: 	Bean
   type: 	String
+
+- fragment_parent: 	AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	fragment
+  collectionType: 	c1
+  id: 	Fragment_parent
+  modified: 	false
+  name: 	parent
+  other: 	compoundFragment_children
+  propertyStyle: 	Bean
+  roleType: 	"java.util.ArrayList<%s>"
 
 - codeFragment_text: 	Attribute
   boxType: 	String
@@ -447,6 +477,18 @@
   name: 	text
   propertyStyle: 	Bean
   type: 	String
+
+- compoundFragment_children: 	AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	compoundFragment
+  collectionType: 	c1
+  id: 	CompoundFragment_children
+  modified: 	false
+  name: 	children
+  other: 	fragment_parent
+  propertyStyle: 	Bean
+  roleType: 	"java.util.ArrayList<%s>"
 
 - c4: 	CollectionType
   implClass: 	class java.util.LinkedHashSet

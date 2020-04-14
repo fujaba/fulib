@@ -4,49 +4,78 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 
-public class CodeFragment extends Fragment
+public class Fragment
 {
    // =============== Constants ===============
 
-   /** @deprecated since 1.2; use {@link Fragment#PROPERTY_key} instead */
-   @Deprecated
    public static final String PROPERTY_key = "key";
-   public static final String PROPERTY_text = "text";
+   public static final String PROPERTY_parent = "parent";
 
    // =============== Fields ===============
 
    protected PropertyChangeSupport listeners;
 
-   private String text;
+   private String key;
+   private CompoundFragment parent;
 
    // =============== Properties ===============
 
-   @Override
-   public CodeFragment setKey(String value)
+   public String getKey()
    {
-      super.setKey(value);
-      return this;
+      return this.key;
    }
 
-   public String getText()
+   public Fragment setKey(String value)
    {
-      return this.text;
-   }
-
-   public CodeFragment setText(String value)
-   {
-      if (Objects.equals(value, this.text))
+      if (Objects.equals(value, this.key))
       {
          return this;
       }
 
-      final String oldValue = this.text;
-      this.text = value;
-      this.firePropertyChange(PROPERTY_text, oldValue, value);
+      final String oldValue = this.key;
+      this.key = value;
+      this.firePropertyChange(PROPERTY_key, oldValue, value);
+      return this;
+   }
+
+   public CompoundFragment getParent()
+   {
+      return this.parent;
+   }
+
+   public Fragment setParent(CompoundFragment value)
+   {
+      if (this.parent == value)
+      {
+         return this;
+      }
+
+      final CompoundFragment oldValue = this.parent;
+      if (this.parent != null)
+      {
+         this.parent = null;
+         oldValue.withoutChildren(this);
+      }
+      this.parent = value;
+      if (value != null)
+      {
+         value.withChildren(this);
+      }
+      this.firePropertyChange(PROPERTY_parent, oldValue, value);
       return this;
    }
 
    // =============== Methods ===============
+
+   public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
+   {
+      if (this.listeners != null)
+      {
+         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
+         return true;
+      }
+      return false;
+   }
 
    public boolean addPropertyChangeListener(PropertyChangeListener listener)
    {
@@ -86,27 +115,16 @@ public class CodeFragment extends Fragment
       return true;
    }
 
-   public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
-   {
-      if (this.listeners != null)
-      {
-         this.listeners.firePropertyChange(propertyName, oldValue, newValue);
-         return true;
-      }
-      return false;
-   }
-
-   @Override
    public void removeYou()
    {
-      super.removeYou();
+      this.setParent(null);
    }
 
    @Override
    public String toString()
    {
-      final StringBuilder result = new StringBuilder(super.toString());
-      result.append(' ').append(this.getText());
-      return result.toString();
+      final StringBuilder result = new StringBuilder();
+      result.append(' ').append(this.getKey());
+      return result.substring(1);
    }
 }
