@@ -171,16 +171,16 @@ public class TablesTest
       Class<?> intTableClass = Class.forName(packageName + ".tables.intTable", true, classLoader);
 
       Constructor<?> declaredConstructors = uniTableClass.getDeclaredConstructors()[0];
-      Method uniExpandRooms = uniTableClass.getMethod("expandRooms", String[].class);
-      Method uniExpandStudents = uniTableClass.getMethod("expandStudents", String[].class);
-      Method roomsExpandAssignments = roomsTableClass.getMethod("expandAssignments", String[].class);
-      Method roomsExpandStudents = roomsTableClass.getMethod("expandStudents", String[].class);
+      Method uniExpandRooms = uniTableClass.getMethod("expandRooms", String.class);
+      Method uniExpandStudents = uniTableClass.getMethod("expandStudents", String.class);
+      Method roomsExpandAssignments = roomsTableClass.getMethod("expandAssignments", String.class);
+      Method roomsExpandStudents = roomsTableClass.getMethod("expandStudents", String.class);
       Method studentTablehasDone = studentsTableClass.getMethod("hasDone", assignmentsTableClass);
       Method studentTableSelectColumns = studentsTableClass.getMethod("selectColumns", String[].class);
       Method studentTableDropColumns = studentsTableClass.getMethod("dropColumns", String[].class);
       Method studentTableAddColumn = studentsTableClass.getMethod("addColumn", String.class, Function.class);
       Method assignmentsToSet = assignmentsTableClass.getMethod("toSet");
-      Method assignmentsExpandPoints = assignmentsTableClass.getMethod("expandPoints", String[].class);
+      Method assignmentsExpandPoints = assignmentsTableClass.getMethod("expandPoints", String.class);
       Method assignmentsFilter = assignmentsTableClass.getMethod("filter", Predicate.class);
       Method assignmentsFilterRow = assignmentsTableClass.getMethod("filterRow", Predicate.class);
       Method intTableToList = intTableClass.getMethod("toList");
@@ -194,26 +194,26 @@ public class TablesTest
       Object uniTable = declaredConstructors.newInstance(uniArray);
       assertThat(uniTable, notNullValue());
 
-      Object roomsTable = uniExpandRooms.invoke(uniTable, new Object[] { new String[] { "Rooms" } });
+      Object roomsTable = uniExpandRooms.invoke(uniTable, "Rooms");
       assertThat(roomsTable.toString(), containsString("wa1337"));
       assertThat(roomsTable.toString(), containsString("wa1338"));
       assertThat(roomsTable.toString(), containsString("wa1339"));
 
       Object assignmentsTable = roomsExpandAssignments
-         .invoke(roomsTable, new Object[] { new String[] { "Assignments" } });
+         .invoke(roomsTable, "Assignments");
       assertThat(assignmentsTable.toString(), containsString("integrals"));
 
       Set<?> assignmentsSet = (Set<?>) assignmentsToSet.invoke(assignmentsTable);
       assertThat(assignmentsSet.size(), equalTo(4));
 
-      Object pointsTable = assignmentsExpandPoints.invoke(assignmentsTable, new Object[] { new String[] { "Points" } });
+      Object pointsTable = assignmentsExpandPoints.invoke(assignmentsTable, "Points");
       List<?> pointsList = (List<?>) intTableToList.invoke(pointsTable);
       assertThat(pointsList.size(), equalTo(4));
 
       Object sum = intTableSum.invoke(pointsTable);
       assertThat(sum, equalTo(89));
 
-      Object studentsTable = roomsExpandStudents.invoke(roomsTable, new Object[] { new String[] { "Students" } });
+      Object studentsTable = roomsExpandStudents.invoke(roomsTable, "Students");
       assertThat(studentsTable.toString(), containsString("Alice"));
 
       Predicate<Object> predicate = o -> {
@@ -235,9 +235,9 @@ public class TablesTest
 
       // filter row
       uniTable = declaredConstructors.newInstance(uniArray);
-      uniExpandStudents.invoke(uniTable, new Object[] { new String[] { "Students" } });
-      roomsTable = uniExpandRooms.invoke(uniTable, new Object[] { new String[] { "Rooms" } });
-      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[] { new String[] { "Assignments" } });
+      uniExpandStudents.invoke(uniTable, "Students");
+      roomsTable = uniExpandRooms.invoke(uniTable, "Rooms");
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, "Assignments");
 
       Predicate<Object> rowPredicate = o -> {
          try
@@ -261,9 +261,9 @@ public class TablesTest
 
       // has done
       uniTable = declaredConstructors.newInstance(uniArray);
-      studentsTable = uniExpandStudents.invoke(uniTable, new Object[] { new String[] { "Students" } });
-      roomsTable = uniExpandRooms.invoke(uniTable, new Object[] { new String[] { "Rooms" } });
-      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[] { new String[] { "Assignments" } });
+      studentsTable = uniExpandStudents.invoke(uniTable, "Students");
+      roomsTable = uniExpandRooms.invoke(uniTable, "Rooms");
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, "Assignments");
 
       studentTablehasDone.invoke(studentsTable, assignmentsTable);
       assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math \tintegrals"));
@@ -271,9 +271,9 @@ public class TablesTest
 
       // select columns
       uniTable = declaredConstructors.newInstance(uniArray);
-      studentsTable = uniExpandStudents.invoke(uniTable, new Object[] { new String[] { "Students" } });
-      roomsTable = uniExpandRooms.invoke(uniTable, new Object[] { new String[] { "Rooms" } });
-      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[] { new String[] { "Assignments" } });
+      studentsTable = uniExpandStudents.invoke(uniTable, "Students");
+      roomsTable = uniExpandRooms.invoke(uniTable, "Rooms");
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, "Assignments");
 
       studentTableSelectColumns.invoke(studentsTable, new Object[] { new String[] { "Students", "Rooms" } });
       assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math"));
@@ -281,9 +281,9 @@ public class TablesTest
 
       // drop columns
       uniTable = declaredConstructors.newInstance(uniArray);
-      studentsTable = uniExpandStudents.invoke(uniTable, new Object[] { new String[] { "Students" } });
-      roomsTable = uniExpandRooms.invoke(uniTable, new Object[] { new String[] { "Rooms" } });
-      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, new Object[] { new String[] { "Assignments" } });
+      studentsTable = uniExpandStudents.invoke(uniTable, "Students");
+      roomsTable = uniExpandRooms.invoke(uniTable, "Rooms");
+      assignmentsTable = roomsExpandAssignments.invoke(roomsTable, "Assignments");
 
       studentTableDropColumns.invoke(studentsTable, new Object[] { new String[] { "Assignments" } });
       assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math"));
@@ -291,7 +291,7 @@ public class TablesTest
 
       // add column
       uniTable = declaredConstructors.newInstance(uniArray);
-      studentsTable = uniExpandStudents.invoke(uniTable, new Object[] { new String[] { "Students" } });
+      studentsTable = uniExpandStudents.invoke(uniTable, "Students");
 
       Function<LinkedHashMap<String, Object>, Object> function = row -> {
          Object student = row.get("Students");
