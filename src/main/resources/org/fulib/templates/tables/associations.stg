@@ -1,6 +1,6 @@
 tableRoleSignatures(role, other) ::= <<
-   expandMethod:  method:expand<role.name; format="cap">(String...)
-   hasMethod:     method:has<role.name; format="cap">(<other.clazz.name>Table)
+   expandMethod:  class/<role.clazz.name>Table/method/expand<role.name; format="cap">(String...)
+   hasMethod:     class/<role.clazz.name>Table/method/has<role.name; format="cap">(<other.clazz.name>Table)
 >>
 
 expandMethod(role, other) ::= <<

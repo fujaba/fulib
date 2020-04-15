@@ -45,7 +45,7 @@ public class Generator4TableClassFile extends AbstractGenerator4ClassFile
       this.generateFromSignatures(fragmentMap, group, "tableSignatures", clazz.getModified(),
                                   st -> st.add("class", clazz));
 
-      fragmentMap.add(CLASS_END, "}", CLASS_END_NEWLINES);
+      fragmentMap.add(CLASS + '/' + clazz.getName() + "Table" + '/' + CLASS_END, "}", CLASS_END_NEWLINES);
    }
 
    private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap)
@@ -71,7 +71,7 @@ public class Generator4TableClassFile extends AbstractGenerator4ClassFile
       {
          final ST importDecl = group.getInstanceOf("importDecl");
          importDecl.add("qualifiedName", qualifiedName);
-         fragmentMap.add(IMPORT + ":" + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
+         fragmentMap.add(IMPORT + '/' + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
       }
    }
 
@@ -114,7 +114,7 @@ public class Generator4TableClassFile extends AbstractGenerator4ClassFile
       final ST classDecl = group.getInstanceOf("classDecl");
       classDecl.add("name", clazz.getName() + "Table");
       classDecl.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() + "Table" : null);
-      fragmentMap.add(CLASS, classDecl.render(), CLASS_NEWLINES);
+      fragmentMap.add(CLASS + '/' + clazz.getName() + "Table" + '/' + CLASS_DECL, classDecl.render(), CLASS_NEWLINES);
    }
 
    private void generateStandardAttributes(Clazz clazz, FileFragmentMap fragmentMap)
@@ -133,7 +133,8 @@ public class Generator4TableClassFile extends AbstractGenerator4ClassFile
 
       final STGroup attributesGroup = this.getSTGroup("org/fulib/templates/tables/attributes.stg");
       final ST getColumn = attributesGroup.getInstanceOf("getColumn");
-      fragmentMap.add(METHOD + ":getColumn()", getColumn.render(), METHOD_NEWLINES);
+      fragmentMap.add(CLASS + '/' + clazz.getName() + "Table" + '/' + METHOD + "/getColumn()", getColumn.render(),
+                      METHOD_NEWLINES);
 
       final Attribute columnName = new Attribute();
       columnName.setName("columnName");

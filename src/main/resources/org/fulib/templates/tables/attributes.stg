@@ -1,5 +1,5 @@
 tableAttributeSignatures(attr) ::= <<
-   expandMethod: method:expand<attr.name; format="cap">(String...)
+   expandMethod: class/<attr.clazz.name>Table/method/expand<attr.name; format="cap">(String...)
 >>
 
 getColumn() ::= <<

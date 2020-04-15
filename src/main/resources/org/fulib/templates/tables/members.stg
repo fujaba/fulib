@@ -1,16 +1,16 @@
 tableSignatures(class) ::= <<
-   constructor:   constructor:<class.name>Table(<class.name>...)
-   selectColumns: method:selectColumns(String...)
-   dropColumns:   method:dropColumns(String...)
-   addColumn:     method:addColumn(String,Function\<? super Map\<String,Object>,?>)
+   constructor:   class/<class.name>Table/constructor/<class.name>Table(<class.name>...)
+   selectColumns: class/<class.name>Table/method/selectColumns(String...)
+   dropColumns:   class/<class.name>Table/method/dropColumns(String...)
+   addColumn:     class/<class.name>Table/method/addColumn(String,Function\<? super Map\<String,Object>,?>)
    <if(!class.superClass)>
-      filter:     method:filter(Predicate\<? super <class.name>\>)
+      filter:     class/<class.name>Table/method/filter(Predicate\<? super <class.name>\>)
    <endif>
-   filterRow:     method:filterRow(Predicate\<? super Map\<String,Object>\>)
+   filterRow:     class/<class.name>Table/method/filterRow(Predicate\<? super Map\<String,Object>\>)
    <if(!class.superClass)>
-      toSet:      method:toSet()
+      toSet:      class/<class.name>Table/method/toSet()
    <endif>
-   tableToString: method:toString()
+   tableToString: class/<class.name>Table/method/toString()
 >>
 
 constructor(class) ::= <<
