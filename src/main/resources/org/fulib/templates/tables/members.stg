@@ -1,24 +1,24 @@
-tableSignatures(class) ::= <<
-   constructor:   class/<class.name>Table/constructor/<class.name>Table(<class.name>...)
-   selectColumns: class/<class.name>Table/method/selectColumns(String...)
-   dropColumns:   class/<class.name>Table/method/dropColumns(String...)
-   addColumn:     class/<class.name>Table/method/addColumn(String,Function\<? super Map\<String,Object>,?>)
-   <if(!class.superClass)>
-      filter:     class/<class.name>Table/method/filter(Predicate\<? super <class.name>\>)
+tableSignatures(clazz) ::= <<
+   constructor:   class/<clazz.name>Table/constructor/<clazz.name>Table(<clazz.name>...)
+   selectColumns: class/<clazz.name>Table/method/selectColumns(String...)
+   dropColumns:   class/<clazz.name>Table/method/dropColumns(String...)
+   addColumn:     class/<clazz.name>Table/method/addColumn(String,Function\<? super Map\<String,Object>,?>)
+   <if(!clazz.superClass)>
+      filter:     class/<clazz.name>Table/method/filter(Predicate\<? super <clazz.name>\>)
    <endif>
-   filterRow:     class/<class.name>Table/method/filterRow(Predicate\<? super Map\<String,Object>\>)
-   <if(!class.superClass)>
-      toSet:      class/<class.name>Table/method/toSet()
+   filterRow:     class/<clazz.name>Table/method/filterRow(Predicate\<? super Map\<String,Object>\>)
+   <if(!clazz.superClass)>
+      toSet:      class/<clazz.name>Table/method/toSet()
    <endif>
-   tableToString: class/<class.name>Table/method/toString()
+   tableToString: class/<clazz.name>Table/method/toString()
 >>
 
-constructor(class) ::= <<
-   public <class.name>Table(<class.name>... start)
+constructor(clazz) ::= <<
+   public <clazz.name>Table(<clazz.name>... start)
    {
-      this.setColumnName("<class.name>");
-      this.columnMap.put("<class.name>", 0);
-      for (<class.name> current : start)
+      this.setColumnName("<clazz.name>");
+      this.columnMap.put("<clazz.name>", 0);
+      for (<clazz.name> current : start)
       {
          List\<Object> row = new ArrayList\<>();
          row.add(current);
@@ -27,8 +27,8 @@ constructor(class) ::= <<
    }
 >>
 
-selectColumns(class) ::= <<
-   public <class.name>Table selectColumns(String... columnNames)
+selectColumns(clazz) ::= <<
+   public <clazz.name>Table selectColumns(String... columnNames)
    {
       Map\<String, Integer> oldColumnMap = new LinkedHashMap\<>(this.columnMap);
       this.columnMap.clear();
@@ -65,8 +65,8 @@ selectColumns(class) ::= <<
    }
 >>
 
-dropColumns(class) ::= <<
-   public <class.name>Table dropColumns(String... columnNames)
+dropColumns(clazz) ::= <<
+   public <clazz.name>Table dropColumns(String... columnNames)
    {
       Map\<String, Integer> oldColumnMap = new LinkedHashMap\<>(this.columnMap);
       this.columnMap.clear();
@@ -104,7 +104,7 @@ dropColumns(class) ::= <<
    }
 >>
 
-addColumn(class) ::= <<
+addColumn(clazz) ::= <<
    public void addColumn(String columnName, Function\<? super Map\<String, Object>, ?> function)
    {
       int newColumnNumber = this.table.isEmpty() ? 0 : this.table.get(0).size();
@@ -122,15 +122,15 @@ addColumn(class) ::= <<
    }
 >>
 
-filter(class) ::= <<
-   public <class.name>Table filter(Predicate\<? super <class.name>\> predicate)
+filter(clazz) ::= <<
+   public <clazz.name>Table filter(Predicate\<? super <clazz.name>\> predicate)
    {
       int column = this.getColumn();
       List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
       for (List\<Object> row : oldTable)
       {
-         <class.name> start = (<class.name>) row.get(column);
+         <clazz.name> start = (<clazz.name>) row.get(column);
          if (predicate.test(start))
          {
             this.table.add(row);
@@ -140,8 +140,8 @@ filter(class) ::= <<
    }
 >>
 
-filterRow(class) ::= <<
-   public <class.name>Table filterRow(Predicate\<? super Map\<String, Object>\> predicate)
+filterRow(clazz) ::= <<
+   public <clazz.name>Table filterRow(Predicate\<? super Map\<String, Object>\> predicate)
    {
       List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
@@ -161,21 +161,21 @@ filterRow(class) ::= <<
    }
 >>
 
-toSet(class) ::= <<
-   public Set\<<class.name>\> toSet()
+toSet(clazz) ::= <<
+   public Set\<<clazz.name>\> toSet()
    {
       int column = this.getColumn();
-      Set\<<class.name>\> result = new LinkedHashSet\<>(this.table.size());
+      Set\<<clazz.name>\> result = new LinkedHashSet\<>(this.table.size());
       for (List\<?> row : this.table)
       {
-         <class.name> value = (<class.name>) row.get(column);
+         <clazz.name> value = (<clazz.name>) row.get(column);
          result.add(value);
       }
       return result;
    }
 >>
 
-tableToString(class) ::= <<
+tableToString(clazz) ::= <<
    public String toString()
    {
       StringBuilder buf = new StringBuilder();

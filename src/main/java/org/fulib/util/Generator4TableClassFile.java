@@ -43,7 +43,7 @@ public class Generator4TableClassFile extends AbstractGenerator4ClassFile
 
       final STGroup group = this.getSTGroup("org/fulib/templates/tables/members.stg");
       this.generateFromSignatures(fragmentMap, group, "tableSignatures", clazz.getModified(),
-                                  st -> st.add("class", clazz));
+                                  st -> st.add("clazz", clazz));
 
       fragmentMap.add(CLASS + '/' + clazz.getName() + "Table" + '/' + CLASS_END, "}", CLASS_END_NEWLINES);
    }
