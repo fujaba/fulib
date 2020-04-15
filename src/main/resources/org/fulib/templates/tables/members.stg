@@ -126,16 +126,10 @@ filter(clazz) ::= <<
    public <clazz.name>Table filter(Predicate\<? super <clazz.name>\> predicate)
    {
       int column = this.getColumn();
-      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
-      this.table.clear();
-      for (List\<Object> row : oldTable)
-      {
+      this.table.removeIf(row -> {
          <clazz.name> start = (<clazz.name>) row.get(column);
-         if (predicate.test(start))
-         {
-            this.table.add(row);
-         }
-      }
+         return !predicate.test(start);
+      });
       return this;
    }
 >>
@@ -143,20 +137,14 @@ filter(clazz) ::= <<
 filterRow(clazz) ::= <<
    public <clazz.name>Table filterRow(Predicate\<? super Map\<String, Object>\> predicate)
    {
-      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
-      this.table.clear();
-      for (List\<Object> row : oldTable)
-      {
+      this.table.removeIf(row -> {
          Map\<String, Object> map = new LinkedHashMap\<>();
          for (Map.Entry\<String, Integer> entry : this.columnMap.entrySet())
          {
             map.put(entry.getKey(), row.get(entry.getValue()));
          }
-         if (predicate.test(map))
-         {
-            this.table.add(row);
-         }
-      }
+         return !predicate.test(map);
+      });
       return this;
    }
 >>
