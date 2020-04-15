@@ -43,22 +43,18 @@ hasMethod(role, other) ::= <<
    public <role.clazz.name>Table has<role.name; format="cap">(<other.clazz.name>Table rowName)
    {
       int column = this.getColumn();
-      int otherColumn = this.columnMap.get(rowName.getColumnName());
-      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
-      this.table.clear();
-      for (List\<Object> row : oldTable)
-      {
+      int otherColumn = rowName.getColumn();
+
+      this.table.removeIf(row -> {
          <role.clazz.name> start = (<role.clazz.name>) row.get(column);
          <other.clazz.name> other = (<other.clazz.name>) row.get(otherColumn);
          <if(role.toMany)>
-         if (start.get<role.name; format="cap">().contains(other))
+         return !start.get<role.name; format="cap">().contains(other);
          <else>
-         if (start.get<role.name; format="cap">() == other)
+         return start.get<role.name; format="cap">() != other;
          <endif>
-         {
-            this.table.add(row);
-         }
-      }
+      });
+
       return this;
    }
 >>
