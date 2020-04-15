@@ -329,13 +329,13 @@ public class FileFragmentMap
          return;
       }
 
-      final Fragment gapBefore = parent.getChild(fragment.getKey() + "#gap-before");
+      final Fragment gapBefore = parent.getChildWithKey(fragment.getKey() + "#gap-before");
       if (gapBefore != null)
       {
-         this.root.withoutChildren(gapBefore);
+         parent.withoutChildren(gapBefore);
       }
 
-      this.root.withoutChildren(fragment);
+      parent.withoutChildren(fragment);
    }
 
    // --------------- Smart Modification ---------------
