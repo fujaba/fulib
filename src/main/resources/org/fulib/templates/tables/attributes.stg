@@ -12,24 +12,21 @@ getColumn() ::= <<
 expandMethod(attr) ::= <<
    public <attr.type>Table expand<attr.name; format="cap">(String columnName)
    {
-      <attr.type>Table result = new <attr.type>Table();
-      result.setColumnMap(this.columnMap);
-      result.setTable(this.table);
       int newColumnNumber = this.table.isEmpty() ? 0 : this.table.get(0).size();
-
-      result.setColumnName(columnName);
       this.columnMap.put(columnName, newColumnNumber);
 
       int column = this.getColumn();
-      List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
-      this.table.clear();
-      for (List\<Object> row : oldTable)
+
+      for (List\<Object> row : this.table)
       {
          <attr.clazz.name> start = (<attr.clazz.name>) row.get(column);
-         List\<Object> newRow = new ArrayList\<>(row);
-         newRow.add(start.get<attr.name; format="cap">());
-         this.table.add(newRow);
+         row.add(start.get<attr.name; format="cap">());
       }
+
+      <attr.type>Table result = new <attr.type>Table();
+      result.setColumnMap(this.columnMap);
+      result.setColumnName(columnName);
+      result.setTable(this.table);
       return result;
    }
 >>
