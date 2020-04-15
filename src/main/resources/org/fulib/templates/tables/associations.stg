@@ -1,19 +1,18 @@
 tableRoleSignatures(role, other) ::= <<
-   expandMethod:  class/<role.clazz.name>Table/method/expand<role.name; format="cap">(String...)
+   expandMethod:  class/<role.clazz.name>Table/method/expand<role.name; format="cap">(String)
    hasMethod:     class/<role.clazz.name>Table/method/has<role.name; format="cap">(<other.clazz.name>Table)
 >>
 
 expandMethod(role, other) ::= <<
-   public <other.clazz.name>Table expand<role.name; format="cap">(String... rowName)
+   public <other.clazz.name>Table expand<role.name; format="cap">(String columnName)
    {
       <other.clazz.name>Table result = new <other.clazz.name>Table();
       result.setColumnMap(this.columnMap);
       result.setTable(this.table);
       int newColumnNumber = this.table.isEmpty() ? 0 : this.table.get(0).size();
 
-      String newColumnName = rowName != null && rowName.length > 0 ? rowName[0] : "" + ((char)('A' + newColumnNumber));
-      result.setColumnName(newColumnName);
-      this.columnMap.put(newColumnName, newColumnNumber);
+      result.setColumnName(columnName);
+      this.columnMap.put(columnName, newColumnNumber);
 
       int column = this.getColumn();
       List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
