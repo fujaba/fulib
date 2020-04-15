@@ -6,33 +6,35 @@ tableRoleSignatures(role, other) ::= <<
 expandMethod(role, other) ::= <<
    public <other.clazz.name>Table expand<role.name; format="cap">(String columnName)
    {
-      <other.clazz.name>Table result = new <other.clazz.name>Table();
-      result.setColumnMap(this.columnMap);
-      result.setTable(this.table);
       int newColumnNumber = this.table.isEmpty() ? 0 : this.table.get(0).size();
-
-      result.setColumnName(columnName);
       this.columnMap.put(columnName, newColumnNumber);
 
       int column = this.getColumn();
+      <if(role.toMany)>
       List\<List\<Object>\> oldTable = new ArrayList\<>(this.table);
       this.table.clear();
       for (List\<Object> row : oldTable)
       {
          <role.clazz.name> start = (<role.clazz.name>) row.get(column);
-         <if(role.toMany)>
          for (<other.clazz.name> current : start.get<role.name; format="cap">())
          {
             List\<Object> newRow = new ArrayList\<>(row);
             newRow.add(current);
             this.table.add(newRow);
          }
-         <else>
-         List\<Object> newRow = new ArrayList\<>(row);
-         newRow.add(start.get<role.name; format="cap">());
-         this.table.add(newRow);
-         <endif>
       }
+      <else>
+      for (List\<Object> row : this.table)
+      {
+         <role.clazz.name> start = (<role.clazz.name>) row.get(column);
+         row.add(start.get<role.name; format="cap">());
+      }
+      <endif>
+
+      <other.clazz.name>Table result = new <other.clazz.name>Table();
+      result.setColumnMap(this.columnMap);
+      result.setTable(this.table);
+      result.setColumnName(columnName);
       return result;
    }
 >>
