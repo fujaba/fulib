@@ -30,6 +30,8 @@ public class FileFragmentMap
    public static final String CLASS_BODY  = "classBody";
    public static final String CLASS_DECL  = "classDecl";
    public static final String CLASS_END   = "classEnd";
+   /** @deprecated since 1.2 */
+   @Deprecated
    public static final String GAP         = "gap:";
    public static final String EOF         = "eof";
 
