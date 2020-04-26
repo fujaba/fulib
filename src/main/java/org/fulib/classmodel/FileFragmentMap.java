@@ -9,7 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -44,6 +47,10 @@ public class FileFragmentMap
    public static final int CLASS_END_NEWLINES   = 1;
 
    public static final String PROPERTY_fileName = "fileName";
+
+   // comments containing "no fulib", case insensitive, and with any whitespace between the words.
+   private static final Pattern NO_FULIB_PATTERN = Pattern.compile("//.*no\\s+fulib|/\\*.*no\\s+fulib.*\\*/",
+                                                                   Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
    // =============== Fields ===============
 
@@ -413,9 +420,8 @@ public class FileFragmentMap
          return this.addNew(key, newText, newLines);
       }
 
-      // TODO this also inspects method bodies. Perhaps we don't want that?
       final String oldText = old.getText();
-      if (oldText.contains("// no"))
+      if (NO_FULIB_PATTERN.matcher(oldText).matches())
       {
          // do not overwrite
          return old;

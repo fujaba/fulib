@@ -49,6 +49,7 @@
 * Improved code generation for classes with superclasses:
   * `toString` now prepends the result of `super.toString()` #24
   * `removeYou` now calls `super.removeYou()` #15
+* Changed the way replacement of declarations with auto-generated code can be suppressed. #30
 
 ## Bugfixes
 
