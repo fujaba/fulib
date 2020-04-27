@@ -638,7 +638,7 @@ public class Clazz
    @Deprecated
    public LinkedHashSet<String> getImportList()
    {
-      return this.imports;
+      return this.imports != null ? this.imports : (this.imports = new LinkedHashSet<>());
    }
 
    @Deprecated
