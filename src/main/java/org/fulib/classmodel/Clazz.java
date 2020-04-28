@@ -15,12 +15,20 @@ public class Clazz
 {
    // =============== Constants ===============
 
+   /** @deprecated since 1.2; for internal use only */
+   @Deprecated
    public static final ArrayList<Attribute> EMPTY_attributes = new ArrayList<Attribute>()
    { @Override public boolean add(Attribute value){ throw new UnsupportedOperationException("No direct add! Use xy.withAttributes(obj)"); }};
+   /** @deprecated since 1.2; for internal use only */
+   @Deprecated
    public static final ArrayList<AssocRole> EMPTY_roles = new ArrayList<AssocRole>()
    { @Override public boolean add(AssocRole value){ throw new UnsupportedOperationException("No direct add! Use xy.withRoles(obj)"); }};
+   /** @deprecated since 1.2; for internal use only */
+   @Deprecated
    public static final ArrayList<Clazz> EMPTY_subClasses = new ArrayList<Clazz>()
    { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withSubClasses(obj)"); }};
+   /** @deprecated since 1.2; for internal use only */
+   @Deprecated
    public static final ArrayList<FMethod> EMPTY_methods = new ArrayList<FMethod>()
    { @Override public boolean add(FMethod value){ throw new UnsupportedOperationException("No direct add! Use xy.withMethods(obj)"); }};
 
@@ -33,7 +41,9 @@ public class Clazz
    public static final String PROPERTY_superClass = "superClass";
    public static final String PROPERTY_subClasses = "subClasses";
    public static final String PROPERTY_methods = "methods";
+   /** @since 1.2 */
    public static final String PROPERTY_imports = "imports";
+   /** @deprecated since 1.2; use {@link #PROPERTY_imports} instead */
    @Deprecated
    public static final String PROPERTY_importList = "importList";
 
@@ -136,6 +146,7 @@ public class Clazz
       return this.subClasses != null ? this.subClasses : EMPTY_subClasses;
    }
 
+   /** @deprecated since 1.2; use one of the type-safe overloads */
    @Deprecated
    public Clazz withSubClasses(Object... value)
    {
@@ -165,6 +176,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withSubClasses(Clazz value)
    {
       if (this.subClasses == null)
@@ -180,6 +192,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withSubClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -189,6 +202,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withSubClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)
@@ -198,6 +212,7 @@ public class Clazz
       return this;
    }
 
+   /** @deprecated since 1.2; use one of the type-safe overloads */
    @Deprecated
    public Clazz withoutSubClasses(Object... value)
    {
@@ -223,6 +238,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutSubClasses(Clazz value)
    {
       if (this.subClasses != null && this.subClasses.remove(value))
@@ -233,6 +249,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutSubClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -242,6 +259,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutSubClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)
@@ -268,6 +286,7 @@ public class Clazz
       return this.attributes != null ? this.attributes : EMPTY_attributes;
    }
 
+   /** @deprecated since 1.2; use one of the type-safe overloads */
    @Deprecated
    public Clazz withAttributes(Object... value)
    {
@@ -297,6 +316,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withAttributes(Attribute value)
    {
       if (this.attributes == null)
@@ -312,6 +332,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withAttributes(Attribute... value)
    {
       for (final Attribute item : value)
@@ -321,6 +342,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withAttributes(Collection<? extends Attribute> value)
    {
       for (final Attribute item : value)
@@ -330,6 +352,7 @@ public class Clazz
       return this;
    }
 
+   /** @deprecated since 1.2; use one of the type-safe overloads */
    @Deprecated
    public Clazz withoutAttributes(Object... value)
    {
@@ -355,6 +378,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutAttributes(Attribute value)
    {
       if (this.attributes != null && this.attributes.remove(value))
@@ -365,6 +389,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutAttributes(Attribute... value)
    {
       for (final Attribute item : value)
@@ -374,6 +399,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutAttributes(Collection<? extends Attribute> value)
    {
       for (final Attribute item : value)
@@ -400,6 +426,7 @@ public class Clazz
       return this.roles != null ? this.roles : EMPTY_roles;
    }
 
+   /** @deprecated since 1.2; use one of the type-safe overloads */
    @Deprecated
    public Clazz withRoles(Object... value)
    {
@@ -429,6 +456,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withRoles(AssocRole value)
    {
       if (this.roles == null)
@@ -444,6 +472,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withRoles(AssocRole... value)
    {
       for (final AssocRole item : value)
@@ -453,6 +482,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withRoles(Collection<? extends AssocRole> value)
    {
       for (final AssocRole item : value)
@@ -462,6 +492,7 @@ public class Clazz
       return this;
    }
 
+   /** @deprecated since 1.2; use one of the type-safe overloads */
    @Deprecated
    public Clazz withoutRoles(Object... value)
    {
@@ -487,6 +518,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutRoles(AssocRole value)
    {
       if (this.roles != null && this.roles.remove(value))
@@ -497,6 +529,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutRoles(AssocRole... value)
    {
       for (final AssocRole item : value)
@@ -506,6 +539,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutRoles(Collection<? extends AssocRole> value)
    {
       for (final AssocRole item : value)
@@ -520,6 +554,7 @@ public class Clazz
       return this.methods != null ? this.methods : EMPTY_methods;
    }
 
+   /** @deprecated since 1.2; use one of the type-safe overloads */
    @Deprecated
    public Clazz withMethods(Object... value)
    {
@@ -549,6 +584,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withMethods(FMethod value)
    {
       if (this.methods == null)
@@ -564,6 +600,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withMethods(FMethod... value)
    {
       for (final FMethod item : value)
@@ -573,6 +610,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withMethods(Collection<? extends FMethod> value)
    {
       for (final FMethod item : value)
@@ -582,6 +620,7 @@ public class Clazz
       return this;
    }
 
+   /** @deprecated since 1.2; use one of the type-safe overloads */
    @Deprecated
    public Clazz withoutMethods(Object... value)
    {
@@ -607,6 +646,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutMethods(FMethod value)
    {
       if (this.methods != null && this.methods.remove(value))
@@ -617,6 +657,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutMethods(FMethod... value)
    {
       for (final FMethod item : value)
@@ -626,6 +667,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutMethods(Collection<? extends FMethod> value)
    {
       for (final FMethod item : value)
@@ -635,12 +677,14 @@ public class Clazz
       return this;
    }
 
+   /** @deprecated since 1.2; use {@link #getImports()} instead */
    @Deprecated
    public LinkedHashSet<String> getImportList()
    {
       return this.imports != null ? this.imports : (this.imports = new LinkedHashSet<>());
    }
 
+   /** @deprecated since 1.2; use {@link #withImports(Collection)} instead */
    @Deprecated
    public Clazz setImportList(LinkedHashSet<String> value)
    {
@@ -648,11 +692,13 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Set<String> getImports()
    {
       return this.imports != null ? Collections.unmodifiableSet(this.imports) : Collections.emptySet();
    }
 
+   /** @since 1.2 */
    public Clazz withImports(String value)
    {
       if (this.imports == null)
@@ -666,6 +712,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withImports(String... value)
    {
       for (final String item : value)
@@ -675,6 +722,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withImports(Collection<? extends String> value)
    {
       for (final String item : value)
@@ -684,6 +732,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutImports(String value)
    {
       if (this.imports != null && this.imports.removeAll(Collections.singleton(value)))
@@ -693,6 +742,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutImports(String... value)
    {
       for (final String item : value)
@@ -702,6 +752,7 @@ public class Clazz
       return this;
    }
 
+   /** @since 1.2 */
    public Clazz withoutImports(Collection<? extends String> value)
    {
       for (final String item : value)
