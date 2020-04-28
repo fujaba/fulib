@@ -12,8 +12,10 @@ public class AssocRole
 
    public static final String PROPERTY_name = "name";
    public static final String PROPERTY_cardinality = "cardinality";
+   /** @deprecated since 1.2; use {@link #PROPERTY_collectionType} instead */
    @Deprecated
    public static final String PROPERTY_roleType = "roleType";
+   /** @since 1.2 */
    public static final String PROPERTY_collectionType = "collectionType";
    public static final String PROPERTY_aggregation = "aggregation";
    public static final String PROPERTY_propertyStyle = "propertyStyle";
@@ -90,6 +92,7 @@ public class AssocRole
       return this;
    }
 
+   /** @since 1.2 */
    public String getId()
    {
       final String className = this.getClazz() == null ? "___" : this.getClazz().getName();
@@ -132,11 +135,13 @@ public class AssocRole
       return this;
    }
 
+   /** @since 1.2 */
    public boolean isToOne()
    {
       return this.cardinality == Type.ONE;
    }
 
+   /** @since 1.2 */
    public boolean isToMany()
    {
       return this.cardinality != Type.ONE;
@@ -235,6 +240,7 @@ public class AssocRole
       return this;
    }
 
+   /** @since 1.2 */
    public boolean isJavaFX()
    {
       return Type.JAVA_FX.equals(this.getPropertyStyle());
