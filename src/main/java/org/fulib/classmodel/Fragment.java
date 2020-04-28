@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Objects;
 
+/** @since 1.2 */
 public class Fragment
 {
    // =============== Constants ===============

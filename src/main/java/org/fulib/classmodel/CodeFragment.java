@@ -50,6 +50,7 @@ public class CodeFragment extends Fragment
 
    // =============== Methods ===============
 
+   /** @since 1.2 */
    @Override
    public void write(Writer writer) throws IOException
    {

@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/** @since 1.2 */
 public class CompoundFragment extends Fragment
 {
    // =============== Constants ===============
