@@ -213,13 +213,13 @@ public class ClassModelManager implements IModelManager
     *
     * @since 1.2
     */
-   public void setPackageName(String packageName)
+   public ClassModelManager setPackageName(String packageName)
    {
       final String oldPackageName = this.classModel.getPackageName();
 
       if (Objects.equals(oldPackageName, packageName))
       {
-         return;
+         return this;
       }
 
       this.classModel.setPackageName(packageName);
@@ -229,6 +229,8 @@ public class ClassModelManager implements IModelManager
          e.put(EVENT_KEY, THE_CLASS_MODEL + "_" + PROPERTY_packageName);
          e.put(PROPERTY_packageName, packageName);
       });
+
+      return this;
    }
 
    /**
@@ -254,13 +256,13 @@ public class ClassModelManager implements IModelManager
     *
     * @since 1.2
     */
-   public void setSourceFolder(String sourceFolder)
+   public ClassModelManager setSourceFolder(String sourceFolder)
    {
       final String mainJavaDir = this.classModel.getMainJavaDir();
 
       if (Objects.equals(mainJavaDir, sourceFolder))
       {
-         return;
+         return this;
       }
 
       this.classModel.setMainJavaDir(sourceFolder);
@@ -270,6 +272,8 @@ public class ClassModelManager implements IModelManager
          e.put(EVENT_KEY, THE_CLASS_MODEL + "_" + PROPERTY_mainJavaDir);
          e.put(PROPERTY_mainJavaDir, sourceFolder);
       });
+
+      return this;
    }
 
    // --------------- Classes ---------------
