@@ -129,6 +129,6 @@ public class AttributeTest
 
       toString = uniClass.getMethod("toString");
       txt = toString.invoke(studyRight);
-      assertThat("toString", txt, is(equalTo("Hello")));
+      assertThat("toString", txt, is(equalTo("StudyFuture")));
    }
 }
