@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.fulib.classmodel.FileFragmentMap.CLASS;
+import static org.fulib.classmodel.FileFragmentMap.EOF;
 import static org.fulib.classmodel.FileFragmentMap.IMPORT;
 import static org.fulib.classmodel.FileFragmentMap.PACKAGE;
 import static org.fulib.classmodel.FileFragmentMap.*;
@@ -20,7 +21,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 {
    // =============== Fields ===============
 
-   private final CharStream      input;
+   private final CharStream input;
    private final FileFragmentMap map;
 
    private int lastFragmentEndPos = -1;
@@ -334,6 +335,11 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    @Override
    public void exitClassDecl(ClassDeclContext ctx)
    {
+      // make sure the method/ and attribute/ sections get created by adding dummies
+      this.map.append(
+         new CodeFragment().setKey(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + "#start").setText(""));
+      this.map.append(
+         new CodeFragment().setKey(CLASS + '/' + this.className + '/' + METHOD + '/' + "#start").setText(""));
       this.addCodeFragment(CLASS + '/' + this.className + '/' + CLASS_END, ctx.classMember().classBody().RBRACE());
    }
 
