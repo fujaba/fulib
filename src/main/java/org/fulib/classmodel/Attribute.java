@@ -12,6 +12,7 @@ public class Attribute
 
    public static final String PROPERTY_name = "name";
    public static final String PROPERTY_type = "type";
+   /** @since 1.2 */
    public static final String PROPERTY_collectionType = "collectionType";
    public static final String PROPERTY_initialization = "initialization";
    public static final String PROPERTY_propertyStyle = "propertyStyle";
@@ -59,6 +60,7 @@ public class Attribute
       return this;
    }
 
+   /** @since 1.2 */
    public String getId()
    {
       final String className = this.getClazz() != null ? this.getClazz().getName() : "___";
@@ -101,6 +103,7 @@ public class Attribute
       return this;
    }
 
+   /** @since 1.2 */
    public String getBoxType()
    {
       return getBoxType(this.getType());
@@ -130,6 +133,7 @@ public class Attribute
       return attrType;
    }
 
+   /** @since 1.2 */
    public boolean isPrimitive()
    {
       return isPrimitive(this.getType());
@@ -140,11 +144,13 @@ public class Attribute
       return !attrType.equals(getBoxType(attrType));
    }
 
+   /** @since 1.2 */
    public CollectionType getCollectionType()
    {
       return this.collectionType;
    }
 
+   /** @since 1.2 */
    public Attribute setCollectionType(CollectionType value)
    {
       if (Objects.equals(value, this.collectionType))
@@ -158,6 +164,7 @@ public class Attribute
       return this;
    }
 
+   /** @since 1.2 */
    public boolean isCollection()
    {
       return this.getCollectionType() != null;
@@ -199,6 +206,7 @@ public class Attribute
       return this;
    }
 
+   /** @since 1.2 */
    public boolean isJavaFX()
    {
       return Type.JAVA_FX.equals(this.getPropertyStyle());
