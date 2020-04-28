@@ -234,43 +234,43 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
-    * @param sourceFolder
-    *    the source folder
+    * @param sourceDir
+    *    the source directory
     *
     * @return this instance, to allow method chaining
     *
-    * @deprecated since 1.2; use {@link #setSourceFolder(String)} instead
+    * @deprecated since 1.2; use {@link #setMainJavaDir(String)} instead
     */
    @Deprecated
-   public ClassModelManager haveMainJavaDir(String sourceFolder)
+   public ClassModelManager haveMainJavaDir(String sourceDir)
    {
-      this.setSourceFolder(sourceFolder);
+      this.setMainJavaDir(sourceDir);
       return this;
    }
 
    /**
-    * Sets the source folder to generate model classes into.
+    * Sets the source directory to generate model classes into.
     *
-    * @param sourceFolder
-    *    the source folder
+    * @param mainJavaDir
+    *    the source directory
     *
     * @since 1.2
     */
-   public ClassModelManager setSourceFolder(String sourceFolder)
+   public ClassModelManager setMainJavaDir(String mainJavaDir)
    {
-      final String mainJavaDir = this.classModel.getMainJavaDir();
+      final String old = this.classModel.getMainJavaDir();
 
-      if (Objects.equals(mainJavaDir, sourceFolder))
+      if (Objects.equals(old, mainJavaDir))
       {
          return this;
       }
 
-      this.classModel.setMainJavaDir(sourceFolder);
+      this.classModel.setMainJavaDir(mainJavaDir);
 
       this.event(e -> {
          e.put(EVENT_TYPE, USE_SOURCE_FOLDER);
          e.put(EVENT_KEY, THE_CLASS_MODEL + "_" + PROPERTY_mainJavaDir);
-         e.put(PROPERTY_mainJavaDir, sourceFolder);
+         e.put(PROPERTY_mainJavaDir, mainJavaDir);
       });
 
       return this;
@@ -697,7 +697,7 @@ public class ClassModelManager implements IModelManager
 
       final Consumer<Map<String, String>> useSourceFolder = map -> {
          final String sourceFolder = map.get(PROPERTY_mainJavaDir);
-         this.setSourceFolder(sourceFolder);
+         this.setMainJavaDir(sourceFolder);
       };
       consumerMap.put(USE_SOURCE_FOLDER, useSourceFolder);
       consumerMap.put("haveMainJavaDir", useSourceFolder); // legacy name

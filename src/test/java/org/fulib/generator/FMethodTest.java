@@ -30,7 +30,7 @@ public class FMethodTest
       Tools.removeDirAndFiles(targetFolder);
 
       ClassModelManager mm = new ClassModelManager();
-      mm.setSourceFolder(sourceFolder);
+      mm.setMainJavaDir(sourceFolder);
       mm.setPackageName(packageName);
 
       Clazz party = mm.haveClass("Party");
