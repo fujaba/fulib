@@ -272,48 +272,56 @@ public class FMethod
       return true;
    }
 
+   /** @deprecated since 1.2; use {@link #getName()} instead */
    @Deprecated
    public String readName()
    {
       return this.getName();
    }
 
+   /** @deprecated since 1.2; use {@link #setName(String)} instead */
    @Deprecated
    public FMethod writeName(String newName)
    {
       return this.setName(newName);
    }
 
+   /** @deprecated since 1.2; use {@link #getSignature()} instead */
    @Deprecated
    public String readSignature()
    {
       return this.getSignature();
    }
 
+   /** @deprecated since 1.2; use {@link #getReturnType()} instead */
    @Deprecated
    public String readReturnType()
    {
       return this.getReturnType();
    }
 
+   /** @deprecated since 1.2; use {@link #setReturnType(String)} instead */
    @Deprecated
    public FMethod writeReturnType(String newReturnType)
    {
       return this.setReturnType(newReturnType);
    }
 
+   /** @deprecated since 1.2; use {@link #getParams()} instead */
    @Deprecated
    public LinkedHashMap<String, String> readParams()
    {
       return this.getParams();
    }
 
+   /** @deprecated since 1.2; use {@link #getParamsString()} instead */
    @Deprecated
    public String readFullParamsString()
    {
       return this.getParamsString();
    }
 
+   /** @deprecated since 1.2; use {@link #setParamsString(String)} instead */
    @Deprecated
    public FMethod setParamsByString(String params)
    {
