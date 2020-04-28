@@ -13,10 +13,13 @@ public class ClassModel
 {
    // =============== Constants ===============
 
+   /** @deprecated since 1.2; for internal use only */
+   @Deprecated
    public static final ArrayList<Clazz> EMPTY_classes = new ArrayList<Clazz>()
    { @Override public boolean add(Clazz value){ throw new UnsupportedOperationException("No direct add! Use xy.withClasses(obj)"); }};
    public static final String PROPERTY_packageName = "packageName";
    public static final String PROPERTY_mainJavaDir = "mainJavaDir";
+   /** @deprecated since 1.2; use {@link #PROPERTY_defaultCollectionType} instead */
    @Deprecated
    public static final String PROPERTY_defaultRoleType = "defaultRoleType";
    public static final String PROPERTY_defaultCollectionType = "defaultCollectionType";
@@ -170,6 +173,7 @@ public class ClassModel
       return this.classes != null ? this.classes : EMPTY_classes;
    }
 
+   /** @deprecated since 1.2; use one of the type-safe overloads */
    @Deprecated
    public ClassModel withClasses(Object... value)
    {
@@ -199,6 +203,7 @@ public class ClassModel
       return this;
    }
 
+   /** @since 1.2 */
    public ClassModel withClasses(Clazz value)
    {
       if (this.classes == null)
@@ -214,6 +219,7 @@ public class ClassModel
       return this;
    }
 
+   /** @since 1.2 */
    public ClassModel withClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -223,6 +229,7 @@ public class ClassModel
       return this;
    }
 
+   /** @since 1.2 */
    public ClassModel withClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)
@@ -232,6 +239,7 @@ public class ClassModel
       return this;
    }
 
+   /** @deprecated since 1.2; use one of the type-safe overloads */
    @Deprecated
    public ClassModel withoutClasses(Object... value)
    {
@@ -257,6 +265,7 @@ public class ClassModel
       return this;
    }
 
+   /** @since 1.2 */
    public ClassModel withoutClasses(Clazz value)
    {
       if (this.classes != null && this.classes.remove(value))
@@ -267,6 +276,7 @@ public class ClassModel
       return this;
    }
 
+   /** @since 1.2 */
    public ClassModel withoutClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -276,6 +286,7 @@ public class ClassModel
       return this;
    }
 
+   /** @since 1.2 */
    public ClassModel withoutClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)
