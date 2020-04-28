@@ -2,6 +2,7 @@ package org.fulib.classmodel;
 
 import java.util.Collection;
 
+/** @since 1.2 */
 @SuppressWarnings("rawtypes")
 public enum CollectionItf
 {

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/** @since 1.2 */
 @SuppressWarnings("rawtypes")
 public class CollectionType
 {
