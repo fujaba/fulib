@@ -101,43 +101,32 @@ public class FMethod
    {
       // a declaration looks like
       // public void m(T1 p1, T2 p2)
-      if (value == null)
+
+      if (value.equals(this.getDeclaration()))
       {
-         if (this.getDeclaration() == null)
-         {
-            return this;
-         }
-         else
-         {
-            this.name = null;
-            this.returnType = "void";
-            this.getParams().clear();
-         }
+         return this;
       }
 
-      if (!value.equals(this.getDeclaration()))
-      {
-         // TODO properly parse
+      // TODO properly parse
 
-         String oldValue = this.getDeclaration();
-         int pos = value.indexOf('(');
-         String namePart = value.substring(0, pos);
-         String params = value.substring(pos + 1, value.length() - 1);
-         String[] split = namePart.split(" ");
-         String modifier = split[0];
-         if (modifier.startsWith("@"))
-         {
-            int publicPos = modifier.indexOf("public");
-            String annos = modifier.substring(0, publicPos - 1);
-            setAnnotations(annos);
-         }
-         String newName = split[2];
-         this.name = newName;
-         String newReturnType = split[1];
-         this.returnType = newReturnType;
-         this.setParamsString(params);
-         firePropertyChange("declaration", oldValue, value);
+      String oldValue = this.getDeclaration();
+      int pos = value.indexOf('(');
+      String namePart = value.substring(0, pos);
+      String params = value.substring(pos + 1, value.length() - 1);
+      String[] split = namePart.split(" ");
+      String modifier = split[0];
+      if (modifier.startsWith("@"))
+      {
+         int publicPos = modifier.indexOf("public");
+         String annos = modifier.substring(0, publicPos - 1);
+         setAnnotations(annos);
       }
+      String newName = split[2];
+      this.name = newName;
+      String newReturnType = split[1];
+      this.returnType = newReturnType;
+      this.setParamsString(params);
+      firePropertyChange("declaration", oldValue, value);
       return this;
    }
 
