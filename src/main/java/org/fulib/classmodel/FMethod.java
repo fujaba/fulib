@@ -119,14 +119,12 @@ public class FMethod
       {
          int publicPos = modifier.indexOf("public");
          String annos = modifier.substring(0, publicPos - 1);
-         setAnnotations(annos);
+         this.setAnnotations(annos);
       }
-      String newName = split[2];
-      this.name = newName;
-      String newReturnType = split[1];
-      this.returnType = newReturnType;
+      this.name = split[2];
+      this.returnType = split[1];
       this.setParamsString(params);
-      firePropertyChange("declaration", oldValue, value);
+      this.firePropertyChange("declaration", oldValue, value);
       return this;
    }
 
