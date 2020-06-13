@@ -34,6 +34,47 @@ Create a class `GenModel` in the `de.uniks.studyright` package and **put it in t
 The name `GenModel` is only a convention, you can also use a different one.
 
 <!-- insert_code_fragment: test.GenModel | fenced -->
+```java
+package de.uniks.studyright;
+
+import org.fulib.builder.ClassModelDecorator;
+import org.fulib.builder.ClassModelManager;
+import org.fulib.builder.Type;
+import org.fulib.classmodel.Clazz;
+
+public class GenModel implements ClassModelDecorator
+{
+	@Override
+	public void decorate(ClassModelManager mm)
+	{
+      final Clazz university = mm.haveClass("University", c -> {
+         c.attribute("name", Type.STRING);
+      });
+
+      final Clazz student = mm.haveClass("Student", c -> {
+         c.attribute("name", Type.STRING);
+         c.attribute("studentId", Type.STRING);
+         c.attribute("credits", Type.INT);
+         c.attribute("motivation", Type.DOUBLE);
+      });
+
+      final Clazz room = mm.haveClass("Room", c -> {
+         c.attribute("roomNo", Type.STRING);
+         c.attribute("topic", Type.STRING);
+         c.attribute("credits", Type.INT);
+      });
+
+      // a university has many students, students have one uni
+      mm.associate(university, "students", Type.MANY, student, "uni", Type.ONE);
+
+      // a university has many rooms, a room has one uni
+      mm.associate(university, "rooms", Type.MANY, room, "uni", Type.ONE);
+
+      // a room has many students, a student is in one room
+      mm.associate(room, "students", Type.MANY, student, "in", Type.ONE);
+   }
+}
+```
 <!-- end_code_fragment: -->
 
 Now, run `gradle generateScenarioSource`.
@@ -47,7 +88,17 @@ Rendered as a class diagram this model looks like this:
 Now you can use the generated classes from your code (in `src/main/java` and `src/test/java`).
 Here's an example for our university model:
 
-<!-- insert_code_fragment: test.UniversityModelUsage -->
+<!-- insert_code_fragment: test.UniversityModelUsage | fenced -->
+```java
+University studyRight = new University().setName("Study Right");
+
+Room mathRoom = new Room().setTopic("math room");
+studyRight.withRooms(mathRoom);
+Room modelingRoom = new Room().setTopic("modeling room").setUni(studyRight);
+Student alice = new Student().setName("Alice").setStudentId("A4242").setIn(mathRoom);
+Student bob = new Student().setName("Bob").setStudentId("B2323").setIn(mathRoom);
+studyRight.withStudents(alice, bob);
+```
 <!-- end_code_fragment: -->
 
 This creates the object structure shown in the object diagram below.
@@ -56,8 +107,10 @@ This creates the object structure shown in the object diagram below.
 
 To create an object diagram from your object structure, add this line:
 
-<!-- insert_code_fragment: test.UniversityObjectDiagram -->
-      FulibTools.objectDiagrams().dumpPng("doc/images/studyRightObjects.png", studyRight);
+<!-- insert_code_fragment: test.UniversityObjectDiagram | fenced -->
+```java
+FulibTools.objectDiagrams().dumpPng("doc/images/studyRightObjects.png", studyRight);
+```
 <!-- end_code_fragment: -->
 
 This requires adding [fulibTools](https://github.com/fujaba/fulibTools) as a dependency.
