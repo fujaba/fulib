@@ -18,7 +18,7 @@ repositories {
 
 ```groovy
 dependencies {
-    // https://mvnrepository.com/artifact/org.fulib/fulibYaml
+    // https://mvnrepository.com/artifact/org.fulib/fulib
     compile group: 'org.fulib', name: 'fulib', version: '1.1.0'
 }
 ```
@@ -38,8 +38,6 @@ First you write code that builds up your class model:
             .buildAttribute("studentId", Type.STRING)
             .buildAttribute("credits", Type.DOUBLE)
             .buildAttribute("motivation", Type.DOUBLE);
-
-      ;
 
       ClassBuilder room = mb.buildClass("Room")
             .buildAttribute("roomNo", Type.STRING)
