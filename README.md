@@ -44,9 +44,9 @@ import org.fulib.classmodel.Clazz;
 
 public class GenModel implements ClassModelDecorator
 {
-	@Override
-	public void decorate(ClassModelManager mm)
-	{
+   @Override
+   public void decorate(ClassModelManager mm)
+   {
       final Clazz university = mm.haveClass("University", c -> {
          c.attribute("name", Type.STRING);
       });
