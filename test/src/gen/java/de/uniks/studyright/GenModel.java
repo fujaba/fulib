@@ -1,3 +1,4 @@
+// start_code_fragment: test.GenModel
 package de.uniks.studyright;
 
 import org.fulib.builder.ClassModelDecorator;
@@ -37,3 +38,4 @@ public class GenModel implements ClassModelDecorator
       mm.associate(room, "students", Type.MANY, student, "in", Type.ONE);
    }
 }
+// end_code_fragment:
