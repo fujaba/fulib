@@ -21,6 +21,6 @@ public class UniversityTest
 
       // start_code_fragment: test.UniversityObjectDiagram
       FulibTools.objectDiagrams().dumpPng("doc/images/studyRightObjects.png", studyRight);
-      // end_code_fragment
+      // end_code_fragment:
    }
 }
