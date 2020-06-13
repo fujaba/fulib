@@ -10,81 +10,59 @@ Fulib is a Java-code generating library.
 `build.gradle`:
 
 ```groovy
+plugins {
+    id 'org.fulib.fulibGradle' version '0.4.0'
+}
+
 repositories {
     mavenCentral()
     jcenter()
 }
-```
 
-```groovy
 dependencies {
-    // https://mvnrepository.com/artifact/org.fulib/fulib
-    compile group: 'org.fulib', name: 'fulib', version: '1.1.0'
+    // https://mvnrepository.com/artifact/org.fulib/fulibScenarios
+    fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.3.0'
 }
 ```
 
 ## Usage
 
-First you write code that builds up your class model:
+In the following tutorial, we build a class model for a university.
+It uses the package name `de.uniks.studyright`, which you can replace according to your needs.
 
-<!-- insert_code_fragment: test4FulibReadme.classmodel -->
-      ClassModelBuilder mb = Fulib.classModelBuilder("de.uniks.studyright");
+Create a class `GenModel` in the `de.uniks.studyright` package and **put it in the `src/gen/java` source directory**.
+The name `GenModel` is only a convention, you can also use a different one.
 
-      ClassBuilder university = mb.buildClass("University")
-            .buildAttribute("name", Type.STRING);
-
-      ClassBuilder student = mb.buildClass("Student")
-            .buildAttribute("name", Type.STRING)
-            .buildAttribute("studentId", Type.STRING)
-            .buildAttribute("credits", Type.DOUBLE)
-            .buildAttribute("motivation", Type.DOUBLE);
-
-      ClassBuilder room = mb.buildClass("Room")
-            .buildAttribute("roomNo", Type.STRING)
-            .buildAttribute("topic", Type.STRING)
-            .buildAttribute("credits", Type.DOUBLE);
-
-      university.buildAssociation(student, "students", Type.MANY, "uni", Type.ONE);
-      university.buildAssociation(room, "rooms", Type.MANY, "uni", Type.ONE);
-      room.buildAssociation(student, "students", Type.MANY, "in", Type.ONE);
-
-
-      ClassModel model = mb.getClassModel();
+<!-- insert_code_fragment: test.GenModel | fenced -->
 <!-- end_code_fragment: -->
 
-Rendered as a class diagram this model looks like:
+Now, run `gradle generateScenarioSource`.
+This will run the code you put in the `GenModel.decorate` method and generate all classes you described.
+You can check out the results in the `de.uniks.studyright` package in the `src/main/java` source directory.
 
-![simple class diagram](doc/images/SimpleClassDiagram.png)
+Rendered as a class diagram this model looks like this:
 
-From the class model you may generate Java code that implements the modeled classes:
+![University class diagram](test/src/main/java/de/uniks/studyright/classDiagram.png)
 
-<!-- insert_code_fragment: test4FulibReadme.generate -->
-      Fulib.generator().generate(model);
+Now you can use the generated classes from your code (in `src/main/java` and `src/test/java`).
+Here's an example for our university model:
+
+<!-- insert_code_fragment: test.UniversityModelUsage -->
 <!-- end_code_fragment: -->
 
-Once your IDE has compiled the generated code, you may use it like:
+This creates the object structure shown in the object diagram below.
 
-<!-- insert_code_fragment: StudyRightUserStories.testSimpleObjectModel -->
-      University studyRight = new University().setName("Study Right");
+![simple object diagram](test/doc/images/studyRightObjects.png)
 
-      Room mathRoom = new Room().setTopic("math room");
-      studyRight.withRooms(mathRoom);
-      Room modelingRoom = new Room().setTopic("modeling room").setUni(studyRight);
-      Student alice = new Student().setName("Alice").setStudentId("A4242").setIn(mathRoom);
-      Student   bob = new Student().setName("Bob")  .setStudentId("B2323").setIn(mathRoom);
-      studyRight.withStudents(alice, bob);
+To create an object diagram from your object structure, add this line:
+
+<!-- insert_code_fragment: test.UniversityObjectDiagram -->
+      FulibTools.objectDiagrams().dumpPng("doc/images/studyRightObjects.png", studyRight);
 <!-- end_code_fragment: -->
 
-This application code creates the object structure shown in the object diagram shown below.
+This requires adding [fulibTools](https://github.com/fujaba/fulibTools) as a dependency.
 
-To create an object diagram from your object structure use:
-
-
-<!-- insert_code_fragment: StudyRightUserStories.FulibTools.objectDiagrams -->
-      FulibTools.objectDiagrams().dumpPng("../fulib/doc/images/studyRightObjects.png", studyRight);
-<!-- end_code_fragment: -->
-
-![simple object diagram](doc/images/studyRightObjects.png)
+---
 
 For more details on class models and code generation see: [Fulib Class Models](doc/FulibClassModels.md)
 
