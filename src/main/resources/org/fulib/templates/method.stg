@@ -1,7 +1,7 @@
 method(method, body) ::= <<
    <if(method.annotations)><method.annotations>
    <endif>
-   public <method.returnType> <method.name>(<method.paramsString>)
+   <method.modifiers> <method.returnType> <method.name>(<method.paramsString>)
    {
       <body>
    }
