@@ -42,7 +42,7 @@ enumConstant: annotation* IDENTIFIER balancedParens? balancedBraces?;
 fieldMember: type fieldNamePart (COMMA fieldNamePart)* SEMI;
 fieldNamePart: IDENTIFIER arraySuffix* (EQ expr)?;
 
-// method: (modifier | annotation)* methodMember;
+method: (modifier | annotation)* methodMember;
 methodMember: (typeParamList annotatedType | type) IDENTIFIER
         parameterList
         arraySuffix*

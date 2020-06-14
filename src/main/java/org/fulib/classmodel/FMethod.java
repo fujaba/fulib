@@ -1,5 +1,10 @@
 package org.fulib.classmodel;
 
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.Interval;
+import org.fulib.parser.FulibClassLexer;
+import org.fulib.parser.FulibClassParser;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Iterator;
@@ -97,35 +102,72 @@ public class FMethod
       return builder.toString();
    }
 
+   private static String inputText(ParserRuleContext rule)
+   {
+      final Token start = rule.getStart();
+      final CharStream inputStream = start.getInputStream();
+      return inputStream.getText(Interval.of(start.getStartIndex(), rule.getStop().getStopIndex()));
+   }
+
    public FMethod setDeclaration(String value) // no fulib
    {
       // a declaration looks like
       // public void m(T1 p1, T2 p2)
 
-      if (value.equals(this.getDeclaration()))
+      final String oldValue = this.getDeclaration();
+      if (value.equals(oldValue))
       {
          return this;
       }
 
-      // TODO properly parse
+      // adding ";" because the "method" rule expects it
+      final CharStream input = CharStreams.fromString(value + ";");
+      final FulibClassLexer lexer = new FulibClassLexer(input);
+      final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
 
-      String oldValue = this.getDeclaration();
-      int pos = value.indexOf('(');
-      String namePart = value.substring(0, pos);
-      String params = value.substring(pos + 1, value.length() - 1);
-      String[] split = namePart.split(" ");
-      String modifier = split[0];
-      if (modifier.startsWith("@"))
+      final FulibClassParser.MethodContext methodCtx = parser.method();
+      final FulibClassParser.MethodMemberContext memberCtx = methodCtx.methodMember();
+
+      final String annotations = methodCtx
+         .annotation()
+         .stream()
+         .map(FMethod::inputText)
+         .collect(Collectors.joining(" "));
+      this.setAnnotations(annotations);
+
+      String returnType = inputText(memberCtx.type());
+
+      for (Object ignored : memberCtx.arraySuffix())
       {
-         int publicPos = modifier.indexOf("public");
-         String annos = modifier.substring(0, publicPos - 1);
-         this.setAnnotations(annos);
+         //noinspection StringConcatenationInLoop
+         returnType += "[]";
       }
-      this.name = split[2];
-      this.returnType = split[1];
-      this.setParamsString(params);
+
+      this.setReturnType(returnType);
+      this.setName(memberCtx.IDENTIFIER().getText());
+      this.setParams(memberCtx.parameterList());
+
       this.firePropertyChange("declaration", oldValue, value);
       return this;
+   }
+
+   private void setParams(FulibClassParser.ParameterListContext paramsCtx)
+   {
+      if (this.params == null)
+      {
+         this.params = new LinkedHashMap<>();
+      }
+      else
+      {
+         this.params.clear();
+      }
+
+      for (final FulibClassParser.ParameterContext paramCtx : paramsCtx.parameter())
+      {
+         final String name = paramCtx.IDENTIFIER().getText();
+         final String type = inputText(paramCtx.type());
+         this.params.put(name, type);
+      }
    }
 
    public String getAnnotations()
@@ -163,18 +205,11 @@ public class FMethod
 
    public FMethod setParamsString(String params)
    {
-      // TODO properly parse the string
-      String[] split = params.split(", ");
-      this.getParams().clear();
-      for (String s : split)
-      {
-         if (s.isEmpty())
-         {
-            break;
-         }
-         String[] pair = s.split(" ");
-         this.getParams().put(pair[1], pair[0]);
-      }
+      final CharStream input = CharStreams.fromString("(" + params + ")");
+      final FulibClassLexer lexer = new FulibClassLexer(input);
+      final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
+
+      this.setParams(parser.parameterList());
 
       return this;
    }
