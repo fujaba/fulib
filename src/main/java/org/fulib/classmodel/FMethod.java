@@ -31,7 +31,7 @@ public class FMethod
    private Clazz clazz;
    private String name;
    private String annotations;
-   private String modifiers;
+   private String modifiers = "public";
    private LinkedHashMap<String, String> params;
    private String returnType;
    private String methodBody;

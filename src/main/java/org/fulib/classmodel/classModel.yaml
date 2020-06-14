@@ -422,6 +422,7 @@
   boxType: 	String
   clazz: 	fMethod
   id: 	FMethod_modifiers
+  initialization: 	"\"public\""
   modified: 	false
   name: 	modifiers
   propertyStyle: 	Bean
