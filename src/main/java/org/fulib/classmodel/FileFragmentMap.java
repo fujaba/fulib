@@ -421,7 +421,7 @@ public class FileFragmentMap
       }
 
       final String oldText = old.getText();
-      if (NO_FULIB_PATTERN.matcher(oldText).matches())
+      if (NO_FULIB_PATTERN.matcher(oldText).find())
       {
          // do not overwrite
          return old;
