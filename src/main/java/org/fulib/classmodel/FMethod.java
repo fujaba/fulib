@@ -22,6 +22,7 @@ public class FMethod
    public static final String PROPERTY_clazz = "clazz";
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_annotations = "annotations";
+   public static final String PROPERTY_modifiers = "modifiers";
 
    // =============== Fields ===============
 
@@ -30,6 +31,7 @@ public class FMethod
    private Clazz clazz;
    private String name;
    private String annotations;
+   private String modifiers;
    private LinkedHashMap<String, String> params;
    private String returnType;
    private String methodBody;
@@ -185,6 +187,24 @@ public class FMethod
       final String oldValue = this.annotations;
       this.annotations = value;
       this.firePropertyChange(PROPERTY_annotations, oldValue, value);
+      return this;
+   }
+
+   public String getModifiers()
+   {
+      return this.modifiers;
+   }
+
+   public FMethod setModifiers(String value)
+   {
+      if (Objects.equals(value, this.modifiers))
+      {
+         return this;
+      }
+
+      final String oldValue = this.modifiers;
+      this.modifiers = value;
+      this.firePropertyChange(PROPERTY_modifiers, oldValue, value);
       return this;
    }
 

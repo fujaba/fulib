@@ -40,7 +40,7 @@
   roles: 	assocRole_clazz 	assocRole_other 	assocRole_other2
 
 - fMethod: 	Clazz
-  attributes: 	fMethod_methodBody 	fMethod_modified 	fMethod_annotations
+  attributes: 	fMethod_methodBody 	fMethod_modified 	fMethod_modifiers 	fMethod_annotations
   model: 	c
   modified: 	false
   name: 	FMethod
@@ -417,6 +417,15 @@
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
+
+- fMethod_modifiers: 	Attribute
+  boxType: 	String
+  clazz: 	fMethod
+  id: 	FMethod_modifiers
+  modified: 	false
+  name: 	modifiers
+  propertyStyle: 	Bean
+  type: 	String
 
 - fMethod_annotations: 	Attribute
   boxType: 	String
