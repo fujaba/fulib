@@ -53,6 +53,8 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
       final FulibClassLexer lexer = new FulibClassLexer(input);
       final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
+      parser.removeErrorListeners();
+      parser.addErrorListener(new FulibErrorHandler(System.err));
 
       final FileContext context = parser.file();
 
