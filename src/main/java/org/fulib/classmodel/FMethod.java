@@ -93,7 +93,8 @@ public class FMethod
          builder.append("\n   ");
       }
 
-      builder.append("public ");
+      builder.append(this.modifiers);
+      builder.append(' ');
       builder.append(this.returnType);
       builder.append(' ');
       builder.append(this.name);
@@ -136,6 +137,8 @@ public class FMethod
          .map(FMethod::inputText)
          .collect(Collectors.joining(" "));
       this.setAnnotations(annotations);
+
+      this.setModifiers(methodCtx.modifier().stream().map(FMethod::inputText).collect(Collectors.joining(" ")));
 
       String returnType = inputText(memberCtx.type());
 
