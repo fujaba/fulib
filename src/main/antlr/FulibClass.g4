@@ -74,7 +74,7 @@ typeArgList: LANGLE (typeArg (COMMA typeArg)*)? RANGLE;
 modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT | VOLATILE | SYNCHRONIZED | NATIVE | STRICTFP | DEFAULT;
 annotation: AT qualifiedName balancedParens?;
 
-expr: (balancedBraces | ~(SEMI | COMMA))*;
+expr: (balancedBraces | balancedParens | ~(SEMI | COMMA))*;
 
 qualifiedName: IDENTIFIER (DOT IDENTIFIER)*;
 
