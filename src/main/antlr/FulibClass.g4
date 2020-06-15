@@ -77,6 +77,8 @@ annotation: AT qualifiedName balancedParens?;
 expr: balancedBraces
     | balancedParens
     | NEW type balancedParens balancedBraces? // constructor
+    | expr DOT IDENTIFIER // field access
+    | expr DOT typeArgList? IDENTIFIER balancedParens // method call
     | ~(SEMI | COMMA)*
     ;
 
