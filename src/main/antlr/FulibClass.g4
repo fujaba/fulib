@@ -74,7 +74,11 @@ typeArgList: LANGLE (typeArg (COMMA typeArg)*)? RANGLE;
 modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT | VOLATILE | SYNCHRONIZED | NATIVE | STRICTFP | DEFAULT;
 annotation: AT qualifiedName balancedParens?;
 
-expr: (balancedBraces | balancedParens | ~(SEMI | COMMA))*;
+expr: balancedBraces
+    | balancedParens
+    | NEW type balancedParens balancedBraces? // constructor
+    | ~(SEMI | COMMA)*
+    ;
 
 qualifiedName: IDENTIFIER (DOT IDENTIFIER)*;
 
@@ -139,6 +143,7 @@ FLOAT: 'float';
 DOUBLE: 'double';
 
 THIS: 'this';
+NEW: 'new';
 
 DOC_COMMENT: '/**' .*? '*/' -> channel(2);
 BLOCK_COMMENT: '/*' .*? '*/' -> channel(2);
