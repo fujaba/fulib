@@ -74,13 +74,13 @@ typeArgList: LANGLE (typeArg (COMMA typeArg)*)? RANGLE;
 modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT | VOLATILE | SYNCHRONIZED | NATIVE | STRICTFP | DEFAULT;
 annotation: AT qualifiedName balancedParens?;
 
-expr: balancedBraces
-    | balancedParens
-    | NEW type balancedParens balancedBraces? // constructor
-    | expr DOT IDENTIFIER // field access
-    | expr DOT typeArgList? IDENTIFIER balancedParens // method call
-    | ~(SEMI | COMMA)*
-    ;
+expr: (balancedBraces
+      | balancedParens
+      | NEW type balancedParens balancedBraces? // constructor
+      | DOT IDENTIFIER // field access
+      | DOT typeArgList? IDENTIFIER balancedParens // method call
+      | ~(SEMI | COMMA)
+      )*;
 
 qualifiedName: IDENTIFIER (DOT IDENTIFIER)*;
 
