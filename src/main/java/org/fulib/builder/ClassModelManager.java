@@ -104,7 +104,6 @@ public class ClassModelManager implements IModelManager
    public static final String SRC_SIZE       = "srcSize";
    public static final String TGT_ROLE       = "tgtRole";
    public static final String TGT_SIZE       = "tgtSize";
-   public static final String BOTH_ROLES     = "bothRoles";
 
    @Deprecated
    public static final String HAVE_ROLE = "haveRole";
