@@ -532,11 +532,7 @@ public class ClassModelManager implements IModelManager
       final AssocRole role = this.haveRole(srcClass, srcRole, srcSize, modified);
       final AssocRole other = this.haveRole(tgtClass, tgtRole, tgtSize, modified);
 
-      if (role.getOther() != other)
-      {
-         modified.set(true);
-         role.setOther(other);
-      }
+      this.link(role, other, modified);
 
       if (!modified.get())
       {
@@ -587,6 +583,33 @@ public class ClassModelManager implements IModelManager
       modified.set(true);
       role.setCardinality(cardinality);
       return role;
+   }
+
+   private void link(AssocRole src, AssocRole tgt, AtomicBoolean modified)
+   {
+      final AssocRole oldTgt = src.getOther();
+      if (oldTgt == tgt)
+      {
+         return;
+      }
+
+      if (oldTgt != null)
+      {
+         throw new IllegalArgumentException(
+            String.format("role '%s.%s' is already linked to '%s.%s'", src.getClazz().getName(), src.getName(),
+                          oldTgt.getClazz().getName(), oldTgt.getName()));
+      }
+
+      final AssocRole oldSrc = tgt.getOther();
+      if (oldSrc != null)
+      {
+         throw new IllegalArgumentException(
+            String.format("role '%s.%s' is already linked to '%s.%s'", tgt.getClazz().getName(), tgt.getName(),
+                          oldSrc.getClazz().getName(), oldSrc.getName()));
+      }
+
+      modified.set(true);
+      src.setOther(tgt);
    }
 
    // --------------- Methods ---------------
