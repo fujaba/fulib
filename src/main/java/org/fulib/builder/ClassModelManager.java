@@ -46,12 +46,12 @@ public class ClassModelManager implements IModelManager
 
       public void imports(String qualifiedName)
       {
-         ClassModelManager.this.addImport(this.clazz, qualifiedName);
+         ClassModelManager.this.haveImport(this.clazz, qualifiedName);
       }
 
       public void extend(Clazz superClazz)
       {
-         ClassModelManager.this.extend(this.clazz, superClazz);
+         ClassModelManager.this.haveSuper(this.clazz, superClazz);
       }
 
       public Attribute attribute(String name, String type)
@@ -94,7 +94,7 @@ public class ClassModelManager implements IModelManager
 
    public static final String CLASS_NAME = "className";
 
-   public static final String IMPORT = "import";
+   public static final String HAVE_IMPORT = "haveImport";
    public static final String QUALIFIED_NAME = "qualifiedName";
 
    public static final String ASSOCIATE = "associate";
@@ -119,7 +119,7 @@ public class ClassModelManager implements IModelManager
    @Deprecated
    public static final String PARAMS = "params";
 
-   public static final String EXTEND = "extend";
+   public static final String HAVE_SUPER = "haveSuper";
    public static final String SUB_CLASS = "subClass";
    public static final String SUPER_CLASS = "superClass";
 
@@ -324,30 +324,30 @@ public class ClassModelManager implements IModelManager
    public Clazz haveClass(String className, Clazz superClass, Consumer<? super ClassManager> body)
    {
       final Clazz clazz = this.haveClass(className);
-      this.extend(clazz, superClass);
+      this.haveSuper(clazz, superClass);
       body.accept(new ClassManager(clazz));
       return clazz;
    }
 
-   public void extend(Clazz subClass, Clazz superClass)
+   public void haveSuper(Clazz subClass, Clazz superClass)
    {
       subClass.setSuperClass(superClass);
 
       this.event(e -> {
-         e.put(EVENT_TYPE, EXTEND);
+         e.put(EVENT_TYPE, HAVE_SUPER);
          e.put(EVENT_KEY, subClass.getName());
          e.put(SUB_CLASS, subClass.getName());
          e.put(SUPER_CLASS, superClass.getName());
       });
    }
 
-   public void addImport(Clazz clazz, String qualifiedName)
+   public void haveImport(Clazz clazz, String qualifiedName)
    {
       clazz.withImports(qualifiedName);
 
       this.event(e -> {
-         e.put(EVENT_TYPE, IMPORT);
-         e.put(EVENT_KEY, clazz.getName() + ":" + IMPORT + ":" + qualifiedName);
+         e.put(EVENT_TYPE, HAVE_IMPORT);
+         e.put(EVENT_KEY, clazz.getName() + ":" + HAVE_IMPORT + ":" + qualifiedName);
          e.put(CLASS_NAME, clazz.getName());
          e.put(QUALIFIED_NAME, qualifiedName);
       });
@@ -727,17 +727,17 @@ public class ClassModelManager implements IModelManager
          this.haveClass(name);
       });
 
-      consumerMap.put(EXTEND, map -> {
+      consumerMap.put(HAVE_SUPER, map -> {
          Clazz subClass = this.haveClass(map.get(SUB_CLASS));
          Clazz superClass = this.haveClass(map.get(SUPER_CLASS));
-         this.extend(subClass, superClass);
+         this.haveSuper(subClass, superClass);
       });
 
-      consumerMap.put(IMPORT, map -> {
+      consumerMap.put(HAVE_IMPORT, map -> {
          final String className = map.get(CLASS_NAME);
          final String qualifiedName = map.get(QUALIFIED_NAME);
          final Clazz clazz = this.haveClass(className);
-         this.addImport(clazz, qualifiedName);
+         this.haveImport(clazz, qualifiedName);
       });
 
       consumerMap.put(ATTRIBUTE, map -> {
