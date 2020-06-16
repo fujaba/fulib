@@ -402,7 +402,8 @@ public class ClassModelManager implements IModelManager
          if (owner.getRole(name) != null)
          {
             throw new IllegalArgumentException(
-               "cannot create attribute with name '" + name + "', a role with that name already exists");
+               String.format("cannot create attribute '%s.%s', a role with that name already exists", owner.getName(),
+                             name));
          }
 
          attr = new Attribute();
