@@ -688,14 +688,14 @@ public class ClassModelManager implements IModelManager
          this.setPackageName(packageName);
       };
       consumerMap.put(USE_PACKAGE_NAME, usePackageName);
-      consumerMap.put("havePackageName", usePackageName); // legacy name
+      consumerMap.put(HAVE_PACKAGE_NAME, usePackageName); // legacy name
 
       final Consumer<Map<String, String>> useSourceFolder = map -> {
          final String sourceFolder = map.get(PROPERTY_mainJavaDir);
          this.setMainJavaDir(sourceFolder);
       };
       consumerMap.put(USE_SOURCE_FOLDER, useSourceFolder);
-      consumerMap.put("haveMainJavaDir", useSourceFolder); // legacy name
+      consumerMap.put(HAVE_MAIN_JAVA_DIR, useSourceFolder); // legacy name
 
       consumerMap.put(HAVE_CLASS, map -> {
          String name = map.get(PROPERTY_name);
@@ -741,6 +741,6 @@ public class ClassModelManager implements IModelManager
       };
 
       consumerMap.put(ASSOCIATE, associateHandler);
-      consumerMap.put("haveRole", associateHandler); // legacy name
+      consumerMap.put(HAVE_ROLE, associateHandler); // legacy name
    }
 }
