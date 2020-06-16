@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import static org.fulib.builder.Type.BEAN;
@@ -526,65 +527,65 @@ public class ClassModelManager implements IModelManager
     */
    public AssocRole associate(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize)
    {
-      AssocRole role = srcClass.getRole(srcRole);
+      final AtomicBoolean modified = new AtomicBoolean(false);
 
-      if (role == null)
+      final AssocRole role = this.haveRole(srcClass, srcRole, srcSize, modified);
+      final AssocRole other = this.haveRole(tgtClass, tgtRole, tgtSize, modified);
+
+      if (role.getOther() != other)
       {
-         if (srcClass.getAttribute(srcRole) != null)
-         {
-            throw new IllegalArgumentException(
-               String.format("cannot create role '%s.%s', an attribute with that name already exists",
-                             srcClass.getName(), srcRole));
-         }
-         if (tgtClass.getAttribute(tgtRole) != null)
-         {
-            throw new IllegalArgumentException(
-               String.format("cannot create role '%s.%s', an attribute with that name already exists",
-                             tgtClass.getName(), tgtRole));
-         }
-
-         role = new AssocRole()
-            .setClazz(srcClass)
-            .setName(srcRole)
-            .setCardinality(srcSize)
-            .setPropertyStyle(srcClass.getPropertyStyle())
-            .setCollectionType(srcClass.getModel().getDefaultCollectionType());
-
-         AssocRole otherRole = new AssocRole()
-            .setClazz(tgtClass)
-            .setName(tgtRole)
-            .setCardinality(tgtSize)
-            .setPropertyStyle(tgtClass.getPropertyStyle())
-            .setCollectionType(tgtClass.getModel().getDefaultCollectionType());
-
-         role.setOther(otherRole);
+         modified.set(true);
+         role.setOther(other);
       }
-      else if (role.getCardinality() >= srcSize && role.getOther().getClazz() == tgtClass
-               && role.getOther().getCardinality() >= tgtSize && Objects.equals(role.getOther().getName(), tgtRole))
+
+      if (!modified.get())
       {
          return role;
       }
 
-      int maxSize = Math.max(role.getCardinality(), srcSize);
-      role.setCardinality(maxSize);
-
-      int maxTgtSize = Math.max(role.getOther().getCardinality(), tgtSize);
-      role.getOther().setName(tgtRole);
-      role.getOther().setCardinality(tgtSize);
-
-      // mm.haveRole(currentRegisterClazz, srcRole, tgtClass, srcSize, tgtRole, ClassModelBuilder.ONE);
       this.event(e -> {
          e.put(EVENT_TYPE, ASSOCIATE);
          e.put(EVENT_KEY, srcClass.getName() + "." + srcRole);
 
          e.put(SRC_CLASS_NAME, srcClass.getName());
          e.put(SRC_ROLE, srcRole);
-         e.put(SRC_SIZE, Integer.toString(maxSize));
+         e.put(SRC_SIZE, Integer.toString(srcSize));
          e.put(TGT_CLASS_NAME, tgtClass.getName());
          e.put(TGT_ROLE, tgtRole);
-         e.put(TGT_SIZE, Integer.toString(maxTgtSize));
+         e.put(TGT_SIZE, Integer.toString(tgtSize));
       });
 
+      return role;
+   }
+
+   private AssocRole haveRole(Clazz owner, String name, int cardinality, AtomicBoolean modified)
+   {
+      AssocRole role = owner.getRole(name);
+      if (role == null)
+      {
+         if (owner.getAttribute(name) != null)
+         {
+            throw new IllegalArgumentException(
+               String.format("cannot create role '%s.%s', an attribute with that name already exists", owner.getName(),
+                             name));
+         }
+
+         modified.set(true);
+
+         role = new AssocRole()
+            .setClazz(owner)
+            .setName(name)
+            .setCardinality(cardinality)
+            .setPropertyStyle(owner.getPropertyStyle())
+            .setCollectionType(owner.getModel().getDefaultCollectionType());
+      }
+      else if (role.getCardinality() == cardinality)
+      {
+         return role;
+      }
+
+      modified.set(true);
+      role.setCardinality(cardinality);
       return role;
    }
 
