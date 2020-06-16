@@ -56,12 +56,12 @@ public class ClassModelManager implements IModelManager
 
       public Attribute attribute(String name, String type)
       {
-         return ClassModelManager.this.attribute(this.clazz, name, type);
+         return ClassModelManager.this.haveAttribute(this.clazz, name, type);
       }
 
       public Attribute attribute(String name, String type, String init)
       {
-         return ClassModelManager.this.attribute(this.clazz, name, type, init);
+         return ClassModelManager.this.haveAttribute(this.clazz, name, type, init);
       }
    }
 
@@ -366,32 +366,10 @@ public class ClassModelManager implements IModelManager
     *    the type
     *
     * @return the new {@link Attribute}
-    *
-    * @deprecated since 1.2; use {@link #attribute(Clazz, String, String)} instead
     */
-   @Deprecated
    public Attribute haveAttribute(Clazz owner, String name, String type)
    {
-      return this.attribute(owner, name, type, null);
-   }
-
-   /**
-    * Creates an attribute with the specified name and type in the owner class.
-    *
-    * @param owner
-    *    the owner class
-    * @param name
-    *    the name
-    * @param type
-    *    the type
-    *
-    * @return the new {@link Attribute}
-    *
-    * @since 1.2
-    */
-   public Attribute attribute(Clazz owner, String name, String type)
-   {
-      return this.attribute(owner, name, type, null);
+      return this.haveAttribute(owner, name, type, null);
    }
 
    /**
@@ -410,7 +388,7 @@ public class ClassModelManager implements IModelManager
     *
     * @since 1.2
     */
-   public Attribute attribute(Clazz owner, String name, String type, String init)
+   public Attribute haveAttribute(Clazz owner, String name, String type, String init)
    {
       Attribute attr = owner.getAttribute(name);
 
@@ -747,7 +725,7 @@ public class ClassModelManager implements IModelManager
          final String init = map.get(INIT);
 
          final Clazz owner = this.haveClass(ownerName);
-         this.attribute(owner, name, type, init);
+         this.haveAttribute(owner, name, type, init);
       });
 
       // legacy naming
@@ -757,7 +735,7 @@ public class ClassModelManager implements IModelManager
          String attrType = map.get("attrType");
 
          Clazz clazz = this.haveClass(className);
-         this.attribute(clazz, attrName, attrType);
+         this.haveAttribute(clazz, attrName, attrType);
       });
 
       final Consumer<Map<String, String>> associateHandler = map -> {
