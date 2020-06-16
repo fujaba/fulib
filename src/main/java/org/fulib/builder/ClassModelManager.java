@@ -536,6 +536,17 @@ public class ClassModelManager implements IModelManager
 
       if (role == null)
       {
+         if (srcClass.getAttribute(srcRole) != null)
+         {
+            throw new IllegalArgumentException(
+               String.format("cannot create role '%s.%s', an attribute with that name already exists", srcClass.getName(), srcRole));
+         }
+         if (tgtClass.getAttribute(tgtRole) != null)
+         {
+            throw new IllegalArgumentException(
+               String.format("cannot create role '%s.%s', an attribute with that name already exists", tgtClass.getName(), tgtRole));
+         }
+
          role = new AssocRole().setClazz(srcClass).setName(srcRole).setCardinality(srcSize)
                                .setPropertyStyle(srcClass.getPropertyStyle())
                                .setCollectionType(srcClass.getModel().getDefaultCollectionType());
