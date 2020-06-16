@@ -641,12 +641,25 @@ public class ClassModelManager implements IModelManager
    {
       for (Clazz clazz : this.getClassModel().getClasses())
       {
-         for (FMethod fMethod : clazz.getMethods())
+         final FMethod method = this.getMethod(clazz, declaration);
+         if (method != null)
          {
-            if (fMethod.getDeclaration().equals(declaration))
-            {
-               return fMethod;
-            }
+            return method;
+         }
+      }
+      return null;
+   }
+
+   /**
+    * @since 1.2
+    */
+   public FMethod getMethod(Clazz owner, String declaration)
+   {
+      for (FMethod fMethod : owner.getMethods())
+      {
+         if (fMethod.getDeclaration().equals(declaration))
+         {
+            return fMethod;
          }
       }
       return null;
