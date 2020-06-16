@@ -79,14 +79,11 @@ public class ClassModelManager implements IModelManager
 
    public static final String HAVE_CLASS = "haveClass";
 
-   public static final String ATTRIBUTE = "attribute";
+   public static final String HAVE_ATTRIBUTE = "haveAttribute";
    public static final String OWNER_NAME = "ownerName";
    public static final String NAME = "name";
    public static final String TYPE = "type";
    public static final String INIT = "init";
-
-   @Deprecated
-   public static final String HAVE_ATTRIBUTE = "haveAttribute";
    @Deprecated
    public static final String ATTR_NAME = "attrName";
    @Deprecated
@@ -416,7 +413,7 @@ public class ClassModelManager implements IModelManager
       attr.setInitialization(init);
 
       this.event(e -> {
-         e.put(EVENT_TYPE, ATTRIBUTE);
+         e.put(EVENT_TYPE, HAVE_ATTRIBUTE);
          e.put(EVENT_KEY, owner.getName() + "." + name);
          e.put(OWNER_NAME, owner.getName());
          e.put(NAME, name);
@@ -718,24 +715,15 @@ public class ClassModelManager implements IModelManager
          this.haveImport(clazz, qualifiedName);
       });
 
-      consumerMap.put(ATTRIBUTE, map -> {
-         final String ownerName = map.get(OWNER_NAME);
-         final String name = map.get(NAME);
-         final String type = map.get(TYPE);
+      consumerMap.put(HAVE_ATTRIBUTE, map -> {
+         // legacy naming
+         final String ownerName = map.getOrDefault(OWNER_NAME, map.get(CLASS_NAME));
+         final String name = map.getOrDefault(NAME, map.get(ATTR_NAME));
+         final String type = map.getOrDefault(TYPE, map.get(ATTR_TYPE));
          final String init = map.get(INIT);
 
          final Clazz owner = this.haveClass(ownerName);
          this.haveAttribute(owner, name, type, init);
-      });
-
-      // legacy naming
-      consumerMap.put("haveAttribute", map -> {
-         String className = map.get("className");
-         String attrName = map.get("attrName");
-         String attrType = map.get("attrType");
-
-         Clazz clazz = this.haveClass(className);
-         this.haveAttribute(clazz, attrName, attrType);
       });
 
       final Consumer<Map<String, String>> associateHandler = map -> {
