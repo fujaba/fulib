@@ -25,9 +25,9 @@ import static org.fulib.yaml.EventSource.EVENT_TYPE;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
-
-      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+ * ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+ *
+ * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
  */
@@ -72,38 +72,38 @@ public class ClassModelManager implements IModelManager
    @Deprecated
    public static final String HAVE_MAIN_JAVA_DIR = "haveMainJavaDir";
    @Deprecated
-   public static final String HAVE_PACKAGE_NAME  = "havePackageName";
+   public static final String HAVE_PACKAGE_NAME = "havePackageName";
 
-   public static final String USE_PACKAGE_NAME  = "usePackageName";
+   public static final String USE_PACKAGE_NAME = "usePackageName";
    public static final String USE_SOURCE_FOLDER = "useSourceFolder";
 
    public static final String HAVE_CLASS = "haveClass";
 
-   public static final String ATTRIBUTE  = "attribute";
+   public static final String ATTRIBUTE = "attribute";
    public static final String OWNER_NAME = "ownerName";
-   public static final String NAME       = "name";
-   public static final String TYPE       = "type";
-   public static final String INIT       = "init";
+   public static final String NAME = "name";
+   public static final String TYPE = "type";
+   public static final String INIT = "init";
 
    @Deprecated
    public static final String HAVE_ATTRIBUTE = "haveAttribute";
    @Deprecated
-   public static final String ATTR_NAME      = "attrName";
+   public static final String ATTR_NAME = "attrName";
    @Deprecated
-   public static final String ATTR_TYPE      = "attrType";
+   public static final String ATTR_TYPE = "attrType";
 
    public static final String CLASS_NAME = "className";
 
-   public static final String IMPORT         = "import";
+   public static final String IMPORT = "import";
    public static final String QUALIFIED_NAME = "qualifiedName";
 
-   public static final String ASSOCIATE      = "associate";
+   public static final String ASSOCIATE = "associate";
    public static final String SRC_CLASS_NAME = "srcClassName";
    public static final String TGT_CLASS_NAME = "tgtClassName";
-   public static final String SRC_ROLE       = "srcRole";
-   public static final String SRC_SIZE       = "srcSize";
-   public static final String TGT_ROLE       = "tgtRole";
-   public static final String TGT_SIZE       = "tgtSize";
+   public static final String SRC_ROLE = "srcRole";
+   public static final String SRC_SIZE = "srcSize";
+   public static final String TGT_ROLE = "tgtRole";
+   public static final String TGT_SIZE = "tgtSize";
 
    @Deprecated
    public static final String HAVE_ROLE = "haveRole";
@@ -117,10 +117,10 @@ public class ClassModelManager implements IModelManager
    @Deprecated
    public static final String METHOD_NAME = "methodName";
    @Deprecated
-   public static final String PARAMS      = "params";
+   public static final String PARAMS = "params";
 
-   public static final String EXTEND      = "extend";
-   public static final String SUB_CLASS   = "subClass";
+   public static final String EXTEND = "extend";
+   public static final String SUB_CLASS = "subClass";
    public static final String SUPER_CLASS = "superClass";
 
    // =============== Fields ===============
@@ -148,9 +148,9 @@ public class ClassModelManager implements IModelManager
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
-
-      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+    *
+    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -161,7 +161,9 @@ public class ClassModelManager implements IModelManager
    {
       this.setModelEventManager(classModelEventManager);
 
-      this.classModel = new ClassModel().setDefaultPropertyStyle(BEAN).setDefaultCollectionType(CollectionType.ArrayList);
+      this.classModel = new ClassModel()
+         .setDefaultPropertyStyle(BEAN)
+         .setDefaultCollectionType(CollectionType.ArrayList);
    }
 
    // =============== Properties ===============
@@ -539,26 +541,34 @@ public class ClassModelManager implements IModelManager
          if (srcClass.getAttribute(srcRole) != null)
          {
             throw new IllegalArgumentException(
-               String.format("cannot create role '%s.%s', an attribute with that name already exists", srcClass.getName(), srcRole));
+               String.format("cannot create role '%s.%s', an attribute with that name already exists",
+                             srcClass.getName(), srcRole));
          }
          if (tgtClass.getAttribute(tgtRole) != null)
          {
             throw new IllegalArgumentException(
-               String.format("cannot create role '%s.%s', an attribute with that name already exists", tgtClass.getName(), tgtRole));
+               String.format("cannot create role '%s.%s', an attribute with that name already exists",
+                             tgtClass.getName(), tgtRole));
          }
 
-         role = new AssocRole().setClazz(srcClass).setName(srcRole).setCardinality(srcSize)
-                               .setPropertyStyle(srcClass.getPropertyStyle())
-                               .setCollectionType(srcClass.getModel().getDefaultCollectionType());
+         role = new AssocRole()
+            .setClazz(srcClass)
+            .setName(srcRole)
+            .setCardinality(srcSize)
+            .setPropertyStyle(srcClass.getPropertyStyle())
+            .setCollectionType(srcClass.getModel().getDefaultCollectionType());
 
-         AssocRole otherRole = new AssocRole().setClazz(tgtClass).setName(tgtRole).setCardinality(tgtSize)
-                                              .setPropertyStyle(tgtClass.getPropertyStyle())
-                                              .setCollectionType(tgtClass.getModel().getDefaultCollectionType());
+         AssocRole otherRole = new AssocRole()
+            .setClazz(tgtClass)
+            .setName(tgtRole)
+            .setCardinality(tgtSize)
+            .setPropertyStyle(tgtClass.getPropertyStyle())
+            .setCollectionType(tgtClass.getModel().getDefaultCollectionType());
 
          role.setOther(otherRole);
       }
       else if (role.getCardinality() >= srcSize && role.getOther().getClazz() == tgtClass
-          && role.getOther().getCardinality() >= tgtSize && Objects.equals(role.getOther().getName(), tgtRole))
+               && role.getOther().getCardinality() >= tgtSize && Objects.equals(role.getOther().getName(), tgtRole))
       {
          return role;
       }
