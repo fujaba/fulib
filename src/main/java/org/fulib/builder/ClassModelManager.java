@@ -595,43 +595,27 @@ public class ClassModelManager implements IModelManager
 
    public FMethod haveMethod(Clazz clazz, String declaration, String body)
    {
-
-      FMethod method = null;
-      for (FMethod fMethod : clazz.getMethods())
-      {
-         if (fMethod.getDeclaration().equals(declaration))
-         {
-            method = fMethod;
-            break;
-         }
-      }
-
-      if (method != null)
-      {
-         if (body == null || body.equals(method.getMethodBody()))
-         {
-            return method;
-         }
-      }
+      FMethod method = this.getMethod(declaration);
 
       if (method == null)
       {
          method = new FMethod();
       }
+      else if (body == null || body.equals(method.getMethodBody()))
+      {
+         return method;
+      }
 
-      // need a final variable due to use in lambda expression below.
-      final FMethod foundMethod = method;
+      method.setClazz(clazz).setDeclaration(declaration).setMethodBody(body);
 
-      foundMethod.setClazz(clazz).setDeclaration(declaration).setMethodBody(body);
-
-      String key = clazz.getName() + "." + foundMethod.getDeclaration();
+      final String key = method.getSignature();
 
       this.event(e -> {
          e.put(EVENT_TYPE, HAVE_METHOD);
          e.put(EVENT_KEY, key);
          e.put(CLASS_NAME, clazz.getName());
-         e.put(DECLARATION, foundMethod.getDeclaration());
-         e.put(METHOD_BODY, foundMethod.getMethodBody());
+         e.put(DECLARATION, declaration);
+         e.put(METHOD_BODY, body);
       });
 
       return method;
