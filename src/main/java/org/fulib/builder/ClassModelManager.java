@@ -293,9 +293,29 @@ public class ClassModelManager implements IModelManager
       Clazz clazz = this.classModel.getClazz(className);
 
       if (clazz != null)
-         return clazz; //============================
+      {
+         return clazz;
+      }
 
-      clazz = new ClassBuilder(this.classModel, className).getClazz();
+      Validator.checkSimpleName(className);
+
+      // java lang classes like Object, String, ...
+      String javaLangName = "java.lang." + className;
+      try
+      {
+         Class.forName(javaLangName);
+         // that is no good
+         throw new IllegalArgumentException("name clash with " + javaLangName);
+      }
+      catch (ClassNotFoundException e)
+      {
+         // that is good
+      }
+
+      clazz = new Clazz();
+      clazz.setModel(classModel);
+      clazz.setName(className);
+      clazz.setPropertyStyle(classModel.getDefaultPropertyStyle());
 
       this.event(e -> {
          e.put(EventSource.EVENT_TYPE, HAVE_CLASS);
