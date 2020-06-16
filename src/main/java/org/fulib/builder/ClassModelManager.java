@@ -534,17 +534,6 @@ public class ClassModelManager implements IModelManager
    {
       AssocRole role = srcClass.getRole(srcRole);
 
-      if (role != null && role.getCardinality() >= srcSize && role.getOther().getClazz() == tgtClass
-          && role.getOther().getCardinality() >= tgtSize && Objects.equals(role.getOther().getName(), tgtRole))
-      {
-         return role;
-      }
-
-      if (Objects.equals(srcRole, tgtRole))
-      {
-         tgtSize = srcSize;
-      }
-
       if (role == null)
       {
          role = new AssocRole().setClazz(srcClass).setName(srcRole).setCardinality(srcSize)
@@ -556,6 +545,11 @@ public class ClassModelManager implements IModelManager
                                               .setCollectionType(tgtClass.getModel().getDefaultCollectionType());
 
          role.setOther(otherRole);
+      }
+      else if (role.getCardinality() >= srcSize && role.getOther().getClazz() == tgtClass
+          && role.getOther().getCardinality() >= tgtSize && Objects.equals(role.getOther().getName(), tgtRole))
+      {
+         return role;
       }
 
       int maxSize = Math.max(role.getCardinality(), srcSize);
