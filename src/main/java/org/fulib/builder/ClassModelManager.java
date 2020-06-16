@@ -481,7 +481,7 @@ public class ClassModelManager implements IModelManager
    public AssocRole associate(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass)
    {
       String otherRoleName = StrUtil.downFirstChar(srcClass.getName());
-      return this.associate(srcClass, srcRole, srcSize, tgtClass, otherRoleName, Type.ONE, false);
+      return this.associate(srcClass, srcRole, srcSize, tgtClass, otherRoleName, Type.ONE);
    }
 
    /**
@@ -507,7 +507,7 @@ public class ClassModelManager implements IModelManager
    @Deprecated
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize, String tgtRole, int tgtSize)
    {
-      return this.associate(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize, true);
+      return this.associate(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize);
    }
 
    /**
@@ -532,25 +532,18 @@ public class ClassModelManager implements IModelManager
     */
    public AssocRole associate(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize)
    {
-      return this.associate(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize, true);
-   }
-
-   private AssocRole associate(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize,
-      boolean bothRoles)
-   {
       AssocRole role = srcClass.getRole(srcRole);
 
-      if (role != null && role.getCardinality() >= srcSize && role.getOther().getClazz() == tgtClass && (!bothRoles
-                                                                                                         || role
-                                                                                                            .getOther()
-                                                                                                            .getName()
-                                                                                                            .equals(
-                                                                                                               tgtRole))
-          && (!bothRoles || role.getOther().getCardinality() >= tgtSize))
-         return role; //===============================================================
+      if (role != null && role.getCardinality() >= srcSize && role.getOther().getClazz() == tgtClass
+          && role.getOther().getCardinality() >= tgtSize && Objects.equals(role.getOther().getName(), tgtRole))
+      {
+         return role;
+      }
 
       if (Objects.equals(srcRole, tgtRole))
+      {
          tgtSize = srcSize;
+      }
 
       if (role == null)
       {
@@ -569,8 +562,7 @@ public class ClassModelManager implements IModelManager
       role.setCardinality(maxSize);
 
       int maxTgtSize = Math.max(role.getOther().getCardinality(), tgtSize);
-      if (bothRoles)
-         role.getOther().setName(tgtRole);
+      role.getOther().setName(tgtRole);
       role.getOther().setCardinality(tgtSize);
 
       // mm.haveRole(currentRegisterClazz, srcRole, tgtClass, srcSize, tgtRole, ClassModelBuilder.ONE);
@@ -584,7 +576,6 @@ public class ClassModelManager implements IModelManager
          e.put(TGT_CLASS_NAME, tgtClass.getName());
          e.put(TGT_ROLE, tgtRole);
          e.put(TGT_SIZE, Integer.toString(maxTgtSize));
-         e.put(BOTH_ROLES, Boolean.toString(bothRoles));
       });
 
       return role;
@@ -747,12 +738,11 @@ public class ClassModelManager implements IModelManager
          final String tgtClassName = map.get(TGT_CLASS_NAME);
          final String tgtRole = map.get(TGT_ROLE);
          final int tgtSize = Integer.parseInt(map.get(TGT_SIZE));
-         final boolean bothRoles = Boolean.parseBoolean(map.get(BOTH_ROLES));
 
          final Clazz srcClazz = this.haveClass(srcClassName);
          final Clazz tgtClazz = this.haveClass(tgtClassName);
 
-         this.associate(srcClazz, srcRole, srcSize, tgtClazz, tgtRole, tgtSize, bothRoles);
+         this.associate(srcClazz, srcRole, srcSize, tgtClazz, tgtRole, tgtSize);
       };
 
       consumerMap.put(ASSOCIATE, associateHandler);
