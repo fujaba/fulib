@@ -180,6 +180,15 @@ public class ClassModelManager implements IModelManager
 
    public void setModelEventManager(ModelEventManager mem)
    {
+      if (mem == this.mem)
+      {
+         return;
+      }
+
+      if (this.mem != null)
+      {
+         this.mem.setModelManager(null);
+      }
       this.mem = mem;
       if (mem != null)
       {
