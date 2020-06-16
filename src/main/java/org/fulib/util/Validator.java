@@ -34,4 +34,20 @@ public class Validator
          throw new IllegalArgumentException("'" + string + "' is not a valid Java identifier");
       }
    }
+
+   public static void checkJavaLangNameClash(String className)
+   {
+      // java lang classes like Object, String, ...
+      String javaLangName = "java.lang." + className;
+      try
+      {
+         Class.forName(javaLangName);
+         // that is no good
+         throw new IllegalArgumentException("name clash with " + javaLangName);
+      }
+      catch (ClassNotFoundException e)
+      {
+         // that is good
+      }
+   }
 }

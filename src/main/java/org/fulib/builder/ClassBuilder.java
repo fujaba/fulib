@@ -38,19 +38,7 @@ public class ClassBuilder
    public ClassBuilder(ClassModel classModel, String className)
    {
       Validator.checkSimpleName(className);
-
-      // java lang classes like Object, String, ...
-      String javaLangName = "java.lang." + className;
-      try
-      {
-         this.getClass().getClassLoader().loadClass(javaLangName);
-         // that is no good
-         throw new IllegalArgumentException("name clash with " + javaLangName);
-      }
-      catch (ClassNotFoundException e)
-      {
-         // that is good
-      }
+      Validator.checkJavaLangNameClash(className);
 
       if (classModel.getClazz(className) != null)
       {

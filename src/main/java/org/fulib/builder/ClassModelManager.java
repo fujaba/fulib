@@ -298,19 +298,7 @@ public class ClassModelManager implements IModelManager
       }
 
       Validator.checkSimpleName(className);
-
-      // java lang classes like Object, String, ...
-      String javaLangName = "java.lang." + className;
-      try
-      {
-         Class.forName(javaLangName);
-         // that is no good
-         throw new IllegalArgumentException("name clash with " + javaLangName);
-      }
-      catch (ClassNotFoundException e)
-      {
-         // that is good
-      }
+      Validator.checkJavaLangNameClash(className);
 
       clazz = new Clazz();
       clazz.setModel(classModel);
