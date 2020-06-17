@@ -6,7 +6,6 @@ import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.CollectionType;
 import org.fulib.util.Validator;
 
-import java.lang.reflect.TypeVariable;
 import java.util.Collection;
 
 /**
@@ -109,6 +108,19 @@ public class ClassModelBuilder
       classModel.setDefaultPropertyStyle(Type.BEAN);
       classModel.setDefaultCollectionType(CollectionType.ArrayList);
 
+      this.setClassModel(classModel);
+   }
+
+   /**
+    * Allows using the builder APIs on an existing class model.
+    *
+    * @param classModel
+    *    the class model to operate on
+    *
+    * @since 1.2
+    */
+   public ClassModelBuilder(ClassModel classModel)
+   {
       this.setClassModel(classModel);
    }
 
