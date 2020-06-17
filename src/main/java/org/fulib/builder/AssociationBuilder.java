@@ -47,8 +47,16 @@ public class AssociationBuilder
 
    public AssociationBuilder setJavaFXPropertyStyle()
    {
-      this.srcRole.setPropertyStyle(Type.JAVA_FX);
-      this.srcRole.getOther().setPropertyStyle(Type.JAVA_FX);
+      return this.setPropertyStyle(Type.JAVA_FX);
+   }
+
+   /**
+    * @since 1.2
+    */
+   public AssociationBuilder setPropertyStyle(String propertyStyle)
+   {
+      this.srcRole.setPropertyStyle(propertyStyle);
+      this.srcRole.getOther().setPropertyStyle(propertyStyle);
       return this;
    }
 
