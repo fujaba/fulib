@@ -36,6 +36,9 @@ public class ClassModelManager implements IModelManager
 {
    // =============== Classes ===============
 
+   /**
+    * @since 1.2
+    */
    public class ClassManager
    {
       private final Clazz clazz;
@@ -325,6 +328,9 @@ public class ClassModelManager implements IModelManager
       return clazz;
    }
 
+   /**
+    * @since 1.2
+    */
    public Clazz haveClass(String className, Consumer<? super ClassManager> body)
    {
       final Clazz clazz = this.haveClass(className);
@@ -332,6 +338,9 @@ public class ClassModelManager implements IModelManager
       return clazz;
    }
 
+   /**
+    * @since 1.2
+    */
    public Clazz haveClass(String className, Clazz superClass, Consumer<? super ClassManager> body)
    {
       final Clazz clazz = this.haveClass(className);
@@ -340,6 +349,9 @@ public class ClassModelManager implements IModelManager
       return clazz;
    }
 
+   /**
+    * @since 1.2
+    */
    public void haveSuper(Clazz subClass, Clazz superClass)
    {
       subClass.setSuperClass(superClass);
@@ -352,6 +364,9 @@ public class ClassModelManager implements IModelManager
       });
    }
 
+   /**
+    * @since 1.2
+    */
    public void haveImport(Clazz clazz, String qualifiedName)
    {
       clazz.withImports(qualifiedName);
@@ -460,7 +475,7 @@ public class ClassModelManager implements IModelManager
     *
     * @return the new {@link AssocRole} in the source class.
     *
-    * @deprecated use {@link #associate(Clazz, String, int, Clazz)}, which provides better parameter symmetry.
+    * @deprecated since 1.2; use {@link #associate(Clazz, String, int, Clazz)}, which provides better parameter symmetry.
     */
    @Deprecated
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize)
@@ -510,7 +525,7 @@ public class ClassModelManager implements IModelManager
     *
     * @return the new {@link AssocRole} in the source class.
     *
-    * @deprecated use {@link #associate(Clazz, String, int, Clazz, String, int)}, which provides better parameter symmetry.
+    * @deprecated since 1.2; use {@link #associate(Clazz, String, int, Clazz, String, int)}, which provides better parameter symmetry.
     */
    @Deprecated
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize, String tgtRole, int tgtSize)
@@ -702,6 +717,11 @@ public class ClassModelManager implements IModelManager
       this.mem.append(map);
    }
 
+   /**
+    * {@inheritDoc}
+    *
+    * @deprecated since 1.2; use {@link #initConsumers(Map)} instead
+    */
    @Deprecated
    @Override
    public void initConsumers(LinkedHashMap<String, Consumer<LinkedHashMap<String, String>>> consumerMap)
@@ -717,6 +737,11 @@ public class ClassModelManager implements IModelManager
       }
    }
 
+   /**
+    * {@inheritDoc}
+    *
+    * @since 1.2
+    */
    @Override
    public void initConsumers(Map<String, Consumer<? super Map<String, String>>> consumerMap)
    {
