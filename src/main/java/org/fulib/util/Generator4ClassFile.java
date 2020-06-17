@@ -106,20 +106,15 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
       // add fragments
 
-      final STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
+      final STGroup group = this.getImportGroup();
       for (final String qualifiedName : qualifiedNames)
       {
-         final ST importDecl = group.getInstanceOf("importDecl");
-         importDecl.add("qualifiedName", qualifiedName);
-         fragmentMap.add(IMPORT + '/' + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
+         this.addImport(fragmentMap, group, qualifiedName, false);
       }
 
       for (final String qualifiedName : staticImports)
       {
-         final ST importDecl = group.getInstanceOf("importDecl");
-         importDecl.add("qualifiedName", qualifiedName);
-         importDecl.add("static", true);
-         fragmentMap.add(IMPORT + '/' + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
+         this.addImport(fragmentMap, group, qualifiedName, true);
       }
    }
 

@@ -162,4 +162,17 @@ public abstract class AbstractGenerator4ClassFile
          }
       }
    }
+
+   protected STGroup getImportGroup()
+   {
+      return this.getSTGroup("org/fulib/templates/declarations.stg");
+   }
+
+   protected void addImport(FileFragmentMap fragmentMap, STGroup group, String qualifiedName, boolean isStatic)
+   {
+      final ST importDecl = group.getInstanceOf("importDecl");
+      importDecl.add("qualifiedName", qualifiedName);
+      importDecl.add("static", isStatic);
+      fragmentMap.add(IMPORT + '/' + qualifiedName, importDecl.render(), IMPORT_NEWLINES);
+   }
 }
