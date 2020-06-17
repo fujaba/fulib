@@ -73,12 +73,12 @@ public class ClassModelBuilder
     * <!-- end_code_fragment:  -->
     * </pre>
     *
-    * @param packagename
+    * @param packageName
     *    the package name
     */
-   public ClassModelBuilder(String packagename)
+   public ClassModelBuilder(String packageName)
    {
-      this(packagename, DEFAULT_SOURCE_FOLDER);
+      this(packageName, DEFAULT_SOURCE_FOLDER);
    }
 
    /**
@@ -93,17 +93,17 @@ public class ClassModelBuilder
     * <!-- end_code_fragment:  -->
     * </pre>
     *
-    * @param packagename
+    * @param packageName
     *    the package name
     * @param sourceFolder
     *    the source folder
     */
-   public ClassModelBuilder(String packagename, String sourceFolder)
+   public ClassModelBuilder(String packageName, String sourceFolder)
    {
-      Validator.checkQualifiedName(packagename);
+      Validator.checkQualifiedName(packageName);
 
       final ClassModel classModel = new ClassModel();
-      classModel.setPackageName(packagename);
+      classModel.setPackageName(packageName);
       classModel.setMainJavaDir(sourceFolder);
       classModel.setDefaultPropertyStyle(Type.BEAN);
       classModel.setDefaultCollectionType(CollectionType.ArrayList);
