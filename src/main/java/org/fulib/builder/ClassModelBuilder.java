@@ -108,7 +108,7 @@ public class ClassModelBuilder
       classModel.setDefaultPropertyStyle(Type.BEAN);
       classModel.setDefaultCollectionType(CollectionType.ArrayList);
 
-      this.setClassModel(classModel);
+      this.classModel = classModel;
    }
 
    /**
@@ -121,7 +121,7 @@ public class ClassModelBuilder
     */
    public ClassModelBuilder(ClassModel classModel)
    {
-      this.setClassModel(classModel);
+      this.classModel = classModel;
    }
 
    // =============== Static Methods ===============
@@ -150,11 +150,6 @@ public class ClassModelBuilder
    public ClassModel getClassModel()
    {
       return this.classModel;
-   }
-
-   private void setClassModel(ClassModel classModel)
-   {
-      this.classModel = classModel;
    }
 
    /**
