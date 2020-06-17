@@ -82,6 +82,15 @@ public class ClassBuilder
       return this;
    }
 
+   /**
+    * @since 1.2
+    */
+   public ClassBuilder setPropertyStyle(String propertyStyle)
+   {
+      this.clazz.setPropertyStyle(propertyStyle);
+      return this;
+   }
+
    // =============== Methods ===============
 
    /**
