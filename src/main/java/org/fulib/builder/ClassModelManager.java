@@ -766,5 +766,15 @@ public class ClassModelManager implements IModelManager
 
       consumerMap.put(ASSOCIATE, associateHandler);
       consumerMap.put(HAVE_ROLE, associateHandler); // legacy name
+
+      consumerMap.put(HAVE_METHOD, map -> {
+         final String className = map.get(CLASS_NAME);
+         final String declaration = map.get(DECLARATION);
+         final String body = map.get(METHOD_BODY);
+
+         final Clazz clazz = this.haveClass(className);
+
+         this.haveMethod(clazz, declaration, body);
+      });
    }
 }
