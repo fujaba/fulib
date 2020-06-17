@@ -18,6 +18,17 @@ box(attr) ::= <%
 <boxMap.(attr.type)>
 %>
 
+primitive ::= [
+   "byte": true,
+   "short": true,
+   "char": true,
+   "int": true,
+   "long": true,
+   "float": true,
+   "double": true,
+   default: false
+]
+
 collectionItf(attr) ::= <%
 <attr.collectionType.itf.simpleName>\<<box(attr)>>
 %>

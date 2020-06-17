@@ -5,7 +5,7 @@ import "attributes.pojo.stg"
 attrSet(attr) ::= <<
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
-      if (<if(attr.primitive)>value == this.<attr.name><else>Objects.equals(value, this.<attr.name>)<endif>)
+      if (<if(primitive.(attr.type))>value == this.<attr.name><else>Objects.equals(value, this.<attr.name>)<endif>)
       {
          return this;
       }

@@ -3,7 +3,7 @@ import "attributes.bean.stg"
 propertyType(attr) ::= <%
 <if(attr.collection)>
    ListProperty\<<box(attr)>>
-<elseif(attr.primitive)>
+<elseif(primitive.(attr.type))>
    <box(attr)>Property
 <else>
    ObjectProperty\<<attr.type>>
@@ -37,7 +37,7 @@ attrGet(attr) ::= <<
 attrSet(attr) ::= <<
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
-      if (<if(attr.primitive)>value != this.<attr.name>.getValue()<else>!Objects.equals(value, this.<attr.name>.getValue())<endif>)
+      if (<if(primitive.(attr.type))>value != this.<attr.name>.getValue()<else>!Objects.equals(value, this.<attr.name>.getValue())<endif>)
       {
          this.<attr.name>.setValue(value);
       }
