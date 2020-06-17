@@ -2,9 +2,9 @@ import "attributes.bean.stg"
 
 propertyType(attr) ::= <%
 <if(attr.collection)>
-   ListProperty\<<attr.boxType>>
+   ListProperty\<<box(attr)>>
 <elseif(attr.primitive)>
-   <attr.boxType>Property
+   <box(attr)>Property
 <else>
    ObjectProperty\<<attr.type>>
 <endif>
@@ -25,7 +25,7 @@ initMethod(attr) ::= <<
 
 attrGet(attr) ::= <<
 <if(attr.collection)>
-   public java.util.List\<<attr.boxType>\> get<attr.name; format="cap">()
+   public java.util.List\<<box(attr)>\> get<attr.name; format="cap">()
 <else>
    public <attr.type> get<attr.name; format="cap">()
 <endif>
@@ -53,7 +53,7 @@ propertyGet(attr) ::= <<
 >>
 
 attrWithItem(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(<attr.boxType> value)
+   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr)> value)
    {
       this.<attr.name>.add(value);
       return this;
@@ -61,7 +61,7 @@ attrWithItem(attr) ::= <<
 >>
 
 attrWithoutItem(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType> value)
+   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr)> value)
    {
       this.<attr.name>.removeAll(value);
       return this;

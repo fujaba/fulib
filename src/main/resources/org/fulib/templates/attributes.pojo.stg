@@ -3,8 +3,23 @@ collectionImpl(attr) ::= <%
 <if(attr.collectionType.generic)>\<><endif>
 %>
 
+boxMap ::= [
+   "byte": "Byte",
+   "short": "Short",
+   "char": "Character",
+   "int": "Integer",
+   "long": "Long",
+   "float": "Float",
+   "double": "Double",
+   default: key
+]
+
+box(attr) ::= <%
+<boxMap.(attr.type)>
+%>
+
 collectionItf(attr) ::= <%
-<attr.collectionType.itf.simpleName>\<<attr.boxType>>
+<attr.collectionType.itf.simpleName>\<<box(attr)>>
 %>
 
 // --------------- Declarations ---------------
@@ -18,12 +33,12 @@ attrSignatures(attr) ::= <<
    propertyGet:      class/<attr.clazz.name>/method/<attr.name>Property()
    <endif>
    <if(attr.collection)>
-   attrWithItem:     class/<attr.clazz.name>/method/with<attr.name; format="cap">(<attr.boxType>)
-   attrWithArray:    class/<attr.clazz.name>/method/with<attr.name; format="cap">(<attr.boxType>...)
-   attrWithColl:     class/<attr.clazz.name>/method/with<attr.name; format="cap">(Collection\<? extends <attr.boxType>\>)
-   attrWithoutItem:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(<attr.boxType>)
-   attrWithoutArray: class/<attr.clazz.name>/method/without<attr.name; format="cap">(<attr.boxType>...)
-   attrWithoutColl:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(Collection\<? extends <attr.boxType>\>)
+   attrWithItem:     class/<attr.clazz.name>/method/with<attr.name; format="cap">(<box(attr)>)
+   attrWithArray:    class/<attr.clazz.name>/method/with<attr.name; format="cap">(<box(attr)>...)
+   attrWithColl:     class/<attr.clazz.name>/method/with<attr.name; format="cap">(Collection\<? extends <box(attr)>\>)
+   attrWithoutItem:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(<box(attr)>)
+   attrWithoutArray: class/<attr.clazz.name>/method/without<attr.name; format="cap">(<box(attr)>...)
+   attrWithoutColl:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(Collection\<? extends <box(attr)>\>)
    <else>
    attrSet:          class/<attr.clazz.name>/method/set<attr.name; format="cap">(<attr.type>)
    <endif>
@@ -68,7 +83,7 @@ attrSet(attr) ::= <<
 // --------------- With ---------------
 
 attrWithItem(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(<attr.boxType> value)
+   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr)> value)
    {
       if (this.<attr.name> == null)
       {
@@ -80,7 +95,7 @@ attrWithItem(attr) ::= <<
 >>
 
 attrWithArray(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(<attr.boxType>... value)
+   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr)>... value)
    {
       this.with<attr.name; format="cap">(Arrays.asList(value));
       return this;
@@ -88,7 +103,7 @@ attrWithArray(attr) ::= <<
 >>
 
 attrWithColl(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
+   public <attr.clazz.name> with<attr.name; format="cap">(Collection\<? extends <box(attr)>\> value)
    {
       if (this.<attr.name> == null)
       {
@@ -105,7 +120,7 @@ attrWithColl(attr) ::= <<
 // --------------- Without ---------------
 
 attrWithoutItem(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType> value)
+   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr)> value)
    {
       this.<attr.name>.removeAll(Collections.singleton(value));
       return this;
@@ -113,7 +128,7 @@ attrWithoutItem(attr) ::= <<
 >>
 
 attrWithoutArray(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(<attr.boxType>... value)
+   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr)>... value)
    {
       this.without<attr.name; format="cap">(Arrays.asList(value));
       return this;
@@ -121,7 +136,7 @@ attrWithoutArray(attr) ::= <<
 >>
 
 attrWithoutColl(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
+   public <attr.clazz.name> without<attr.name; format="cap">(Collection\<? extends <box(attr)>\> value)
    {
       if (this.<attr.name> != null)
       {
@@ -134,14 +149,14 @@ attrWithoutColl(attr) ::= <<
 // --------------- Set All ---------------
 
 attrSetAllArray(attr) ::= <<
-   public <attr.clazz.name> set<attr.name; format="cap">(<attr.boxType>... value)
+   public <attr.clazz.name> set<attr.name; format="cap">(<box(attr)>... value)
    {
       return this.set<attr.name; format="cap">(Arrays.asList(value));
    }
 >>
 
 attrSetAllColl(attr) ::= <<
-   public <attr.clazz.name> set<attr.name; format="cap">(Collection\<? extends <attr.boxType>\> value)
+   public <attr.clazz.name> set<attr.name; format="cap">(Collection\<? extends <box(attr)>\> value)
    {
       if (this.<attr.name> == null)
       {
