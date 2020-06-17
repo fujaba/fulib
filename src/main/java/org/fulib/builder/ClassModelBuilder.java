@@ -29,16 +29,16 @@ public class ClassModelBuilder
    // replacements for the deprecated constants below can be found in org.fulib.builder.Type.
 
    // @formatter:off
-   @Deprecated public static final String STRING = "String";
-   @Deprecated public static final String LONG = "long";
-   @Deprecated public static final String INT = "int";
-   @Deprecated public static final String FLOAT = "float";
-   @Deprecated public static final String DOUBLE = "double";
-   @Deprecated public static final String BOOLEAN = "boolean";
-   @Deprecated public static final int ONE = 1;
-   @Deprecated public static final int MANY = 42;
-   @Deprecated public static final String POJO = "POJO";
-   @Deprecated public static final String JAVA_FX = "JavaFX";
+   /** @deprecated since 1.2; use {@link Type#STRING} instead */ @Deprecated public static final String STRING = "String";
+   /** @deprecated since 1.2; use {@link Type#LONG} instead */ @Deprecated public static final String LONG = "long";
+   /** @deprecated since 1.2; use {@link Type#INT} instead */ @Deprecated public static final String INT = "int";
+   /** @deprecated since 1.2; use {@link Type#FLOAT} instead */ @Deprecated public static final String FLOAT = "float";
+   /** @deprecated since 1.2; use {@link Type#DOUBLE} instead */ @Deprecated public static final String DOUBLE = "double";
+   /** @deprecated since 1.2; use {@link Type#BOOLEAN} instead */ @Deprecated public static final String BOOLEAN = "boolean";
+   /** @deprecated since 1.2; use {@link Type#ONE} instead */ @Deprecated public static final int ONE = 1;
+   /** @deprecated since 1.2; use {@link Type#MANY} instead */ @Deprecated public static final int MANY = 42;
+   /** @deprecated since 1.2; use {@link Type#POJO} instead */ @Deprecated public static final String POJO = "POJO";
+   /** @deprecated since 1.2; use {@link Type#JAVA_FX} instead */ @Deprecated public static final String JAVA_FX = "JavaFX";
    // @formatter:on
 
    /**
