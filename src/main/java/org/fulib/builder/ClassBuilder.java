@@ -76,6 +76,10 @@ public class ClassBuilder
       return this;
    }
 
+   /**
+    * @deprecated since 1.2; use {@link #setPropertyStyle(String)} with {@link Type#JAVA_FX}
+    */
+   @Deprecated
    public ClassBuilder setJavaFXPropertyStyle()
    {
       this.clazz.setPropertyStyle(Type.JAVA_FX);
