@@ -17,6 +17,9 @@ import static org.fulib.classmodel.FileFragmentMap.IMPORT;
 import static org.fulib.classmodel.FileFragmentMap.PACKAGE;
 import static org.fulib.classmodel.FileFragmentMap.*;
 
+/**
+ * @since 1.2
+ */
 public class FragmentMapBuilder extends FulibClassBaseListener
 {
    // =============== Fields ===============
