@@ -52,6 +52,14 @@ public class ClassBuilder
       this.setClazz(clazz);
    }
 
+   /**
+    * @since 1.2
+    */
+   public ClassBuilder(Clazz clazz)
+   {
+      this.clazz = clazz;
+   }
+
    // =============== Properties ===============
 
    /**
