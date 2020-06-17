@@ -765,7 +765,19 @@ public class ClassModelManager implements IModelManager
       };
 
       consumerMap.put(ASSOCIATE, associateHandler);
-      consumerMap.put(HAVE_ROLE, associateHandler); // legacy name
+
+      // legacy format
+      consumerMap.put(HAVE_ROLE, map -> {
+         final String srcClassName = map.get(SRC_CLASS_NAME);
+         final String attrName = map.get(ATTR_NAME);
+         final String tgtClassName = map.get(TGT_CLASS_NAME);
+
+         final Clazz srcClazz = haveClass(srcClassName);
+         final Clazz tgClazz = haveClass(tgtClassName);
+         final int size = Integer.parseInt(map.get(TGT_CARDINALITY));
+
+         this.haveRole(srcClazz, attrName, tgClazz, size);
+      });
 
       consumerMap.put(HAVE_METHOD, map -> {
          final String className = map.get(CLASS_NAME);
