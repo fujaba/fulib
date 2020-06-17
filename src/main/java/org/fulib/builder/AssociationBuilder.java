@@ -45,6 +45,10 @@ public class AssociationBuilder
       return this;
    }
 
+   /**
+    * @deprecated since 1.2; use {@link #setPropertyStyle(String)} with {@link Type#JAVA_FX}
+    */
+   @Deprecated
    public AssociationBuilder setJavaFXPropertyStyle()
    {
       return this.setPropertyStyle(Type.JAVA_FX);
