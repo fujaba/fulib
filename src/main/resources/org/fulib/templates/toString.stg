@@ -1,10 +1,14 @@
-toString(names, superClass) ::= <<
+toStringSignatures(clazz, names) ::= <<
+   toString: class/<clazz.name>/method/toString()
+>>
+
+toString(clazz, names) ::= <<
    @Override
    public String toString()
    {
-      final StringBuilder result = new StringBuilder(<if(superClass)>super.toString()<endif>);
+      final StringBuilder result = new StringBuilder(<if(clazz.superClass)>super.toString()<endif>);
       <names:attrLine(); separator="\n">
-      return result.<if(superClass)>toString()<else>substring(1)<endif>;
+      return result.<if(clazz.superClass)>toString()<else>substring(1)<endif>;
    }
 >>
 

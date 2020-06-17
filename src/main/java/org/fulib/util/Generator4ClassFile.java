@@ -293,13 +293,6 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      final String key = CLASS + '/' + clazz.getName() + '/' + METHOD + "/toString()";
-      if (clazz.getAttributes().stream().anyMatch(Attribute::getModified))
-      {
-         fragmentMap.remove(key);
-         return;
-      }
-
       final List<String> nameList = clazz
          .getAttributes()
          .stream()
@@ -307,17 +300,9 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
          .map(Attribute::getName)
          .collect(Collectors.toList());
 
-      if (nameList.isEmpty())
-      {
-         fragmentMap.remove(key);
-         return;
-      }
-
       final STGroup group = this.getSTGroup("org/fulib/templates/toString.stg");
-      final ST toString = group.getInstanceOf("toString");
-      toString.add("names", nameList);
-      toString.add("superClass", clazz.getSuperClass() != null);
-      fragmentMap.add(key, toString.render(), METHOD_NEWLINES);
+      this.generateFromSignatures(fragmentMap, group, "toStringSignatures", clazz.getModified(),
+                                  st -> st.add("clazz", clazz).add("names", nameList));
    }
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
