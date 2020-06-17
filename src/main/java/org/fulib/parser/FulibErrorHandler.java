@@ -6,11 +6,11 @@ import org.antlr.v4.runtime.Recognizer;
 
 import java.io.PrintStream;
 
-public class FulibErrorHandler extends BaseErrorListener
+class FulibErrorHandler extends BaseErrorListener
 {
    private final PrintStream out;
 
-   public FulibErrorHandler(PrintStream out)
+   FulibErrorHandler(PrintStream out)
    {
       this.out = out;
    }
