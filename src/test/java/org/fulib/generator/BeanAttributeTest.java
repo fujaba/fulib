@@ -106,6 +106,6 @@ public class BeanAttributeTest extends AttributeTest
 
       toString = uniClass.getMethod("toString");
       txt = toString.invoke(studyRight);
-      assertThat("toString", txt, is(equalTo("StudyFuture")));
+      assertThat("toString", txt, is(equalTo("Hello")));
    }
 }
