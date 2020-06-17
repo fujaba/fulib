@@ -750,7 +750,7 @@ public class ClassModelManager implements IModelManager
          this.haveAttribute(owner, name, type, init);
       });
 
-      final Consumer<Map<String, String>> associateHandler = map -> {
+      consumerMap.put(ASSOCIATE, map -> {
          final String srcClassName = map.get(SRC_CLASS_NAME);
          final String srcRole = map.get(SRC_ROLE);
          final int srcSize = Integer.parseInt(map.get(SRC_SIZE));
@@ -762,9 +762,7 @@ public class ClassModelManager implements IModelManager
          final Clazz tgtClazz = this.haveClass(tgtClassName);
 
          this.associate(srcClazz, srcRole, srcSize, tgtClazz, tgtRole, tgtSize);
-      };
-
-      consumerMap.put(ASSOCIATE, associateHandler);
+      });
 
       // legacy format
       consumerMap.put(HAVE_ROLE, map -> {
