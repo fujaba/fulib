@@ -196,6 +196,19 @@ public class ClassModelManager implements IModelManager
 
    // =============== Methods ===============
 
+   /**
+    * Creates a {@link ClassModelBuilder} that operates on the same underlying class model as this manager.
+    * Note that changes made using the builder are not recorded as events.
+    *
+    * @since 1.2
+    *
+    * @return a {@link ClassModelBuilder} that operates on the same underlying class model as this manager
+    */
+   public ClassModelBuilder asBuilder()
+   {
+      return new ClassModelBuilder(this.classModel);
+   }
+
    // --------------- Settings ---------------
 
    /**
