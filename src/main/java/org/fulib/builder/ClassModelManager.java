@@ -75,8 +75,8 @@ public class ClassModelManager implements IModelManager
    @Deprecated
    public static final String HAVE_PACKAGE_NAME = "havePackageName";
 
-   public static final String USE_PACKAGE_NAME = "usePackageName";
-   public static final String USE_SOURCE_FOLDER = "useSourceFolder";
+   public static final String SET_PACKAGE_NAME = "setPackageName";
+   public static final String SET_SOURCE_FOLDER = "setSourceFolder";
 
    public static final String HAVE_CLASS = "haveClass";
 
@@ -233,7 +233,7 @@ public class ClassModelManager implements IModelManager
       this.classModel.setPackageName(packageName);
 
       this.event(e -> {
-         e.put(EVENT_TYPE, USE_PACKAGE_NAME);
+         e.put(EVENT_TYPE, SET_PACKAGE_NAME);
          e.put(EVENT_KEY, THE_CLASS_MODEL + "_" + PROPERTY_packageName);
          e.put(PROPERTY_packageName, packageName);
       });
@@ -276,7 +276,7 @@ public class ClassModelManager implements IModelManager
       this.classModel.setMainJavaDir(mainJavaDir);
 
       this.event(e -> {
-         e.put(EVENT_TYPE, USE_SOURCE_FOLDER);
+         e.put(EVENT_TYPE, SET_SOURCE_FOLDER);
          e.put(EVENT_KEY, THE_CLASS_MODEL + "_" + PROPERTY_mainJavaDir);
          e.put(PROPERTY_mainJavaDir, mainJavaDir);
       });
@@ -711,14 +711,14 @@ public class ClassModelManager implements IModelManager
          final String packageName = map.get(PROPERTY_packageName);
          this.setPackageName(packageName);
       };
-      consumerMap.put(USE_PACKAGE_NAME, usePackageName);
+      consumerMap.put(SET_PACKAGE_NAME, usePackageName);
       consumerMap.put(HAVE_PACKAGE_NAME, usePackageName); // legacy name
 
       final Consumer<Map<String, String>> useSourceFolder = map -> {
          final String sourceFolder = map.get(PROPERTY_mainJavaDir);
          this.setMainJavaDir(sourceFolder);
       };
-      consumerMap.put(USE_SOURCE_FOLDER, useSourceFolder);
+      consumerMap.put(SET_SOURCE_FOLDER, useSourceFolder);
       consumerMap.put(HAVE_MAIN_JAVA_DIR, useSourceFolder); // legacy name
 
       consumerMap.put(HAVE_CLASS, map -> {
