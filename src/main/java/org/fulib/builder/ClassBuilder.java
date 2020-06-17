@@ -45,11 +45,11 @@ public class ClassBuilder
          throw new IllegalArgumentException("duplicate class name" + className);
       }
 
-      Clazz clazz = new Clazz();
+      final Clazz clazz = new Clazz();
       clazz.setModel(classModel);
       clazz.setName(className);
       clazz.setPropertyStyle(classModel.getDefaultPropertyStyle());
-      this.setClazz(clazz);
+      this.clazz = clazz;
    }
 
    /**
@@ -68,11 +68,6 @@ public class ClassBuilder
    public Clazz getClazz()
    {
       return this.clazz;
-   }
-
-   private void setClazz(Clazz clazz)
-   {
-      this.clazz = clazz;
    }
 
    public ClassBuilder setSuperClass(ClassBuilder superClass)
