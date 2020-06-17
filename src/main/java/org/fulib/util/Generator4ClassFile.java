@@ -322,18 +322,9 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      final String key = CLASS + '/' + clazz.getName() + '/' + METHOD + "/removeYou()";
-      if (clazz.getModified())
-      {
-         fragmentMap.remove(key);
-      }
-      else
-      {
-         final STGroup group = this.getSTGroup("org/fulib/templates/removeYou.stg");
-         final ST removeYou = group.getInstanceOf("removeYou");
-         removeYou.add("superClass", clazz.getSuperClass() != null);
-         removeYou.add("roles", clazz.getRoles().stream().filter(r -> r.getName() != null).toArray());
-         fragmentMap.add(key, removeYou.render(), METHOD_NEWLINES);
-      }
+      final STGroup group = this.getSTGroup("org/fulib/templates/removeYou.stg");
+      final Object[] roles = clazz.getRoles().stream().filter(r -> r.getName() != null).toArray();
+      this.generateFromSignatures(fragmentMap, group, "removeYouSignatures", clazz.getModified(),
+                                  st -> st.add("clazz", clazz).add("roles", roles));
    }
 }

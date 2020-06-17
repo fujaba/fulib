@@ -1,10 +1,14 @@
-removeYou(superClass, roles) ::= <<
-   <if(superClass)>
+removeYouSignatures(clazz, roles) ::= <<
+   removeYou: class/<clazz.name>/method/removeYou()
+>>
+
+removeYou(clazz, roles) ::= <<
+   <if(clazz.superClass)>
    @Override
    <endif>
    public void removeYou()
    {
-      <if(superClass)>
+      <if(clazz.superClass)>
       super.removeYou();
       <endif>
       <roles:removeRole(); separator="\n">
