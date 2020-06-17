@@ -53,8 +53,7 @@ public class StrUtil
    @Deprecated
    public static String truncate(String string, int n)
    {
-      string = string.substring(0, string.length() - n);
-      return string;
+      return string.substring(0, string.length() - n);
    }
 
    /**
