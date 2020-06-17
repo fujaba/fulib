@@ -1,5 +1,10 @@
 package org.fulib.builder;
 
+/**
+ * Contains constants for common attribute types, association cardinalities, and property styles.
+ *
+ * @since 1.2
+ */
 public class Type
 {
    // value types
