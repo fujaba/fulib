@@ -3,19 +3,17 @@ package org.fulib.builder;
 import org.fulib.yaml.EventSource;
 import org.fulib.yaml.Yamler;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ModelEventManager
 {
    // =============== Fields ===============
 
-   private final EventSource   eventSource;
-   private       IModelManager modelManager;
+   private final EventSource eventSource;
+   private IModelManager modelManager;
 
-   private Map<String, Consumer<? super Map<String, String>>> consumerMap;
+   private final Map<String, Consumer<? super Map<String, String>>> consumerMap = new HashMap<>();
 
    // =============== Constructors ===============
 
@@ -57,7 +55,6 @@ public class ModelEventManager
 
    // =============== Methods ===============
 
-   // event handling
    public void applyEvents(String yaml)
    {
       if (yaml == null)
@@ -65,8 +62,8 @@ public class ModelEventManager
          return;
       }
 
-      Yamler yamler = new Yamler();
-      ArrayList<LinkedHashMap<String, String>> list = yamler.decodeList(yaml);
+      final Yamler yamler = new Yamler();
+      final List<? extends Map<String, String>> list = yamler.decodeList(yaml);
       this.applyEvents(list);
    }
 
@@ -78,7 +75,6 @@ public class ModelEventManager
     */
    public void applyEvents(Iterable<? extends Map<String, String>> events)
    {
-      // consume event list
       for (Map<String, String> map : events)
       {
          if (this.eventSource.isOverwritten(map))
