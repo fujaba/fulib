@@ -39,7 +39,6 @@
   simpleImplName: 	ArrayList
 
 - university_name: 	Attribute
-  boxType: 	String
   clazz: 	university
   id: 	University_name
   modified: 	false
@@ -72,7 +71,6 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - student_name: 	Attribute
-  boxType: 	String
   clazz: 	student
   id: 	Student_name
   modified: 	false
@@ -81,7 +79,6 @@
   type: 	String
 
 - student_studentId: 	Attribute
-  boxType: 	String
   clazz: 	student
   id: 	Student_studentId
   modified: 	false
@@ -90,7 +87,6 @@
   type: 	String
 
 - student_credits: 	Attribute
-  boxType: 	Integer
   clazz: 	student
   id: 	Student_credits
   modified: 	false
@@ -99,7 +95,6 @@
   type: 	int
 
 - student_motivation: 	Attribute
-  boxType: 	Double
   clazz: 	student
   id: 	Student_motivation
   modified: 	false
@@ -132,7 +127,6 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - room_roomNo: 	Attribute
-  boxType: 	String
   clazz: 	room
   id: 	Room_roomNo
   modified: 	false
@@ -141,7 +135,6 @@
   type: 	String
 
 - room_topic: 	Attribute
-  boxType: 	String
   clazz: 	room
   id: 	Room_topic
   modified: 	false
@@ -150,7 +143,6 @@
   type: 	String
 
 - room_credits: 	Attribute
-  boxType: 	Integer
   clazz: 	room
   id: 	Room_credits
   modified: 	false

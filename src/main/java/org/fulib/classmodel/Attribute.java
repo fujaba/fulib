@@ -104,47 +104,6 @@ public class Attribute
    }
 
    /** @since 1.2 */
-   public String getBoxType()
-   {
-      return getBoxType(this.getType());
-   }
-
-   private static String getBoxType(String attrType)
-   {
-      switch (attrType)
-      {
-      case "boolean":
-         return "Boolean";
-      case "byte":
-         return "Byte";
-      case "short":
-         return "Short";
-      case "char":
-         return "Character"; // !
-      case "int":
-         return "Integer"; // !
-      case "long":
-         return "Long";
-      case "float":
-         return "Float";
-      case "double":
-         return "Double";
-      }
-      return attrType;
-   }
-
-   /** @since 1.2 */
-   public boolean isPrimitive()
-   {
-      return isPrimitive(this.getType());
-   }
-
-   private static boolean isPrimitive(String attrType)
-   {
-      return !attrType.equals(getBoxType(attrType));
-   }
-
-   /** @since 1.2 */
    public CollectionType getCollectionType()
    {
       return this.collectionType;
