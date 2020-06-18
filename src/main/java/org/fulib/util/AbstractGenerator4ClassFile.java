@@ -20,8 +20,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.fulib.classmodel.FileFragmentMap.FIELD_NEWLINES;
-import static org.fulib.classmodel.FileFragmentMap.METHOD_NEWLINES;
+import static org.fulib.classmodel.FileFragmentMap.*;
+import static org.fulib.classmodel.FileFragmentMap.IMPORT_NEWLINES;
 
 /**
  * @author Adrian Kunz
@@ -33,6 +33,7 @@ public abstract class AbstractGenerator4ClassFile
    // =============== Constants ===============
 
    private static final Pattern SIGNATURE_PATTERN = Pattern.compile("^\\s*(\\w+)\\s*:\\s*(.*)\\s*$");
+   private static final Pattern IMPORT_PATTERN = Pattern.compile("import\\(((?:\\w+\\.)*(\\w+))\\)");
 
    // =============== Fields ===============
 
@@ -158,9 +159,40 @@ public abstract class AbstractGenerator4ClassFile
             final int newLines = signature.contains("/attribute/") ? FIELD_NEWLINES : METHOD_NEWLINES;
             final ST namedST = group.getInstanceOf(templateName);
             addTarget.accept(namedST);
-            fragmentMap.add(signature, namedST.render(), newLines);
+
+            final String rendered = namedST.render();
+            final String result = replaceImports(rendered, fragmentMap);
+            fragmentMap.add(signature, result, newLines);
          }
       }
+   }
+
+   private String replaceImports(String template, FileFragmentMap fragmentMap)
+   {
+      final Matcher matcher = IMPORT_PATTERN.matcher(template);
+
+      // adapted from Matcher.replaceAll
+      boolean result = matcher.find();
+      if (!result)
+      {
+         return template;
+      }
+
+      final STGroup group = this.getImportGroup();
+
+      final StringBuffer sb = new StringBuffer(template.length());
+      do
+      {
+         final String qualifiedName = matcher.group(1);
+         this.addImport(fragmentMap, group, qualifiedName, false);
+
+         matcher.appendReplacement(sb, "$2"); // group 2 = simple name
+         result = matcher.find();
+      }
+      while (result);
+
+      matcher.appendTail(sb);
+      return sb.toString();
    }
 
    protected STGroup getImportGroup()
