@@ -1,3 +1,5 @@
+import "java.dicts.stg"
+
 removeYouSignatures(clazz, roles) ::= <<
    removeYou: class/<clazz.name>/method/removeYou()
 >>
@@ -25,7 +27,7 @@ removeRole(role) ::= <%
 <else><! to many !>
    <if(role.aggregation)>
       new import(java.util.ArrayList)\<>(this.get<role.name; format="cap">()).forEach(<role.other.clazz.name>::removeYou);
-   <elseif(role.javaFX)>
+   <elseif(javaFX.(role.propertyStyle))>
       this.get<role.name; format="cap">().clear();
    <else>
       this.without<role.name; format="cap">(new import(java.util.ArrayList)\<>(this.get<role.name; format="cap">()));

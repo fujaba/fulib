@@ -19,3 +19,8 @@ boxMap ::= [
    "double": "Double",
    default: key
 ]
+
+javaFX ::= [
+   "JavaFX": true,
+   default: false
+]

@@ -1,3 +1,5 @@
+import "java.dicts.stg"
+
 collectionImpl(role, other) ::= <%
 <role.collectionType.simpleImplName>
 <if(role.collectionType.generic)>\<><endif>
@@ -13,7 +15,7 @@ roleSignatures(role, other) ::= <<
    propertyDecl:           class/<role.clazz.name>/attribute/PROPERTY_<role.name>
    roleAttrDecl:           class/<role.clazz.name>/attribute/<role.name>
    getMethod:              class/<role.clazz.name>/method/get<role.name; format="cap">()
-   <if(role.javaFX)>
+   <if(javaFX.(role.propertyStyle))>
       initMethod:          class/<role.clazz.name>/method/_init<role.name; format="cap">()
       <if(!role.toMany)>
          propertyMethod:   class/<role.clazz.name>/method/<role.name>Property()
