@@ -240,12 +240,6 @@ public class AssocRole
       return this;
    }
 
-   /** @since 1.2 */
-   public boolean isJavaFX()
-   {
-      return Type.JAVA_FX.equals(this.getPropertyStyle());
-   }
-
    public boolean getModified()
    {
       return this.modified;
