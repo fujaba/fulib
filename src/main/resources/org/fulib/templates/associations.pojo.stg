@@ -49,7 +49,7 @@ getMethod(role, other) ::= <<
 <if(role.toMany)>
    public <collectionItf(role, other)> get<role.name; format="cap">()
    {
-      return this.<role.name> != null ? Collections.unmodifiable<role.collectionType.itf.simpleName>(this.<role.name>) : Collections.empty<role.collectionType.itf.simpleName>();
+      return this.<role.name> != null ? import(java.util.Collections).unmodifiable<role.collectionType.itf.simpleName>(this.<role.name>) : import(java.util.Collections).empty<role.collectionType.itf.simpleName>();
    }
 <else>
    public <other.clazz.name> get<role.name; format="cap">()
@@ -118,7 +118,7 @@ withArray(role, other) ::= <<
 >>
 
 withColl(role, other) ::= <<
-   public <role.clazz.name> with<role.name; format="cap">(Collection\<? extends <other.clazz.name>\> value)
+   public <role.clazz.name> with<role.name; format="cap">(import(java.util.Collection)\<? extends <other.clazz.name>\> value)
    {
       for (final <other.clazz.name> item : value)
       {
@@ -155,7 +155,7 @@ withoutArray(role, other) ::= <<
 >>
 
 withoutColl(role, other) ::= <<
-   public <role.clazz.name> without<role.name; format="cap">(Collection\<? extends <other.clazz.name>\> value)
+   public <role.clazz.name> without<role.name; format="cap">(import(java.util.Collection)\<? extends <other.clazz.name>\> value)
    {
       for (final <other.clazz.name> item : value)
       {

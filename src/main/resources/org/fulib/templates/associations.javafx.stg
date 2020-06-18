@@ -4,15 +4,15 @@ import "associations.bean.stg"
 
 roleAttrDecl(role, other) ::= <<
 <if(role.toMany)>
-   private SimpleListProperty\<<other.clazz.name>\> <role.name> = _init<role.name; format="cap">();
+   private import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> <role.name> = _init<role.name; format="cap">();
 <else>
-   private ObjectProperty\<<other.clazz.name>\> <role.name> = _init<role.name; format="cap">();
+   private import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> <role.name> = _init<role.name; format="cap">();
 <endif>
 >>
 
 getMethod(role, other) ::= <<
 <if(role.toMany)>
-   public SimpleListProperty\<<other.clazz.name>\> get<role.name; format="cap">()
+   public import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> get<role.name; format="cap">()
    {
       return this.<role.name>;
    }
@@ -57,7 +57,7 @@ withoutItem(role, other) ::= <<
 // --------------- Additional Templates ---------------
 
 propertyMethod(role, other) ::= <<
-   public ObjectProperty\<<other.clazz.name>\> <role.name>Property()
+   public import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> <role.name>Property()
    {
       return this.<role.name>;
    }
@@ -65,9 +65,9 @@ propertyMethod(role, other) ::= <<
 
 initMethod(role, other) ::= <<
 <if(role.toMany)>
-   private SimpleListProperty\<<other.clazz.name>\> _init<role.name; format="cap">()
+   private import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> _init<role.name; format="cap">()
    {
-      final SimpleListProperty\<<other.clazz.name>\> result = new SimpleListProperty(javafx.collections.FXCollections.observableArrayList());
+      final import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> result = new import(javafx.beans.property.SimpleListProperty)(javafx.collections.FXCollections.observableArrayList());
       result.addListener((javafx.collections.ListChangeListener\<? super <other.clazz.name>\>) change -> {
          while (change.next())
          {
@@ -86,9 +86,9 @@ initMethod(role, other) ::= <<
       return result;
    }
 <else>
-   private ObjectProperty\<<other.clazz.name>\> _init<role.name; format="cap">()
+   private import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> _init<role.name; format="cap">()
    {
-      final ObjectProperty\<<other.clazz.name>\> result = new SimpleObjectProperty\<>();
+      final import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> result = new import(javafx.beans.property.SimpleObjectProperty)\<>();
       result.addListener((observable, oldValue, newValue) -> {
          if (oldValue != null)
          {

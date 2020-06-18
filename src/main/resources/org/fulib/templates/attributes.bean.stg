@@ -5,7 +5,7 @@ import "attributes.pojo.stg"
 attrSet(attr) ::= <<
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
-      if (<if(primitive.(attr.type))>value == this.<attr.name><else>Objects.equals(value, this.<attr.name>)<endif>)
+      if (<if(primitive.(attr.type))>value == this.<attr.name><else>import(java.util.Objects).equals(value, this.<attr.name>)<endif>)
       {
          return this;
       }
@@ -46,7 +46,7 @@ attrWithArray(attr) ::= <<
 >>
 
 attrWithColl(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(Collection\<? extends <box(attr)>\> value)
+   public <attr.clazz.name> with<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
    {
       for (final <box(attr)> item : value)
       {
@@ -61,7 +61,7 @@ attrWithColl(attr) ::= <<
 attrWithoutItem(attr) ::= <<
    public <attr.clazz.name> without<attr.name; format="cap">(<box(attr)> value)
    {
-      if (this.<attr.name> != null && this.<attr.name>.removeAll(Collections.singleton(value)))
+      if (this.<attr.name> != null && this.<attr.name>.removeAll(import(java.util.Collections).singleton(value)))
       {
          this.firePropertyChange(PROPERTY_<attr.name>, value, null);
       }
@@ -81,7 +81,7 @@ attrWithoutArray(attr) ::= <<
 >>
 
 attrWithoutColl(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(Collection\<? extends <box(attr)>\> value)
+   public <attr.clazz.name> without<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
    {
       for (final <box(attr)> item : value)
       {
@@ -96,12 +96,12 @@ attrWithoutColl(attr) ::= <<
 attrSetAllArray(attr) ::= <<
    public <attr.clazz.name> set<attr.name; format="cap">(<box(attr)>... value)
    {
-      return this.set<attr.name; format="cap">(Arrays.asList(value));
+      return this.set<attr.name; format="cap">(import(java.util.Arrays).asList(value));
    }
 >>
 
 attrSetAllColl(attr) ::= <<
-   public <attr.clazz.name> set<attr.name; format="cap">(Collection\<? extends <box(attr)>\> value)
+   public <attr.clazz.name> set<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
    {
       if (this.<attr.name> == null)
       {

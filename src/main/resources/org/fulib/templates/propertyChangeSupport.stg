@@ -8,15 +8,15 @@ propertyChangeSignatures(clazz) ::= <<
 >>
 
 listenersField(clazz) ::= <<
-   protected PropertyChangeSupport listeners;
+   protected import(java.beans.PropertyChangeSupport) listeners;
 >>
 
 addPropertyChangeListener1(clazz) ::= <<
-   public boolean addPropertyChangeListener(PropertyChangeListener listener)
+   public boolean addPropertyChangeListener(import(java.beans.PropertyChangeListener) listener)
    {
       if (this.listeners == null)
       {
-         this.listeners = new PropertyChangeSupport(this);
+         this.listeners = new import(java.beans.PropertyChangeSupport)(this);
       }
       this.listeners.addPropertyChangeListener(listener);
       return true;
@@ -24,11 +24,11 @@ addPropertyChangeListener1(clazz) ::= <<
 >>
 
 addPropertyChangeListener2(clazz) ::= <<
-   public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+   public boolean addPropertyChangeListener(String propertyName, import(java.beans.PropertyChangeListener) listener)
    {
       if (this.listeners == null)
       {
-         this.listeners = new PropertyChangeSupport(this);
+         this.listeners = new import(java.beans.PropertyChangeSupport)(this);
       }
       this.listeners.addPropertyChangeListener(propertyName, listener);
       return true;
@@ -36,7 +36,7 @@ addPropertyChangeListener2(clazz) ::= <<
 >>
 
 removePropertyChangeListener1(clazz) ::= <<
-   public boolean removePropertyChangeListener(PropertyChangeListener listener)
+   public boolean removePropertyChangeListener(import(java.beans.PropertyChangeListener) listener)
    {
       if (this.listeners != null)
       {
@@ -47,7 +47,7 @@ removePropertyChangeListener1(clazz) ::= <<
 >>
 
 removePropertyChangeListener2(clazz) ::= <<
-   public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+   public boolean removePropertyChangeListener(String propertyName, import(java.beans.PropertyChangeListener) listener)
    {
       if (this.listeners != null)
       {

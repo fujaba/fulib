@@ -1,12 +1,12 @@
 import "attributes.bean.stg"
 
-propertyType(attr) ::= <%
+propertyType(attr, prefix="") ::= <%
 <if(attr.collection)>
-   ListProperty\<<box(attr)>>
+   import(javafx.beans.property.<prefix>ListProperty)\<<box(attr)>>
 <elseif(primitive.(attr.type))>
-   <box(attr)>Property
+   import(javafx.beans.property.<prefix><box(attr)>Property)
 <else>
-   ObjectProperty\<<attr.type>>
+   import(javafx.beans.property.<prefix>ObjectProperty)\<<attr.type>>
 <endif>
 %>
 
@@ -17,7 +17,7 @@ attrDecl(attr) ::= <<
 initMethod(attr) ::= <<
    private <propertyType(attr)> _init<attr.name; format="cap">()
    {
-      final <propertyType(attr)> result = new Simple<propertyType(attr)>(<if(attr.collection)>javafx.collections.FXCollections.observableArrayList()<endif>);
+      final <propertyType(attr)> result = new <propertyType(attr, "Simple")>(<if(attr.collection)>javafx.collections.FXCollections.observableArrayList()<endif>);
       result.addListener((observable, oldValue, newValue) -> this.firePropertyChange(PROPERTY_<attr.name>, oldValue, newValue));
       return result;
    }
@@ -37,7 +37,7 @@ attrGet(attr) ::= <<
 attrSet(attr) ::= <<
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
-      if (<if(primitive.(attr.type))>value != this.<attr.name>.getValue()<else>!Objects.equals(value, this.<attr.name>.getValue())<endif>)
+      if (<if(primitive.(attr.type))>value != this.<attr.name>.getValue()<else>!import(java.util.Objects).equals(value, this.<attr.name>.getValue())<endif>)
       {
          this.<attr.name>.setValue(value);
       }
