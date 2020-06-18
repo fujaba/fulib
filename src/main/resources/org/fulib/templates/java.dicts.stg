@@ -1,0 +1,21 @@
+primitive ::= [
+   "byte": true,
+   "short": true,
+   "char": true,
+   "int": true,
+   "long": true,
+   "float": true,
+   "double": true,
+   default: false
+]
+
+boxMap ::= [
+   "byte": "Byte",
+   "short": "Short",
+   "char": "Character",
+   "int": "Integer",
+   "long": "Long",
+   "float": "Float",
+   "double": "Double",
+   default: key
+]
