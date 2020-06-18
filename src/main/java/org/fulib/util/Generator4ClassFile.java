@@ -116,45 +116,17 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       {
          this.addImport(fragmentMap, group, qualifiedName, true);
       }
+
+      if (qualifiedNames.isEmpty() && staticImports.isEmpty())
+      {
+         // we still need to make an import section in the right place,
+         // in case one of the templates requires any
+         fragmentMap.add(IMPORT + "/#start", "", 0);
+      }
    }
 
    private void addDefaultImports(Clazz clazz, Set<String> qualifiedNames)
    {
-      // any roles or attributes
-      if (!clazz.getRoles().isEmpty() || !clazz.getAttributes().isEmpty())
-      {
-         qualifiedNames.add("java.beans.PropertyChangeSupport");
-         qualifiedNames.add("java.beans.PropertyChangeListener");
-      }
-
-      // any JavaFX roles or attributes
-      if (clazz.getRoles().stream().anyMatch(AssocRole::isJavaFX) //
-          || clazz.getAttributes().stream().anyMatch(Attribute::isJavaFX))
-      {
-         qualifiedNames.add("javafx.beans.property.*");
-      }
-
-      // ArrayList required by removeYou template
-      if (clazz.getRoles().stream().anyMatch(r -> r.isToMany() && (r.getAggregation() || !r.isJavaFX())))
-      {
-         qualifiedNames.add("java.util.ArrayList");
-      }
-
-      // any non-primitive attributes
-      if (clazz.getAttributes().stream().anyMatch(a -> !a.isCollection() && !a.isPrimitive()))
-      {
-         qualifiedNames.add("java.util.Objects");
-      }
-
-      // any to-n roles or to-n attributes
-      if (clazz.getRoles().stream().anyMatch(AssocRole::isToMany) //
-          || clazz.getAttributes().stream().anyMatch(Attribute::isCollection))
-      {
-         qualifiedNames.add("java.util.Collection");
-         qualifiedNames.add("java.util.Collections");
-         qualifiedNames.add("java.util.Arrays");
-      }
-
       for (final AssocRole role : clazz.getRoles())
       {
          if (role.isToMany())
