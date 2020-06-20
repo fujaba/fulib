@@ -702,6 +702,15 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
+    * Finds a method with the given {@linkplain FMethod#getDeclaration() declaration} in the given {@code owner} class.
+    *
+    * @param owner
+    *    the class in which to search
+    * @param declaration
+    *    the {@linkplain FMethod#getDeclaration() declaration} of the method to search for
+    *
+    * @return a method in the given class that has the given declaration, or {@code null} if none is found
+    *
     * @since 1.2
     */
    public FMethod getMethod(Clazz owner, String declaration)

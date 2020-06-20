@@ -78,6 +78,10 @@ public class FMethod
       return this;
    }
 
+   /**
+    * @return the declaration of this method.
+    * Includes header, including annotations, modifiers, return type, name, and parameters.
+    */
    public String getDeclaration() // no fulib
    {
       // e.g. public void m(T1 p1, T2 p2)
