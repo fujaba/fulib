@@ -21,11 +21,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.fulib.classmodel.FileFragmentMap.*;
-import static org.fulib.classmodel.FileFragmentMap.IMPORT_NEWLINES;
 
 /**
  * @author Adrian Kunz
- *
  * @since 1.2
  */
 public abstract class AbstractGenerator4ClassFile
@@ -55,7 +53,6 @@ public abstract class AbstractGenerator4ClassFile
    }
 
    // =============== Methods ===============
-
 
    /**
     * @deprecated since 1.2
@@ -131,6 +128,67 @@ public abstract class AbstractGenerator4ClassFile
       return group;
    }
 
+   /**
+    * Generates multiple related fragments.
+    * Their signatures are extracted from a template themselves, which should have the following format:
+    *
+    * <pre>{@code
+    * signatures(foo, bar) ::= <<
+    * fragment1: class/<foo.name>/method/get<bar>
+    * fragment2: class/<foo.name>/method/set<bar>
+    * >>
+    *
+    * fragment1(foo, bar) ::= << ... >>
+    *
+    * fragment2(foo, bar) ::= << ... >>
+    * }</pre>
+    * <p>
+    * In detail:
+    *
+    * <ul>
+    *    <li>All templates are taken from the same ST group, given by {@code group}.</li>
+    *    <li>
+    *       The template named by {@code signaturesTemplate} lists (separated by line breaks) all the other templates
+    *       that are related, along with their signature.
+    *       The format is {@code templateName : signature}
+    *       (any number of whitespace symbols is allowed around the colon or the line itself).
+    *    </li>
+    *    <li>
+    *       All templates, including the signatures, must have the same number and names of parameters.
+    *       This is a consequence of the {@code addTarget} lambda expression, which is supposed to add the arguments,
+    *       being applied to all templates.
+    *    </li>
+    *    <li>
+    *       The {@code targetModified} parameter decides whether the fragments will be added or removed from the {@code fragmentMap}.
+    *       {@code true} indicates removal, {@code false} addition.
+    *       In removal mode, the templates specified by the signatures template will not be rendered at all,
+    *       as that is obviously not necessary to remove the fragments.
+    *    </li>
+    *    <li>
+    *       The number of newlines after the fragment is by default {@link FileFragmentMap#METHOD_NEWLINES},
+    *       unless the signature contains the string {@code /attribute/},
+    *       in which case {@link FileFragmentMap#FIELD_NEWLINES} is used.
+    *    </li>
+    *    <li>
+    *       As an additional feature for convenience, any occurrence of {@code import(foo.bar.Baz)} in the rendered template strings,
+    *       where {@code foo.bar.Baz} is a fully qualified class name, will be replaced with {@code Baz},
+    *       and an import statement will be added at the top of the fragment map: {@code import foo.bar.Baz;}.
+    *       No effort is made to avoid this within string literals or other used-supplied content.
+    *       Thus, this feature is exposed to end users of the Fulib API.
+    *    </li>
+    * </ul>
+    *
+    * @param fragmentMap
+    *    the fragment map to add or remove generated fragments to or from
+    * @param group
+    *    the ST group holding the templates
+    * @param signaturesTemplate
+    *    the template holding the signatures
+    * @param targetModified
+    *    whether or not the member was modified. if true, fragments will be removed instead of added
+    * @param addTarget
+    *    a lambda expression that adds arguments to both the signatures template and all other templates specified by the signatures
+    */
    protected void generateFromSignatures(FileFragmentMap fragmentMap, STGroup group, String signaturesTemplate,
       boolean targetModified, Consumer<? super ST> addTarget)
    {
