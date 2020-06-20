@@ -302,27 +302,27 @@ public class ClassModelManager implements IModelManager
 
    // --------------- Classes ---------------
 
-   public Clazz haveClass(String className)
+   public Clazz haveClass(String name)
    {
-      Clazz clazz = this.classModel.getClazz(className);
+      Clazz clazz = this.classModel.getClazz(name);
 
       if (clazz != null)
       {
          return clazz;
       }
 
-      Validator.checkSimpleName(className);
-      Validator.checkJavaLangNameClash(className);
+      Validator.checkSimpleName(name);
+      Validator.checkJavaLangNameClash(name);
 
       clazz = new Clazz();
       clazz.setModel(classModel);
-      clazz.setName(className);
+      clazz.setName(name);
       clazz.setPropertyStyle(classModel.getDefaultPropertyStyle());
 
       this.event(e -> {
          e.put(EventSource.EVENT_TYPE, HAVE_CLASS);
-         e.put(EventSource.EVENT_KEY, className);
-         e.put(Clazz.PROPERTY_name, className);
+         e.put(EventSource.EVENT_KEY, name);
+         e.put(Clazz.PROPERTY_name, name);
       });
 
       return clazz;
@@ -331,9 +331,9 @@ public class ClassModelManager implements IModelManager
    /**
     * @since 1.2
     */
-   public Clazz haveClass(String className, Consumer<? super ClassManager> body)
+   public Clazz haveClass(String name, Consumer<? super ClassManager> body)
    {
-      final Clazz clazz = this.haveClass(className);
+      final Clazz clazz = this.haveClass(name);
       body.accept(new ClassManager(clazz));
       return clazz;
    }
@@ -341,9 +341,9 @@ public class ClassModelManager implements IModelManager
    /**
     * @since 1.2
     */
-   public Clazz haveClass(String className, Clazz superClass, Consumer<? super ClassManager> body)
+   public Clazz haveClass(String name, Clazz superClass, Consumer<? super ClassManager> body)
    {
-      final Clazz clazz = this.haveClass(className);
+      final Clazz clazz = this.haveClass(name);
       this.haveSuper(clazz, superClass);
       body.accept(new ClassManager(clazz));
       return clazz;
