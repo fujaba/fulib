@@ -675,6 +675,19 @@ public class ClassModelManager implements IModelManager
       return method;
    }
 
+   /**
+    * Finds a methods with the given {@linkplain FMethod#getDeclaration() declaration}
+    *
+    * @param declaration
+    *    the {@linkplain FMethod#getDeclaration() declaration} of the method to search for
+    *
+    * @return a method in any class of the managed class model that has the given declaration,
+    * or {@code null} if none is found
+    *
+    * @deprecated since 1.2; when multiple classes have a method with the same declaration, the result is undefined.
+    * Use {@link #getMethod(Clazz, String)} instead.
+    */
+   @Deprecated
    public FMethod getMethod(String declaration)
    {
       for (Clazz clazz : this.getClassModel().getClasses())
