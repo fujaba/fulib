@@ -642,12 +642,12 @@ public class ClassModelManager implements IModelManager
 
    // --------------- Methods ---------------
 
-   public FMethod haveMethod(Clazz srcClass, String declaration)
+   public FMethod haveMethod(Clazz owner, String declaration)
    {
-      return this.haveMethod(srcClass, declaration, null);
+      return this.haveMethod(owner, declaration, null);
    }
 
-   public FMethod haveMethod(Clazz clazz, String declaration, String body)
+   public FMethod haveMethod(Clazz owner, String declaration, String body)
    {
       FMethod method = this.getMethod(declaration);
 
@@ -660,14 +660,14 @@ public class ClassModelManager implements IModelManager
          return method;
       }
 
-      method.setClazz(clazz).setDeclaration(declaration).setMethodBody(body);
+      method.setClazz(owner).setDeclaration(declaration).setMethodBody(body);
 
       final String key = method.getSignature();
 
       this.event(e -> {
          e.put(EVENT_TYPE, HAVE_METHOD);
          e.put(EVENT_KEY, key);
-         e.put(CLASS_NAME, clazz.getName());
+         e.put(CLASS_NAME, owner.getName());
          e.put(DECLARATION, declaration);
          e.put(METHOD_BODY, body);
       });
