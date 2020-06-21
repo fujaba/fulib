@@ -151,7 +151,7 @@ public class ClassBuilder
     * @param type
     *    the attribute type
     * @param initialValue
-    *    the initialize value; can be any Java expression or {@code null}.
+    *    the initial value; can be any Java expression or {@code null}.
     *
     * @return this instance, to allow method chaining
     *
@@ -177,7 +177,7 @@ public class ClassBuilder
     * @param collectionType
     *    the collection type; can be {@code null} for simple attributes
     * @param initialValue
-    *    the initialize value; can be any Java expression or {@code null}.
+    *    the initial value; can be any Java expression or {@code null}.
     *
     * @return this instance, to allow method chaining
     *
