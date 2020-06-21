@@ -92,7 +92,11 @@ public class AssocRole
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @return a string that uniquely identifies this role within the enclosing class model
+    *
+    * @since 1.2
+    */
    public String getId()
    {
       final String className = this.getClazz() == null ? "___" : this.getClazz().getName();
@@ -135,13 +139,21 @@ public class AssocRole
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @return a boolean indicating whether this is a to-one role
+    *
+    * @since 1.2
+    */
    public boolean isToOne()
    {
       return this.cardinality == Type.ONE;
    }
 
-   /** @since 1.2 */
+   /**
+    * @return a boolean indicating whether this is a to-many role
+    *
+    * @since 1.2
+    */
    public boolean isToMany()
    {
       return this.cardinality != Type.ONE;
@@ -195,8 +207,7 @@ public class AssocRole
     *
     * @return this instance, to allow method chaining
     *
-    * @deprecated since 1.2; use {@link #setCollectionType(CollectionType) setCollectionType}
-    * ({@link CollectionType#of(String) CollectionType.of}(value)) instead
+    * @deprecated since 1.2; use {@link #setCollectionType(CollectionType)} with {@link CollectionType#of(String)} instead
     */
    @Deprecated
    public AssocRole setRoleType(String value)
@@ -204,11 +215,22 @@ public class AssocRole
       return this.setCollectionType(CollectionType.of(value));
    }
 
+   /**
+    * @return a boolean indicating whether this role is an aggregation,
+    * i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or {@code removeYou} on the source object
+    */
    public boolean getAggregation()
    {
       return this.aggregation;
    }
 
+   /**
+    * @param value
+    *    a boolean indicating whether this role is an aggregation,
+    *    i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or {@code removeYou} on the source object
+    *
+    * @return this instance, to allow method chaining
+    */
    public AssocRole setAggregation(boolean value)
    {
       if (value == this.aggregation)
@@ -222,11 +244,21 @@ public class AssocRole
       return this;
    }
 
+   /**
+    * @return the property style of this role
+    */
    public String getPropertyStyle()
    {
       return this.propertyStyle;
    }
 
+   /**
+    * @param value
+    *    the property style to use for this role.
+    *    Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
+    *
+    * @return this instance, to allow method chaining
+    */
    public AssocRole setPropertyStyle(String value)
    {
       if (Objects.equals(value, this.propertyStyle))
@@ -240,11 +272,20 @@ public class AssocRole
       return this;
    }
 
+   /**
+    * @return a boolean indicating whether this role was modified. For internal use only.
+    */
    public boolean getModified()
    {
       return this.modified;
    }
 
+   /**
+    * @param value
+    *    a boolean indicating whether this role was modified. For internal use only.
+    *
+    * @return this instance, to allow method chaining
+    */
    public AssocRole setModified(boolean value)
    {
       if (value == this.modified)
@@ -260,6 +301,12 @@ public class AssocRole
 
    // =============== Methods ===============
 
+   /**
+    * Marks this role as modified.
+    * Equivalent to calling {@link #setModified(boolean)} with a value of {@code true}.
+    *
+    * @return this instance, to allow method chaining
+    */
    public AssocRole markAsModified()
    {
       return this.setModified(true);
