@@ -1,22 +1,12 @@
 package org.fulib.builder;
 
-import org.fulib.Fulib;
 import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.CollectionType;
 
 import java.util.Collection;
 
 /**
- * ClassModelbuilder is used to create fulib class models that are input for
- * fulib code generation {@link Fulib#generator()}.<br>
- * Typical usage:
- * <pre>
- * <!-- insert_code_fragment: ClassModelBuilder -->
- * ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
- *
- * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
- * <!-- end_code_fragment:  -->
- * </pre>
+ * Allows defining additional properties for associations, e.g. aggregation, property style or collection type.
  */
 public class AssociationBuilder
 {
@@ -27,8 +17,6 @@ public class AssociationBuilder
    // =============== Constructors ===============
 
    /**
-    * Allows to define additional properties for associations, e.g. aggregation or Collection to be used
-    *
     * @param myRole
     *    the role to operate on
     */
