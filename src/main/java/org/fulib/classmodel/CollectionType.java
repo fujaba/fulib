@@ -21,7 +21,7 @@ public class CollectionType
 
    // =============== Fields ===============
 
-   private CollectionItf itf;
+   private CollectionInterface itf;
    private String implTemplate;
    private Class<? extends Collection> implClass;
 
@@ -34,7 +34,7 @@ public class CollectionType
       this.cached = false;
    }
 
-   private CollectionType(CollectionItf itf, String implTemplate, Class<? extends Collection> implClass)
+   private CollectionType(CollectionInterface itf, String implTemplate, Class<? extends Collection> implClass)
    {
       this.cached = true;
       this.itf = itf;
@@ -51,7 +51,7 @@ public class CollectionType
 
    private static CollectionType create(Class<? extends Collection> implClass)
    {
-      final CollectionItf itf = CollectionItf.deriveFrom(implClass);
+      final CollectionInterface itf = CollectionInterface.deriveFrom(implClass);
       final String implTemplate = deriveTemplate(implClass);
       return new CollectionType(itf, implTemplate, implClass);
    }
@@ -75,12 +75,12 @@ public class CollectionType
             throw new IllegalArgumentException("class '" + className + "' is not a sub-type of java.util.Collection");
          }
 
-         final CollectionItf itf = CollectionItf.deriveFrom((Class<? extends Collection>) implClass);
+         final CollectionInterface itf = CollectionInterface.deriveFrom((Class<? extends Collection>) implClass);
          return new CollectionType(itf, implTemplate, (Class<? extends Collection>) implClass);
       }
       catch (ClassNotFoundException e)
       {
-         final CollectionItf itf = CollectionItf.deriveFrom(className);
+         final CollectionInterface itf = CollectionInterface.deriveFrom(className);
          return new CollectionType(itf, implTemplate, null);
       }
    }
@@ -110,12 +110,12 @@ public class CollectionType
 
    // =============== Properties ===============
 
-   public CollectionItf getItf()
+   public CollectionInterface getItf()
    {
       return this.itf;
    }
 
-   public void setItf(CollectionItf itf)
+   public void setItf(CollectionInterface itf)
    {
       this.checkCached();
       this.itf = itf;

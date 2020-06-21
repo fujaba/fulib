@@ -4,7 +4,7 @@ import java.util.Collection;
 
 /** @since 1.2 */
 @SuppressWarnings("rawtypes")
-public enum CollectionItf
+public enum CollectionInterface
 {
    // interfaces corresponding to java.util.Collections.unmodifiable* methods, excluding Maps
    // must be ordered super -> subtypes
@@ -20,29 +20,29 @@ public enum CollectionItf
 
    // =============== Constructors ===============
 
-   CollectionItf(Class<? extends Collection> itf)
+   CollectionInterface(Class<? extends Collection> itf)
    {
       this.itf = itf;
    }
 
    // =============== Static Methods ===============
 
-   static CollectionItf deriveFrom(String implClassName)
+   static CollectionInterface deriveFrom(String implClassName)
    {
       if (implClassName.contains("List"))
       {
-         return CollectionItf.List;
+         return CollectionInterface.List;
       }
       else if (implClassName.contains("Set"))
       {
-         return CollectionItf.Set;
+         return CollectionInterface.Set;
       }
-      return CollectionItf.Collection;
+      return CollectionInterface.Collection;
    }
 
-   static CollectionItf deriveFrom(Class<? extends Collection> implClass)
+   static CollectionInterface deriveFrom(Class<? extends Collection> implClass)
    {
-      final CollectionItf[] values = values();
+      final CollectionInterface[] values = values();
       for (int i = values.length - 1; i >= 0; i--)
       {
          if (values[i].itf.isAssignableFrom(implClass))

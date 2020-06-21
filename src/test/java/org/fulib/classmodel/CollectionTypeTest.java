@@ -28,32 +28,32 @@ public class CollectionTypeTest
    public void testFactories()
    {
       final CollectionType stringList = CollectionType.of(StringList.class);
-      assertEquals(CollectionItf.List, stringList.getItf());
+      assertEquals(CollectionInterface.List, stringList.getItf());
       assertEquals(StringList.class.getName(), stringList.getImplTemplate());
       assertEquals(StringList.class, stringList.getImplClass());
 
       final CollectionType stringSet = CollectionType.of(StringSet.class);
-      assertEquals(CollectionItf.Set, stringSet.getItf());
+      assertEquals(CollectionInterface.Set, stringSet.getItf());
       assertEquals(StringSet.class.getName(), stringSet.getImplTemplate());
       assertEquals(StringSet.class, stringSet.getImplClass());
 
       final CollectionType customList = CollectionType.of(CustomList.class);
-      assertEquals(CollectionItf.List, customList.getItf());
+      assertEquals(CollectionInterface.List, customList.getItf());
       assertEquals(CustomList.class.getName() + "<%s>", customList.getImplTemplate());
       assertEquals(CustomList.class, customList.getImplClass());
 
       final CollectionType customList2 = CollectionType.of(CustomSet.class.getName() + "<%s>");
-      assertEquals(CollectionItf.Set, customList2.getItf());
+      assertEquals(CollectionInterface.Set, customList2.getItf());
       assertEquals(CustomSet.class.getName() + "<%s>", customList2.getImplTemplate());
       assertEquals(CustomSet.class, customList2.getImplClass());
 
       final CollectionType unloadedList = CollectionType.of("org.example.UnloadedList<%s>");
-      assertEquals(CollectionItf.List, unloadedList.getItf());
+      assertEquals(CollectionInterface.List, unloadedList.getItf());
       assertEquals("org.example.UnloadedList<%s>", unloadedList.getImplTemplate());
       assertNull(unloadedList.getImplClass());
 
       final CollectionType unloadedSet = CollectionType.of("org.example.UnloadedSet<%s>");
-      assertEquals(CollectionItf.Set, unloadedSet.getItf());
+      assertEquals(CollectionInterface.Set, unloadedSet.getItf());
       assertEquals("org.example.UnloadedSet<%s>", unloadedSet.getImplTemplate());
       assertNull(unloadedSet.getImplClass());
    }
@@ -103,7 +103,7 @@ public class CollectionTypeTest
 
    private void testCachedThrows(CollectionType cached)
    {
-      assertThrows(UnsupportedOperationException.class, () -> cached.setItf(CollectionItf.Collection));
+      assertThrows(UnsupportedOperationException.class, () -> cached.setItf(CollectionInterface.Collection));
       assertThrows(UnsupportedOperationException.class, () -> cached.setImplTemplate("foo"));
       assertThrows(UnsupportedOperationException.class, () -> cached.setImplClass(ArrayList.class));
    }
@@ -116,7 +116,7 @@ public class CollectionTypeTest
 
    private void testCachedThrowsNot(CollectionType cached)
    {
-      cached.setItf(CollectionItf.Collection);
+      cached.setItf(CollectionInterface.Collection);
       cached.setImplTemplate("foo");
       cached.setImplClass(ArrayList.class);
    }
