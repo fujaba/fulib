@@ -64,6 +64,17 @@ public class AssociationBuilder
       return this;
    }
 
+   /**
+    * Sets the collection type for the target role.
+    *
+    * @param collectionClass
+    *    the collection implementation class, e.g. {@link java.util.ArrayList}
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @deprecated since 1.2; use {@link #setSourceRoleCollection(CollectionType)} with {@link CollectionType#of(Class)}
+    */
+   @Deprecated
    public AssociationBuilder setSourceRoleCollection(
       @SuppressWarnings("rawtypes") Class<? extends Collection> collectionClass)
    {
@@ -87,6 +98,17 @@ public class AssociationBuilder
       return this;
    }
 
+   /**
+    * Sets the collection type for the target role.
+    *
+    * @param collectionClass
+    *    the collection implementation class, e.g. {@link java.util.ArrayList}
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @deprecated since 1.2; use {@link #setTargetRoleCollection(CollectionType)} with {@link CollectionType#of(Class)}
+    */
+   @Deprecated
    public AssociationBuilder setTargetRoleCollection(
       @SuppressWarnings("rawtypes") Class<? extends Collection> collectionClass)
    {
