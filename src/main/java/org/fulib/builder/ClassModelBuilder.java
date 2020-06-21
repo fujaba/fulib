@@ -14,9 +14,9 @@ import java.util.Collection;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
-
-      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+ * ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+ *
+ * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
  */
@@ -46,14 +46,16 @@ public class ClassModelBuilder
     * {@link AssocRole#setCollectionType(CollectionType)} or
     * {@link ClassModel#setDefaultCollectionType(CollectionType)}
     */
-   @Deprecated public static final String COLLECTION_ARRAY_LIST = "java.util.ArrayList<%s>";
+   @Deprecated
+   public static final String COLLECTION_ARRAY_LIST = "java.util.ArrayList<%s>";
 
    /**
     * @deprecated since 1.2; use {@link CollectionType#LinkedHashSet} in conjunction with
     * {@link AssocRole#setCollectionType(CollectionType)} or
     * {@link ClassModel#setDefaultCollectionType(CollectionType)}
     */
-   @Deprecated public static final String COLLECTION_LINKED_HASH_SET = "java.util.LinkedHashSet<%s>";
+   @Deprecated
+   public static final String COLLECTION_LINKED_HASH_SET = "java.util.LinkedHashSet<%s>";
 
    // =============== Fields ===============
 
@@ -67,14 +69,17 @@ public class ClassModelBuilder
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
-
-      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+    *
+    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
     * @param packageName
     *    the package name
+    *
+    * @throws IllegalArgumentException
+    *    if the package name is not a valid qualified Java identifier
     */
    public ClassModelBuilder(String packageName)
    {
@@ -87,9 +92,9 @@ public class ClassModelBuilder
     * Typical usage:
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
-
-      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+    * ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+    *
+    * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
     * <!-- end_code_fragment:  -->
     * </pre>
     *
@@ -97,6 +102,9 @@ public class ClassModelBuilder
     *    the package name
     * @param sourceFolder
     *    the source folder
+    *
+    * @throws IllegalArgumentException
+    *    if the package name is not a valid qualified Java identifier
     */
    public ClassModelBuilder(String packageName, String sourceFolder)
    {
@@ -153,12 +161,11 @@ public class ClassModelBuilder
    }
 
    /**
-    * set container class to be used for to-many associations,
-    * default is Type.COLLECTION_ARRAY_LIST
-    * alternative is e.g.: ClassModelBuilder.
+    * Set the default container class to be used for to-many associations.
+    * The default is {@link java.util.ArrayList}.
     *
     * @param collectionClass
-    *    the collection class
+    *    the collection class, e.g. {@link java.util.HashSet}
     *
     * @return this instance, to allow call chaining
     */
@@ -186,11 +193,11 @@ public class ClassModelBuilder
    }
 
    /**
-    * Sets the default property style for the class model being built to "JavaFX".
+    * Sets the default property style for the class model being built to {@link Type#JAVA_FX}.
     *
     * @return this instance, to allow method chaining
     *
-    * @deprecated since 1.2; use {@link #setDefaultPropertyStyle(String) setDefaultPropertyStyle}({@link Type#JAVA_FX}) instead.
+    * @deprecated since 1.2; use {@link #setDefaultPropertyStyle(String)} with {@link Type#JAVA_FX} instead.
     */
    @Deprecated
    public ClassModelBuilder setJavaFXPropertyStyle()
@@ -202,7 +209,7 @@ public class ClassModelBuilder
    // =============== Methods ===============
 
    /**
-    * Builds and returns a class builder for the given classname and connects it to the model
+    * Builds and returns a class builder for the given class name and connects it to the model.
     * <pre>
     * <!-- insert_code_fragment: ClassModelBuilder.twoParams -->
     * ClassModelBuilder mb = Fulib.classModelBuilder(packageName, "src/main/java")
@@ -215,7 +222,10 @@ public class ClassModelBuilder
     * @param className
     *    the class name
     *
-    * @return new class builder
+    * @return the new class builder
+    *
+    * @throws IllegalArgumentException
+    *    see {@link ClassBuilder#ClassBuilder(ClassModel, String)}
     */
    public ClassBuilder buildClass(String className)
    {
