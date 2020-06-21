@@ -1,10 +1,7 @@
 package org.fulib.builder;
 
 import org.fulib.Fulib;
-import org.fulib.classmodel.AssocRole;
-import org.fulib.classmodel.Attribute;
-import org.fulib.classmodel.ClassModel;
-import org.fulib.classmodel.Clazz;
+import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
 
 /**
@@ -164,6 +161,34 @@ public class ClassBuilder
     */
    public ClassBuilder buildAttribute(String name, String type, String initialValue)
    {
+      return this.buildAttribute(name, type, null, initialValue);
+   }
+
+   /**
+    * Creates an attribute with the given name, type and initial value.
+    * By passing a non-{@code null} collection type, the attribute can be made multi-valued.
+    * This will generate {@code with*} and {@code without*} methods instead of a setter.
+    * The attribute uses the same property style as the class.
+    *
+    * @param name
+    *    the attribute name
+    * @param type
+    *    the attribute type; serves as the element type if {@code collectionType} is specified
+    * @param collectionType
+    *    the collection type; can be {@code null} for simple attributes
+    * @param initialValue
+    *    the initialize value; can be any Java expression or {@code null}.
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @throws IllegalArgumentException
+    *    if an attribute or role with the same name already exists within the class,
+    *    or the name is not a valid Java identifier
+    *
+    * @since 1.2
+    */
+   public ClassBuilder buildAttribute(String name, String type, CollectionType collectionType, String initialValue)
+   {
       Validator.checkSimpleName(name);
       if (this.clazz.getAttribute(name) != null || this.clazz.getRole(name) != null)
       {
@@ -175,6 +200,7 @@ public class ClassBuilder
       attribute.setName(name);
       attribute.setType(type);
       attribute.setPropertyStyle(this.clazz.getPropertyStyle());
+      attribute.setCollectionType(collectionType);
       attribute.setInitialization(initialValue);
 
       return this;
