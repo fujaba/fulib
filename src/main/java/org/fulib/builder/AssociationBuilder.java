@@ -46,6 +46,10 @@ public class AssociationBuilder
    }
 
    /**
+    * Sets the property style for both source and target roles to {@link Type#JAVA_FX}.
+    *
+    * @return this instance, to allow method chaining
+    *
     * @deprecated since 1.2; use {@link #setPropertyStyle(String)} with {@link Type#JAVA_FX}
     */
    @Deprecated
@@ -55,6 +59,13 @@ public class AssociationBuilder
    }
 
    /**
+    * Sets the property style for both source and target roles.
+    *
+    * @param propertyStyle
+    *    the property style, e.g. {@link Type#BEAN} or {@link Type#JAVA_FX}
+    *
+    * @return this instance, to allow method chaining
+    *
     * @since 1.2
     */
    public AssociationBuilder setPropertyStyle(String propertyStyle)
