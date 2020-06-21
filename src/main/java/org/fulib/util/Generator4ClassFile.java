@@ -154,7 +154,8 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
    {
       final STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
       final ST classDecl = group.getInstanceOf("classDecl");
-      classDecl.add("clazz", clazz);
+      classDecl.add("name", clazz.getName());
+      classDecl.add("superClass", clazz.getSuperClass() != null ? clazz.getSuperClass().getName() : null);
       fragmentMap.add(CLASS + '/' + clazz.getName() + '/' + CLASS_DECL, classDecl.render(), CLASS_NEWLINES);
    }
 

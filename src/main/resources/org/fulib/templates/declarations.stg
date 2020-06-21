@@ -6,7 +6,7 @@ importDecl(qualifiedName, static) ::= <<
 import <if(static)>static <endif><qualifiedName>;
 >>
 
-classDecl(clazz) ::= <<
-public class <clazz.name><if(clazz.superClass)> extends <clazz.superClass.name><endif>
+classDecl(name, superClass) ::= <<
+public class <name><if(superClass)> extends <superClass><endif>
 {
 >>
