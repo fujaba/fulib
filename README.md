@@ -1,6 +1,7 @@
 # fulib - Fujaba library
 
 [![Build Status](https://travis-ci.org/fujaba/fulib.svg?branch=master)](https://travis-ci.org/fujaba/fulib)
+[![Java CI](https://github.com/fujaba/fulib/workflows/Java%20CI/badge.svg)](https://github.com/fujaba/fulib/actions)
 [![Download](https://api.bintray.com/packages/fujaba/maven/fulib/images/download.svg)](https://bintray.com/fujaba/maven/fulib/_latestVersion "Download")
 
 Fulib is a Java-code generating library.
