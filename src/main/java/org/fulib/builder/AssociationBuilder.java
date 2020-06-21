@@ -39,6 +39,11 @@ public class AssociationBuilder
 
    // =============== Methods ===============
 
+   /**
+    * Makes the source role an aggregation.
+    *
+    * @return this instance, to allow method chaining
+    */
    public AssociationBuilder setAggregation()
    {
       this.srcRole.setAggregation(true);
