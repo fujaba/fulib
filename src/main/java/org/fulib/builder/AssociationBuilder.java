@@ -12,9 +12,9 @@ import java.util.Collection;
  * Typical usage:
  * <pre>
  * <!-- insert_code_fragment: ClassModelBuilder -->
-      ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
-
-      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
+ * ClassModelBuilder mb = Fulib.classModelBuilder(packageName, srcFolder);
+ *
+ * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
  */
@@ -71,10 +71,42 @@ public class AssociationBuilder
       return this;
    }
 
+   /**
+    * Sets the collection type for the source role.
+    *
+    * @param type
+    *    the collection type
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @since 1.2
+    */
+   public AssociationBuilder setSourceRoleCollection(CollectionType type)
+   {
+      this.srcRole.setCollectionType(type);
+      return this;
+   }
+
    public AssociationBuilder setTargetRoleCollection(
       @SuppressWarnings("rawtypes") Class<? extends Collection> collectionClass)
    {
       this.srcRole.getOther().setCollectionType(CollectionType.of(collectionClass));
+      return this;
+   }
+
+   /**
+    * Sets the collection type for the target role.
+    *
+    * @param type
+    *    the collection type
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @since 1.2
+    */
+   public AssociationBuilder setTargetRoleCollection(CollectionType type)
+   {
+      this.srcRole.getOther().setCollectionType(type);
       return this;
    }
 }
