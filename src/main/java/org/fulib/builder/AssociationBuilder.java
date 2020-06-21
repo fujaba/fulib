@@ -12,17 +12,17 @@ public class AssociationBuilder
 {
    // =============== Fields ===============
 
-   private AssocRole srcRole;
+   private AssocRole role;
 
    // =============== Constructors ===============
 
    /**
-    * @param myRole
+    * @param role
     *    the role to operate on
     */
-   public AssociationBuilder(AssocRole myRole)
+   public AssociationBuilder(AssocRole role)
    {
-      this.srcRole = myRole;
+      this.role = role;
    }
 
    // =============== Methods ===============
@@ -34,7 +34,7 @@ public class AssociationBuilder
     */
    public AssociationBuilder setAggregation()
    {
-      this.srcRole.setAggregation(true);
+      this.role.setAggregation(true);
       return this;
    }
 
@@ -63,8 +63,8 @@ public class AssociationBuilder
     */
    public AssociationBuilder setPropertyStyle(String propertyStyle)
    {
-      this.srcRole.setPropertyStyle(propertyStyle);
-      this.srcRole.getOther().setPropertyStyle(propertyStyle);
+      this.role.setPropertyStyle(propertyStyle);
+      this.role.getOther().setPropertyStyle(propertyStyle);
       return this;
    }
 
@@ -82,7 +82,7 @@ public class AssociationBuilder
    public AssociationBuilder setSourceRoleCollection(
       @SuppressWarnings("rawtypes") Class<? extends Collection> collectionClass)
    {
-      this.srcRole.setCollectionType(CollectionType.of(collectionClass));
+      this.role.setCollectionType(CollectionType.of(collectionClass));
       return this;
    }
 
@@ -98,7 +98,7 @@ public class AssociationBuilder
     */
    public AssociationBuilder setSourceRoleCollection(CollectionType type)
    {
-      this.srcRole.setCollectionType(type);
+      this.role.setCollectionType(type);
       return this;
    }
 
@@ -116,7 +116,7 @@ public class AssociationBuilder
    public AssociationBuilder setTargetRoleCollection(
       @SuppressWarnings("rawtypes") Class<? extends Collection> collectionClass)
    {
-      this.srcRole.getOther().setCollectionType(CollectionType.of(collectionClass));
+      this.role.getOther().setCollectionType(CollectionType.of(collectionClass));
       return this;
    }
 
@@ -132,7 +132,7 @@ public class AssociationBuilder
     */
    public AssociationBuilder setTargetRoleCollection(CollectionType type)
    {
-      this.srcRole.getOther().setCollectionType(type);
+      this.role.getOther().setCollectionType(type);
       return this;
    }
 }
