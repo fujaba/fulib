@@ -23,12 +23,15 @@
 + Added the decorator mechanism. #26
 + Attributes can now be multi-valued. #23
 + Added the typesafe `CollectionType` API for to-n associations and collection attributes.
-<!-- TODO new PropertyStyles #19 -->
++ Added the `Bean` property style as the new default and changed the `POJO` property style to omit property change support.
++ `FMethod`s can now have custom modifiers.
 
 ## Improvements
 
+* Updated to fulibYaml v1.3.0.
 * Improved Javadoc across all public APIs. #13
-* Improved the `ClassModelManager` API and DSL. #18
+* Improved the `ClassModelManager` API and DSL. #18 #28
+* Improved the `ClassBuilder` API.
 * Improved the rules for what is allowed as an identifier.
 * A new parser now understands more and newer Java syntax. #17
 * Improved merging of existing and new declarations.
@@ -43,9 +46,11 @@
   * no more raw types
   * braces for control statements
   * `with` and `without` methods are now overloaded and typesafe for: single element, varargs elements, element collection #20
+  * fields and methods are now grouped. #22
 * Improved code generation for table classes:
   * generally cleaner code on par with the changes to regular class generation
   * replaced excessive use of `ArrayList`, `LinkedHashSet` and `LinkedHashMap` with their respective interfaces
+  * expand methods now use overloads instead of varargs. #25
 * Improved code generation for classes with superclasses:
   * `toString` now prepends the result of `super.toString()` #24
   * `removeYou` now calls `super.removeYou()` #15
@@ -54,7 +59,8 @@
 ## Bugfixes
 
 * Fixed problems related to wrapper classes of uncommon primitive types.
-* `removeYou` now works correctly with unidirectional associations. #9
+* Generated `removeYou()` methods now works correctly with unidirectional associations. #9
+* Fixed declaration parsing in the `FMethod.setDeclaration` and `.setParamsString` methods. #29
 
 ## Deprecations
 
