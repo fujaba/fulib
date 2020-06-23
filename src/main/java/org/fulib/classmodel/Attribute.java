@@ -60,7 +60,11 @@ public class Attribute
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @return a string that uniquely identifies this attribute within the enclosing class model
+    *
+    * @since 1.2
+    */
    public String getId()
    {
       final String className = this.getClazz() != null ? this.getClazz().getName() : "___";
@@ -103,13 +107,24 @@ public class Attribute
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @return the collection type
+    *
+    * @since 1.2
+    */
    public CollectionType getCollectionType()
    {
       return this.collectionType;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the new collection type
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @since 1.2
+    */
    public Attribute setCollectionType(CollectionType value)
    {
       if (Objects.equals(value, this.collectionType))
@@ -123,7 +138,11 @@ public class Attribute
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @return a boolean indicating whether this is multi-valued attribute
+    *
+    * @since 1.2
+    */
    public boolean isCollection()
    {
       return this.getCollectionType() != null;
@@ -147,11 +166,21 @@ public class Attribute
       return this;
    }
 
+   /**
+    * @return the property style of this attribute
+    */
    public String getPropertyStyle()
    {
       return this.propertyStyle;
    }
 
+   /**
+    * @param value
+    *    the property style to use for this attribute.
+    *    Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
+    *
+    * @return this instance, to allow method chaining
+    */
    public Attribute setPropertyStyle(String value)
    {
       if (Objects.equals(value, this.propertyStyle))
@@ -165,11 +194,20 @@ public class Attribute
       return this;
    }
 
+   /**
+    * @return a boolean indicating whether this attribute was modified. For internal use only.
+    */
    public boolean getModified()
    {
       return this.modified;
    }
 
+   /**
+    * @param value
+    *    a boolean indicating whether this attribute was modified. For internal use only.
+    *
+    * @return this instance, to allow method chaining
+    */
    public Attribute setModified(boolean value)
    {
       if (value == this.modified)
@@ -185,6 +223,12 @@ public class Attribute
 
    // =============== Methods ===============
 
+   /**
+    * Marks this attribute as modified.
+    * Equivalent to calling {@link #setModified(boolean)} with a value of {@code true}.
+    *
+    * @return this instance, to allow method chaining
+    */
    public Attribute markAsModified()
    {
       return this.setModified(true);
