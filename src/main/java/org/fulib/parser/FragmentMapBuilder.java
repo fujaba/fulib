@@ -54,6 +54,11 @@ public class FragmentMapBuilder extends FulibClassBaseListener
          throw new IllegalArgumentException("failed to read: " + fileName, e);
       }
 
+      return parse(fileName, input);
+   }
+
+   public static FileFragmentMap parse(String fileName, CharStream input)
+   {
       final FulibClassLexer lexer = new FulibClassLexer(input);
       final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
       parser.removeErrorListeners();
