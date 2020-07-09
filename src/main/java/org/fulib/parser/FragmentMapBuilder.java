@@ -49,9 +49,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       }
       catch (IOException e)
       {
-         // TODO better error handling
-         // e.printStackTrace();
-         return new FileFragmentMap(fileName);
+         throw new IllegalArgumentException("failed to read: " + fileName, e);
       }
 
       final FulibClassLexer lexer = new FulibClassLexer(input);
