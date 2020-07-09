@@ -9,6 +9,8 @@ import org.fulib.classmodel.FileFragmentMap;
 import org.fulib.parser.FulibClassParser.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 import static org.fulib.classmodel.FileFragmentMap.CLASS;
@@ -55,13 +57,22 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final FulibClassLexer lexer = new FulibClassLexer(input);
       final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
       parser.removeErrorListeners();
-      parser.addErrorListener(new FulibErrorHandler(System.err));
+
+      final StringWriter writer = new StringWriter();
+      parser.addErrorListener(new FulibErrorHandler(new PrintWriter(writer)));
 
       final FileContext context = parser.file();
 
       final FileFragmentMap map = new FileFragmentMap(fileName);
       final FragmentMapBuilder builder = new FragmentMapBuilder(input, map);
       ParseTreeWalker.DEFAULT.walk(builder, context);
+
+      final String errors = writer.toString();
+      if (!errors.isEmpty())
+      {
+         throw new IllegalArgumentException(fileName + " contained syntax errors, aborting:\n" + errors);
+      }
+
       return map;
    }
 

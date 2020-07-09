@@ -4,13 +4,13 @@ import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 
 class FulibErrorHandler extends BaseErrorListener
 {
-   private final PrintStream out;
+   private final PrintWriter out;
 
-   FulibErrorHandler(PrintStream out)
+   FulibErrorHandler(PrintWriter out)
    {
       this.out = out;
    }
