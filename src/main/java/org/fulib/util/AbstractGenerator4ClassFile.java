@@ -61,7 +61,9 @@ public abstract class AbstractGenerator4ClassFile
    public void generate(Clazz clazz)
    {
       final String classFileName = this.getSourceFileName(clazz);
-      FileFragmentMap fragmentMap = FragmentMapBuilder.parse(classFileName);
+      final FileFragmentMap fragmentMap = Files.exists(Paths.get(classFileName)) ?
+         FragmentMapBuilder.parse(classFileName) :
+         new FileFragmentMap(classFileName);
 
       this.generate(clazz, fragmentMap);
 

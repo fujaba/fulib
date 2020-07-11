@@ -141,8 +141,12 @@ public abstract class AbstractGenerator
    {
       for (Clazz clazz : model.getClasses())
       {
-         final FileFragmentMap fragmentMap = files.computeIfAbsent(clazz.getName(), s -> FragmentMapBuilder.parse(
-            generator.getSourceFileName(clazz)));
+         final FileFragmentMap fragmentMap = files.computeIfAbsent(clazz.getName(), s -> {
+            final String sourceFileName = generator.getSourceFileName(clazz);
+            return Files.exists(Paths.get(sourceFileName)) ?
+               FragmentMapBuilder.parse(sourceFileName) :
+               new FileFragmentMap(sourceFileName);
+         });
          generator.generate(clazz, fragmentMap);
       }
    }
