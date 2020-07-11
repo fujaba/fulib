@@ -33,6 +33,9 @@ public class TablesGenerator extends AbstractGenerator
 
    // =============== Properties ===============
 
+   /**
+    * @since 1.2
+    */
    @Override
    public TablesGenerator setCustomTemplatesFile(String customFileName)
    {

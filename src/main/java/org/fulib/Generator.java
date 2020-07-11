@@ -19,6 +19,9 @@ public class Generator extends AbstractGenerator
 
    // =============== Properties ===============
 
+   /**
+    * @since 1.2
+    */
    @Override
    public Generator setCustomTemplatesFile(String customFileName)
    {

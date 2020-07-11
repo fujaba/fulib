@@ -16,6 +16,9 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @since 1.2
+ */
 public abstract class AbstractGenerator
 {
    // =============== Static Fields ===============
