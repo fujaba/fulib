@@ -234,9 +234,9 @@ public class ClassModelManager implements IModelManager
     * Creates a {@link ClassModelBuilder} that operates on the same underlying class model as this manager.
     * Note that changes made using the builder are not recorded as events.
     *
-    * @since 1.2
-    *
     * @return a {@link ClassModelBuilder} that operates on the same underlying class model as this manager
+    *
+    * @since 1.2
     */
    public ClassModelBuilder asBuilder()
    {
@@ -261,10 +261,10 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
-    * Sets the package name to use for generated classes.
-    *
     * @param packageName
-    *    the package name
+    *    the package name to use for generated classes
+    *
+    * @return this instance, to allow method chaining
     *
     * @since 1.2
     */
@@ -304,10 +304,10 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
-    * Sets the source directory to generate model classes into.
-    *
     * @param mainJavaDir
-    *    the source directory
+    *    the source directory to generate model classes into
+    *
+    * @return this instance, to allow method chaining
     *
     * @since 1.2
     */
@@ -360,6 +360,16 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
+    * Gets or creates a class with the given name.
+    * In either case, the consumer is invoked to configure the resulting class using the {@link ClassManager} API.
+    *
+    * @param name
+    *    the class name
+    * @param body
+    *    a lambda expression that configures the class
+    *
+    * @return the class with the given name
+    *
     * @since 1.2
     */
    public Clazz haveClass(String name, Consumer<? super ClassManager> body)
@@ -370,6 +380,18 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
+    * Gets or creates a class with the given name and super class.
+    * In either case, the consumer is invoked to configure the resulting class using the {@link ClassManager} API.
+    *
+    * @param name
+    *    the class name
+    * @param superClass
+    *    the super class
+    * @param body
+    *    a lambda expression that configures the class
+    *
+    * @return the class with the given name
+    *
     * @since 1.2
     */
    public Clazz haveClass(String name, Clazz superClass, Consumer<? super ClassManager> body)
@@ -381,6 +403,13 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
+    * Configures the sub class to extend the given super class.
+    *
+    * @param subClass
+    *    the class to modify
+    * @param superClass
+    *    the super class that the sub class should extend
+    *
     * @since 1.2
     */
    public void haveSuper(Clazz subClass, Clazz superClass)
@@ -396,6 +425,13 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
+    * Configures the class to have an import for the given qualified name.
+    *
+    * @param clazz
+    *    the class to modify
+    * @param qualifiedName
+    *    the qualified name that should be imported by the class
+    *
     * @since 1.2
     */
    public void haveImport(Clazz clazz, String qualifiedName)

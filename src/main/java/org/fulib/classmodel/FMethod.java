@@ -264,6 +264,9 @@ public class FMethod
    }
 
    /**
+    * @return a signature that allows inserting this method into {@link FileFragmentMap FileFragmentMaps},
+    * using their signature format.
+    *
     * @since 1.2
     */
    public String getSignature()
@@ -330,6 +333,16 @@ public class FMethod
    // =============== Methods ===============
 
    /**
+    * @param that the method to compare signatures with
+    *
+    * @return a boolean indicating whether the signatures of this and the given method match.
+    * In particular, two method's signatures match if and only if they fullfill all of the following conditions:
+    * <ul>
+    *    <li>The names of the methods are exactly equal</li>
+    *    <li>The methods have the same number of parameters</li>
+    *    <li>The parameter types of the methods are exactly equal</li>
+    * </ul>
+    *
     * @since 1.2
     */
    public boolean signatureMatches(FMethod that)

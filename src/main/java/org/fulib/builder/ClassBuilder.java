@@ -20,7 +20,7 @@ public class ClassBuilder
 {
    // =============== Fields ===============
 
-   private Clazz clazz;
+   private final Clazz clazz;
 
    // =============== Constructors ===============
 
@@ -107,7 +107,8 @@ public class ClassBuilder
    }
 
    /**
-    * Sets the property style for the class.
+    * @param propertyStyle
+    *    the property style for the class
     *
     * @return this instance, to allow method chaining
     *
