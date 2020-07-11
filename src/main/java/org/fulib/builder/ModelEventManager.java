@@ -72,6 +72,8 @@ public class ModelEventManager
     *
     * @param events
     *    the events
+    *
+    * @since 1.2
     */
    public void applyEvents(Iterable<? extends Map<String, String>> events)
    {

@@ -24,6 +24,7 @@ public class ClassModelBuilder
 {
    // =============== Constants ===============
 
+   /** @since 1.2 */
    public static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
 
    // replacements for the deprecated constants below can be found in org.fulib.builder.Type.
@@ -59,7 +60,7 @@ public class ClassModelBuilder
 
    // =============== Fields ===============
 
-   private ClassModel classModel;
+   private final ClassModel classModel;
 
    // =============== Constructors ===============
 

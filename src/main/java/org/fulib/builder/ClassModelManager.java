@@ -73,31 +73,44 @@ public class ClassModelManager implements IModelManager
 
    public static final String THE_CLASS_MODEL = "theClassModel";
 
+   /** @deprecated since 1.2; use {@link #SET_SOURCE_FOLDER} instead */
    @Deprecated
    public static final String HAVE_MAIN_JAVA_DIR = "haveMainJavaDir";
+   /** @deprecated since 1.2; use {@link #SET_PACKAGE_NAME} instead */
    @Deprecated
    public static final String HAVE_PACKAGE_NAME = "havePackageName";
 
+   /** @since 1.2 */
    public static final String SET_PACKAGE_NAME = "setPackageName";
+   /** @since 1.2 */
    public static final String SET_SOURCE_FOLDER = "setSourceFolder";
 
    public static final String HAVE_CLASS = "haveClass";
 
    public static final String HAVE_ATTRIBUTE = "haveAttribute";
+   /** @since 1.2 */
    public static final String OWNER_NAME = "ownerName";
+   /** @since 1.2 */
    public static final String NAME = "name";
+   /** @since 1.2 */
    public static final String TYPE = "type";
+   /** @since 1.2 */
    public static final String INIT = "init";
+   /** @deprecated since 1.2; use {@link #NAME} instead */
    @Deprecated
    public static final String ATTR_NAME = "attrName";
+   /** @deprecated since 1.2; use {@link #TYPE} instead */
    @Deprecated
    public static final String ATTR_TYPE = "attrType";
 
    public static final String CLASS_NAME = "className";
 
+   /** @since 1.2 */
    public static final String HAVE_IMPORT = "haveImport";
+   /** @since 1.2 */
    public static final String QUALIFIED_NAME = "qualifiedName";
 
+   /** @since 1.2 */
    public static final String ASSOCIATE = "associate";
    public static final String SRC_CLASS_NAME = "srcClassName";
    public static final String TGT_CLASS_NAME = "tgtClassName";
@@ -106,8 +119,10 @@ public class ClassModelManager implements IModelManager
    public static final String TGT_ROLE = "tgtRole";
    public static final String TGT_SIZE = "tgtSize";
 
+   /** @deprecated since 1.2; use {@link #ASSOCIATE} instead */
    @Deprecated
    public static final String HAVE_ROLE = "haveRole";
+   /** @deprecated since 1.2; use {@link #TGT_SIZE} instead */
    @Deprecated
    public static final String TGT_CARDINALITY = "tgtCardinality";
 
@@ -115,13 +130,18 @@ public class ClassModelManager implements IModelManager
    public static final String METHOD_BODY = "methodBody";
    public static final String DECLARATION = "declaration";
 
+   /** @deprecated since 1.2; unused */
    @Deprecated
    public static final String METHOD_NAME = "methodName";
+   /** @deprecated since 1.2; unused */
    @Deprecated
    public static final String PARAMS = "params";
 
+   /** @since 1.2 */
    public static final String HAVE_SUPER = "haveSuper";
+   /** @since 1.2 */
    public static final String SUB_CLASS = "subClass";
+   /** @since 1.2 */
    public static final String SUPER_CLASS = "superClass";
 
    // =============== Fields ===============
@@ -174,11 +194,22 @@ public class ClassModelManager implements IModelManager
       return this.classModel;
    }
 
+   /**
+    * @return the model event manager
+    *
+    * @since 1.2
+    */
    public ModelEventManager getModelEventManager()
    {
       return this.mem;
    }
 
+   /**
+    * @param mem
+    *    the model event manager
+    *
+    * @since 1.2
+    */
    public void setModelEventManager(ModelEventManager mem)
    {
       if (mem == this.mem)
