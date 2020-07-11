@@ -33,9 +33,6 @@ public class FileFragmentMap
    /** @since 1.2 */ public static final String CLASS_BODY  = "classBody";
    /** @since 1.2 */ public static final String CLASS_DECL  = "classDecl";
    /** @since 1.2 */ public static final String CLASS_END   = "classEnd";
-   /** @deprecated since 1.2 */
-   @Deprecated
-   public static final String GAP         = "gap:";
    /** @since 1.2 */ public static final String EOF         = "eof";
 
    /** @since 1.2 */ public static final int PACKAGE_NEWLINES     = 2;
