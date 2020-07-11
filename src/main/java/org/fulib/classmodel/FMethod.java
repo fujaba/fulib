@@ -22,6 +22,7 @@ public class FMethod
    public static final String PROPERTY_clazz = "clazz";
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_annotations = "annotations";
+   /** @since 1.2 */
    public static final String PROPERTY_modifiers = "modifiers";
 
    // =============== Fields ===============
@@ -67,11 +68,17 @@ public class FMethod
       return this;
    }
 
+   /**
+    * @since 1.2
+    */
    public String getName()
    {
       return this.name;
    }
 
+   /**
+    * @since 1.2
+    */
    public FMethod setName(String newName)
    {
       this.name = newName;
@@ -197,11 +204,17 @@ public class FMethod
       return this;
    }
 
+   /**
+    * @since 1.2
+    */
    public String getModifiers()
    {
       return this.modifiers;
    }
 
+   /**
+    * @since 1.2
+    */
    public FMethod setModifiers(String value)
    {
       if (Objects.equals(value, this.modifiers))
@@ -215,6 +228,9 @@ public class FMethod
       return this;
    }
 
+   /**
+    * @since 1.2
+    */
    public LinkedHashMap<String, String> getParams()
    {
       if (this.params == null)
@@ -224,12 +240,18 @@ public class FMethod
       return this.params;
    }
 
+   /**
+    * @since 1.2
+    */
    public String getParamsString()
    {
       return this.getParams().entrySet().stream().map(e -> e.getValue() + " " + e.getKey())
                  .collect(Collectors.joining(", "));
    }
 
+   /**
+    * @since 1.2
+    */
    public FMethod setParamsString(String params)
    {
       final CharStream input = CharStreams.fromString("(" + params + ")");
@@ -241,6 +263,9 @@ public class FMethod
       return this;
    }
 
+   /**
+    * @since 1.2
+    */
    public String getSignature()
    {
       String paramTypes = this.getParams().entrySet().stream().filter(e -> !"this".equals(e.getKey()))
@@ -249,11 +274,17 @@ public class FMethod
              + this.getName() + '(' + paramTypes + ')';
    }
 
+   /**
+    * @since 1.2
+    */
    public String getReturnType()
    {
       return this.returnType;
    }
 
+   /**
+    * @since 1.2
+    */
    public FMethod setReturnType(String value)
    {
       this.returnType = value;
@@ -298,6 +329,9 @@ public class FMethod
 
    // =============== Methods ===============
 
+   /**
+    * @since 1.2
+    */
    public boolean signatureMatches(FMethod that)
    {
       if (!Objects.equals(this.getName(), that.getName()) || this.getParams().size() != that.getParams().size())

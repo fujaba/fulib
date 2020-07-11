@@ -23,6 +23,9 @@ public class CodeFragment extends Fragment
 
    // =============== Properties ===============
 
+   /**
+    * @since 1.2
+    */
    @Override
    public CodeFragment setKey(String value)
    {

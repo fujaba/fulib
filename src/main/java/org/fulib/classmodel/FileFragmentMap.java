@@ -24,27 +24,27 @@ public class FileFragmentMap
 {
    // =============== Constants ===============
 
-   public static final String CLASS       = "class";
-   public static final String PACKAGE     = "package";
-   public static final String CONSTRUCTOR = "constructor";
-   public static final String ATTRIBUTE   = "attribute";
-   public static final String METHOD      = "method";
-   public static final String IMPORT      = "import";
-   public static final String CLASS_BODY  = "classBody";
-   public static final String CLASS_DECL  = "classDecl";
-   public static final String CLASS_END   = "classEnd";
+   /** @since 1.2 */ public static final String CLASS       = "class";
+   /** @since 1.2 */ public static final String PACKAGE     = "package";
+   /** @since 1.2 */ public static final String CONSTRUCTOR = "constructor";
+   /** @since 1.2 */ public static final String ATTRIBUTE   = "attribute";
+   /** @since 1.2 */ public static final String METHOD      = "method";
+   /** @since 1.2 */ public static final String IMPORT      = "import";
+   /** @since 1.2 */ public static final String CLASS_BODY  = "classBody";
+   /** @since 1.2 */ public static final String CLASS_DECL  = "classDecl";
+   /** @since 1.2 */ public static final String CLASS_END   = "classEnd";
    /** @deprecated since 1.2 */
    @Deprecated
    public static final String GAP         = "gap:";
-   public static final String EOF         = "eof";
+   /** @since 1.2 */ public static final String EOF         = "eof";
 
-   public static final int PACKAGE_NEWLINES     = 2;
-   public static final int IMPORT_NEWLINES      = 1;
-   public static final int CLASS_NEWLINES       = 2;
-   public static final int FIELD_NEWLINES       = 2;
-   public static final int CONSTRUCTOR_NEWLINES = 2;
-   public static final int METHOD_NEWLINES      = 2;
-   public static final int CLASS_END_NEWLINES   = 1;
+   /** @since 1.2 */ public static final int PACKAGE_NEWLINES     = 2;
+   /** @since 1.2 */ public static final int IMPORT_NEWLINES      = 1;
+   /** @since 1.2 */ public static final int CLASS_NEWLINES       = 2;
+   /** @since 1.2 */ public static final int FIELD_NEWLINES       = 2;
+   /** @since 1.2 */ public static final int CONSTRUCTOR_NEWLINES = 2;
+   /** @since 1.2 */ public static final int METHOD_NEWLINES      = 2;
+   /** @since 1.2 */ public static final int CLASS_END_NEWLINES   = 1;
 
    public static final String PROPERTY_fileName = "fileName";
 
@@ -58,7 +58,7 @@ public class FileFragmentMap
 
    private String fileName;
 
-   private CompoundFragment root;
+   private final CompoundFragment root;
 
    // =============== Constructors ===============
 
@@ -93,6 +93,9 @@ public class FileFragmentMap
       return this;
    }
 
+   /**
+    * @since 1.2
+    */
    public Stream<CodeFragment> codeFragments()
    {
       return codeFragments(this.root);
@@ -142,6 +145,9 @@ public class FileFragmentMap
       return result.toArray(new String[0]);
    }
 
+   /**
+    * @since 1.2
+    */
    public boolean isClassBodyEmpty()
    {
       final AtomicBoolean inClassBody = new AtomicBoolean();
@@ -270,6 +276,9 @@ public class FileFragmentMap
       this.append(fragment);
    }
 
+   /**
+    * @since 1.2
+    */
    public void append(CodeFragment fragment)
    {
       final String fullKey = fragment.getKey();
@@ -305,11 +314,14 @@ public class FileFragmentMap
       next.withChildren(fragment);
    }
 
+   /**
+    * @since 1.2
+    */
    public void insert(CodeFragment fragment)
    {
       CompoundFragment parent = this.root;
       final String fullKey = fragment.getKey();
-      for (final String subKey : this.getParentKeys(fullKey))
+      for (final String subKey : getParentKeys(fullKey))
       {
          final Fragment next = parent.getChildWithKey(subKey);
          if (next == null)
@@ -330,6 +342,9 @@ public class FileFragmentMap
       parent.withChildren(fragment);
    }
 
+   /**
+    * @since 1.2
+    */
    public void remove(CodeFragment fragment)
    {
       final CompoundFragment parent = fragment.getParent();
@@ -467,6 +482,9 @@ public class FileFragmentMap
 
    // --------------- Post-Processing ---------------
 
+   /**
+    * @since 1.2
+    */
    public void compressBlankLines()
    {
       final AtomicInteger noOfBlankLines = new AtomicInteger();
@@ -523,6 +541,9 @@ public class FileFragmentMap
       }
    }
 
+   /**
+    * @since 1.2
+    */
    public void write(Writer writer) throws IOException
    {
       this.root.write(writer);
