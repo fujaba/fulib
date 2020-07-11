@@ -34,7 +34,7 @@
 - c1: 	CollectionType
   implClass: 	class java.util.ArrayList
   implTemplate: 	"java.util.ArrayList<%s>"
-  itf: 	org.fulib.classmodel.CollectionItf.List
+  itf: 	org.fulib.classmodel.CollectionInterface.List
   qualifiedImplName: 	java.util.ArrayList
   simpleImplName: 	ArrayList
 
