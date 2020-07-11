@@ -55,6 +55,7 @@
   * `toString` now prepends the result of `super.toString()` #24
   * `removeYou` now calls `super.removeYou()` #15
 * Changed the way replacement of declarations with auto-generated code can be suppressed. #30
+* The code generator no longer now aborts when it encounters syntactically malformed Java source files.
 
 ## Bugfixes
 
