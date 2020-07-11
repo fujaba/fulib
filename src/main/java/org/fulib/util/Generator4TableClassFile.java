@@ -16,6 +16,9 @@ public class Generator4TableClassFile extends AbstractGenerator4ClassFile
 {
    // =============== Properties ===============
 
+   /**
+    * @since 1.2
+    */
    @Override
    public Generator4TableClassFile setCustomTemplatesFile(String customTemplatesFile)
    {
@@ -25,12 +28,18 @@ public class Generator4TableClassFile extends AbstractGenerator4ClassFile
 
    // =============== Methods ===============
 
+   /**
+    * @since 1.2
+    */
    @Override
    public String getSourceFileName(Clazz clazz)
    {
       return clazz.getModel().getPackageSrcFolder() + "/tables/" + clazz.getName() + "Table.java";
    }
 
+   /**
+    * @since 1.2
+    */
    @Override
    public void generate(Clazz clazz, FileFragmentMap fragmentMap)
    {

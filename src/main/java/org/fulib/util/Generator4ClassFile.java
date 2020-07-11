@@ -22,6 +22,9 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    // =============== Properties ===============
 
+   /**
+    * @since 1.2
+    */
    @Override
    public Generator4ClassFile setCustomTemplatesFile(String customTemplatesFile)
    {
@@ -31,12 +34,18 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    // =============== Methods ===============
 
+   /**
+    * @since 1.2
+    */
    @Override
    public String getSourceFileName(Clazz clazz)
    {
       return clazz.getModel().getPackageSrcFolder() + "/" + clazz.getName() + ".java";
    }
 
+   /**
+    * @since 1.2
+    */
    @Override
    public void generate(Clazz clazz, FileFragmentMap fragmentMap)
    {
