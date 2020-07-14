@@ -15,11 +15,15 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 
 public class MultiAttributeTest
 {
@@ -69,6 +73,7 @@ public class MultiAttributeTest
          final Method getMethod = rootClass.getMethod("getResultList");
          final Method withItemMethod = rootClass.getMethod("withResultList", Integer.class);
          final Method withoutItemMethod = rootClass.getMethod("withoutResultList", Integer.class);
+         final Method setItemsMethod = rootClass.getMethod("setResultList", Collection.class);
 
          final Object theRoot = rootClass.newInstance();
 
@@ -84,6 +89,12 @@ public class MultiAttributeTest
 
          withoutItemMethod.invoke(theRoot, 23);
          assertThat("without removes all occurrences", theList.size(), equalTo(1));
+
+         setItemsMethod.invoke(theRoot, Arrays.asList(1, 2, 3, 4, 5));
+         assertThat("setter replaces old items", theList, equalTo(Arrays.asList(1, 2, 3, 4, 5)));
+
+         setItemsMethod.invoke(theRoot, Collections.emptyList());
+         assertThat("setter clears items", theList, empty());
 
          // TODO test other "with" and "without" overloads
       }
