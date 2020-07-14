@@ -30,6 +30,8 @@ attrSignatures(attr) ::= <<
    attrWithoutItem:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(<box(attr)>)
    attrWithoutArray: class/<attr.clazz.name>/method/without<attr.name; format="cap">(<box(attr)>...)
    attrWithoutColl:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(Collection\<? extends <box(attr)>\>)
+   attrSetAllArray:  class/<attr.clazz.name>/method/set<attr.name; format="cap">(<box(attr)>...)
+   attrSetAllColl:   class/<attr.clazz.name>/method/set<attr.name; format="cap">(Collection\<? extends <box(attr)>\>)
    <else>
    attrSet:          class/<attr.clazz.name>/method/set<attr.name; format="cap">(<attr.type>)
    <endif>
