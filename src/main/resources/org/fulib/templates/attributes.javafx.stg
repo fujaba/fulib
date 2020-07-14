@@ -67,3 +67,19 @@ attrWithoutItem(attr) ::= <<
       return this;
    }
 >>
+
+attrSetAllArray(attr) ::= <<
+   public <attr.clazz.name> set<attr.name; format="cap">(<box(attr)>... value)
+   {
+      this.<attr.name>.setAll(value);
+      return this;
+   }
+>>
+
+attrSetAllColl(attr) ::= <<
+   public <attr.clazz.name> set<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
+   {
+      this.<attr.name>.setAll(value);
+      return this;
+   }
+>>
