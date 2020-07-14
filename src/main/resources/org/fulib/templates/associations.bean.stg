@@ -66,3 +66,44 @@ withoutItem(role, other) ::= <<
       return this;
    }
 >>
+
+setAllColl(role, other) ::= <<
+   public <role.clazz.name> set<role.name; format="cap">(import(java.util.Collection)\<? extends <other.clazz.name>\> value)
+   {
+      if (this.<role.name> == null)
+      {
+         this.<role.name> = new <collectionImpl(role, other)>();
+      }
+
+      if (value.equals(this.<role.name>))
+      {
+         return this;
+      }
+
+      for (final <other.clazz.name> oldItem : this.<role.name>)
+      {
+         if (!value.contains(oldItem))
+         {
+<if(other.name)>
+            oldItem.<withoutThis(other)>;
+<endif>
+            this.firePropertyChange(PROPERTY_<role.name>, oldItem, null);
+         }
+      }
+
+      for (final <other.clazz.name> newItem : value)
+      {
+         if (!this.<role.name>.contains(newItem))
+         {
+<if(other.name)>
+            newItem.<withThis(other)>;
+<endif>
+            this.firePropertyChange(PROPERTY_<role.name>, null, newItem);
+         }
+      }
+
+      this.<role.name>.clear();
+      this.<role.name>.addAll(value);
+      return this;
+   }
+>>

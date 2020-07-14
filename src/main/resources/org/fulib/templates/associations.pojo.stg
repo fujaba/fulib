@@ -28,6 +28,8 @@ roleSignatures(role, other) ::= <<
       withoutItem:         class/<role.clazz.name>/method/without<role.name; format="cap">(<other.clazz.name>)
       withoutArray:        class/<role.clazz.name>/method/without<role.name; format="cap">(<other.clazz.name>...)
       withoutColl:         class/<role.clazz.name>/method/without<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
+      setAllArray:         class/<role.clazz.name>/method/set<role.name; format="cap">(<other.clazz.name>...)
+      setAllColl:          class/<role.clazz.name>/method/set<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
    <else>
       setMethod:           class/<role.clazz.name>/method/set<role.name; format="cap">(<other.clazz.name>)
    <endif>
@@ -162,6 +164,29 @@ withoutColl(role, other) ::= <<
       for (final <other.clazz.name> item : value)
       {
          this.without<role.name; format="cap">(item);
+      }
+      return this;
+   }
+>>
+
+setAllArray(role, other) ::= <<
+   public <role.clazz.name> set<role.name; format="cap">(<other.clazz.name>... value)
+   {
+      return this.set<role.name; format="cap">(import(java.util.Arrays).asList(value));
+   }
+>>
+
+setAllColl(role, other) ::= <<
+   public <role.clazz.name> set<role.name; format="cap">(import(java.util.Collection)\<? extends <other.clazz.name>\> value)
+   {
+      if (this.<role.name> == null)
+      {
+         this.<role.name> = new <collectionImpl(role, other)>(value);
+      }
+      else
+      {
+         this.<role.name>.clear();
+         this.<role.name>.addAll(value);
       }
       return this;
    }

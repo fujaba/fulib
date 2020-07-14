@@ -54,6 +54,22 @@ withoutItem(role, other) ::= <<
    }
 >>
 
+setAllArray(role, other) ::= <<
+   public <role.clazz.name> set<role.name; format="cap">(<other.clazz.name>... value)
+   {
+      this.<role.name>.setAll(value);
+      return this;
+   }
+>>
+
+setAllColl(role, other) ::= <<
+   public <role.clazz.name> set<role.name; format="cap">(import(java.util.Collection)\<? extends <other.clazz.name>\> value)
+   {
+      this.<role.name>.setAll(value);
+      return this;
+   }
+>>
+
 // --------------- Additional Templates ---------------
 
 propertyMethod(role, other) ::= <<
