@@ -106,7 +106,7 @@ dependencies {
    genCompile sourceSets.main.output + sourceSets.main.runtimeClasspath
 
    // https://mvnrepository.com/artifact/org.fulib/fulibTools
-   genCompile group: 'org.fulib', name: 'fulibTools', version: '1.2.0-dev.3'
+   genCompile group: 'org.fulib', name: 'fulibTools', version: '1.2.0'
 }
 
 if (JavaVersion.current().java11Compatible) {
