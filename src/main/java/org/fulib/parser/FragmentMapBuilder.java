@@ -27,6 +27,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    // =============== Fields ===============
 
    private final CharStream input;
+   private final CommonTokenStream tokenStream;
    private final FileFragmentMap map;
 
    private int lastFragmentEndPos = -1;
@@ -34,9 +35,10 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    // =============== Constructors ===============
 
-   public FragmentMapBuilder(CharStream input, FileFragmentMap map)
+   public FragmentMapBuilder(CharStream input, CommonTokenStream tokenStream, FileFragmentMap map)
    {
       this.input = input;
+      this.tokenStream = tokenStream;
       this.map = map;
    }
 
@@ -60,7 +62,8 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    public static FileFragmentMap parse(String fileName, CharStream input)
    {
       final FulibClassLexer lexer = new FulibClassLexer(input);
-      final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
+      final CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+      final FulibClassParser parser = new FulibClassParser(tokenStream);
       parser.removeErrorListeners();
 
       final StringWriter writer = new StringWriter();
@@ -69,7 +72,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final FileContext context = parser.file();
 
       final FileFragmentMap map = new FileFragmentMap(fileName);
-      final FragmentMapBuilder builder = new FragmentMapBuilder(input, map);
+      final FragmentMapBuilder builder = new FragmentMapBuilder(input, tokenStream, map);
       ParseTreeWalker.DEFAULT.walk(builder, context);
 
       final String errors = writer.toString();
