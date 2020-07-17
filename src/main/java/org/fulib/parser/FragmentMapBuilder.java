@@ -172,7 +172,9 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       if (size == 1)
       {
          // only one field, straightforward (pass the whole ctx)
-         this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName, memberCtx);
+         final Token start = this.getStartOrJavaDoc(memberCtx);
+         final Token stop = memberCtx.getStop();
+         this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName, start, stop);
          return;
       }
 
@@ -189,21 +191,21 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final List<TerminalNode> commas = ctx.COMMA();
 
       // first part includes type and annotations and first comma
-      this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName, memberCtx.getStart(),
-                           commas.get(0).getSymbol());
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName,
+                           this.getStartOrJavaDoc(memberCtx), commas.get(0).getSymbol());
 
       // all but the first and last part range from name to comma
       for (int i = 1; i < size - 1; i++)
       {
          final FieldNamePartContext namePart = nameParts.get(i);
          this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + namePart.IDENTIFIER().getText(),
-                              namePart.getStart(), commas.get(i).getSymbol());
+                              this.getStartOrJavaDoc(namePart), commas.get(i).getSymbol());
       }
 
       // last part includes semicolon
       final FieldNamePartContext lastPart = nameParts.get(size - 1);
       this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + lastPart.IDENTIFIER().getText(),
-                           lastPart.getStart(), memberCtx.getStop());
+                           this.getStartOrJavaDoc(lastPart), memberCtx.getStop());
    }
 
    @Override
