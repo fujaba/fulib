@@ -155,8 +155,10 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    {
       final ClassMemberContext classMemberCtx = ctx.classMember();
       this.className = classMemberCtx.IDENTIFIER().getText();
-      this.addCodeFragment(CLASS + '/' + this.className + '/' + CLASS_DECL, ctx.getStart().getStartIndex(),
-                           classMemberCtx.classBody().LBRACE().getSymbol().getStopIndex());
+
+      final Token start = this.getStartOrJavaDoc(ctx);
+      final Token stop = classMemberCtx.classBody().LBRACE().getSymbol();
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + CLASS_DECL, start, stop);
    }
 
    @Override
@@ -244,7 +246,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       this.addCodeFragment(signature.toString(), start, memberCtx.getStop());
    }
 
-   private Token getStartOrJavaDoc(MemberContext memberCtx)
+   private Token getStartOrJavaDoc(ParserRuleContext memberCtx)
    {
       final Token start = memberCtx.getStart();
       for (int i = start.getTokenIndex() - 1; i >= 0; i--)
