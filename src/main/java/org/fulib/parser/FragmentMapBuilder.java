@@ -219,7 +219,8 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       signature.append(this.className);
       writeParams(signature, ctx.parameterList());
 
-      this.addCodeFragment(signature.toString(), memberCtx);
+      final Token start = this.getStartOrJavaDoc(memberCtx);
+      this.addCodeFragment(signature.toString(), start, memberCtx.getStop());
    }
 
    @Override
@@ -239,7 +240,29 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       signature.append(methodName);
       writeParams(signature, ctx.parameterList());
 
-      this.addCodeFragment(signature.toString(), memberCtx);
+      final Token start = this.getStartOrJavaDoc(memberCtx);
+      this.addCodeFragment(signature.toString(), start, memberCtx.getStop());
+   }
+
+   private Token getStartOrJavaDoc(MemberContext memberCtx)
+   {
+      final Token start = memberCtx.getStart();
+      for (int i = start.getTokenIndex() - 1; i >= 0; i--)
+      {
+         final Token prev = this.tokenStream.get(i);
+         switch (prev.getChannel())
+         {
+         case 2: // TODO FulibClassLexer.COMMENT
+            // regular comments between the JavaDoc comment and the declaration are ok
+            continue;
+         case 3: // TODO FulibClassLexer.JAVADOC
+            return prev;
+         default:
+            // anything other than a comment indicates that there is no JavaDoc comment for this declaration
+            return start;
+         }
+      }
+      return start;
    }
 
    private static void writeParams(StringBuilder signature, ParameterListContext paramsCtx)
