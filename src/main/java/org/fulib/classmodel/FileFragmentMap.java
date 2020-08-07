@@ -469,10 +469,10 @@ public class FileFragmentMap
    {
       final CodeFragment result = new CodeFragment().setKey(key).setText(newText);
       final String newLinesStr = String.join("", Collections.nCopies(newLines, "\n"));
-      final CodeFragment gap = new CodeFragment().setKey(key + "#newLines").setText(newLinesStr);
+      final CodeFragment gap = new CodeFragment().setKey(key + "#gap-before").setText(newLinesStr);
 
-      this.insert(result);
       this.insert(gap);
+      this.insert(result);
 
       return result;
    }
