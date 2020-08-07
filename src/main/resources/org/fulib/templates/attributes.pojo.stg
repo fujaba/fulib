@@ -13,6 +13,14 @@ collectionItf(attr) ::= <%
 <attr.collectionType.itf.simpleName>\<<box(attr)>>
 %>
 
+attrType(attr) ::= <%
+<if(attr.collection)>
+<collectionItf(attr)>
+<else>
+<attr.type>
+<endif>
+%>
+
 // --------------- Declarations ---------------
 
 attrSignatures(attr) ::= <<
@@ -36,11 +44,7 @@ attrSignatures(attr) ::= <<
 >>
 
 attrDecl(attr) ::= <<
-<if(attr.collection)>
-   private <collectionItf(attr)> <attr.name><if(attr.initialization)> = <attr.initialization><endif>;
-<else>
-   private <attr.type> <attr.name><if(attr.initialization)> = <attr.initialization><endif>;
-<endif>
+   private <attrType(attr)> <attr.name><if(attr.initialization)> = <attr.initialization><endif>;
 >>
 
 propertyDecl(attr) ::= <<
@@ -50,17 +54,14 @@ propertyDecl(attr) ::= <<
 // --------------- Simple Accessors ---------------
 
 attrGet(attr) ::= <<
+   public <attrType(attr)> get<attr.name; format="cap">()
+   {
 <if(attr.collection)>
-   public <collectionItf(attr)> get<attr.name; format="cap">()
-   {
       return this.<attr.name> != null ? import(java.util.Collections).unmodifiable<attr.collectionType.itf.simpleName>(this.<attr.name>) : import(java.util.Collections).empty<attr.collectionType.itf.simpleName>();
-   }
 <else>
-   public <attr.type> get<attr.name; format="cap">()
-   {
       return this.<attr.name>;
-   }
 <endif>
+   }
 >>
 
 attrSet(attr) ::= <<
