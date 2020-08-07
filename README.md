@@ -118,7 +118,5 @@ This requires adding [fulibTools](https://github.com/fujaba/fulibTools) as a dep
 
 ---
 
-For more details on class models and code generation see: [Fulib Class Models](doc/FulibClassModels.md)
-
 Fulib also provides means for model queries and model transformations, see:
 [Fulib Tables](doc/FulibTables.md)
