@@ -4,7 +4,15 @@
 [![Java CI](https://github.com/fujaba/fulib/workflows/Java%20CI/badge.svg)](https://github.com/fujaba/fulib/actions)
 [![Download](https://api.bintray.com/packages/fujaba/maven/fulib/images/download.svg)](https://bintray.com/fujaba/maven/fulib/_latestVersion "Download")
 
-Fulib is a Java-code generating library.
+Fulib is a library that provides code generation for UML like models and some model management functionalities.
+Using a domain-specific language provided by Java APIs, it allows you to define classes, attributes and associations with a meta model.
+From the meta model definition, Fulib can automatically generate Java code.
+The generated code ensures referential integrity and can optionally include support for property change listeners or JavaFX.
+
+Fulib-generated Java files can seamlessly coexist with hand-written code and may even be modified.
+Great care is taken that no hand-written code is deleted or changed by code generation.
+Fulib is able to read and modify any Java code using language features from up to Java 11,
+even if it contains syntax errors or can otherwise not be compiled.
 
 ## Installation
 
