@@ -2,12 +2,16 @@ import "associations.bean.stg"
 
 // --------------- Overrides ---------------
 
-roleAttrDecl(role, other) ::= <<
+rolePropertyType(role, other) ::= <%
 <if(role.toMany)>
-   private import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> <role.name> = _init<role.name; format="cap">();
+import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>>
 <else>
-   private import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> <role.name> = _init<role.name; format="cap">();
+import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>>
 <endif>
+%>
+
+roleAttrDecl(role, other) ::= <<
+   private <rolePropertyType(role, other)> <role.name> = _init<role.name; format="cap">();
 >>
 
 getMethod(role, other) ::= <<
@@ -15,13 +19,12 @@ getMethod(role, other) ::= <<
    public import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> get<role.name; format="cap">()
    {
       return this.<role.name>;
-   }
 <else>
    public <other.clazz.name> get<role.name; format="cap">()
    {
       return this.<role.name>.getValue();
-   }
 <endif>
+   }
 >>
 
 setMethod(role, other) ::= <<
@@ -64,9 +67,9 @@ propertyMethod(role, other) ::= <<
 >>
 
 initMethod(role, other) ::= <<
-<if(role.toMany)>
-   private import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> _init<role.name; format="cap">()
+   private <rolePropertyType(role, other)> _init<role.name; format="cap">()
    {
+<if(role.toMany)>
       final import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> result = new import(javafx.beans.property.SimpleListProperty)(javafx.collections.FXCollections.observableArrayList());
       result.addListener((javafx.collections.ListChangeListener\<? super <other.clazz.name>\>) change -> {
          while (change.next())
@@ -84,10 +87,7 @@ initMethod(role, other) ::= <<
          }
       });
       return result;
-   }
 <else>
-   private import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> _init<role.name; format="cap">()
-   {
       final import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> result = new import(javafx.beans.property.SimpleObjectProperty)\<>();
       result.addListener((observable, oldValue, newValue) -> {
          if (oldValue != null)
@@ -101,6 +101,6 @@ initMethod(role, other) ::= <<
          this.firePropertyChange(PROPERTY_<role.name>, oldValue, newValue);
       });
       return result;
-   }
 <endif>
+   }
 >>
