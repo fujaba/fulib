@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.fulib.classmodel.FileFragmentMap.*;
 
@@ -285,8 +286,27 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
    {
       final STGroup group = this.getSTGroup("org/fulib/templates/removeYou.stg");
-      final Object[] roles = clazz.getRoles().stream().filter(r -> r.getName() != null).toArray();
-      this.generateFromSignatures(fragmentMap, group, "removeYouSignatures", clazz.getModified(),
-                                  st -> st.add("clazz", clazz).add("roles", roles));
+      final Object[] roles = getRolesForRemoveYou(clazz).toArray();
+      final boolean superCall = needsSuperCallForRemoveYou(clazz);
+      this.generateFromSignatures(fragmentMap, group, "removeYouSignatures", roles.length == 0 || clazz.getModified(),
+                                  st -> st.add("clazz", clazz).add("roles", roles).add("superCall", superCall));
+   }
+
+   private Stream<AssocRole> getRolesForRemoveYou(Clazz clazz)
+   {
+      return clazz.getRoles().stream().filter(r -> r.getName() != null);
+   }
+
+   private boolean needsSuperCallForRemoveYou(Clazz clazz)
+   {
+      Clazz superClazz = clazz;
+      while ((superClazz = superClazz.getSuperClass()) != null)
+      {
+         if (getRolesForRemoveYou(superClazz).findAny().isPresent())
+         {
+            return true;
+         }
+      }
+      return false;
    }
 }
