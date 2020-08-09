@@ -278,7 +278,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
          .collect(Collectors.toList());
 
       final STGroup group = this.getSTGroup("org/fulib/templates/toString.stg");
-      this.generateFromSignatures(fragmentMap, group, "toStringSignatures", clazz.getModified(),
+      this.generateFromSignatures(fragmentMap, group, "toStringSignatures", nameList.isEmpty() || clazz.getModified(),
                                   st -> st.add("clazz", clazz).add("names", nameList));
    }
 
