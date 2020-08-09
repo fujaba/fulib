@@ -36,6 +36,8 @@ dependencies {
 
 ## Usage
 
+### Defining the Class Model
+
 In the following tutorial, we build a class model for a university.
 It uses the package name `de.uniks.studyright`, which you can replace according to your needs.
 
@@ -86,6 +88,8 @@ public class GenModel implements ClassModelDecorator
 ```
 <!-- end_code_fragment: -->
 
+### Generating Java Code
+
 Now, run `gradle generateScenarioSource`.
 This will run the code you put in the `GenModel.decorate` method and generate all classes you described.
 You can check out the results in the `de.uniks.studyright` package in the `src/main/java` source directory.
@@ -93,6 +97,8 @@ You can check out the results in the `de.uniks.studyright` package in the `src/m
 Rendered as a class diagram this model looks like this:
 
 ![University class diagram](test/src/main/java/de/uniks/studyright/classDiagram.png)
+
+### Using Generated Code
 
 Now you can use the generated classes from your code (in `src/main/java` and `src/test/java`).
 Here's an example for our university model:
@@ -110,7 +116,9 @@ studyRight.withStudents(alice, bob);
 ```
 <!-- end_code_fragment: -->
 
-This creates the object structure shown in the object diagram below.
+### Object Diagrams
+
+The code using the model creates the object structure shown in the object diagram below.
 
 ![simple object diagram](test/doc/images/studyRightObjects.png)
 
