@@ -19,6 +19,11 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
    // indentation used for method bodies.
    // Used by generateMethod to normalize method bodies in preparation for ST's automatic indentation.
    private static final String METHOD_BODY_INDENT = "      ";
+   
+   // =============== Fields ===============
+
+   private Clazz clazz;
+   private FileFragmentMap fragmentMap;
 
    // =============== Properties ===============
 
@@ -49,23 +54,34 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
    @Override
    public void generate(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      this.generatePackageDecl(clazz, fragmentMap);
-      this.generateImports(clazz, fragmentMap);
-      this.generateClassDecl(clazz, fragmentMap);
+      this.clazz = clazz;
+      this.fragmentMap = fragmentMap;
 
-      this.generateAttributes(clazz, fragmentMap);
-      this.generateAssociations(clazz, fragmentMap);
-      this.generateMethods(clazz, fragmentMap);
-      this.generatePropertyChangeSupport(clazz, fragmentMap);
-      this.generateToString(clazz, fragmentMap);
-      this.generateRemoveYou(clazz, fragmentMap);
+      this.generate();
+   }
+
+   /**
+    * @since 1.3
+    */
+   public void generate()
+   {
+      this.generatePackageDecl();
+      this.generateImports();
+      this.generateClassDecl();
+
+      this.generateAttributes();
+      this.generateAssociations();
+      this.generateMethods();
+      this.generatePropertyChangeSupport();
+      this.generateToString();
+      this.generateRemoveYou();
 
       fragmentMap.add(CLASS + '/' + clazz.getName() + '/' + CLASS_END, "}", CLASS_END_NEWLINES);
    }
 
    // --------------- Declarations ---------------
 
-   private void generatePackageDecl(Clazz clazz, FileFragmentMap fragmentMap)
+   private void generatePackageDecl()
    {
       final STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
       final ST packageDecl = group.getInstanceOf("packageDecl");
@@ -73,7 +89,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       fragmentMap.add(PACKAGE, packageDecl.render(), PACKAGE_NEWLINES);
    }
 
-   private void generateImports(Clazz clazz, FileFragmentMap fragmentMap)
+   private void generateImports()
    {
       final Set<String> qualifiedNames = new TreeSet<>();
 
@@ -159,7 +175,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       qualifiedNames.add(collectionType.getQualifiedImplName());
    }
 
-   private void generateClassDecl(Clazz clazz, FileFragmentMap fragmentMap)
+   private void generateClassDecl()
    {
       final STGroup group = this.getSTGroup("org/fulib/templates/declarations.stg");
       final ST classDecl = group.getInstanceOf("classDecl");
@@ -170,15 +186,15 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    // --------------- Attributes ---------------
 
-   private void generateAttributes(Clazz clazz, FileFragmentMap fragmentMap)
+   private void generateAttributes()
    {
       for (Attribute attr : clazz.getAttributes())
       {
-         this.generateAttribute(fragmentMap, attr);
+         this.generateAttribute(attr);
       }
    }
 
-   private void generateAttribute(FileFragmentMap fragmentMap, Attribute attr)
+   private void generateAttribute(Attribute attr)
    {
       final STGroup group = this.getSTGroup(
          "org/fulib/templates/attributes." + attr.getPropertyStyle().toLowerCase() + ".stg");
@@ -188,7 +204,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    // --------------- Associations ---------------
 
-   private void generateAssociations(Clazz clazz, FileFragmentMap fragmentMap)
+   private void generateAssociations()
    {
       for (AssocRole role : clazz.getRoles())
       {
@@ -197,11 +213,11 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
             continue; //=====================================
          }
 
-         this.generateAssociation(fragmentMap, role);
+         this.generateAssociation(role);
       }
    }
 
-   private void generateAssociation(FileFragmentMap fragmentMap, AssocRole role)
+   private void generateAssociation(AssocRole role)
    {
       final STGroup group = this.getSTGroup(
          "org/fulib/templates/associations." + role.getPropertyStyle().toLowerCase() + ".stg");
@@ -212,15 +228,15 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    // --------------- Methods ---------------
 
-   private void generateMethods(Clazz clazz, FileFragmentMap fragmentMap)
+   private void generateMethods()
    {
       for (FMethod method : clazz.getMethods())
       {
-         this.generateMethod(fragmentMap, method);
+         this.generateMethod(method);
       }
    }
 
-   private void generateMethod(FileFragmentMap fragmentMap, FMethod method)
+   private void generateMethod(FMethod method)
    {
       String body = method.getMethodBody();
       if (body.startsWith(METHOD_BODY_INDENT))
@@ -255,7 +271,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    // --------------- Additional Fragments ---------------
 
-   private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap)
+   private void generatePropertyChangeSupport()
    {
       if (clazz.getAttributes().isEmpty() && clazz.getRoles().isEmpty())
       {
@@ -267,7 +283,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
                                   st -> st.add("clazz", clazz));
    }
 
-   private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
+   private void generateToString()
    {
       final List<String> nameList = clazz
          .getAttributes()
@@ -281,7 +297,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
                                   st -> st.add("clazz", clazz).add("names", nameList));
    }
 
-   private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
+   private void generateRemoveYou()
    {
       final STGroup group = this.getSTGroup("org/fulib/templates/removeYou.stg");
       final Object[] roles = clazz.getRoles().stream().filter(r -> r.getName() != null).toArray();
