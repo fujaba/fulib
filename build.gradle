@@ -91,6 +91,9 @@ dependencies {
    // https://mvnrepository.com/artifact/org.antlr/antlr4-runtime
    implementation group: 'org.antlr', name: 'antlr4-runtime', version: '4.8'
 
+   // https://mvnrepository.com/artifact/org.ec4j.core/ec4j-core
+   implementation group: 'org.ec4j.core', name: 'ec4j-core', version: '0.2.2'
+
    // https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library
    testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: '2.1'
 
