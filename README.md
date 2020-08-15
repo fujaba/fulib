@@ -5,6 +5,7 @@
 [![Download](https://api.bintray.com/packages/fujaba/maven/fulib/images/download.svg)](https://bintray.com/fujaba/maven/fulib/_latestVersion "Download")
 
 Fulib is a Java-code generating library.
+We have an Online Version at www.fulib.org where you can find docs and tutorials for getting started.
 
 ## Installation
 
@@ -122,3 +123,13 @@ For more details on class models and code generation see: [Fulib Class Models](d
 
 Fulib also provides means for model queries and model transformations, see:
 [Fulib Tables](doc/FulibTables.md)
+
+## History
+
+Fulib is the newest tool of the Fujaba Family https://github.com/fujaba .
+
+| Period | Activity |
+| --- | --- |
+| 1998 - 2008 | We developed the Fujaba (From UML to Java And Back Again) tool as a graphical editor for class diagrams and model transformations. |
+| 2008 - 2018 | We moved on to [SDMLib](https://github.com/fujaba/SDMLib) (Story Driven Modeling Library). SDMLib got rid of the graphical editors. |
+| 2019 - present | We did a major refactoring of the SDMLib and call it Fulib (Fujaba Library) now. |
