@@ -49,6 +49,9 @@ public class FileFragmentMap
    private static final Pattern NO_FULIB_PATTERN = Pattern.compile("//.*no\\s+fulib|/\\*.*no\\s+fulib.*\\*/",
                                                                    Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
+   private static final Pattern CLASS_DECL_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_DECL + "$");
+   private static final Pattern CLASS_END_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_END + "$");
+
    // =============== Fields ===============
 
    protected PropertyChangeSupport listeners;
@@ -158,11 +161,11 @@ public class FileFragmentMap
          }
 
          final String key = fragment.getKey();
-         if (key.matches("^" + CLASS + "/(\\w+)/" + CLASS_DECL + "$"))
+         if (CLASS_DECL_PATTERN.matcher(key).matches())
          {
             inClassBody.set(true);
          }
-         else if (key.matches("^" + CLASS + "/(\\w+)/" + CLASS_END + "$"))
+         else if (CLASS_END_PATTERN.matcher(key).matches())
          {
             inClassBody.set(false);
          }
