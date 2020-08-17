@@ -52,6 +52,8 @@ public class FileFragmentMap
    private static final Pattern CLASS_DECL_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_DECL + "$");
    private static final Pattern CLASS_END_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_END + "$");
 
+   private static final String GAP_BEFORE = "#gap-before";
+
    // =============== Fields ===============
 
    protected PropertyChangeSupport listeners;
@@ -180,7 +182,7 @@ public class FileFragmentMap
 
    private static boolean isEmptyFragment(CodeFragment fragment)
    {
-      return fragment.getText().isEmpty() || fragment.getKey().endsWith("#gap-before");
+      return fragment.getText().isEmpty() || fragment.getKey().endsWith(GAP_BEFORE);
    }
 
    @Deprecated
@@ -358,7 +360,7 @@ public class FileFragmentMap
          return;
       }
 
-      final Fragment gapBefore = parent.getChildWithKey(fragment.getKey() + "#gap-before");
+      final Fragment gapBefore = parent.getChildWithKey(fragment.getKey() + GAP_BEFORE);
       if (gapBefore != null)
       {
          parent.withoutChildren(gapBefore);
@@ -477,7 +479,7 @@ public class FileFragmentMap
    {
       final CodeFragment result = new CodeFragment().setKey(key).setText(newText);
       final String newLinesStr = String.join("", Collections.nCopies(newLines, "\n"));
-      final CodeFragment gap = new CodeFragment().setKey(key + "#gap-before").setText(newLinesStr);
+      final CodeFragment gap = new CodeFragment().setKey(key + GAP_BEFORE).setText(newLinesStr);
 
       this.insert(gap);
       this.insert(result);
