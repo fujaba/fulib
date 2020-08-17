@@ -166,13 +166,20 @@ public class FileFragmentMap
          {
             inClassBody.set(false);
          }
-         else if (inClassBody.get() && key.endsWith("#gap-before") || key.endsWith("#gap-after"))
+         else if (inClassBody.get() && !isEmptyFragment(fragment))
          {
             foundContent.set(true);
          }
       });
 
       return foundContent.get();
+   }
+
+   private static boolean isEmptyFragment(CodeFragment fragment)
+   {
+      return fragment.getText().isEmpty() || fragment.getKey().endsWith("#gap-before") || fragment
+         .getKey()
+         .endsWith("#gap-after");
    }
 
    @Deprecated
