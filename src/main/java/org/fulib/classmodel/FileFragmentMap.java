@@ -180,9 +180,7 @@ public class FileFragmentMap
 
    private static boolean isEmptyFragment(CodeFragment fragment)
    {
-      return fragment.getText().isEmpty() || fragment.getKey().endsWith("#gap-before") || fragment
-         .getKey()
-         .endsWith("#gap-after");
+      return fragment.getText().isEmpty() || fragment.getKey().endsWith("#gap-before");
    }
 
    @Deprecated
