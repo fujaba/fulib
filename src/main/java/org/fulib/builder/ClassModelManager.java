@@ -716,7 +716,7 @@ public class ClassModelManager implements IModelManager
 
    public FMethod haveMethod(Clazz owner, String declaration, String body)
    {
-      FMethod method = this.getMethod(declaration);
+      FMethod method = this.getMethod(owner, declaration);
 
       if (method == null)
       {
