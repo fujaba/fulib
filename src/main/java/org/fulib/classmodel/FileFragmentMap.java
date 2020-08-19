@@ -47,7 +47,7 @@ public class FileFragmentMap
 
    // comments containing "no fulib", case insensitive, and with any whitespace between the words.
    private static final Pattern NO_FULIB_PATTERN = Pattern.compile("//.*no\\s+fulib|/\\*.*no\\s+fulib.*\\*/",
-                                                                   Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+      Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
    // =============== Fields ===============
 
@@ -291,7 +291,13 @@ public class FileFragmentMap
             continue;
          }
 
-         final Fragment lastChild = children.get(children.size() - 1);
+         Fragment lastChild = children.get(children.size() - 1);
+         for (Fragment child : children) {
+            if (subKey.equals(child.getKey())) {
+               lastChild = child;
+               break;
+            }
+         }
          if (!subKey.equals(lastChild.getKey()))
          {
             next = new CompoundFragment().setKey(subKey).setParent(next);
