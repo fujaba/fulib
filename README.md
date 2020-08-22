@@ -50,7 +50,7 @@ dependencies {
 ### Maven
 
 Maven is currently not supported.
-See #52 for more info.
+See [issue #52](https://github.com/fujaba/fulib/issues/52) for more info.
 
 ## Usage
 
