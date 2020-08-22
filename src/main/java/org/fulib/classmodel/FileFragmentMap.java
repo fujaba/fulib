@@ -9,11 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -152,32 +148,27 @@ public class FileFragmentMap
     */
    public boolean isClassBodyEmpty()
    {
-      final AtomicBoolean inClassBody = new AtomicBoolean();
-      final AtomicBoolean foundContent = new AtomicBoolean();
+      boolean inClassBody = false;
 
-      this.codeFragments().forEach(fragment -> {
-         if (foundContent.get())
-         {
-            // short-circuit
-            return;
-         }
-
+      for (final Iterator<CodeFragment> it = this.codeFragments().iterator(); it.hasNext(); )
+      {
+         final CodeFragment fragment = it.next();
          final String key = fragment.getKey();
          if (CLASS_DECL_PATTERN.matcher(key).matches())
          {
-            inClassBody.set(true);
+            inClassBody = true;
          }
          else if (CLASS_END_PATTERN.matcher(key).matches())
          {
-            inClassBody.set(false);
+            inClassBody = false;
          }
-         else if (inClassBody.get() && !isEmptyFragment(fragment))
+         else if (inClassBody && !isEmptyFragment(fragment))
          {
-            foundContent.set(true);
+            return false;
          }
-      });
+      }
 
-      return foundContent.get();
+      return true;
    }
 
    private static boolean isEmptyFragment(CodeFragment fragment)
