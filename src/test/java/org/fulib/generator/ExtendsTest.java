@@ -28,7 +28,7 @@ public class ExtendsTest
    void testExtendsGenerator() throws Exception
    {
       final String targetFolder = "tmp/extends";
-      final String srcFolder = targetFolder + "/out";
+      final String srcFolder = targetFolder + "/src";
       final String outFolder = targetFolder + "/out";
       final String packageName = "org.fulib.test.studyright";
 

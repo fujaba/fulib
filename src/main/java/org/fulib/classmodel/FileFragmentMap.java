@@ -9,11 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,6 +44,11 @@ public class FileFragmentMap
    // comments containing "no fulib", case insensitive, and with any whitespace between the words.
    private static final Pattern NO_FULIB_PATTERN = Pattern.compile("//.*no\\s+fulib|/\\*.*no\\s+fulib.*\\*/",
                                                                    Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+
+   private static final Pattern CLASS_DECL_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_DECL + "$");
+   private static final Pattern CLASS_END_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_END + "$");
+
+   private static final String GAP_BEFORE = "#gap-before";
 
    // =============== Fields ===============
 
@@ -163,32 +164,32 @@ public class FileFragmentMap
     */
    public boolean isClassBodyEmpty()
    {
-      final AtomicBoolean inClassBody = new AtomicBoolean();
-      final AtomicBoolean foundContent = new AtomicBoolean();
+      boolean inClassBody = false;
 
-      this.codeFragments().forEach(fragment -> {
-         if (foundContent.get())
-         {
-            // short-circuit
-            return;
-         }
-
+      for (final Iterator<CodeFragment> it = this.codeFragments().iterator(); it.hasNext(); )
+      {
+         final CodeFragment fragment = it.next();
          final String key = fragment.getKey();
-         if (key.matches("^" + CLASS + "/(\\w+)/" + CLASS_DECL + "$"))
+         if (CLASS_DECL_PATTERN.matcher(key).matches())
          {
-            inClassBody.set(true);
+            inClassBody = true;
          }
-         else if (key.matches("^" + CLASS + "/(\\w+)/" + CLASS_END + "$"))
+         else if (CLASS_END_PATTERN.matcher(key).matches())
          {
-            inClassBody.set(false);
+            inClassBody = false;
          }
-         else if (inClassBody.get() && key.endsWith("#gap-before") || key.endsWith("#gap-after"))
+         else if (inClassBody && !isEmptyFragment(fragment))
          {
-            foundContent.set(true);
+            return false;
          }
-      });
+      }
 
-      return foundContent.get();
+      return true;
+   }
+
+   private static boolean isEmptyFragment(CodeFragment fragment)
+   {
+      return fragment.getText().isEmpty() || fragment.getKey().endsWith(GAP_BEFORE);
    }
 
    /**
@@ -447,7 +448,7 @@ public class FileFragmentMap
          return;
       }
 
-      final Fragment gapBefore = parent.getChildWithKey(fragment.getKey() + "#gap-before");
+      final Fragment gapBefore = parent.getChildWithKey(fragment.getKey() + GAP_BEFORE);
       if (gapBefore != null)
       {
          parent.withoutChildren(gapBefore);
@@ -571,7 +572,7 @@ public class FileFragmentMap
    {
       final CodeFragment result = new CodeFragment().setKey(key).setText(newText);
       final String newLinesStr = String.join("", Collections.nCopies(newLines, "\n"));
-      final CodeFragment gap = new CodeFragment().setKey(key + "#gap-before").setText(newLinesStr);
+      final CodeFragment gap = new CodeFragment().setKey(key + GAP_BEFORE).setText(newLinesStr);
 
       this.insert(gap);
       this.insert(result);
