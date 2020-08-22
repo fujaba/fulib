@@ -364,7 +364,6 @@ public class AssocRole
    {
       this.setClazz(null);
       this.setOther(null);
-      this.setOther(null);
    }
 
    @Override
