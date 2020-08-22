@@ -18,23 +18,39 @@ We have an Online Version at www.fulib.org where you can find docs and tutorials
 
 ## Installation
 
+### Gradle
+
 `build.gradle`:
 
 ```groovy
 plugins {
+    // ...
+    // https://plugins.gradle.org/plugin/org.fulib.fulibGradle
     id 'org.fulib.fulibGradle' version '0.4.0'
 }
 
 repositories {
+    // ...
     mavenCentral()
     jcenter()
 }
 
 dependencies {
+    // ...
+
     // https://mvnrepository.com/artifact/org.fulib/fulibScenarios
-    fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.3.0'
+    fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.4.1'
+
+    // optional, to override the version of fulib used by fulibScenarios:
+    // https://mvnrepository.com/artifact/org.fulib/fulib
+    fulibScenarios group: 'org.fulib', name: 'fulib', version: '1.2.1'
 }
 ```
+
+### Maven
+
+Maven is currently not supported.
+See [issue #52](https://github.com/fujaba/fulib/issues/52) for more info.
 
 ## Usage
 
