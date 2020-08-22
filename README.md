@@ -4,7 +4,16 @@
 [![Java CI](https://github.com/fujaba/fulib/workflows/Java%20CI/badge.svg)](https://github.com/fujaba/fulib/actions)
 [![Download](https://api.bintray.com/packages/fujaba/maven/fulib/images/download.svg)](https://bintray.com/fujaba/maven/fulib/_latestVersion "Download")
 
-Fulib is a Java-code generating library.
+Fulib is a library that provides code generation for UML like models and some model management functionalities.
+Using a domain-specific language provided by Java APIs, it allows you to define classes, attributes and associations with a meta model.
+From the meta model definition, Fulib can automatically generate Java code.
+The generated code ensures referential integrity and can optionally include support for property change listeners or JavaFX.
+
+Fulib-generated Java files can seamlessly coexist with hand-written code and may even be modified.
+Great care is taken that no hand-written code is deleted or changed by code generation.
+Fulib is able to read and modify any Java code using language features from up to Java 11,
+even if it contains syntax errors or can otherwise not be compiled.
+
 We have an Online Version at www.fulib.org where you can find docs and tutorials for getting started.
 
 ## Installation
@@ -28,6 +37,8 @@ dependencies {
 ```
 
 ## Usage
+
+### Defining the Class Model
 
 In the following tutorial, we build a class model for a university.
 It uses the package name `de.uniks.studyright`, which you can replace according to your needs.
@@ -79,6 +90,8 @@ public class GenModel implements ClassModelDecorator
 ```
 <!-- end_code_fragment: -->
 
+### Generating Java Code
+
 Now, run `gradle generateScenarioSource`.
 This will run the code you put in the `GenModel.decorate` method and generate all classes you described.
 You can check out the results in the `de.uniks.studyright` package in the `src/main/java` source directory.
@@ -86,6 +99,8 @@ You can check out the results in the `de.uniks.studyright` package in the `src/m
 Rendered as a class diagram this model looks like this:
 
 ![University class diagram](test/src/main/java/de/uniks/studyright/classDiagram.png)
+
+### Using Generated Code
 
 Now you can use the generated classes from your code (in `src/main/java` and `src/test/java`).
 Here's an example for our university model:
@@ -103,7 +118,9 @@ studyRight.withStudents(alice, bob);
 ```
 <!-- end_code_fragment: -->
 
-This creates the object structure shown in the object diagram below.
+### Object Diagrams
+
+The code using the model creates the object structure shown in the object diagram below.
 
 ![simple object diagram](test/doc/images/studyRightObjects.png)
 
@@ -119,8 +136,6 @@ This requires adding [fulibTools](https://github.com/fujaba/fulibTools) as a dep
 
 ---
 
-For more details on class models and code generation see: [Fulib Class Models](doc/FulibClassModels.md)
-
 Fulib also provides means for model queries and model transformations, see:
 [Fulib Tables](doc/FulibTables.md)
 
@@ -133,3 +148,11 @@ Fulib is the newest tool of the Fujaba Family https://github.com/fujaba .
 | 1998 - 2008 | We developed the Fujaba (From UML to Java And Back Again) tool as a graphical editor for class diagrams and model transformations. |
 | 2008 - 2018 | We moved on to [SDMLib](https://github.com/fujaba/SDMLib) (Story Driven Modeling Library). SDMLib got rid of the graphical editors. |
 | 2019 - present | We did a major refactoring of the SDMLib and call it Fulib (Fujaba Library) now. |
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE.md)
