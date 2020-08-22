@@ -152,3 +152,7 @@ Fulib is the newest tool of the Fujaba Family https://github.com/fujaba .
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE.md)
