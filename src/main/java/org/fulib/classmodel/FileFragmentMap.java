@@ -20,24 +20,26 @@ public class FileFragmentMap
 {
    // =============== Constants ===============
 
-   /** @since 1.2 */ public static final String CLASS       = "class";
-   /** @since 1.2 */ public static final String PACKAGE     = "package";
+   // @formatter:off
+   /** @since 1.2 */ public static final String CLASS = "class";
+   /** @since 1.2 */ public static final String PACKAGE = "package";
    /** @since 1.2 */ public static final String CONSTRUCTOR = "constructor";
-   /** @since 1.2 */ public static final String ATTRIBUTE   = "attribute";
-   /** @since 1.2 */ public static final String METHOD      = "method";
-   /** @since 1.2 */ public static final String IMPORT      = "import";
-   /** @since 1.2 */ public static final String CLASS_BODY  = "classBody";
-   /** @since 1.2 */ public static final String CLASS_DECL  = "classDecl";
-   /** @since 1.2 */ public static final String CLASS_END   = "classEnd";
-   /** @since 1.2 */ public static final String EOF         = "eof";
+   /** @since 1.2 */ public static final String ATTRIBUTE = "attribute";
+   /** @since 1.2 */ public static final String METHOD = "method";
+   /** @since 1.2 */ public static final String IMPORT = "import";
+   /** @since 1.2 */ public static final String CLASS_BODY = "classBody";
+   /** @since 1.2 */ public static final String CLASS_DECL = "classDecl";
+   /** @since 1.2 */ public static final String CLASS_END = "classEnd";
+   /** @since 1.2 */ public static final String EOF = "eof";
 
-   /** @since 1.2 */ public static final int PACKAGE_NEWLINES     = 0;
-   /** @since 1.2 */ public static final int IMPORT_NEWLINES      = 1;
-   /** @since 1.2 */ public static final int CLASS_NEWLINES       = 2;
-   /** @since 1.2 */ public static final int FIELD_NEWLINES       = 1;
+   /** @since 1.2 */ public static final int PACKAGE_NEWLINES = 0;
+   /** @since 1.2 */ public static final int IMPORT_NEWLINES = 1;
+   /** @since 1.2 */ public static final int CLASS_NEWLINES = 2;
+   /** @since 1.2 */ public static final int FIELD_NEWLINES = 1;
    /** @since 1.2 */ public static final int CONSTRUCTOR_NEWLINES = 2;
-   /** @since 1.2 */ public static final int METHOD_NEWLINES      = 2;
-   /** @since 1.2 */ public static final int CLASS_END_NEWLINES   = 1;
+   /** @since 1.2 */ public static final int METHOD_NEWLINES = 2;
+   /** @since 1.2 */ public static final int CLASS_END_NEWLINES = 1;
+   // @formatter:on
 
    public static final String PROPERTY_fileName = "fileName";
 
