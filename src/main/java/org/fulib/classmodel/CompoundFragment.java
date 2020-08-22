@@ -4,8 +4,10 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+import java.util.Collection;
 
 /** @since 1.2 */
 public class CompoundFragment extends Fragment

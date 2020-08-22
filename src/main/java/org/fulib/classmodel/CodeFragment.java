@@ -109,12 +109,6 @@ public class CodeFragment extends Fragment
    }
 
    @Override
-   public void removeYou()
-   {
-      super.removeYou();
-   }
-
-   @Override
    public String toString()
    {
       final StringBuilder result = new StringBuilder(super.toString());
