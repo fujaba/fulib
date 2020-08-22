@@ -365,7 +365,6 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    @Override
    public void exitFile(FileContext ctx)
    {
-      // TODO this adds two gaps. Not sure if FileFragmentMap can handle only one, so leaving it at that for now.
-      this.addCodeFragment(EOF, this.lastFragmentEndPos + 1, this.input.size());
+      this.addCodeFragment(EOF, this.input.size(), this.input.size());
    }
 }
