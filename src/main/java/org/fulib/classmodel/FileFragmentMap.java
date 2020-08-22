@@ -91,6 +91,8 @@ public class FileFragmentMap
    }
 
    /**
+    * @return a stream of all code fragments containing text
+    *
     * @since 1.2
     */
    public Stream<CodeFragment> codeFragments()
@@ -98,6 +100,11 @@ public class FileFragmentMap
       return codeFragments(this.root);
    }
 
+   /**
+    * @return a list of all code fragments containing text
+    *
+    * @deprecated since 1.2; use {@link #codeFragments()} instead
+    */
    @Deprecated
    public ArrayList<CodeFragment> getFragmentList()
    {
@@ -120,6 +127,13 @@ public class FileFragmentMap
       }
    }
 
+   /**
+    * @param key
+    *    the key to search for
+    *
+    * @return the code fragment with the given key,
+    * or {@code null} if not found or the result is not a {@link CodeFragment} (e.g. a {@link CompoundFragment})
+    */
    public CodeFragment getFragment(String key)
    {
       final String[] path = getPath(key);
@@ -143,6 +157,8 @@ public class FileFragmentMap
    }
 
    /**
+    * @return {@code false} if this file contains a class declaration whose body has at least one member, {@code true} otherwise
+    *
     * @since 1.2
     */
    public boolean isClassBodyEmpty()
@@ -175,6 +191,14 @@ public class FileFragmentMap
       return foundContent.get();
    }
 
+   /**
+    * @param fragmentMap
+    *    unused
+    *
+    * @return see {@link #isClassBodyEmpty()}
+    *
+    * @deprecated since 1.2; use {@link #isClassBodyEmpty()} instead
+    */
    @Deprecated
    @SuppressWarnings("unused")
    public boolean classBodyIsEmpty(FileFragmentMap fragmentMap)
@@ -261,11 +285,15 @@ public class FileFragmentMap
    // --------------- Raw Modification ---------------
 
    /**
-    * @see #append(CodeFragment)
+    * Behaves like {@link #append(CodeFragment)}.
     *
+    * @param fragment
+    *    the fragment to add
+    *
+    * @see #append(CodeFragment)
     * @deprecated since 1.2; this method is ambiguous.
-    * Use {@link #append(CodeFragment)} to add a fragment to the end,
-    * or {@link #insert(CodeFragment)} to intelligently insert it in a fitting place.
+    * Use {@link #append(CodeFragment)} to append the fragment to the end of the file,
+    * or {@link #insert(CodeFragment)} to insert it grouping by key.
     */
    @Deprecated
    public void add(CodeFragment fragment)
@@ -274,6 +302,33 @@ public class FileFragmentMap
    }
 
    /**
+    * Appends the code fragment to the end, without grouping like {@link #insert(CodeFragment)}.
+    * E.g., a fragment with key {@code class/Foo/attribute/moo} will be appended to the following tree as highlighted.
+    *
+    * <pre>{@code
+    * class
+    *    Foo
+    *       attribute
+    *          bar
+    *       method
+    *          getBar()
+    *          setBar(String)
+    *       *attribute*
+    *          *moo*
+    * }</pre>
+    * <p>
+    * Parent nodes are automatically inserted.
+    * Note how the {@code class/Foo/attribute} subtree was added a second time in order to maintain member order.
+    * This makes it possible to add duplicate members, which may be unwanted after initial code loading and during
+    * member generation.
+    *
+    * @param fragment
+    *    the fragment to append
+    *
+    * @throws IllegalStateException
+    *    if a fragment with the key already exists - the
+    *    {@link #replace(String, String, int)} API is designed for this case.
+    * @see #insert(CodeFragment)
     * @since 1.2
     */
    public void append(CodeFragment fragment)
@@ -312,6 +367,42 @@ public class FileFragmentMap
    }
 
    /**
+    * Inserts the code fragment grouping by the key.
+    * E.g., a fragment with key {@code class/Foo/attribute/moo} will be inserted in the following tree as highlighted.
+    *
+    * <pre>{@code
+    * class
+    *    Foo
+    *       attribute
+    *          bar
+    *          *moo*
+    *       method
+    *          getBar()
+    *          setBar(String)
+    * }</pre>
+    * <p>
+    * Parent nodes are automatically inserted.
+    * In this case, if the {@code class/Foo/attribute} subtree was missing, it would have been automatically inserted.
+    * The insertion point is always the last child of an existing parent.
+    *
+    * <pre>{@code
+    * class
+    *    Foo
+    *       method
+    *          getBar()
+    *          setBar(String)
+    *       *attribute*
+    *          *moo*
+    * }</pre>
+    *
+    * @param fragment
+    *    the fragment to insert
+    *
+    * @throws IllegalStateException
+    *    if one of the parent keys denotes a text fragment instead of a compound fragment
+    *    (for example, if the key was {@code class/Foo/attribute/bar/baz} - the parent key
+    *    {@code class/Foo/attribute/bar} refers to the text fragment holding the attribute 'bar')
+    * @see #append(CodeFragment)
     * @since 1.2
     */
    public void insert(CodeFragment fragment)
@@ -340,6 +431,12 @@ public class FileFragmentMap
    }
 
    /**
+    * Removes the fragment by removing it from it's {@linkplain Fragment#getParent() parent}'s
+    * {@linkplain CompoundFragment#withoutChildren(Fragment) children}.
+    *
+    * @param fragment
+    *    the fragment to remove
+    *
     * @since 1.2
     */
    public void remove(CodeFragment fragment)
@@ -362,17 +459,21 @@ public class FileFragmentMap
    // --------------- Smart Modification ---------------
 
    /**
-    * Adds or replaces the fragment with the given key, UNLESS it is marked as user-defined.
-    * When no old fragment exists, a gap with the specified number of newlines is added after the new fragment.
+    * Adds or replaces the fragment with the given key.
+    * If no fragment with the given key exists, a gap with the specified number of line breaks is added before the new
+    * fragment.
+    * If the fragment exists and is marked as user-defined (contains a comment with the words "no fulib",
+    * case-insensitive and separated by any string of whitespace), no action is performed.
+    * Otherwise, the text of the fragment is replaced with the new text and no newlines are added.
     *
     * @param key
     *    the key
     * @param newText
     *    the new text
     * @param newLines
-    *    the number of line breaks to insert after the text
+    *    the number of line breaks to insert before the text
     *
-    * @return the old fragment, or {@code null} if not found
+    * @return the fragment with the given key, or {@code null} if not found
     */
    public CodeFragment add(String key, String newText, int newLines)
    {
@@ -380,7 +481,8 @@ public class FileFragmentMap
    }
 
    /**
-    * Removes the fragment with the given key, UNLESS it is marked as user-defined.
+    * Removes the fragment with the given key, unless it is marked as user-defined (contains a comment with the words
+    * "no fulib", case-insensitive and separated by any string of whitespace).
     *
     * @param key
     *    the key
@@ -395,17 +497,17 @@ public class FileFragmentMap
    }
 
    /**
-    * Behaves like {@link #add(String, String, int)} when removeFragment is true,
+    * Behaves like {@link #add(String, String, int)} when {@code removeFragment} is {@code false},
     * and like {@link #remove(String)} otherwise.
     *
     * @param key
     *    the key
     * @param newText
-    *    the new text (ignored if removeFragment is true)
+    *    the new text (ignored if {@code removeFragment} is {@code true})
     * @param newLines
-    *    the number of line breaks to insert after the text (ignored if removeFragment is true)
+    *    the number of line breaks to insert before the text (ignored if {@code removeFragment} is {@code true})
     * @param removeFragment
-    *    whether to remove the fragment associated with the key
+    *    whether to remove or add/replace the fragment with the given key
     *
     * @return the old fragment, or {@code null} if not found
     *
@@ -480,6 +582,8 @@ public class FileFragmentMap
    // --------------- Post-Processing ---------------
 
    /**
+    * Modifies all code fragments so there are no more than 2 consecutive line breaks anywhere in the resulting text.
+    *
     * @since 1.2
     */
    public void compressBlankLines()
@@ -518,6 +622,9 @@ public class FileFragmentMap
 
    // --------------- Output ---------------
 
+   /**
+    * Concatenates all code fragments and writes the resulting text to the file specified by {@link #getFileName()}.
+    */
    public void writeFile()
    {
       final Path path = Paths.get(this.fileName);
@@ -525,8 +632,8 @@ public class FileFragmentMap
       {
          Files.createDirectories(path.getParent());
 
-         try (final Writer writer = Files
-            .newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING))
+         try (final Writer writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE,
+                                                            StandardOpenOption.TRUNCATE_EXISTING))
          {
             this.write(writer);
          }
@@ -539,6 +646,11 @@ public class FileFragmentMap
    }
 
    /**
+    * Concatenates all code fragments and writes the resulting text to given writer.
+    *
+    * @param writer
+    *    the writer
+    *
     * @since 1.2
     */
    public void write(Writer writer) throws IOException
