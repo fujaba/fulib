@@ -35,10 +35,10 @@ public class FileFragmentMap
    /** @since 1.2 */ public static final String CLASS_END   = "classEnd";
    /** @since 1.2 */ public static final String EOF         = "eof";
 
-   /** @since 1.2 */ public static final int PACKAGE_NEWLINES     = 2;
+   /** @since 1.2 */ public static final int PACKAGE_NEWLINES     = 0;
    /** @since 1.2 */ public static final int IMPORT_NEWLINES      = 1;
    /** @since 1.2 */ public static final int CLASS_NEWLINES       = 2;
-   /** @since 1.2 */ public static final int FIELD_NEWLINES       = 2;
+   /** @since 1.2 */ public static final int FIELD_NEWLINES       = 1;
    /** @since 1.2 */ public static final int CONSTRUCTOR_NEWLINES = 2;
    /** @since 1.2 */ public static final int METHOD_NEWLINES      = 2;
    /** @since 1.2 */ public static final int CLASS_END_NEWLINES   = 1;
@@ -469,10 +469,10 @@ public class FileFragmentMap
    {
       final CodeFragment result = new CodeFragment().setKey(key).setText(newText);
       final String newLinesStr = String.join("", Collections.nCopies(newLines, "\n"));
-      final CodeFragment gap = new CodeFragment().setKey(key + "#newLines").setText(newLinesStr);
+      final CodeFragment gap = new CodeFragment().setKey(key + "#gap-before").setText(newLinesStr);
 
-      this.insert(result);
       this.insert(gap);
+      this.insert(result);
 
       return result;
    }

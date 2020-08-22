@@ -68,3 +68,11 @@
 * Deprecated the `TypeScript` parser and generator. #27
 * Deprecated the `Parser` class and related classes. #17
 * Deprecated many methods across the codebase. See their Javadoc for replacements or migration instructions.
+
+# fulib v1.2.1
+
+## Bugfixes
+
+* All new members now correctly generate leading whitespace. #35 #36
+* `toString` methods are no longer generated in classes without suitable attributes. #39 #41
+* `removeYou` methods are no longer generated in classes without associations. #40 #42

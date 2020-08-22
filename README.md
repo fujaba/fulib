@@ -14,6 +14,8 @@ Great care is taken that no hand-written code is deleted or changed by code gene
 Fulib is able to read and modify any Java code using language features from up to Java 11,
 even if it contains syntax errors or can otherwise not be compiled.
 
+We have an Online Version at www.fulib.org where you can find docs and tutorials for getting started.
+
 ## Installation
 
 `build.gradle`:
@@ -136,3 +138,13 @@ This requires adding [fulibTools](https://github.com/fujaba/fulibTools) as a dep
 
 Fulib also provides means for model queries and model transformations, see:
 [Fulib Tables](doc/FulibTables.md)
+
+## History
+
+Fulib is the newest tool of the Fujaba Family https://github.com/fujaba .
+
+| Period | Activity |
+| --- | --- |
+| 1998 - 2008 | We developed the Fujaba (From UML to Java And Back Again) tool as a graphical editor for class diagrams and model transformations. |
+| 2008 - 2018 | We moved on to [SDMLib](https://github.com/fujaba/SDMLib) (Story Driven Modeling Library). SDMLib got rid of the graphical editors. |
+| 2019 - present | We did a major refactoring of the SDMLib and call it Fulib (Fujaba Library) now. |
