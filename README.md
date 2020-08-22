@@ -148,3 +148,7 @@ Fulib is the newest tool of the Fujaba Family https://github.com/fujaba .
 | 1998 - 2008 | We developed the Fujaba (From UML to Java And Back Again) tool as a graphical editor for class diagrams and model transformations. |
 | 2008 - 2018 | We moved on to [SDMLib](https://github.com/fujaba/SDMLib) (Story Driven Modeling Library). SDMLib got rid of the graphical editors. |
 | 2019 - present | We did a major refactoring of the SDMLib and call it Fulib (Fujaba Library) now. |
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
