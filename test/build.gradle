@@ -13,8 +13,10 @@ repositories {
 }
 
 dependencies {
-	// https://mvnrepository.com/artifact/org.fulib/fulibScenarios
-	fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.4.1'
+   // https://mvnrepository.com/artifact/org.fulib/fulibScenarios
+   fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.4.1', {
+      exclude group: 'org.fulib', module: 'fulib'
+   }
 
    // override fulib dependency
    fulibScenarios rootProject
