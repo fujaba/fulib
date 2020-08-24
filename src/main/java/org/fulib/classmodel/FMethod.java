@@ -153,9 +153,10 @@ public class FMethod
 
       String returnType = inputText(memberCtx.type());
 
-      for (Object ignored : memberCtx.arraySuffix())
+      for (int arrayDimensions = memberCtx.arraySuffix().size(); arrayDimensions > 0; arrayDimensions--)
       {
-         //noinspection StringConcatenationInLoop
+         // C-style arrays are so rare that normal methods don't need to pay the StringBuilder overhead
+         // noinspection StringConcatenationInLoop
          returnType += "[]";
       }
 
@@ -182,6 +183,12 @@ public class FMethod
       {
          final String name = paramCtx.IDENTIFIER().getText();
          String type = inputText(paramCtx.type());
+         for (int arrayDimensions = paramCtx.arraySuffix().size(); arrayDimensions > 0; arrayDimensions--)
+         {
+            // C-style arrays are so rare that normal methods don't need to pay the StringBuilder overhead
+            // noinspection StringConcatenationInLoop
+            type += "[]";
+         }
          if (paramCtx.ELLIPSIS() != null)
          {
             type += "...";

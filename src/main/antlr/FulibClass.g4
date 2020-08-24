@@ -51,7 +51,7 @@ methodMember: (typeParamList annotatedType | type) IDENTIFIER
         (balancedBraces | SEMI);
 
 parameterList: LPAREN (parameter (COMMA parameter)*)? RPAREN;
-parameter: (modifier | annotation)* type ELLIPSIS? (IDENTIFIER | (IDENTIFIER DOT)? THIS);
+parameter: (modifier | annotation)* type ELLIPSIS? (IDENTIFIER arraySuffix* | (IDENTIFIER DOT)? THIS);
 
 // --------------- Types ---------------
 
