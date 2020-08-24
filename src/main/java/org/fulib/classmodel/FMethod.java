@@ -181,7 +181,11 @@ public class FMethod
       for (final FulibClassParser.ParameterContext paramCtx : paramsCtx.parameter())
       {
          final String name = paramCtx.IDENTIFIER().getText();
-         final String type = inputText(paramCtx.type());
+         String type = inputText(paramCtx.type());
+         if (paramCtx.ELLIPSIS() != null)
+         {
+            type += "...";
+         }
          this.params.put(name, type);
       }
    }
