@@ -56,4 +56,26 @@ class FMethodTest
       assertThat(parametricTypes.getParams(), hasEntry("ints", "List<Integer>"));
       assertThat(parametricTypes.getParams(), hasEntry("matrix", "Map<Integer, Map<Integer, String>>"));
    }
+
+   @Test
+   void setDeclaration_cStyleArrays()
+   {
+      final FMethod cStyleArrays = new FMethod();
+      cStyleArrays.setDeclaration("String cStyleArrays(String args[])[]");
+      assertThat(cStyleArrays.getReturnType(), equalTo("String[]"));
+      assertThat(cStyleArrays.getParams(), aMapWithSize(1));
+      assertThat(cStyleArrays.getParams(), hasEntry("args", "String[]"));
+
+      final FMethod cStyleMultiArrays = new FMethod();
+      cStyleMultiArrays.setDeclaration("String cStyleMultiArrays(String args[][])[][]");
+      assertThat(cStyleMultiArrays.getReturnType(), equalTo("String[][]"));
+      assertThat(cStyleMultiArrays.getParams(), aMapWithSize(1));
+      assertThat(cStyleMultiArrays.getParams(), hasEntry("args", "String[][]"));
+
+      final FMethod cStyleMixedArrays = new FMethod();
+      cStyleMixedArrays.setDeclaration("String[] cStyleMixedArrays(String[] args[])[]");
+      assertThat(cStyleMixedArrays.getReturnType(), equalTo("String[][]"));
+      assertThat(cStyleMixedArrays.getParams(), aMapWithSize(1));
+      assertThat(cStyleMixedArrays.getParams(), hasEntry("args", "String[][]"));
+   }
 }
