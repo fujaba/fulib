@@ -267,6 +267,10 @@ public class FragmentMapBuilder extends FulibClassBaseListener
          return;
       }
       writeType(paramCtx.type(), builder);
+      for (int arrayDimensions = paramCtx.arraySuffix().size(); arrayDimensions > 0; arrayDimensions--)
+      {
+         builder.append("[]");
+      }
       if (paramCtx.ELLIPSIS() != null)
       {
          builder.append("...");
