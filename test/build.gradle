@@ -1,15 +1,15 @@
 plugins {
-	id 'java'
-	id 'org.fulib.fulibGradle'
+   id 'java'
+   id 'org.fulib.fulibGradle'
 }
 
 group = 'org.example'
 version = '0.1.0'
 
 repositories {
-	mavenLocal()
-	mavenCentral()
-	jcenter()
+   mavenLocal()
+   mavenCentral()
+   jcenter()
 }
 
 dependencies {
@@ -21,8 +21,8 @@ dependencies {
    // override fulib dependency
    fulibScenarios rootProject
 
-	// https://mvnrepository.com/artifact/junit/junit
-	testCompile group: 'junit', name: 'junit', version: '4.13'
+   // https://mvnrepository.com/artifact/junit/junit
+   testCompile group: 'junit', name: 'junit', version: '4.13'
 
    // https://mvnrepository.com/artifact/org.fulib/fulibTools
    testCompile group: 'org.fulib', name: 'fulibTools', version: '1.2.1'
