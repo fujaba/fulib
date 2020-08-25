@@ -239,6 +239,13 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       this.addCodeFragment(signature.toString(), memberCtx);
    }
 
+   public static String getParamsSignature(ParameterListContext paramsCtx)
+   {
+      final StringBuilder builder = new StringBuilder();
+      writeParams(builder, paramsCtx);
+      return builder.toString();
+   }
+
    private static void writeParams(StringBuilder signature, ParameterListContext paramsCtx)
    {
       signature.append('(');
@@ -275,6 +282,13 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       {
          builder.append("...");
       }
+   }
+
+   public static String getTypeSignature(TypeContext typeCtx)
+   {
+      final StringBuilder builder = new StringBuilder();
+      writeType(typeCtx, builder);
+      return builder.toString();
    }
 
    private static void writeType(TypeContext typeCtx, StringBuilder builder)

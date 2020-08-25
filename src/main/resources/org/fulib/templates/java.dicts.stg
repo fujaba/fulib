@@ -24,6 +24,8 @@ boxMap ::= [
    default: key
 ]
 
+box(type) ::= "<boxMap.(type)>"
+
 javaFX ::= [
    "JavaFX": true,
    default: false

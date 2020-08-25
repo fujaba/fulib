@@ -1,6 +1,13 @@
 package org.fulib.classmodel;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.fulib.builder.Type;
+import org.fulib.parser.FragmentMapBuilder;
+import org.fulib.parser.FulibClassLexer;
+import org.fulib.parser.FulibClassParser;
+import org.fulib.util.Validator;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -30,6 +37,8 @@ public class Attribute
    private String initialization;
    private String propertyStyle;
    private boolean modified;
+
+   private String typeSignature;
 
    // =============== Properties ===============
 
@@ -94,7 +103,7 @@ public class Attribute
       return this.type;
    }
 
-   public Attribute setType(String value)
+   public Attribute setType(String value) // no fulib
    {
       if (Objects.equals(value, this.type))
       {
@@ -103,8 +112,38 @@ public class Attribute
 
       final String oldValue = this.type;
       this.type = value;
+      this.typeSignature = buildTypeSignature(value);
       this.firePropertyChange(PROPERTY_type, oldValue, value);
       return this;
+   }
+
+   private static String buildTypeSignature(String type)
+   {
+      if (Validator.isSimpleName(type))
+      {
+         // fast-path - if the type is just an identifier (no generics, no annotations, ...),
+         // we can skip all the parser overhead because the signature will be same as the type anyway.
+         return type;
+      }
+
+      final CharStream input = CharStreams.fromString(type);
+      final FulibClassLexer lexer = new FulibClassLexer(input);
+      final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
+      final FulibClassParser.TypeContext typeCtx = parser.type();
+      return FragmentMapBuilder.getTypeSignature(typeCtx);
+   }
+
+   /**
+    * @return the signature of this attribute's {@linkplain #getType() type}
+    *
+    * @deprecated for internal use only
+    *
+    * @since 1.2.2
+    */
+   @Deprecated
+   public String getTypeSignature()
+   {
+      return this.typeSignature;
    }
 
    /**

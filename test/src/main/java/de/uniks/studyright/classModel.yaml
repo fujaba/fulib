@@ -45,6 +45,7 @@
   name: 	name
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - university_students: 	AssocRole
   aggregation: 	false
@@ -77,6 +78,7 @@
   name: 	name
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - student_studentId: 	Attribute
   clazz: 	student
@@ -85,6 +87,7 @@
   name: 	studentId
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - student_credits: 	Attribute
   clazz: 	student
@@ -93,6 +96,7 @@
   name: 	credits
   propertyStyle: 	Bean
   type: 	int
+  typeSignature: 	int
 
 - student_motivation: 	Attribute
   clazz: 	student
@@ -101,6 +105,7 @@
   name: 	motivation
   propertyStyle: 	Bean
   type: 	double
+  typeSignature: 	double
 
 - student_uni: 	AssocRole
   aggregation: 	false
@@ -133,6 +138,7 @@
   name: 	roomNo
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - room_topic: 	Attribute
   clazz: 	room
@@ -141,6 +147,7 @@
   name: 	topic
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - room_credits: 	Attribute
   clazz: 	room
@@ -149,6 +156,7 @@
   name: 	credits
   propertyStyle: 	Bean
   type: 	int
+  typeSignature: 	int
 
 - room_uni: 	AssocRole
   aggregation: 	false

@@ -2,6 +2,7 @@ package org.fulib.classmodel;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
+import org.fulib.parser.FragmentMapBuilder;
 import org.fulib.parser.FulibClassLexer;
 import org.fulib.parser.FulibClassParser;
 
@@ -282,10 +283,14 @@ public class FMethod
     */
    public String getSignature()
    {
-      String paramTypes = this.getParams().entrySet().stream().filter(e -> !"this".equals(e.getKey()))
-                              .map(Map.Entry::getValue).collect(Collectors.joining(","));
+      final CharStream input = CharStreams.fromString("(" + this.getParamsString() + ")");
+      final FulibClassLexer lexer = new FulibClassLexer(input);
+      final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
+      final FulibClassParser.ParameterListContext paramsCtx = parser.parameterList();
+      final String paramsSignature = FragmentMapBuilder.getParamsSignature(paramsCtx);
+
       return FileFragmentMap.CLASS + '/' + this.getClazz().getName() + '/' + FileFragmentMap.METHOD + '/'
-             + this.getName() + '(' + paramTypes + ')';
+             + this.getName() + paramsSignature;
    }
 
    /**

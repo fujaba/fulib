@@ -20,7 +20,7 @@ attrSet(attr) ::= <<
 // --------------- With ---------------
 
 attrWithItem(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr)> value)
+   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)> value)
    {
       if (this.<attr.name> == null)
       {
@@ -35,7 +35,7 @@ attrWithItem(attr) ::= <<
 >>
 
 attrWithArray(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr)>... value)
+   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)>... value)
    {
       for (final <attr.type> item : value)
       {
@@ -46,9 +46,9 @@ attrWithArray(attr) ::= <<
 >>
 
 attrWithColl(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
+   public <attr.clazz.name> with<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
-      for (final <box(attr)> item : value)
+      for (final <box(attr.type)> item : value)
       {
          this.with<attr.name; format="cap">(item);
       }
@@ -59,7 +59,7 @@ attrWithColl(attr) ::= <<
 // --------------- Without ---------------
 
 attrWithoutItem(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr)> value)
+   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)> value)
    {
       if (this.<attr.name> != null && this.<attr.name>.removeAll(import(java.util.Collections).singleton(value)))
       {
@@ -70,9 +70,9 @@ attrWithoutItem(attr) ::= <<
 >>
 
 attrWithoutArray(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr)>... value)
+   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)>... value)
    {
-      for (final <box(attr)> item : value)
+      for (final <box(attr.type)> item : value)
       {
          this.without<attr.name; format="cap">(item);
       }
@@ -81,9 +81,9 @@ attrWithoutArray(attr) ::= <<
 >>
 
 attrWithoutColl(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
+   public <attr.clazz.name> without<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
-      for (final <box(attr)> item : value)
+      for (final <box(attr.type)> item : value)
       {
          this.without<attr.name; format="cap">(item);
       }
@@ -94,19 +94,19 @@ attrWithoutColl(attr) ::= <<
 // --------------- Set All ---------------
 
 attrSetAllArray(attr) ::= <<
-   public <attr.clazz.name> set<attr.name; format="cap">(<box(attr)>... value)
+   public <attr.clazz.name> set<attr.name; format="cap">(<box(attr.type)>... value)
    {
       return this.set<attr.name; format="cap">(import(java.util.Arrays).asList(value));
    }
 >>
 
 attrSetAllColl(attr) ::= <<
-   public <attr.clazz.name> set<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
+   public <attr.clazz.name> set<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
       if (this.<attr.name> == null)
       {
          this.<attr.name> = new <collectionImpl(attr)>(value);
-         for (final <box(attr)> newItem : value)
+         for (final <box(attr.type)> newItem : value)
          {
             this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);
          }
@@ -118,7 +118,7 @@ attrSetAllColl(attr) ::= <<
          return this;
       }
 
-      for (final <box(attr)> oldItem : this.<attr.name>)
+      for (final <box(attr.type)> oldItem : this.<attr.name>)
       {
          if (!value.contains(oldItem))
          {
@@ -126,7 +126,7 @@ attrSetAllColl(attr) ::= <<
          }
       }
 
-      for (final <box(attr)> newItem : value)
+      for (final <box(attr.type)> newItem : value)
       {
          if (!this.<attr.name>.contains(newItem))
          {
