@@ -139,9 +139,31 @@ public class FileFragmentMap
     */
    public CodeFragment getFragment(String key)
    {
-      final String[] path = getPath(key);
-      final Fragment ancestor = this.root.getAncestor(path);
-      return ancestor instanceof CodeFragment ? (CodeFragment) ancestor : null;
+      return findFragment(this.root, getParentKeys(key), 0, key);
+   }
+
+   private static CodeFragment findFragment(CompoundFragment parent, String[] parentKeys, int index, String key)
+   {
+      if (index == parentKeys.length)
+      {
+         final Fragment child = parent.getChildWithKey(key);
+         return child instanceof CodeFragment ? (CodeFragment) child : null;
+      }
+
+      for (final Fragment child : parent.getChildren())
+      {
+         if (!(child instanceof CompoundFragment) || !child.getKey().equals(parentKeys[index]))
+         {
+            continue;
+         }
+
+         final CodeFragment fragment = findFragment((CompoundFragment) child, parentKeys, index + 1, key);
+         if (fragment != null)
+         {
+            return fragment;
+         }
+      }
+      return null;
    }
 
    static String[] getPath(String key)
