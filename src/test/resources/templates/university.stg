@@ -1,5 +1,3 @@
-
-
 university(packageName) ::= <<
 
 // MIT license
@@ -19,6 +17,9 @@ public class University
     {
         return 42;
     }
+
+    // attribute between methods
+    private static final long serialVersionUID = 12345L;
 
    @Override // no fulib
    public String toString()
