@@ -93,6 +93,7 @@
   name: 	packageName
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - classModel_mainJavaDir: 	Attribute
   clazz: 	classModel
@@ -101,6 +102,7 @@
   name: 	mainJavaDir
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - classModel_defaultCollectionType: 	Attribute
   clazz: 	classModel
@@ -109,6 +111,7 @@
   name: 	defaultCollectionType
   propertyStyle: 	Bean
   type: 	CollectionType
+  typeSignature: 	CollectionType
 
 - classModel_defaultPropertyStyle: 	Attribute
   clazz: 	classModel
@@ -118,6 +121,7 @@
   name: 	defaultPropertyStyle
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - classModel_classes: 	AssocRole
   aggregation: 	false
@@ -138,6 +142,7 @@
   name: 	name
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - clazz_propertyStyle: 	Attribute
   clazz: 	clazz
@@ -146,6 +151,7 @@
   name: 	propertyStyle
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - clazz_modified: 	Attribute
   clazz: 	clazz
@@ -154,6 +160,7 @@
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
+  typeSignature: 	boolean
 
 - clazz_imports: 	Attribute
   clazz: 	clazz
@@ -163,6 +170,7 @@
   name: 	imports
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - clazz_model: 	AssocRole
   aggregation: 	false
@@ -243,6 +251,7 @@
   name: 	name
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - attribute_type: 	Attribute
   clazz: 	attribute
@@ -251,6 +260,7 @@
   name: 	type
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - attribute_collectionType: 	Attribute
   clazz: 	attribute
@@ -259,6 +269,7 @@
   name: 	collectionType
   propertyStyle: 	Bean
   type: 	CollectionType
+  typeSignature: 	CollectionType
 
 - attribute_initialization: 	Attribute
   clazz: 	attribute
@@ -267,6 +278,7 @@
   name: 	initialization
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - attribute_propertyStyle: 	Attribute
   clazz: 	attribute
@@ -275,6 +287,7 @@
   name: 	propertyStyle
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - attribute_modified: 	Attribute
   clazz: 	attribute
@@ -283,6 +296,7 @@
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
+  typeSignature: 	boolean
 
 - attribute_clazz: 	AssocRole
   aggregation: 	false
@@ -303,6 +317,7 @@
   name: 	name
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - assocRole_cardinality: 	Attribute
   clazz: 	assocRole
@@ -311,6 +326,7 @@
   name: 	cardinality
   propertyStyle: 	Bean
   type: 	int
+  typeSignature: 	int
 
 - assocRole_collectionType: 	Attribute
   clazz: 	assocRole
@@ -319,6 +335,7 @@
   name: 	collectionType
   propertyStyle: 	Bean
   type: 	CollectionType
+  typeSignature: 	CollectionType
 
 - assocRole_aggregation: 	Attribute
   clazz: 	assocRole
@@ -327,6 +344,7 @@
   name: 	aggregation
   propertyStyle: 	Bean
   type: 	boolean
+  typeSignature: 	boolean
 
 - assocRole_propertyStyle: 	Attribute
   clazz: 	assocRole
@@ -335,6 +353,7 @@
   name: 	propertyStyle
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - assocRole_modified: 	Attribute
   clazz: 	assocRole
@@ -343,6 +362,7 @@
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
+  typeSignature: 	boolean
 
 - assocRole_clazz: 	AssocRole
   aggregation: 	false
@@ -375,6 +395,7 @@
   name: 	methodBody
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - fMethod_modified: 	Attribute
   clazz: 	fMethod
@@ -383,6 +404,7 @@
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
+  typeSignature: 	boolean
 
 - fMethod_modifiers: 	Attribute
   clazz: 	fMethod
@@ -392,6 +414,7 @@
   name: 	modifiers
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - fMethod_annotations: 	Attribute
   clazz: 	fMethod
@@ -400,6 +423,7 @@
   name: 	annotations
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - fMethod_clazz: 	AssocRole
   aggregation: 	false
@@ -420,6 +444,7 @@
   name: 	fileName
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - fragment_key: 	Attribute
   clazz: 	fragment
@@ -428,6 +453,7 @@
   name: 	key
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - fragment_parent: 	AssocRole
   aggregation: 	false
@@ -448,6 +474,7 @@
   name: 	text
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - compoundFragment_children: 	AssocRole
   aggregation: 	false
