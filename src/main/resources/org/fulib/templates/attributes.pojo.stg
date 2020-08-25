@@ -28,14 +28,14 @@ attrSignatures(attr) ::= <<
    propertyGet:      class/<attr.clazz.name>/method/<attr.name>Property()
    <endif>
    <if(attr.collection)>
-   attrWithItem:     class/<attr.clazz.name>/method/with<attr.name; format="cap">(<box(attr.type)>)
-   attrWithArray:    class/<attr.clazz.name>/method/with<attr.name; format="cap">(<box(attr.type)>...)
-   attrWithColl:     class/<attr.clazz.name>/method/with<attr.name; format="cap">(Collection\<? extends <box(attr.type)>\>)
-   attrWithoutItem:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(<box(attr.type)>)
-   attrWithoutArray: class/<attr.clazz.name>/method/without<attr.name; format="cap">(<box(attr.type)>...)
-   attrWithoutColl:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(Collection\<? extends <box(attr.type)>\>)
+   attrWithItem:     class/<attr.clazz.name>/method/with<attr.name; format="cap">(<box(attr.typeSignature)>)
+   attrWithArray:    class/<attr.clazz.name>/method/with<attr.name; format="cap">(<box(attr.typeSignature)>...)
+   attrWithColl:     class/<attr.clazz.name>/method/with<attr.name; format="cap">(Collection\<? extends <box(attr.typeSignature)>\>)
+   attrWithoutItem:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(<box(attr.typeSignature)>)
+   attrWithoutArray: class/<attr.clazz.name>/method/without<attr.name; format="cap">(<box(attr.typeSignature)>...)
+   attrWithoutColl:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(Collection\<? extends <box(attr.typeSignature)>\>)
    <else>
-   attrSet:          class/<attr.clazz.name>/method/set<attr.name; format="cap">(<attr.type>)
+   attrSet:          class/<attr.clazz.name>/method/set<attr.name; format="cap">(<attr.typeSignature>)
    <endif>
 >>
 

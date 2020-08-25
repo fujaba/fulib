@@ -277,6 +277,13 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       }
    }
 
+   public static String getTypeSignature(TypeContext typeCtx)
+   {
+      final StringBuilder builder = new StringBuilder();
+      writeType(typeCtx, builder);
+      return builder.toString();
+   }
+
    private static void writeType(TypeContext typeCtx, StringBuilder builder)
    {
       if (typeCtx.primitiveType() != null)
