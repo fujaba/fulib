@@ -291,23 +291,86 @@ public class FileFragmentMap
    // TODO test
    static String mergeAttributeDecl(String oldText, String newText)
    {
-      // keep everything before public
-      final int oldPublicPos = oldText.indexOf("public");
-      final int newPublicPos = newText.indexOf("public");
-      if (oldPublicPos >= 0 && newPublicPos >= 0)
+      final FulibClassParser.FieldContext oldField = parseField(oldText);
+      final FulibClassParser.FieldMemberContext oldFieldMember = oldField.fieldMember();
+
+      if (oldFieldMember.fieldNamePart().size() != 1)
       {
-         return oldText.substring(0, oldPublicPos) + newText.substring(newPublicPos);
+         // oldText is of the form 'int x, y;' or similar - merging that is too complicated
+         return oldText;
       }
 
-      // keep everything before private
-      final int newPrivatePos = newText.indexOf("private");
-      final int oldPrivatePos = oldText.indexOf("private");
-      if (oldPrivatePos >= 0 && newPrivatePos >= 0)
+      final FulibClassParser.FieldNamePartContext oldFieldPart = oldFieldMember.fieldNamePart(0);
+
+      final FulibClassParser.FieldContext newField = parseField(newText);
+      final FulibClassParser.FieldMemberContext newFieldMember = newField.fieldMember();
+      final FulibClassParser.FieldNamePartContext newFieldPart = newFieldMember.fieldNamePart(0);
+
+      // newText provides the following information:
+      // - type
+      // - (name) - this is part of the key and will always be identical
+      // - initializer (optional)
+      // changes need to be performed from right to left so indices are not messed up
+
+      final StringBuilder builder = new StringBuilder(oldText);
+      if (newFieldPart.EQ() == null)
       {
-         return oldText.substring(0, oldPrivatePos) + newText.substring(newPrivatePos);
+         if (oldFieldPart.EQ() != null)
+         {
+            // delete everything between the attribute name and the semicolon
+            final int start = oldFieldPart.IDENTIFIER().getSymbol().getStopIndex() + 1;
+            final int stop = oldFieldMember.SEMI().getSymbol().getStartIndex();
+            builder.delete(start, stop);
+         }
+      }
+      else
+      {
+         final FulibClassParser.ExprContext newExpr = newFieldPart.expr();
+         final String newExprText = newText.substring(newExpr.getStart().getStartIndex(),
+                                                      newExpr.getStop().getStopIndex() + 1);
+
+         if (oldFieldPart.EQ() != null)
+         {
+            // replace expr in oldText
+            final FulibClassParser.ExprContext oldExpr = oldFieldPart.expr();
+            final int start = oldExpr.getStart().getStartIndex();
+            final int stop = oldExpr.getStop().getStopIndex() + 1;
+            builder.replace(start, stop, newExprText);
+         }
+         else
+         {
+            final int insertIndex = oldFieldMember.SEMI().getSymbol().getStartIndex();
+            builder.insert(insertIndex, " = " + newExprText);
+         }
       }
 
-      return newText;
+      final List<FulibClassParser.ArraySuffixContext> arraySuffixes = oldFieldPart.arraySuffix();
+      if (!arraySuffixes.isEmpty())
+      {
+         // delete array suffixes - they can mess with type replacement
+         final int start = arraySuffixes.get(0).getStart().getStartIndex();
+         final int end = arraySuffixes.get(arraySuffixes.size() - 1).getStop().getStopIndex() + 1;
+         builder.delete(start, end);
+      }
+
+      // replace old type with new
+      final FulibClassParser.TypeContext newType = newFieldMember.type();
+      final String newTypeText = newText.substring(newType.getStart().getStartIndex(),
+                                                   newType.getStop().getStopIndex() + 1);
+      final FulibClassParser.TypeContext oldType = oldFieldMember.type();
+      final int start = oldType.getStart().getStartIndex();
+      final int stop = oldType.getStop().getStopIndex() + 1;
+      builder.replace(start, stop, newTypeText);
+
+      return builder.toString();
+   }
+
+   private static FulibClassParser.FieldContext parseField(String newText)
+   {
+      final CharStream newInput = CharStreams.fromString(newText);
+      final FulibClassLexer newLexer = new FulibClassLexer(newInput);
+      final FulibClassParser newParser = new FulibClassParser(new CommonTokenStream(newLexer));
+      return newParser.field();
    }
 
    // =============== Methods ===============

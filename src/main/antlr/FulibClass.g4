@@ -38,7 +38,7 @@ constructorMember: typeParamList? IDENTIFIER
 enumConstants: enumConstant (COMMA enumConstant)*;
 enumConstant: annotation* IDENTIFIER balancedParens? balancedBraces?;
 
-// field: (modifier | annotation)* fieldMember;
+field: (modifier | annotation)* fieldMember;
 fieldMember: type fieldNamePart (COMMA fieldNamePart)* SEMI;
 fieldNamePart: IDENTIFIER arraySuffix* (EQ expr)?;
 

@@ -48,6 +48,34 @@ class FileFragmentMapTest
    }
 
    @Test
+   void mergeAttributeDecl()
+   {
+      assertThat("it ignores multi-declarations", FileFragmentMap.mergeAttributeDecl("int x, y;", "long x;"),
+                 equalTo("int x, y;"));
+
+      assertThat("it removes the initializer", FileFragmentMap.mergeAttributeDecl("int x = 0;", "int x;"),
+                 equalTo("int x;"));
+      assertThat("it removes the initializer and keeps annotations",
+                 FileFragmentMap.mergeAttributeDecl("@Cool int x = 0;", "int x;"), equalTo("@Cool int x;"));
+
+      assertThat("it replaces the initializer", FileFragmentMap.mergeAttributeDecl("int x = 0;", "int x = 1;"),
+                 equalTo("int x = 1;"));
+      assertThat("it replaces the initializer and keeps annotations",
+                 FileFragmentMap.mergeAttributeDecl("@Cool int x = 0;", "int x = 1;"), equalTo("@Cool int x = 1;"));
+
+      assertThat("it adds the initializer", FileFragmentMap.mergeAttributeDecl("int x;", "int x = 1;"),
+                 equalTo("int x = 1;"));
+      assertThat("it adds the initializer and keeps annotations",
+                 FileFragmentMap.mergeAttributeDecl("@Cool int x;", "int x = 1;"), equalTo("@Cool int x = 1;"));
+
+      assertThat("it updates the type", FileFragmentMap.mergeAttributeDecl("int x;", "long x;"), equalTo("long x;"));
+      assertThat("it updates the type and keeps annotations",
+                 FileFragmentMap.mergeAttributeDecl("@Cool int x;", "long x;"), equalTo("@Cool long x;"));
+      assertThat("it updates the type and removes C-style arrays",
+                 FileFragmentMap.mergeAttributeDecl("int x[];", "long x;"), equalTo("long x;"));
+   }
+
+   @Test
    void getPath()
    {
       // assertThat(FileFragmentMap.getPath(""), emptyArray());
