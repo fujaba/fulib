@@ -17,8 +17,8 @@ importDecl: IMPORT STATIC? qualifiedName (DOT STAR)? SEMI;
 classDecl: (modifier | annotation)* classMember;
 classMember: (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            typeParamList?
-           (EXTENDS annotatedTypeList)?
-           (IMPLEMENTS annotatedTypeList)?
+           (EXTENDS extendsTypes=annotatedTypeList)?
+           (IMPLEMENTS implementsTypes=annotatedTypeList)?
            classBody;
 
 classBody: LBRACE (enumConstants (SEMI (member | SEMI)*)? | (member | SEMI)*) RBRACE;

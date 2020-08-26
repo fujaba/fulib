@@ -1,5 +1,11 @@
 package org.fulib.classmodel;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.fulib.parser.FulibClassLexer;
+import org.fulib.parser.FulibClassParser;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -11,7 +17,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -237,50 +242,49 @@ public class FileFragmentMap
    // package-private for testability
    static String mergeClassDecl(String oldText, String newText)
    {
-      // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
-      final Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
-      final Matcher match = pattern.matcher(newText);
+      // really the only information newText may contain in the current setup is the extends clause
+      // - the class name is part of the key and will always be identical
+      // - the visibility is always public and fulib does not allow other modifiers
+      // - fulib does not allow interfaces
+      // - fulib does not allow any comments <- TODO this may need to be updated when implementing Javadoc descriptions
+      final int extendsIndex = newText.indexOf("extends");
 
-      if (!match.find())
+      final CharStream input = CharStreams.fromString(oldText + "}");
+      final FulibClassLexer lexer = new FulibClassLexer(input);
+      final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
+      final FulibClassParser.ClassDeclContext classDecl = parser.classDecl();
+      final FulibClassParser.ClassMemberContext classMember = classDecl.classMember();
+
+      if (extendsIndex < 0)
       {
-         // TODO error?
-         return newText;
+         if (classMember.EXTENDS() == null)
+         {
+            return oldText;
+         }
+
+         // delete extends clause from oldText
+         final int startIndex = classMember.EXTENDS().getSymbol().getStartIndex();
+         final int endIndex = classMember.IMPLEMENTS() != null ?
+            classMember.IMPLEMENTS().getSymbol().getStartIndex() :
+            classMember.classBody().getStart().getStartIndex();
+         return new StringBuilder(oldText).delete(startIndex, endIndex).toString();
       }
 
-      final String className = match.group(1);
-      final String extendsClause = match.group(2);
+      final String superType = newText.substring(extendsIndex + "extends".length(), newText.lastIndexOf('{')).trim();
 
-      final int oldClassNamePos = oldText.indexOf("class " + className);
-      if (oldClassNamePos < 0)
+      if (classMember.EXTENDS() == null)
       {
-         // TODO error?
-         return newText;
+         // insert extends clause
+         final int insertIndex = classMember.IMPLEMENTS() != null ?
+            classMember.IMPLEMENTS().getSymbol().getStartIndex() :
+            classMember.classBody().getStart().getStartIndex();
+         return new StringBuilder(oldText).insert(insertIndex, "extends " + superType + " ").toString();
       }
 
-      final StringBuilder newTextBuilder = new StringBuilder();
-
-      // prefix
-      newTextBuilder.append(oldText, 0, oldClassNamePos);
-
-      // middle
-      newTextBuilder.append("class ").append(className);
-      if (extendsClause != null)
-      {
-         newTextBuilder.append(" ").append(extendsClause);
-      }
-
-      // suffix
-      final int implementsPos = oldText.indexOf("implements");
-      if (implementsPos >= 0)
-      {
-         newTextBuilder.append(" ").append(oldText, implementsPos, oldText.length());
-      }
-      else
-      {
-         newTextBuilder.append("\n{");
-      }
-
-      return newTextBuilder.toString();
+      // replace super type
+      final int startIndex = classMember.extendsTypes.getStart().getStartIndex();
+      final int endIndex = classMember.extendsTypes.getStop().getStopIndex() + 1;
+      return new StringBuilder(oldText).replace(startIndex, endIndex, superType).toString();
    }
 
    // package-private for testability
