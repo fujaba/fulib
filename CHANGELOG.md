@@ -76,3 +76,25 @@
 * All new members now correctly generate leading whitespace. #35 #36
 * `toString` methods are no longer generated in classes without suitable attributes. #39 #41
 * `removeYou` methods are no longer generated in classes without associations. #40 #42
+
+# fulib v1.2.2
+
+## Improvements
+
+* Improved JavaDocs in `FileFragmentMap`. #50
+* Improved the merging of class and attribute declarations from original source and newly generated code. #60
+  * Class declarations are now mostly kept intact, only the type in the extends clause is updated.
+  * Attribute declarations are now mostly kept intact, only the type and initializer are updated.
+
+## Bugfixes
+
+* The code generator no longer generates duplicate members when an attribute has a generic or annotated types. #43 #59
+* The code generator no longer generates duplicate methods with parameters of generic or annotated types. #43 #59
+* The code generator now treats the types `void` and `boolean` as primitives. #46
+* The code generator no longer removes newlines at the end of existing files. #47
+* The code generator now correctly determines when classes are empty and removes them if necessary. #49
+* The `FMethod.setDeclaration` method no longer ignores varargs `...`. #54 #55
+* The Java parser now supports C-style arrays for parameters. #56
+* The `FMethod.setDeclaration` method now supports C-style arrays for parameters. #56
+* The code generator no longer generates duplicate members when mixing attributes with methods. #58
+* The code generator now intelligently merges the original source with new class and attribute declarations again. #60
