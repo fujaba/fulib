@@ -49,6 +49,7 @@ public class FileFragmentMap
 
    private static final Pattern CLASS_DECL_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_DECL + "$");
    private static final Pattern CLASS_END_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_END + "$");
+   private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + ATTRIBUTE + "/(\\w+)$");
 
    private static final String GAP_BEFORE = "#gap-before";
 
@@ -578,11 +579,11 @@ public class FileFragmentMap
          // newtext contains annotations, thus it overrides annotations in the code
          // do not modify newtext
       }
-      else if (key.equals(CLASS))
+      else if (CLASS_DECL_PATTERN.matcher(key).matches())
       {
          newText = mergeClassDecl(oldText, newText);
       }
-      else if (key.startsWith(ATTRIBUTE))
+      else if (ATTRIBUTE_PATTERN.matcher(key).matches())
       {
          newText = mergeAttributeDecl(oldText, newText);
       }
