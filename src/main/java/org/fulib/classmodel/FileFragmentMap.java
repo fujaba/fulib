@@ -1,5 +1,11 @@
 package org.fulib.classmodel;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.fulib.parser.FulibClassLexer;
+import org.fulib.parser.FulibClassParser;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -11,7 +17,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,6 +54,7 @@ public class FileFragmentMap
 
    private static final Pattern CLASS_DECL_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_DECL + "$");
    private static final Pattern CLASS_END_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_END + "$");
+   private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + ATTRIBUTE + "/(\\w+)$");
 
    private static final String GAP_BEFORE = "#gap-before";
 
@@ -236,73 +242,135 @@ public class FileFragmentMap
    // package-private for testability
    static String mergeClassDecl(String oldText, String newText)
    {
-      // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
-      final Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
-      final Matcher match = pattern.matcher(newText);
+      // really the only information newText may contain in the current setup is the extends clause
+      // - the class name is part of the key and will always be identical
+      // - the visibility is always public and fulib does not allow other modifiers
+      // - fulib does not allow interfaces
+      // - fulib does not allow any comments <- TODO this may need to be updated when implementing Javadoc descriptions
+      final int extendsIndex = newText.indexOf("extends");
 
-      if (!match.find())
+      final CharStream input = CharStreams.fromString(oldText + "}");
+      final FulibClassLexer lexer = new FulibClassLexer(input);
+      final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
+      final FulibClassParser.ClassDeclContext classDecl = parser.classDecl();
+      final FulibClassParser.ClassMemberContext classMember = classDecl.classMember();
+
+      if (extendsIndex < 0)
       {
-         // TODO error?
-         return newText;
+         if (classMember.EXTENDS() == null)
+         {
+            return oldText;
+         }
+
+         // delete extends clause from oldText
+         final int startIndex = classMember.EXTENDS().getSymbol().getStartIndex();
+         final int endIndex = classMember.IMPLEMENTS() != null ?
+            classMember.IMPLEMENTS().getSymbol().getStartIndex() :
+            classMember.classBody().getStart().getStartIndex();
+         return new StringBuilder(oldText).delete(startIndex, endIndex).toString();
       }
 
-      final String className = match.group(1);
-      final String extendsClause = match.group(2);
+      final String superType = newText.substring(extendsIndex + "extends".length(), newText.lastIndexOf('{')).trim();
 
-      final int oldClassNamePos = oldText.indexOf("class " + className);
-      if (oldClassNamePos < 0)
+      if (classMember.EXTENDS() == null)
       {
-         // TODO error?
-         return newText;
+         // insert extends clause
+         final int insertIndex = classMember.IMPLEMENTS() != null ?
+            classMember.IMPLEMENTS().getSymbol().getStartIndex() :
+            classMember.classBody().getStart().getStartIndex();
+         return new StringBuilder(oldText).insert(insertIndex, "extends " + superType + " ").toString();
       }
 
-      final StringBuilder newTextBuilder = new StringBuilder();
-
-      // prefix
-      newTextBuilder.append(oldText, 0, oldClassNamePos);
-
-      // middle
-      newTextBuilder.append("class ").append(className);
-      if (extendsClause != null)
-      {
-         newTextBuilder.append(" ").append(extendsClause);
-      }
-
-      // suffix
-      final int implementsPos = oldText.indexOf("implements");
-      if (implementsPos >= 0)
-      {
-         newTextBuilder.append(" ").append(oldText, implementsPos, oldText.length());
-      }
-      else
-      {
-         newTextBuilder.append("\n{");
-      }
-
-      return newTextBuilder.toString();
+      // replace super type
+      final int startIndex = classMember.extendsTypes.getStart().getStartIndex();
+      final int endIndex = classMember.extendsTypes.getStop().getStopIndex() + 1;
+      return new StringBuilder(oldText).replace(startIndex, endIndex, superType).toString();
    }
 
    // package-private for testability
    // TODO test
    static String mergeAttributeDecl(String oldText, String newText)
    {
-      // keep everything before public
-      final int oldPublicPos = oldText.indexOf("public");
-      final int newPublicPos = newText.indexOf("public");
-      if (oldPublicPos >= 0 && newPublicPos >= 0)
+      final FulibClassParser.FieldContext oldField = parseField(oldText);
+      final FulibClassParser.FieldMemberContext oldFieldMember = oldField.fieldMember();
+
+      if (oldFieldMember.fieldNamePart().size() != 1)
       {
-         return oldText.substring(0, oldPublicPos) + newText.substring(newPublicPos);
+         // oldText is of the form 'int x, y;' or similar - merging that is too complicated
+         return oldText;
       }
 
-      // keep everything before private
-      final int newPrivatePos = newText.indexOf("private");
-      final int oldPrivatePos = oldText.indexOf("private");
-      if (oldPrivatePos >= 0 && newPrivatePos >= 0)
+      final FulibClassParser.FieldNamePartContext oldFieldPart = oldFieldMember.fieldNamePart(0);
+
+      final FulibClassParser.FieldContext newField = parseField(newText);
+      final FulibClassParser.FieldMemberContext newFieldMember = newField.fieldMember();
+      final FulibClassParser.FieldNamePartContext newFieldPart = newFieldMember.fieldNamePart(0);
+
+      // newText provides the following information:
+      // - type
+      // - (name) - this is part of the key and will always be identical
+      // - initializer (optional)
+      // changes need to be performed from right to left so indices are not messed up
+
+      final StringBuilder builder = new StringBuilder(oldText);
+      if (newFieldPart.EQ() == null)
       {
-         return oldText.substring(0, oldPrivatePos) + newText.substring(newPrivatePos);
+         if (oldFieldPart.EQ() != null)
+         {
+            // delete everything between the attribute name and the semicolon
+            final int start = oldFieldPart.IDENTIFIER().getSymbol().getStopIndex() + 1;
+            final int stop = oldFieldMember.SEMI().getSymbol().getStartIndex();
+            builder.delete(start, stop);
+         }
+      }
+      else
+      {
+         final FulibClassParser.ExprContext newExpr = newFieldPart.expr();
+         final String newExprText = newText.substring(newExpr.getStart().getStartIndex(),
+                                                      newExpr.getStop().getStopIndex() + 1);
+
+         if (oldFieldPart.EQ() != null)
+         {
+            // replace expr in oldText
+            final FulibClassParser.ExprContext oldExpr = oldFieldPart.expr();
+            final int start = oldExpr.getStart().getStartIndex();
+            final int stop = oldExpr.getStop().getStopIndex() + 1;
+            builder.replace(start, stop, newExprText);
+         }
+         else
+         {
+            final int insertIndex = oldFieldMember.SEMI().getSymbol().getStartIndex();
+            builder.insert(insertIndex, " = " + newExprText);
+         }
       }
 
-      return newText;
+      final List<FulibClassParser.ArraySuffixContext> arraySuffixes = oldFieldPart.arraySuffix();
+      if (!arraySuffixes.isEmpty())
+      {
+         // delete array suffixes - they can mess with type replacement
+         final int start = arraySuffixes.get(0).getStart().getStartIndex();
+         final int end = arraySuffixes.get(arraySuffixes.size() - 1).getStop().getStopIndex() + 1;
+         builder.delete(start, end);
+      }
+
+      // replace old type with new
+      final FulibClassParser.TypeContext newType = newFieldMember.type();
+      final String newTypeText = newText.substring(newType.getStart().getStartIndex(),
+                                                   newType.getStop().getStopIndex() + 1);
+      final FulibClassParser.TypeContext oldType = oldFieldMember.type();
+      final int start = oldType.getStart().getStartIndex();
+      final int stop = oldType.getStop().getStopIndex() + 1;
+      builder.replace(start, stop, newTypeText);
+
+      return builder.toString();
+   }
+
+   private static FulibClassParser.FieldContext parseField(String newText)
+   {
+      final CharStream newInput = CharStreams.fromString(newText);
+      final FulibClassLexer newLexer = new FulibClassLexer(newInput);
+      final FulibClassParser newParser = new FulibClassParser(new CommonTokenStream(newLexer));
+      return newParser.field();
    }
 
    // =============== Methods ===============
@@ -578,11 +646,11 @@ public class FileFragmentMap
          // newtext contains annotations, thus it overrides annotations in the code
          // do not modify newtext
       }
-      else if (key.equals(CLASS))
+      else if (CLASS_DECL_PATTERN.matcher(key).matches())
       {
          newText = mergeClassDecl(oldText, newText);
       }
-      else if (key.startsWith(ATTRIBUTE))
+      else if (ATTRIBUTE_PATTERN.matcher(key).matches())
       {
          newText = mergeAttributeDecl(oldText, newText);
       }

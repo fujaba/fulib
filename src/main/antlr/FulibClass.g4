@@ -17,8 +17,8 @@ importDecl: IMPORT STATIC? qualifiedName (DOT STAR)? SEMI;
 classDecl: (modifier | annotation)* classMember;
 classMember: (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            typeParamList?
-           (EXTENDS annotatedTypeList)?
-           (IMPLEMENTS annotatedTypeList)?
+           (EXTENDS extendsTypes=annotatedTypeList)?
+           (IMPLEMENTS implementsTypes=annotatedTypeList)?
            classBody;
 
 classBody: LBRACE (enumConstants (SEMI (member | SEMI)*)? | (member | SEMI)*) RBRACE;
@@ -38,7 +38,7 @@ constructorMember: typeParamList? IDENTIFIER
 enumConstants: enumConstant (COMMA enumConstant)*;
 enumConstant: annotation* IDENTIFIER balancedParens? balancedBraces?;
 
-// field: (modifier | annotation)* fieldMember;
+field: (modifier | annotation)* fieldMember;
 fieldMember: type fieldNamePart (COMMA fieldNamePart)* SEMI;
 fieldNamePart: IDENTIFIER arraySuffix* (EQ expr)?;
 

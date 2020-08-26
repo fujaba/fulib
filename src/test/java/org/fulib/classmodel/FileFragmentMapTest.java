@@ -11,20 +11,68 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FileFragmentMapTest
 {
    @Test
    void mergeClassDecl()
    {
-      assertEquals("@Cool class Foo\n{", FileFragmentMap.mergeClassDecl("@Cool class Foo {", "class Foo {"));
-      assertEquals("@Cool class Foo extends Bar\n{",
-                   FileFragmentMap.mergeClassDecl("@Cool class Foo {", "class Foo extends Bar {"));
-      assertEquals("class Foo implements Serializable {",
-                   FileFragmentMap.mergeClassDecl("class Foo implements Serializable {", "class Foo {"));
-      assertEquals("class Foo extends Bar implements Baz {",
-                   FileFragmentMap.mergeClassDecl("class Foo implements Baz {", "class Foo extends Bar {"));
+      assertThat("it keeps annotations", FileFragmentMap.mergeClassDecl("@Cool class Foo {", "class Foo {"),
+                 equalTo("@Cool class Foo {"));
+      assertThat("it keeps interfaces",
+                 FileFragmentMap.mergeClassDecl("class Foo implements Serializable {", "class Foo {"),
+                 equalTo("class Foo implements Serializable {"));
+
+      assertThat("it removes extends clause", FileFragmentMap.mergeClassDecl("class Foo extends Bar {", "class Foo {"),
+                 equalTo("class Foo {"));
+      assertThat("it removes extends clause and keeps interfaces",
+                 FileFragmentMap.mergeClassDecl("class Foo extends Bar implements Baz {", "class Foo {"),
+                 equalTo("class Foo implements Baz {"));
+
+      assertThat("it adds extends clause before interface",
+                 FileFragmentMap.mergeClassDecl("class Foo implements Baz {", "class Foo extends Bar {"),
+                 equalTo("class Foo extends Bar implements Baz {"));
+      assertThat("it adds extends clause before body",
+                 FileFragmentMap.mergeClassDecl("class Foo {", "class Foo extends Bar {"),
+                 equalTo("class Foo extends Bar {"));
+      assertThat("it adds extends clause and keeps annotations",
+                 FileFragmentMap.mergeClassDecl("@Cool class Foo {", "class Foo extends Bar {"),
+                 equalTo("@Cool class Foo extends Bar {"));
+
+      assertThat("it replaces the super type",
+                 FileFragmentMap.mergeClassDecl("class Foo extends Moo {", "class Foo extends Bar {"),
+                 equalTo("class Foo extends Bar {"));
+      assertThat("it replaces the super type and keeps interfaces",
+                 FileFragmentMap.mergeClassDecl("class Foo extends Moo implements Baz {", "class Foo extends Bar {"),
+                 equalTo("class Foo extends Bar implements Baz {"));
+   }
+
+   @Test
+   void mergeAttributeDecl()
+   {
+      assertThat("it ignores multi-declarations", FileFragmentMap.mergeAttributeDecl("int x, y;", "long x;"),
+                 equalTo("int x, y;"));
+
+      assertThat("it removes the initializer", FileFragmentMap.mergeAttributeDecl("int x = 0;", "int x;"),
+                 equalTo("int x;"));
+      assertThat("it removes the initializer and keeps annotations",
+                 FileFragmentMap.mergeAttributeDecl("@Cool int x = 0;", "int x;"), equalTo("@Cool int x;"));
+
+      assertThat("it replaces the initializer", FileFragmentMap.mergeAttributeDecl("int x = 0;", "int x = 1;"),
+                 equalTo("int x = 1;"));
+      assertThat("it replaces the initializer and keeps annotations",
+                 FileFragmentMap.mergeAttributeDecl("@Cool int x = 0;", "int x = 1;"), equalTo("@Cool int x = 1;"));
+
+      assertThat("it adds the initializer", FileFragmentMap.mergeAttributeDecl("int x;", "int x = 1;"),
+                 equalTo("int x = 1;"));
+      assertThat("it adds the initializer and keeps annotations",
+                 FileFragmentMap.mergeAttributeDecl("@Cool int x;", "int x = 1;"), equalTo("@Cool int x = 1;"));
+
+      assertThat("it updates the type", FileFragmentMap.mergeAttributeDecl("int x;", "long x;"), equalTo("long x;"));
+      assertThat("it updates the type and keeps annotations",
+                 FileFragmentMap.mergeAttributeDecl("@Cool int x;", "long x;"), equalTo("@Cool long x;"));
+      assertThat("it updates the type and removes C-style arrays",
+                 FileFragmentMap.mergeAttributeDecl("int x[];", "long x;"), equalTo("long x;"));
    }
 
    @Test
