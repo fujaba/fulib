@@ -551,6 +551,27 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
+    * Alias for {@link #associate(Clazz, String, int, Clazz)}.
+    *
+    * @param srcClass
+    *    the source class
+    * @param srcRole
+    *    the role name in the source class
+    * @param srcSize
+    *    the cardinality in the source class
+    * @param tgtClass
+    *    the target class
+    *
+    * @return the new {@link AssocRole} in the source class.
+    *
+    * @since 1.3
+    */
+   public AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass)
+   {
+      return this.associate(srcClass, srcRole, srcSize, tgtClass);
+   }
+
+   /**
     * Creates an association like {@link #associate(Clazz, String, int, Clazz, String, int)},
     * but with the target role name inferred from the name of the source class,
     * and the target cardinality 1.
@@ -596,6 +617,31 @@ public class ClassModelManager implements IModelManager
     */
    @Deprecated
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize, String tgtRole, int tgtSize)
+   {
+      return this.associate(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize);
+   }
+
+   /**
+    * Alias for {@link #associate(Clazz, String, int, Clazz, String, int)}.
+    *
+    * @param srcClass
+    *    the source class
+    * @param srcRole
+    *    the role name in the source class
+    * @param srcSize
+    *    the cardinality in the source class
+    * @param tgtClass
+    *    the target class
+    * @param tgtRole
+    *    the role name in the target class
+    * @param tgtSize
+    *    the cardinality in the target class
+    *
+    * @return the new {@link AssocRole} in the source class.
+    *
+    * @since 1.3
+    */
+   public AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize)
    {
       return this.associate(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize);
    }
