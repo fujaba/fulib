@@ -8,11 +8,12 @@ import org.fulib.classmodel.ClassModel;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -27,33 +28,37 @@ public class CustomTemplateTest
 
       Tools.removeDirAndFiles(targetFolder);
 
-      ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", srcFolder);
+      final ClassModelBuilder mb = Fulib.classModelBuilder("org.fulib.studyright", srcFolder);
       mb.buildClass("University").buildAttribute("name", Type.STRING);
-      mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"")
-        .buildAttribute("matrNo", Type.LONG, "0");
+      mb
+         .buildClass("Student")
+         .buildAttribute("name", Type.STRING, "\"Karli\"")
+         .buildAttribute("matrNo", Type.LONG, "0");
 
-      ClassModel model = mb.getClassModel();
-
-      // generate normal
-      Fulib.generator().generate(model);
-
-      byte[] bytes = Files.readAllBytes(Paths.get(model.getPackageSrcFolder() + "/Student.java"));
-      String content = new String(bytes);
-      assertThat(content, not(containsString("/* custom attribute comment */")));
-
-      int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
-      assertThat("compiler return code: ", returnCode, is(0));
+      final ClassModel model = mb.getClassModel();
 
       // generate custom
       // start_code_fragment: testCustomTemplates
       Fulib.generator().setCustomTemplatesFile("templates/custom.stg").generate(model);
       // end_code_fragment:
 
-      bytes = Files.readAllBytes(Paths.get(model.getPackageSrcFolder() + "/Student.java"));
-      content = new String(bytes);
+      final Path path = Paths.get(model.getPackageSrcFolder(), "Student.java");
+      final String content = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
       assertThat(content, containsString("/* custom attribute comment */"));
 
-      returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
+      final int returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       assertThat("compiler return code: ", returnCode, is(0));
+
+      // change comment text
+      final String userChangedContent = content.replace("/* custom attribute comment */",
+                                                        "/* attribute comment changed by user */");
+      Files.write(path, userChangedContent.getBytes(StandardCharsets.UTF_8));
+
+      // generate custom again
+      Fulib.generator().setCustomTemplatesFile("templates/custom.stg").generate(model);
+
+      final String loadedContent = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+      assertThat("it keeps user changes intact", loadedContent,
+                 containsString("/* attribute comment changed by user */"));
    }
 }

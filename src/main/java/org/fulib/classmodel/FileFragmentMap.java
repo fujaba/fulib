@@ -1,5 +1,11 @@
 package org.fulib.classmodel;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.fulib.parser.FulibClassLexer;
+import org.fulib.parser.FulibClassParser;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -9,13 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,30 +25,38 @@ public class FileFragmentMap
 {
    // =============== Constants ===============
 
-   /** @since 1.2 */ public static final String CLASS       = "class";
-   /** @since 1.2 */ public static final String PACKAGE     = "package";
+   // @formatter:off
+   /** @since 1.2 */ public static final String CLASS = "class";
+   /** @since 1.2 */ public static final String PACKAGE = "package";
    /** @since 1.2 */ public static final String CONSTRUCTOR = "constructor";
-   /** @since 1.2 */ public static final String ATTRIBUTE   = "attribute";
-   /** @since 1.2 */ public static final String METHOD      = "method";
-   /** @since 1.2 */ public static final String IMPORT      = "import";
-   /** @since 1.2 */ public static final String CLASS_BODY  = "classBody";
-   /** @since 1.2 */ public static final String CLASS_DECL  = "classDecl";
-   /** @since 1.2 */ public static final String CLASS_END   = "classEnd";
-   /** @since 1.2 */ public static final String EOF         = "eof";
+   /** @since 1.2 */ public static final String ATTRIBUTE = "attribute";
+   /** @since 1.2 */ public static final String METHOD = "method";
+   /** @since 1.2 */ public static final String IMPORT = "import";
+   /** @since 1.2 */ public static final String CLASS_BODY = "classBody";
+   /** @since 1.2 */ public static final String CLASS_DECL = "classDecl";
+   /** @since 1.2 */ public static final String CLASS_END = "classEnd";
+   /** @since 1.2 */ public static final String EOF = "eof";
 
-   /** @since 1.2 */ public static final int PACKAGE_NEWLINES     = 2;
-   /** @since 1.2 */ public static final int IMPORT_NEWLINES      = 1;
-   /** @since 1.2 */ public static final int CLASS_NEWLINES       = 2;
-   /** @since 1.2 */ public static final int FIELD_NEWLINES       = 2;
+   /** @since 1.2 */ public static final int PACKAGE_NEWLINES = 0;
+   /** @since 1.2 */ public static final int IMPORT_NEWLINES = 1;
+   /** @since 1.2 */ public static final int CLASS_NEWLINES = 2;
+   /** @since 1.2 */ public static final int FIELD_NEWLINES = 1;
    /** @since 1.2 */ public static final int CONSTRUCTOR_NEWLINES = 2;
-   /** @since 1.2 */ public static final int METHOD_NEWLINES      = 2;
-   /** @since 1.2 */ public static final int CLASS_END_NEWLINES   = 1;
+   /** @since 1.2 */ public static final int METHOD_NEWLINES = 2;
+   /** @since 1.2 */ public static final int CLASS_END_NEWLINES = 1;
+   // @formatter:on
 
    public static final String PROPERTY_fileName = "fileName";
 
    // comments containing "no fulib", case insensitive, and with any whitespace between the words.
    private static final Pattern NO_FULIB_PATTERN = Pattern.compile("//.*no\\s+fulib|/\\*.*no\\s+fulib.*\\*/",
                                                                    Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+
+   private static final Pattern CLASS_DECL_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_DECL + "$");
+   private static final Pattern CLASS_END_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_END + "$");
+   private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + ATTRIBUTE + "/(\\w+)$");
+
+   private static final String GAP_BEFORE = "#gap-before";
 
    // =============== Fields ===============
 
@@ -91,6 +100,8 @@ public class FileFragmentMap
    }
 
    /**
+    * @return a stream of all code fragments containing text
+    *
     * @since 1.2
     */
    public Stream<CodeFragment> codeFragments()
@@ -98,6 +109,11 @@ public class FileFragmentMap
       return codeFragments(this.root);
    }
 
+   /**
+    * @return a list of all code fragments containing text
+    *
+    * @deprecated since 1.2; use {@link #codeFragments()} instead
+    */
    @Deprecated
    public ArrayList<CodeFragment> getFragmentList()
    {
@@ -120,11 +136,40 @@ public class FileFragmentMap
       }
    }
 
+   /**
+    * @param key
+    *    the key to search for
+    *
+    * @return the code fragment with the given key,
+    * or {@code null} if not found or the result is not a {@link CodeFragment} (e.g. a {@link CompoundFragment})
+    */
    public CodeFragment getFragment(String key)
    {
-      final String[] path = getPath(key);
-      final Fragment ancestor = this.root.getAncestor(path);
-      return ancestor instanceof CodeFragment ? (CodeFragment) ancestor : null;
+      return findFragment(this.root, getParentKeys(key), 0, key);
+   }
+
+   private static CodeFragment findFragment(CompoundFragment parent, String[] parentKeys, int index, String key)
+   {
+      if (index == parentKeys.length)
+      {
+         final Fragment child = parent.getChildWithKey(key);
+         return child instanceof CodeFragment ? (CodeFragment) child : null;
+      }
+
+      for (final Fragment child : parent.getChildren())
+      {
+         if (!(child instanceof CompoundFragment) || !child.getKey().equals(parentKeys[index]))
+         {
+            continue;
+         }
+
+         final CodeFragment fragment = findFragment((CompoundFragment) child, parentKeys, index + 1, key);
+         if (fragment != null)
+         {
+            return fragment;
+         }
+      }
+      return null;
    }
 
    static String[] getPath(String key)
@@ -143,38 +188,48 @@ public class FileFragmentMap
    }
 
    /**
+    * @return {@code false} if this file contains a class declaration whose body has at least one member, {@code true} otherwise
+    *
     * @since 1.2
     */
    public boolean isClassBodyEmpty()
    {
-      final AtomicBoolean inClassBody = new AtomicBoolean();
-      final AtomicBoolean foundContent = new AtomicBoolean();
+      boolean inClassBody = false;
 
-      this.codeFragments().forEach(fragment -> {
-         if (foundContent.get())
-         {
-            // short-circuit
-            return;
-         }
-
+      for (final Iterator<CodeFragment> it = this.codeFragments().iterator(); it.hasNext(); )
+      {
+         final CodeFragment fragment = it.next();
          final String key = fragment.getKey();
-         if (key.matches("^" + CLASS + "/(\\w+)/" + CLASS_DECL + "$"))
+         if (CLASS_DECL_PATTERN.matcher(key).matches())
          {
-            inClassBody.set(true);
+            inClassBody = true;
          }
-         else if (key.matches("^" + CLASS + "/(\\w+)/" + CLASS_END + "$"))
+         else if (CLASS_END_PATTERN.matcher(key).matches())
          {
-            inClassBody.set(false);
+            inClassBody = false;
          }
-         else if (inClassBody.get() && key.endsWith("#gap-before") || key.endsWith("#gap-after"))
+         else if (inClassBody && !isEmptyFragment(fragment))
          {
-            foundContent.set(true);
+            return false;
          }
-      });
+      }
 
-      return foundContent.get();
+      return true;
    }
 
+   private static boolean isEmptyFragment(CodeFragment fragment)
+   {
+      return fragment.getText().isEmpty() || fragment.getKey().endsWith(GAP_BEFORE);
+   }
+
+   /**
+    * @param fragmentMap
+    *    unused
+    *
+    * @return see {@link #isClassBodyEmpty()}
+    *
+    * @deprecated since 1.2; use {@link #isClassBodyEmpty()} instead
+    */
    @Deprecated
    @SuppressWarnings("unused")
    public boolean classBodyIsEmpty(FileFragmentMap fragmentMap)
@@ -187,73 +242,135 @@ public class FileFragmentMap
    // package-private for testability
    static String mergeClassDecl(String oldText, String newText)
    {
-      // keep annotations and implements clause "\\s*public\\s+class\\s+(\\w+)(\\.+)\\{"
-      final Pattern pattern = Pattern.compile("class\\s+(\\w+)\\s*(extends\\s+[^\\s]+)?");
-      final Matcher match = pattern.matcher(newText);
+      // really the only information newText may contain in the current setup is the extends clause
+      // - the class name is part of the key and will always be identical
+      // - the visibility is always public and fulib does not allow other modifiers
+      // - fulib does not allow interfaces
+      // - fulib does not allow any comments <- TODO this may need to be updated when implementing Javadoc descriptions
+      final int extendsIndex = newText.indexOf("extends");
 
-      if (!match.find())
+      final CharStream input = CharStreams.fromString(oldText + "}");
+      final FulibClassLexer lexer = new FulibClassLexer(input);
+      final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
+      final FulibClassParser.ClassDeclContext classDecl = parser.classDecl();
+      final FulibClassParser.ClassMemberContext classMember = classDecl.classMember();
+
+      if (extendsIndex < 0)
       {
-         // TODO error?
-         return newText;
+         if (classMember.EXTENDS() == null)
+         {
+            return oldText;
+         }
+
+         // delete extends clause from oldText
+         final int startIndex = classMember.EXTENDS().getSymbol().getStartIndex();
+         final int endIndex = classMember.IMPLEMENTS() != null ?
+            classMember.IMPLEMENTS().getSymbol().getStartIndex() :
+            classMember.classBody().getStart().getStartIndex();
+         return new StringBuilder(oldText).delete(startIndex, endIndex).toString();
       }
 
-      final String className = match.group(1);
-      final String extendsClause = match.group(2);
+      final String superType = newText.substring(extendsIndex + "extends".length(), newText.lastIndexOf('{')).trim();
 
-      final int oldClassNamePos = oldText.indexOf("class " + className);
-      if (oldClassNamePos < 0)
+      if (classMember.EXTENDS() == null)
       {
-         // TODO error?
-         return newText;
+         // insert extends clause
+         final int insertIndex = classMember.IMPLEMENTS() != null ?
+            classMember.IMPLEMENTS().getSymbol().getStartIndex() :
+            classMember.classBody().getStart().getStartIndex();
+         return new StringBuilder(oldText).insert(insertIndex, "extends " + superType + " ").toString();
       }
 
-      final StringBuilder newTextBuilder = new StringBuilder();
-
-      // prefix
-      newTextBuilder.append(oldText, 0, oldClassNamePos);
-
-      // middle
-      newTextBuilder.append("class ").append(className);
-      if (extendsClause != null)
-      {
-         newTextBuilder.append(" ").append(extendsClause);
-      }
-
-      // suffix
-      final int implementsPos = oldText.indexOf("implements");
-      if (implementsPos >= 0)
-      {
-         newTextBuilder.append(" ").append(oldText, implementsPos, oldText.length());
-      }
-      else
-      {
-         newTextBuilder.append("\n{");
-      }
-
-      return newTextBuilder.toString();
+      // replace super type
+      final int startIndex = classMember.extendsTypes.getStart().getStartIndex();
+      final int endIndex = classMember.extendsTypes.getStop().getStopIndex() + 1;
+      return new StringBuilder(oldText).replace(startIndex, endIndex, superType).toString();
    }
 
    // package-private for testability
    // TODO test
    static String mergeAttributeDecl(String oldText, String newText)
    {
-      // keep everything before public
-      final int oldPublicPos = oldText.indexOf("public");
-      final int newPublicPos = newText.indexOf("public");
-      if (oldPublicPos >= 0 && newPublicPos >= 0)
+      final FulibClassParser.FieldContext oldField = parseField(oldText);
+      final FulibClassParser.FieldMemberContext oldFieldMember = oldField.fieldMember();
+
+      if (oldFieldMember.fieldNamePart().size() != 1)
       {
-         return oldText.substring(0, oldPublicPos) + newText.substring(newPublicPos);
+         // oldText is of the form 'int x, y;' or similar - merging that is too complicated
+         return oldText;
       }
 
-      // keep everything before private
-      final int newPrivatePos = newText.indexOf("private");
-      final int oldPrivatePos = oldText.indexOf("private");
-      if (oldPrivatePos >= 0 && newPrivatePos >= 0)
+      final FulibClassParser.FieldNamePartContext oldFieldPart = oldFieldMember.fieldNamePart(0);
+
+      final FulibClassParser.FieldContext newField = parseField(newText);
+      final FulibClassParser.FieldMemberContext newFieldMember = newField.fieldMember();
+      final FulibClassParser.FieldNamePartContext newFieldPart = newFieldMember.fieldNamePart(0);
+
+      // newText provides the following information:
+      // - type
+      // - (name) - this is part of the key and will always be identical
+      // - initializer (optional)
+      // changes need to be performed from right to left so indices are not messed up
+
+      final StringBuilder builder = new StringBuilder(oldText);
+      if (newFieldPart.EQ() == null)
       {
-         return oldText.substring(0, oldPrivatePos) + newText.substring(newPrivatePos);
+         if (oldFieldPart.EQ() != null)
+         {
+            // delete everything between the attribute name and the semicolon
+            final int start = oldFieldPart.IDENTIFIER().getSymbol().getStopIndex() + 1;
+            final int stop = oldFieldMember.SEMI().getSymbol().getStartIndex();
+            builder.delete(start, stop);
+         }
+      }
+      else
+      {
+         final FulibClassParser.ExprContext newExpr = newFieldPart.expr();
+         final String newExprText = newText.substring(newExpr.getStart().getStartIndex(),
+                                                      newExpr.getStop().getStopIndex() + 1);
+
+         if (oldFieldPart.EQ() != null)
+         {
+            // replace expr in oldText
+            final FulibClassParser.ExprContext oldExpr = oldFieldPart.expr();
+            final int start = oldExpr.getStart().getStartIndex();
+            final int stop = oldExpr.getStop().getStopIndex() + 1;
+            builder.replace(start, stop, newExprText);
+         }
+         else
+         {
+            final int insertIndex = oldFieldMember.SEMI().getSymbol().getStartIndex();
+            builder.insert(insertIndex, " = " + newExprText);
+         }
       }
 
-      return newText;
+      final List<FulibClassParser.ArraySuffixContext> arraySuffixes = oldFieldPart.arraySuffix();
+      if (!arraySuffixes.isEmpty())
+      {
+         // delete array suffixes - they can mess with type replacement
+         final int start = arraySuffixes.get(0).getStart().getStartIndex();
+         final int end = arraySuffixes.get(arraySuffixes.size() - 1).getStop().getStopIndex() + 1;
+         builder.delete(start, end);
+      }
+
+      // replace old type with new
+      final FulibClassParser.TypeContext newType = newFieldMember.type();
+      final String newTypeText = newText.substring(newType.getStart().getStartIndex(),
+                                                   newType.getStop().getStopIndex() + 1);
+      final FulibClassParser.TypeContext oldType = oldFieldMember.type();
+      final int start = oldType.getStart().getStartIndex();
+      final int stop = oldType.getStop().getStopIndex() + 1;
+      builder.replace(start, stop, newTypeText);
+
+      return builder.toString();
+   }
+
+   private static FulibClassParser.FieldContext parseField(String newText)
+   {
+      final CharStream newInput = CharStreams.fromString(newText);
+      final FulibClassLexer newLexer = new FulibClassLexer(newInput);
+      final FulibClassParser newParser = new FulibClassParser(new CommonTokenStream(newLexer));
+      return newParser.field();
    }
 
    // =============== Methods ===============
@@ -261,11 +378,15 @@ public class FileFragmentMap
    // --------------- Raw Modification ---------------
 
    /**
-    * @see #append(CodeFragment)
+    * Behaves like {@link #append(CodeFragment)}.
     *
+    * @param fragment
+    *    the fragment to add
+    *
+    * @see #append(CodeFragment)
     * @deprecated since 1.2; this method is ambiguous.
-    * Use {@link #append(CodeFragment)} to add a fragment to the end,
-    * or {@link #insert(CodeFragment)} to intelligently insert it in a fitting place.
+    * Use {@link #append(CodeFragment)} to append the fragment to the end of the file,
+    * or {@link #insert(CodeFragment)} to insert it grouping by key.
     */
    @Deprecated
    public void add(CodeFragment fragment)
@@ -274,6 +395,33 @@ public class FileFragmentMap
    }
 
    /**
+    * Appends the code fragment to the end, without grouping like {@link #insert(CodeFragment)}.
+    * E.g., a fragment with key {@code class/Foo/attribute/moo} will be appended to the following tree as highlighted.
+    *
+    * <pre>{@code
+    * class
+    *    Foo
+    *       attribute
+    *          bar
+    *       method
+    *          getBar()
+    *          setBar(String)
+    *       *attribute*
+    *          *moo*
+    * }</pre>
+    * <p>
+    * Parent nodes are automatically inserted.
+    * Note how the {@code class/Foo/attribute} subtree was added a second time in order to maintain member order.
+    * This makes it possible to add duplicate members, which may be unwanted after initial code loading and during
+    * member generation.
+    *
+    * @param fragment
+    *    the fragment to append
+    *
+    * @throws IllegalStateException
+    *    if a fragment with the key already exists - the
+    *    {@link #replace(String, String, int)} API is designed for this case.
+    * @see #insert(CodeFragment)
     * @since 1.2
     */
    public void append(CodeFragment fragment)
@@ -312,6 +460,42 @@ public class FileFragmentMap
    }
 
    /**
+    * Inserts the code fragment grouping by the key.
+    * E.g., a fragment with key {@code class/Foo/attribute/moo} will be inserted in the following tree as highlighted.
+    *
+    * <pre>{@code
+    * class
+    *    Foo
+    *       attribute
+    *          bar
+    *          *moo*
+    *       method
+    *          getBar()
+    *          setBar(String)
+    * }</pre>
+    * <p>
+    * Parent nodes are automatically inserted.
+    * In this case, if the {@code class/Foo/attribute} subtree was missing, it would have been automatically inserted.
+    * The insertion point is always the last child of an existing parent.
+    *
+    * <pre>{@code
+    * class
+    *    Foo
+    *       method
+    *          getBar()
+    *          setBar(String)
+    *       *attribute*
+    *          *moo*
+    * }</pre>
+    *
+    * @param fragment
+    *    the fragment to insert
+    *
+    * @throws IllegalStateException
+    *    if one of the parent keys denotes a text fragment instead of a compound fragment
+    *    (for example, if the key was {@code class/Foo/attribute/bar/baz} - the parent key
+    *    {@code class/Foo/attribute/bar} refers to the text fragment holding the attribute 'bar')
+    * @see #append(CodeFragment)
     * @since 1.2
     */
    public void insert(CodeFragment fragment)
@@ -340,6 +524,12 @@ public class FileFragmentMap
    }
 
    /**
+    * Removes the fragment by removing it from it's {@linkplain Fragment#getParent() parent}'s
+    * {@linkplain CompoundFragment#withoutChildren(Fragment) children}.
+    *
+    * @param fragment
+    *    the fragment to remove
+    *
     * @since 1.2
     */
    public void remove(CodeFragment fragment)
@@ -350,7 +540,7 @@ public class FileFragmentMap
          return;
       }
 
-      final Fragment gapBefore = parent.getChildWithKey(fragment.getKey() + "#gap-before");
+      final Fragment gapBefore = parent.getChildWithKey(fragment.getKey() + GAP_BEFORE);
       if (gapBefore != null)
       {
          parent.withoutChildren(gapBefore);
@@ -362,17 +552,21 @@ public class FileFragmentMap
    // --------------- Smart Modification ---------------
 
    /**
-    * Adds or replaces the fragment with the given key, UNLESS it is marked as user-defined.
-    * When no old fragment exists, a gap with the specified number of newlines is added after the new fragment.
+    * Adds or replaces the fragment with the given key.
+    * If no fragment with the given key exists, a gap with the specified number of line breaks is added before the new
+    * fragment.
+    * If the fragment exists and is marked as user-defined (contains a comment with the words "no fulib",
+    * case-insensitive and separated by any string of whitespace), no action is performed.
+    * Otherwise, the text of the fragment is replaced with the new text and no newlines are added.
     *
     * @param key
     *    the key
     * @param newText
     *    the new text
     * @param newLines
-    *    the number of line breaks to insert after the text
+    *    the number of line breaks to insert before the text
     *
-    * @return the old fragment, or {@code null} if not found
+    * @return the fragment with the given key, or {@code null} if not found
     */
    public CodeFragment add(String key, String newText, int newLines)
    {
@@ -380,7 +574,8 @@ public class FileFragmentMap
    }
 
    /**
-    * Removes the fragment with the given key, UNLESS it is marked as user-defined.
+    * Removes the fragment with the given key, unless it is marked as user-defined (contains a comment with the words
+    * "no fulib", case-insensitive and separated by any string of whitespace).
     *
     * @param key
     *    the key
@@ -395,17 +590,17 @@ public class FileFragmentMap
    }
 
    /**
-    * Behaves like {@link #add(String, String, int)} when removeFragment is true,
+    * Behaves like {@link #add(String, String, int)} when {@code removeFragment} is {@code false},
     * and like {@link #remove(String)} otherwise.
     *
     * @param key
     *    the key
     * @param newText
-    *    the new text (ignored if removeFragment is true)
+    *    the new text (ignored if {@code removeFragment} is {@code true})
     * @param newLines
-    *    the number of line breaks to insert after the text (ignored if removeFragment is true)
+    *    the number of line breaks to insert before the text (ignored if {@code removeFragment} is {@code true})
     * @param removeFragment
-    *    whether to remove the fragment associated with the key
+    *    whether to remove or add/replace the fragment with the given key
     *
     * @return the old fragment, or {@code null} if not found
     *
@@ -451,11 +646,11 @@ public class FileFragmentMap
          // newtext contains annotations, thus it overrides annotations in the code
          // do not modify newtext
       }
-      else if (key.equals(CLASS))
+      else if (CLASS_DECL_PATTERN.matcher(key).matches())
       {
          newText = mergeClassDecl(oldText, newText);
       }
-      else if (key.startsWith(ATTRIBUTE))
+      else if (ATTRIBUTE_PATTERN.matcher(key).matches())
       {
          newText = mergeAttributeDecl(oldText, newText);
       }
@@ -469,10 +664,10 @@ public class FileFragmentMap
    {
       final CodeFragment result = new CodeFragment().setKey(key).setText(newText);
       final String newLinesStr = String.join("", Collections.nCopies(newLines, "\n"));
-      final CodeFragment gap = new CodeFragment().setKey(key + "#newLines").setText(newLinesStr);
+      final CodeFragment gap = new CodeFragment().setKey(key + GAP_BEFORE).setText(newLinesStr);
 
-      this.insert(result);
       this.insert(gap);
+      this.insert(result);
 
       return result;
    }
@@ -480,6 +675,8 @@ public class FileFragmentMap
    // --------------- Post-Processing ---------------
 
    /**
+    * Modifies all code fragments so there are no more than 2 consecutive line breaks anywhere in the resulting text.
+    *
     * @since 1.2
     */
    public void compressBlankLines()
@@ -518,6 +715,9 @@ public class FileFragmentMap
 
    // --------------- Output ---------------
 
+   /**
+    * Concatenates all code fragments and writes the resulting text to the file specified by {@link #getFileName()}.
+    */
    public void writeFile()
    {
       final Path path = Paths.get(this.fileName);
@@ -525,8 +725,8 @@ public class FileFragmentMap
       {
          Files.createDirectories(path.getParent());
 
-         try (final Writer writer = Files
-            .newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING))
+         try (final Writer writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE,
+                                                            StandardOpenOption.TRUNCATE_EXISTING))
          {
             this.write(writer);
          }
@@ -539,6 +739,11 @@ public class FileFragmentMap
    }
 
    /**
+    * Concatenates all code fragments and writes the resulting text to given writer.
+    *
+    * @param writer
+    *    the writer
+    *
     * @since 1.2
     */
    public void write(Writer writer) throws IOException

@@ -1,4 +1,6 @@
 primitive ::= [
+   "void": true,
+   "boolean": true,
    "byte": true,
    "short": true,
    "char": true,
@@ -10,6 +12,8 @@ primitive ::= [
 ]
 
 boxMap ::= [
+   "void": "Void",
+   "boolean": "Boolean",
    "byte": "Byte",
    "short": "Short",
    "char": "Character",
@@ -19,6 +23,8 @@ boxMap ::= [
    "double": "Double",
    default: key
 ]
+
+box(type) ::= "<boxMap.(type)>"
 
 javaFX ::= [
    "JavaFX": true,

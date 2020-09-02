@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.fulib.classmodel.FileFragmentMap.*;
 
@@ -61,6 +62,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       this.generateRemoveYou(clazz, fragmentMap);
 
       fragmentMap.add(CLASS + '/' + clazz.getName() + '/' + CLASS_END, "}", CLASS_END_NEWLINES);
+      fragmentMap.add(EOF, "", 1);
    }
 
    // --------------- Declarations ---------------
@@ -238,33 +240,49 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
          body = body.substring(0, body.length() - 1);
       }
 
-      final String signature = method.getSignature();
-      if (method.getModified())
-      {
-         fragmentMap.remove(signature);
-      }
-      else
-      {
-         final STGroup group = this.getSTGroup("org/fulib/templates/method.stg");
-         final ST method1 = group.getInstanceOf("method");
-         method1.add("method", method);
-         method1.add("body", body);
-         fragmentMap.add(signature, method1.render(), METHOD_NEWLINES);
-      }
+      final STGroup group = this.getSTGroup("org/fulib/templates/method.stg");
+      final String finalBody = body;
+      this.generateFromSignatures(fragmentMap, group, "methodSignatures", method.getModified(),
+                                  st -> st.add("method", method).add("body", finalBody));
    }
 
    // --------------- Additional Fragments ---------------
 
    private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      if (clazz.getAttributes().isEmpty() && clazz.getRoles().isEmpty())
-      {
-         return;
-      }
-
       final STGroup group = this.getSTGroup("org/fulib/templates/propertyChangeSupport.stg");
-      this.generateFromSignatures(fragmentMap, group, "propertyChangeSignatures", clazz.getModified(),
-                                  st -> st.add("clazz", clazz));
+      final boolean remove = clazz.getModified() || !needsPropertyChangeSupport(clazz);
+      this.generateFromSignatures(fragmentMap, group, "propertyChangeSignatures", remove, st -> st.add("clazz", clazz));
+   }
+
+   private static boolean needsPropertyChangeSupport(Clazz clazz)
+   {
+      if (!needsPropertyChangeSupportIgnoringSuper(clazz))
+      {
+         // no data members means no PropertyChange is needed at all, regardless of superclasses
+         return false;
+      }
+      Clazz superClazz = clazz;
+      while ((superClazz = superClazz.getSuperClass()) != null)
+      {
+         if (needsPropertyChangeSupportIgnoringSuper(superClazz))
+         {
+            // one of the super classes already contains PropertyChange members, no need to duplicate them
+            return false;
+         }
+      }
+      // no super class or none with PropertyChange members, we need to generate them ourselves
+      return true;
+   }
+
+   private static boolean needsPropertyChangeSupportIgnoringSuper(Clazz clazz)
+   {
+      return hasDataMembers(clazz) && !Type.POJO.equals(clazz.getPropertyStyle());
+   }
+
+   private static boolean hasDataMembers(Clazz superClazz)
+   {
+      return !superClazz.getAttributes().isEmpty() || superClazz.getRoles().stream().anyMatch(r -> r.getName() != null);
    }
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
@@ -277,15 +295,34 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
          .collect(Collectors.toList());
 
       final STGroup group = this.getSTGroup("org/fulib/templates/toString.stg");
-      this.generateFromSignatures(fragmentMap, group, "toStringSignatures", clazz.getModified(),
+      this.generateFromSignatures(fragmentMap, group, "toStringSignatures", nameList.isEmpty() || clazz.getModified(),
                                   st -> st.add("clazz", clazz).add("names", nameList));
    }
 
    private void generateRemoveYou(Clazz clazz, FileFragmentMap fragmentMap)
    {
       final STGroup group = this.getSTGroup("org/fulib/templates/removeYou.stg");
-      final Object[] roles = clazz.getRoles().stream().filter(r -> r.getName() != null).toArray();
-      this.generateFromSignatures(fragmentMap, group, "removeYouSignatures", clazz.getModified(),
-                                  st -> st.add("clazz", clazz).add("roles", roles));
+      final Object[] roles = getRolesForRemoveYou(clazz).toArray();
+      final boolean superCall = needsSuperCallForRemoveYou(clazz);
+      this.generateFromSignatures(fragmentMap, group, "removeYouSignatures", roles.length == 0 || clazz.getModified(),
+                                  st -> st.add("clazz", clazz).add("roles", roles).add("superCall", superCall));
+   }
+
+   private Stream<AssocRole> getRolesForRemoveYou(Clazz clazz)
+   {
+      return clazz.getRoles().stream().filter(r -> r.getName() != null);
+   }
+
+   private boolean needsSuperCallForRemoveYou(Clazz clazz)
+   {
+      Clazz superClazz = clazz;
+      while ((superClazz = superClazz.getSuperClass()) != null)
+      {
+         if (getRolesForRemoveYou(superClazz).findAny().isPresent())
+         {
+            return true;
+         }
+      }
+      return false;
    }
 }

@@ -68,12 +68,8 @@ public class FMethodTest
       returnCode = Tools.javac(outFolder, model.getPackageSrcFolder());
       assertThat("compiler return code: ", returnCode, is(0));
 
-      party.withImports("import org.junit.jupiter.api.Test;");
-      party.withImports("import static org.hamcrest.CoreMatchers.*;");
-      party.withImports("import static org.hamcrest.MatcherAssert.assertThat;");
-
-      mm.haveMethod(party, "" + "@Test\n" + "public void testQuestion()",
-                    "" + "      assertThat(theAnswer(21), equalTo(42));\n");
+      mm.haveMethod(party, "@import(org.junit.jupiter.api.Test) public void testQuestion()",
+                    "import(static org.hamcrest.MatcherAssert.assertThat)(theAnswer(21), import(static org.hamcrest.CoreMatchers.equalTo)(42));");
 
       Fulib.generator().generate(model);
 

@@ -37,7 +37,7 @@
   modified: 	false
   name: 	AssocRole
   propertyStyle: 	Bean
-  roles: 	assocRole_clazz 	assocRole_other 	assocRole_other2
+  roles: 	assocRole_clazz 	assocRole_other
 
 - fMethod: 	Clazz
   attributes: 	fMethod_methodBody 	fMethod_modified 	fMethod_modifiers 	fMethod_annotations
@@ -82,39 +82,38 @@
 - c1: 	CollectionType
   implClass: 	class java.util.ArrayList
   implTemplate: 	"java.util.ArrayList<%s>"
-  itf: 	org.fulib.classmodel.CollectionItf.List
+  itf: 	org.fulib.classmodel.CollectionInterface.List
   qualifiedImplName: 	java.util.ArrayList
   simpleImplName: 	ArrayList
 
 - classModel_packageName: 	Attribute
-  boxType: 	String
   clazz: 	classModel
   id: 	ClassModel_packageName
   modified: 	false
   name: 	packageName
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - classModel_mainJavaDir: 	Attribute
-  boxType: 	String
   clazz: 	classModel
   id: 	ClassModel_mainJavaDir
   modified: 	false
   name: 	mainJavaDir
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - classModel_defaultCollectionType: 	Attribute
-  boxType: 	CollectionType
   clazz: 	classModel
   id: 	ClassModel_defaultCollectionType
   modified: 	false
   name: 	defaultCollectionType
   propertyStyle: 	Bean
   type: 	CollectionType
+  typeSignature: 	CollectionType
 
 - classModel_defaultPropertyStyle: 	Attribute
-  boxType: 	String
   clazz: 	classModel
   id: 	ClassModel_defaultPropertyStyle
   initialization: 	"\"POJO\""
@@ -122,6 +121,7 @@
   name: 	defaultPropertyStyle
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - classModel_classes: 	AssocRole
   aggregation: 	false
@@ -136,41 +136,41 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - clazz_name: 	Attribute
-  boxType: 	String
   clazz: 	clazz
   id: 	Clazz_name
   modified: 	false
   name: 	name
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - clazz_propertyStyle: 	Attribute
-  boxType: 	String
   clazz: 	clazz
   id: 	Clazz_propertyStyle
   modified: 	false
   name: 	propertyStyle
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - clazz_modified: 	Attribute
-  boxType: 	Boolean
   clazz: 	clazz
   id: 	Clazz_modified
   modified: 	false
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
+  typeSignature: 	boolean
 
 - clazz_imports: 	Attribute
-  boxType: 	String
   clazz: 	clazz
-  collectionType: 	c4
+  collectionType: 	c3
   id: 	Clazz_imports
   modified: 	false
   name: 	imports
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - clazz_model: 	AssocRole
   aggregation: 	false
@@ -245,58 +245,58 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - attribute_name: 	Attribute
-  boxType: 	String
   clazz: 	attribute
   id: 	Attribute_name
   modified: 	false
   name: 	name
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - attribute_type: 	Attribute
-  boxType: 	String
   clazz: 	attribute
   id: 	Attribute_type
   modified: 	false
   name: 	type
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - attribute_collectionType: 	Attribute
-  boxType: 	CollectionType
   clazz: 	attribute
   id: 	Attribute_collectionType
   modified: 	false
   name: 	collectionType
   propertyStyle: 	Bean
   type: 	CollectionType
+  typeSignature: 	CollectionType
 
 - attribute_initialization: 	Attribute
-  boxType: 	String
   clazz: 	attribute
   id: 	Attribute_initialization
   modified: 	false
   name: 	initialization
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - attribute_propertyStyle: 	Attribute
-  boxType: 	String
   clazz: 	attribute
   id: 	Attribute_propertyStyle
   modified: 	false
   name: 	propertyStyle
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - attribute_modified: 	Attribute
-  boxType: 	Boolean
   clazz: 	attribute
   id: 	Attribute_modified
   modified: 	false
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
+  typeSignature: 	boolean
 
 - attribute_clazz: 	AssocRole
   aggregation: 	false
@@ -311,58 +311,58 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - assocRole_name: 	Attribute
-  boxType: 	String
   clazz: 	assocRole
   id: 	AssocRole_name
   modified: 	false
   name: 	name
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - assocRole_cardinality: 	Attribute
-  boxType: 	Integer
   clazz: 	assocRole
   id: 	AssocRole_cardinality
   modified: 	false
   name: 	cardinality
   propertyStyle: 	Bean
   type: 	int
+  typeSignature: 	int
 
 - assocRole_collectionType: 	Attribute
-  boxType: 	CollectionType
   clazz: 	assocRole
   id: 	AssocRole_collectionType
   modified: 	false
   name: 	collectionType
   propertyStyle: 	Bean
   type: 	CollectionType
+  typeSignature: 	CollectionType
 
 - assocRole_aggregation: 	Attribute
-  boxType: 	Boolean
   clazz: 	assocRole
   id: 	AssocRole_aggregation
   modified: 	false
   name: 	aggregation
   propertyStyle: 	Bean
   type: 	boolean
+  typeSignature: 	boolean
 
 - assocRole_propertyStyle: 	Attribute
-  boxType: 	String
   clazz: 	assocRole
   id: 	AssocRole_propertyStyle
   modified: 	false
   name: 	propertyStyle
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - assocRole_modified: 	Attribute
-  boxType: 	Boolean
   clazz: 	assocRole
   id: 	AssocRole_modified
   modified: 	false
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
+  typeSignature: 	boolean
 
 - assocRole_clazz: 	AssocRole
   aggregation: 	false
@@ -384,42 +384,29 @@
   id: 	AssocRole_other
   modified: 	false
   name: 	other
-  other: 	assocRole_other2
-  propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
-
-- assocRole_other2: 	AssocRole
-  aggregation: 	false
-  cardinality: 	1
-  clazz: 	assocRole
-  collectionType: 	c1
-  id: 	AssocRole_other
-  modified: 	false
-  name: 	other
   other: 	assocRole_other
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
 - fMethod_methodBody: 	Attribute
-  boxType: 	String
   clazz: 	fMethod
   id: 	FMethod_methodBody
   modified: 	false
   name: 	methodBody
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - fMethod_modified: 	Attribute
-  boxType: 	Boolean
   clazz: 	fMethod
   id: 	FMethod_modified
   modified: 	false
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
+  typeSignature: 	boolean
 
 - fMethod_modifiers: 	Attribute
-  boxType: 	String
   clazz: 	fMethod
   id: 	FMethod_modifiers
   initialization: 	"\"public\""
@@ -427,15 +414,16 @@
   name: 	modifiers
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - fMethod_annotations: 	Attribute
-  boxType: 	String
   clazz: 	fMethod
   id: 	FMethod_annotations
   modified: 	false
   name: 	annotations
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - fMethod_clazz: 	AssocRole
   aggregation: 	false
@@ -450,22 +438,22 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - fileFragmentMap_fileName: 	Attribute
-  boxType: 	String
   clazz: 	fileFragmentMap
   id: 	FileFragmentMap_fileName
   modified: 	false
   name: 	fileName
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - fragment_key: 	Attribute
-  boxType: 	String
   clazz: 	fragment
   id: 	Fragment_key
   modified: 	false
   name: 	key
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - fragment_parent: 	AssocRole
   aggregation: 	false
@@ -480,13 +468,13 @@
   roleType: 	"java.util.ArrayList<%s>"
 
 - codeFragment_text: 	Attribute
-  boxType: 	String
   clazz: 	codeFragment
   id: 	CodeFragment_text
   modified: 	false
   name: 	text
   propertyStyle: 	Bean
   type: 	String
+  typeSignature: 	String
 
 - compoundFragment_children: 	AssocRole
   aggregation: 	false
@@ -500,10 +488,10 @@
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- c4: 	CollectionType
+- c3: 	CollectionType
   implClass: 	class java.util.LinkedHashSet
   implTemplate: 	"java.util.LinkedHashSet<%s>"
-  itf: 	org.fulib.classmodel.CollectionItf.Set
+  itf: 	org.fulib.classmodel.CollectionInterface.Set
   qualifiedImplName: 	java.util.LinkedHashSet
   simpleImplName: 	LinkedHashSet
 

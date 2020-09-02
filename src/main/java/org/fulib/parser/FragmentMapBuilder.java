@@ -269,6 +269,13 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       return start;
    }
 
+   public static String getParamsSignature(ParameterListContext paramsCtx)
+   {
+      final StringBuilder builder = new StringBuilder();
+      writeParams(builder, paramsCtx);
+      return builder.toString();
+   }
+
    private static void writeParams(StringBuilder signature, ParameterListContext paramsCtx)
    {
       signature.append('(');
@@ -297,10 +304,21 @@ public class FragmentMapBuilder extends FulibClassBaseListener
          return;
       }
       writeType(paramCtx.type(), builder);
+      for (int arrayDimensions = paramCtx.arraySuffix().size(); arrayDimensions > 0; arrayDimensions--)
+      {
+         builder.append("[]");
+      }
       if (paramCtx.ELLIPSIS() != null)
       {
          builder.append("...");
       }
+   }
+
+   public static String getTypeSignature(TypeContext typeCtx)
+   {
+      final StringBuilder builder = new StringBuilder();
+      writeType(typeCtx, builder);
+      return builder.toString();
    }
 
    private static void writeType(TypeContext typeCtx, StringBuilder builder)
@@ -308,6 +326,10 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       if (typeCtx.primitiveType() != null)
       {
          writeType(typeCtx.primitiveType(), builder);
+      }
+      else if (typeCtx.importType() != null)
+      {
+         writeType(typeCtx.importType(), builder);
       }
       else
       {
@@ -339,11 +361,22 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       }
    }
 
+   private static void writeType(ImportTypeContext importTypeCtx, StringBuilder builder)
+   {
+      // import(org.example.Foo) ends up as only Foo in the code, so the signature should also use the simple name
+      final List<TerminalNode> identifiers = importTypeCtx.importTypeName().qualifiedName().IDENTIFIER();
+      builder.append(identifiers.get(identifiers.size() - 1).getText());
+      writeTypeArgs(importTypeCtx.typeArgList(), builder);
+   }
+
    private static void writeType(ReferenceTypePartContext referenceTypePartCtx, StringBuilder builder)
    {
       builder.append(referenceTypePartCtx.IDENTIFIER().getText());
+      writeTypeArgs(referenceTypePartCtx.typeArgList(), builder);
+   }
 
-      final TypeArgListContext typeArgListCtx = referenceTypePartCtx.typeArgList();
+   private static void writeTypeArgs(TypeArgListContext typeArgListCtx, StringBuilder builder)
+   {
       if (typeArgListCtx == null)
       {
          return;
@@ -395,7 +428,6 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    @Override
    public void exitFile(FileContext ctx)
    {
-      // TODO this adds two gaps. Not sure if FileFragmentMap can handle only one, so leaving it at that for now.
-      this.addCodeFragment(EOF, this.lastFragmentEndPos + 1, this.input.size());
+      this.addCodeFragment(EOF, this.input.size(), this.input.size());
    }
 }
