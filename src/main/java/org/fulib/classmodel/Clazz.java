@@ -694,13 +694,28 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @return the set of imported members.
+    * Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    * {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *
+    * @since 1.2
+    */
    public Set<String> getImports()
    {
       return this.imports != null ? Collections.unmodifiableSet(this.imports) : Collections.emptySet();
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withImports(String value)
    {
       if (this.imports == null)
@@ -714,7 +729,16 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withImports(String... value)
    {
       for (final String item : value)
@@ -724,7 +748,16 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withImports(Collection<? extends String> value)
    {
       for (final String item : value)
@@ -734,7 +767,16 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutImports(String value)
    {
       if (this.imports != null && this.imports.removeAll(Collections.singleton(value)))
@@ -744,7 +786,16 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutImports(String... value)
    {
       for (final String item : value)
@@ -754,7 +805,16 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutImports(Collection<? extends String> value)
    {
       for (final String item : value)

@@ -33,7 +33,13 @@ public class GenModel implements ClassModelDecorator
          c
             .attribute("modified", BOOLEAN)
             .setDescription("a boolean indicating whether this attribute was modified. For internal use only.");
-         c.attribute("imports", STRING).setCollectionType(CollectionType.LinkedHashSet);
+         c
+            .attribute("imports", STRING)
+            .setCollectionType(CollectionType.LinkedHashSet)
+            .setDescription("the set of imported members.\n"
+                            + "Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},\n"
+                            + "{@code import org.example.Foo;} or {@code import static org.example.Foo.bar;")
+            .setSince("1.2");
       });
 
       final Clazz Attribute = mb.haveClass("Attribute", c -> {
