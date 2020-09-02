@@ -297,6 +297,10 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       {
          writeType(typeCtx.primitiveType(), builder);
       }
+      else if (typeCtx.importType() != null)
+      {
+         writeType(typeCtx.importType(), builder);
+      }
       else
       {
          writeType(typeCtx.referenceType(), builder);
@@ -327,11 +331,22 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       }
    }
 
+   private static void writeType(ImportTypeContext importTypeCtx, StringBuilder builder)
+   {
+      // import(org.example.Foo) ends up as only Foo in the code, so the signature should also use the simple name
+      final List<TerminalNode> identifiers = importTypeCtx.importTypeName().qualifiedName().IDENTIFIER();
+      builder.append(identifiers.get(identifiers.size() - 1).getText());
+      writeTypeArgs(importTypeCtx.typeArgList(), builder);
+   }
+
    private static void writeType(ReferenceTypePartContext referenceTypePartCtx, StringBuilder builder)
    {
       builder.append(referenceTypePartCtx.IDENTIFIER().getText());
+      writeTypeArgs(referenceTypePartCtx.typeArgList(), builder);
+   }
 
-      final TypeArgListContext typeArgListCtx = referenceTypePartCtx.typeArgList();
+   private static void writeTypeArgs(TypeArgListContext typeArgListCtx, StringBuilder builder)
+   {
       if (typeArgListCtx == null)
       {
          return;

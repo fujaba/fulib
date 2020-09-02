@@ -31,7 +31,7 @@ public abstract class AbstractGenerator4ClassFile
    // =============== Constants ===============
 
    private static final Pattern SIGNATURE_PATTERN = Pattern.compile("^\\s*(\\w+)\\s*:\\s*(.*)\\s*$");
-   private static final Pattern IMPORT_PATTERN = Pattern.compile("import\\(((?:\\w+\\.)*(\\w+))\\)");
+   private static final Pattern IMPORT_PATTERN = Pattern.compile("import\\(((?:static\\s+)?(?:\\w+\\.)*(\\w+))\\)");
 
    // =============== Fields ===============
 

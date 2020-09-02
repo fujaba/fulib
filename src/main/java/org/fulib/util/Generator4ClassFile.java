@@ -240,19 +240,10 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
          body = body.substring(0, body.length() - 1);
       }
 
-      final String signature = method.getSignature();
-      if (method.getModified())
-      {
-         fragmentMap.remove(signature);
-      }
-      else
-      {
-         final STGroup group = this.getSTGroup("org/fulib/templates/method.stg");
-         final ST method1 = group.getInstanceOf("method");
-         method1.add("method", method);
-         method1.add("body", body);
-         fragmentMap.add(signature, method1.render(), METHOD_NEWLINES);
-      }
+      final STGroup group = this.getSTGroup("org/fulib/templates/method.stg");
+      final String finalBody = body;
+      this.generateFromSignatures(fragmentMap, group, "methodSignatures", method.getModified(),
+                                  st -> st.add("method", method).add("body", finalBody));
    }
 
    // --------------- Additional Fragments ---------------
