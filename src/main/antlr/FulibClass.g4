@@ -59,7 +59,7 @@ typeParamList: LANGLE (typeParam (COMMA typeParam)*)? RANGLE;
 typeParam: annotation* IDENTIFIER (EXTENDS annotatedType (AMP annotatedType)*)?;
 typeArg: annotation* (QMARK (EXTENDS annotatedType | SUPER annotatedType)? | type);
 
-type: (primitiveType | referenceType) arraySuffix*;
+type: (primitiveType | referenceType | importType) arraySuffix*;
 arraySuffix: annotation* LBRACKET RBRACKET;
 annotatedType: annotation* type;
 annotatedTypeList: annotatedType (COMMA annotatedType)*;
@@ -67,12 +67,14 @@ annotatedTypeList: annotatedType (COMMA annotatedType)*;
 primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
 referenceType: referenceTypePart (DOT annotation* referenceTypePart)*;
 referenceTypePart: IDENTIFIER typeArgList?;
+importTypeName: IMPORT LPAREN qualifiedName RPAREN;
+importType: importTypeName typeArgList?;
 typeArgList: LANGLE (typeArg (COMMA typeArg)*)? RANGLE;
 
 // --------------- Misc. ---------------
 
 modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT | VOLATILE | SYNCHRONIZED | NATIVE | STRICTFP | DEFAULT;
-annotation: AT qualifiedName balancedParens?;
+annotation: AT (qualifiedName | importTypeName) balancedParens?;
 
 expr: (balancedBraces
       | balancedParens
