@@ -25,6 +25,8 @@ public class Attribute
    public static final String PROPERTY_propertyStyle = "propertyStyle";
    /** @since 1.3 */
    public static final String PROPERTY_description = "description";
+   /** @since 1.3 */
+   public static final String PROPERTY_since = "since";
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_clazz = "clazz";
 
@@ -39,6 +41,7 @@ public class Attribute
    private String initialization;
    private String propertyStyle;
    private String description;
+   private String since;
    private boolean modified;
 
    private String typeSignature;
@@ -277,6 +280,34 @@ public class Attribute
       return this.getDescription() == null ? null : this.getDescription().split("\n");
    }
 
+
+   /**
+    * @return the version when this attribute was introduced, used for generating JavaDocs
+    */
+   public String getSince()
+   {
+      return this.since;
+   }
+
+   /**
+    * @param value
+    *    the version when this attribute was introduced, used for generating JavaDocs
+    *
+    * @return this
+    */
+   public Attribute setSince(String value)
+   {
+      if (Objects.equals(value, this.since))
+      {
+         return this;
+      }
+
+      final String oldValue = this.since;
+      this.since = value;
+      this.firePropertyChange(PROPERTY_since, oldValue, value);
+      return this;
+   }
+
    /**
     * @return a boolean indicating whether this attribute was modified. For internal use only.
     */
@@ -379,6 +410,7 @@ public class Attribute
       result.append(' ').append(this.getInitialization());
       result.append(' ').append(this.getPropertyStyle());
       result.append(' ').append(this.getDescription());
+      result.append(' ').append(this.getSince());
       return result.substring(1);
    }
 }

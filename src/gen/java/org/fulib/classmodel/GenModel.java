@@ -50,6 +50,9 @@ public class GenModel implements ClassModelDecorator
          c
             .attribute("description", STRING)
             .setDescription("the description of this attribute, used for generating JavaDocs");
+         c
+            .attribute("since", STRING)
+            .setDescription("the version when this attribute was introduced, used for generating JavaDocs");
       });
 
       final Clazz AssocRole = mb.haveClass("AssocRole", c -> {
