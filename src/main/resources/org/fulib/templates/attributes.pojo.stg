@@ -1,4 +1,5 @@
 import "java.dicts.stg"
+import "javadoc.stg"
 
 collectionImpl(attr) ::= <%
 <attr.collectionType.simpleImplName>
@@ -48,31 +49,6 @@ propertyDecl(attr) ::= <<
    /** @since <attr.since> */
 <endif>
    public static final String PROPERTY_<attr.name> = "<attr.name>";
->>
-
-// --------------- JavaDocs ---------------
-
-getterJavaDoc(attr) ::= <<
-/**
- * @return <attr.descriptionLines; separator="\n * ">
-<if(attr.since)>
- *
- * @since <attr.since>
-<endif>
- */
->>
-
-setterJavaDoc(attr) ::= <<
-/**
- * @param value
- *    <attr.descriptionLines; separator="\n *    ">
- *
- * @return this
-<if(attr.since)>
- *
- * @since <attr.since>
-<endif>
- */
 >>
 
 // --------------- Simple Accessors ---------------
