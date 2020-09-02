@@ -268,6 +268,16 @@ public class Attribute
    }
 
    /**
+    * @return the lines of the description of this attribute, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String[] getDescriptionLines()
+   {
+      return this.getDescription() == null ? null : this.getDescription().split("\n");
+   }
+
+   /**
     * @return a boolean indicating whether this attribute was modified. For internal use only.
     */
    public boolean getModified()
