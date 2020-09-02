@@ -20,7 +20,7 @@ public class GenModel implements ClassModelDecorator
             .setSince("1.2");
          c
             .attribute("defaultPropertyStyle", STRING, "\"POJO\"")
-            .setDescription("the default property style to use for attributes and roles.\n"
+            .setDescription("the default property style for attributes and roles.\n"
                             + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
       });
 
@@ -28,7 +28,7 @@ public class GenModel implements ClassModelDecorator
          c.attribute("name", STRING);
          c
             .attribute("propertyStyle", STRING)
-            .setDescription("the default property style to use for attributes and roles.\n"
+            .setDescription("the default property style for attributes and roles.\n"
                             + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
          c
             .attribute("modified", BOOLEAN)
@@ -43,7 +43,7 @@ public class GenModel implements ClassModelDecorator
          c.attribute("initialization", STRING);
          c
             .attribute("propertyStyle", STRING)
-            .setDescription("the property style to use for this attribute.\n"
+            .setDescription("the property style.\n"
                             + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
          c
             .attribute("modified", BOOLEAN)
@@ -69,7 +69,7 @@ public class GenModel implements ClassModelDecorator
                             + "{@code removeYou} on the source object");
          c
             .attribute("propertyStyle", STRING)
-            .setDescription("the property style to use for this role.\n"
+            .setDescription("the property style.\n"
                             + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
          c
             .attribute("modified", BOOLEAN)
