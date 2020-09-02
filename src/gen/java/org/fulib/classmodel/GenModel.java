@@ -32,6 +32,7 @@ public class GenModel implements ClassModelDecorator
          c.attribute("initialization", STRING);
          c.attribute("propertyStyle", STRING);
          c.attribute("modified", BOOLEAN);
+         c.attribute("description", STRING);
       });
 
       final Clazz AssocRole = mb.haveClass("AssocRole", c -> {

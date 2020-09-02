@@ -24,7 +24,7 @@
   roles: 	clazz_model 	clazz_attributes 	clazz_roles 	clazz_methods 	clazz_superClass 	clazz_subClasses
 
 - attribute: 	Clazz
-  attributes: 	attribute_name 	attribute_type 	attribute_collectionType 	attribute_initialization 	attribute_propertyStyle 	attribute_modified
+  attributes: 	attribute_name 	attribute_type 	attribute_collectionType 	attribute_initialization 	attribute_propertyStyle 	attribute_modified 	attribute_description
   model: 	c
   modified: 	false
   name: 	Attribute
@@ -297,6 +297,15 @@
   propertyStyle: 	Bean
   type: 	boolean
   typeSignature: 	boolean
+
+- attribute_description: 	Attribute
+  clazz: 	attribute
+  id: 	Attribute_description
+  modified: 	false
+  name: 	description
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
 
 - attribute_clazz: 	AssocRole
   aggregation: 	false

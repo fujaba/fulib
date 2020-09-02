@@ -23,6 +23,8 @@ public class Attribute
    public static final String PROPERTY_collectionType = "collectionType";
    public static final String PROPERTY_initialization = "initialization";
    public static final String PROPERTY_propertyStyle = "propertyStyle";
+   /** @since 1.3 */
+   public static final String PROPERTY_description = "description";
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_clazz = "clazz";
 
@@ -36,6 +38,7 @@ public class Attribute
    private CollectionType collectionType;
    private String initialization;
    private String propertyStyle;
+   private String description;
    private boolean modified;
 
    private String typeSignature;
@@ -234,6 +237,37 @@ public class Attribute
    }
 
    /**
+    * @return the description of this attribute, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String getDescription()
+   {
+      return this.description;
+   }
+
+   /**
+    * @param value
+    *    the description of this attribute, used for generating JavaDocs
+    *
+    * @return this instance, to allow method chaining
+    *
+    * @since 1.3
+    */
+   public Attribute setDescription(String value)
+   {
+      if (Objects.equals(value, this.description))
+      {
+         return this;
+      }
+
+      final String oldValue = this.description;
+      this.description = value;
+      this.firePropertyChange(PROPERTY_description, oldValue, value);
+      return this;
+   }
+
+   /**
     * @return a boolean indicating whether this attribute was modified. For internal use only.
     */
    public boolean getModified()
@@ -334,6 +368,7 @@ public class Attribute
       result.append(' ').append(this.getType());
       result.append(' ').append(this.getInitialization());
       result.append(' ').append(this.getPropertyStyle());
+      result.append(' ').append(this.getDescription());
       return result.substring(1);
    }
 }
