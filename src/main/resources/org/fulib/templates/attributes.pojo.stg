@@ -44,6 +44,9 @@ attrDecl(attr) ::= <<
 >>
 
 propertyDecl(attr) ::= <<
+<if(attr.since)>
+   /** @since <attr.since> */
+<endif>
    public static final String PROPERTY_<attr.name> = "<attr.name>";
 >>
 

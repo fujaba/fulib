@@ -24,6 +24,7 @@ public class ClassModel
    /** @deprecated since 1.2; use {@link #PROPERTY_defaultCollectionType} instead */
    @Deprecated
    public static final String PROPERTY_defaultRoleType = "defaultRoleType";
+   /** @since 1.2 */
    public static final String PROPERTY_defaultCollectionType = "defaultCollectionType";
    public static final String PROPERTY_defaultPropertyStyle = "defaultPropertyStyle";
    public static final String PROPERTY_classes = "classes";
