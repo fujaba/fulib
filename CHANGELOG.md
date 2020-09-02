@@ -98,3 +98,16 @@
 * The `FMethod.setDeclaration` method now supports C-style arrays for parameters. #56
 * The code generator no longer generates duplicate members when mixing attributes with methods. #58
 * The code generator now intelligently merges the original source with new class and attribute declarations again. #60
+
+# fulib v1.2.3
+
+## Improvements
+
+* `FMethods` now support `import(...)` syntax. #62
+* The parser now supports `import(...)` syntax in type uses and annotations. #62
+* `import(...)` syntax now supports `static` imports via `import(static ...)`. #62
+
+## Bugfixes
+
+* The code generator now properly removes PropertyChange members when they are not needed. #63
+* The code generator now correctly determines when PropertyChange members are needed, depending on attributes, associations, potential super classes and the use of `POJO` property style. #63
