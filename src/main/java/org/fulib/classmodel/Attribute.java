@@ -11,6 +11,9 @@ import org.fulib.util.Validator;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class Attribute
@@ -276,9 +279,9 @@ public class Attribute
     *
     * @since 1.3
     */
-   public String[] getDescriptionLines()
+   public List<String> getDescriptionLines()
    {
-      return this.getDescription() == null ? null : this.getDescription().split("\n");
+      return this.getDescription() == null ? Collections.emptyList() : Arrays.asList(this.getDescription().split("\n"));
    }
 
    /**
