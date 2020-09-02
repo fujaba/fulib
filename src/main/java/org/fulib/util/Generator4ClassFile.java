@@ -257,7 +257,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    private static boolean needsPropertyChangeSupport(Clazz clazz)
    {
-      if (!hasDataMembers(clazz))
+      if (!needsPropertyChangeSupportIgnoringSuper(clazz))
       {
          // no data members means no PropertyChange is needed at all, regardless of superclasses
          return false;
@@ -265,7 +265,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       Clazz superClazz = clazz;
       while ((superClazz = superClazz.getSuperClass()) != null)
       {
-         if (hasDataMembers(superClazz))
+         if (needsPropertyChangeSupportIgnoringSuper(superClazz))
          {
             // one of the super classes already contains PropertyChange members, no need to duplicate them
             return false;
@@ -273,6 +273,11 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       }
       // no super class or none with PropertyChange members, we need to generate them ourselves
       return true;
+   }
+
+   private static boolean needsPropertyChangeSupportIgnoringSuper(Clazz clazz)
+   {
+      return hasDataMembers(clazz) && !Type.POJO.equals(clazz.getPropertyStyle());
    }
 
    private static boolean hasDataMembers(Clazz superClazz)
