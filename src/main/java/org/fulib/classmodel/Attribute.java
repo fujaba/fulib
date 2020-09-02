@@ -164,9 +164,9 @@ public class Attribute
 
    /**
     * @param value
-    *    the new collection type
+    *    the collection type
     *
-    * @return this instance, to allow method chaining
+    * @return this
     *
     * @since 1.2
     */
@@ -212,7 +212,8 @@ public class Attribute
    }
 
    /**
-    * @return the property style of this attribute
+    * @return the property style.
+    * Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     */
    public String getPropertyStyle()
    {
@@ -221,10 +222,10 @@ public class Attribute
 
    /**
     * @param value
-    *    the property style to use for this attribute.
+    *    the property style.
     *    Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public Attribute setPropertyStyle(String value)
    {
@@ -253,7 +254,7 @@ public class Attribute
     * @param value
     *    the description of this attribute, used for generating JavaDocs
     *
-    * @return this instance, to allow method chaining
+    * @return this
     *
     * @since 1.3
     */
@@ -280,9 +281,10 @@ public class Attribute
       return this.getDescription() == null ? null : this.getDescription().split("\n");
    }
 
-
    /**
     * @return the version when this attribute was introduced, used for generating JavaDocs
+    *
+    * @since 1.3
     */
    public String getSince()
    {
@@ -294,6 +296,8 @@ public class Attribute
     *    the version when this attribute was introduced, used for generating JavaDocs
     *
     * @return this
+    *
+    * @since 1.3
     */
    public Attribute setSince(String value)
    {
@@ -320,7 +324,7 @@ public class Attribute
     * @param value
     *    a boolean indicating whether this attribute was modified. For internal use only.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public Attribute setModified(boolean value)
    {

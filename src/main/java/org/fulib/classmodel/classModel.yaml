@@ -106,15 +106,21 @@
 
 - classModel_defaultCollectionType: 	Attribute
   clazz: 	classModel
+  description: 	"the default collection type for to-n roles"
+  descriptionLines: 	[Ljava.lang.String;@5e955596
   id: 	ClassModel_defaultCollectionType
   modified: 	false
   name: 	defaultCollectionType
   propertyStyle: 	Bean
+  since: 	1.2
   type: 	CollectionType
   typeSignature: 	CollectionType
 
 - classModel_defaultPropertyStyle: 	Attribute
   clazz: 	classModel
+  description: 	"the default property style for attributes and roles.
+Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  descriptionLines: 	[Ljava.lang.String;@50de0926
   id: 	ClassModel_defaultPropertyStyle
   initialization: 	"\"POJO\""
   modified: 	false
@@ -146,6 +152,9 @@
 
 - clazz_propertyStyle: 	Attribute
   clazz: 	clazz
+  description: 	"the default property style for attributes and roles.
+Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  descriptionLines: 	[Ljava.lang.String;@2473b9ce
   id: 	Clazz_propertyStyle
   modified: 	false
   name: 	propertyStyle
@@ -155,6 +164,8 @@
 
 - clazz_modified: 	Attribute
   clazz: 	clazz
+  description: 	"a boolean indicating whether this attribute was modified. For internal use only."
+  descriptionLines: 	[Ljava.lang.String;@60438a68
   id: 	Clazz_modified
   modified: 	false
   name: 	modified
@@ -264,10 +275,13 @@
 
 - attribute_collectionType: 	Attribute
   clazz: 	attribute
+  description: 	"the collection type"
+  descriptionLines: 	[Ljava.lang.String;@17695df3
   id: 	Attribute_collectionType
   modified: 	false
   name: 	collectionType
   propertyStyle: 	Bean
+  since: 	1.2
   type: 	CollectionType
   typeSignature: 	CollectionType
 
@@ -282,6 +296,9 @@
 
 - attribute_propertyStyle: 	Attribute
   clazz: 	attribute
+  description: 	"the property style.
+Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  descriptionLines: 	[Ljava.lang.String;@6c9f5c0d
   id: 	Attribute_propertyStyle
   modified: 	false
   name: 	propertyStyle
@@ -291,6 +308,8 @@
 
 - attribute_modified: 	Attribute
   clazz: 	attribute
+  description: 	"a boolean indicating whether this attribute was modified. For internal use only."
+  descriptionLines: 	[Ljava.lang.String;@de3a06f
   id: 	Attribute_modified
   modified: 	false
   name: 	modified
@@ -300,21 +319,25 @@
 
 - attribute_description: 	Attribute
   clazz: 	attribute
+  description: 	"the description of this attribute, used for generating JavaDocs"
+  descriptionLines: 	[Ljava.lang.String;@76b10754
   id: 	Attribute_description
   modified: 	false
   name: 	description
   propertyStyle: 	Bean
+  since: 	1.3
   type: 	String
   typeSignature: 	String
 
 - attribute_since: 	Attribute
   clazz: 	attribute
   description: 	"the version when this attribute was introduced, used for generating JavaDocs"
-  descriptionLines: 	[Ljava.lang.String;@de3a06f
+  descriptionLines: 	[Ljava.lang.String;@2bea5ab4
   id: 	Attribute_since
   modified: 	false
   name: 	since
   propertyStyle: 	Bean
+  since: 	1.3
   type: 	String
   typeSignature: 	String
 
@@ -350,15 +373,22 @@
 
 - assocRole_collectionType: 	Attribute
   clazz: 	assocRole
+  description: 	"the collection type"
+  descriptionLines: 	[Ljava.lang.String;@3d8314f0
   id: 	AssocRole_collectionType
   modified: 	false
   name: 	collectionType
   propertyStyle: 	Bean
+  since: 	1.2
   type: 	CollectionType
   typeSignature: 	CollectionType
 
 - assocRole_aggregation: 	Attribute
   clazz: 	assocRole
+  description: 	"a boolean indicating whether this role is an aggregation,
+i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or
+{@code removeYou} on the source object"
+  descriptionLines: 	[Ljava.lang.String;@2df32bf7
   id: 	AssocRole_aggregation
   modified: 	false
   name: 	aggregation
@@ -368,6 +398,9 @@
 
 - assocRole_propertyStyle: 	Attribute
   clazz: 	assocRole
+  description: 	"the property style.
+Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  descriptionLines: 	[Ljava.lang.String;@530612ba
   id: 	AssocRole_propertyStyle
   modified: 	false
   name: 	propertyStyle
@@ -377,6 +410,8 @@
 
 - assocRole_modified: 	Attribute
   clazz: 	assocRole
+  description: 	"a boolean indicating whether this role was modified. For internal use only."
+  descriptionLines: 	[Ljava.lang.String;@2a40cd94
   id: 	AssocRole_modified
   modified: 	false
   name: 	modified
@@ -419,6 +454,8 @@
 
 - fMethod_modified: 	Attribute
   clazz: 	fMethod
+  description: 	"a boolean indicating whether this method was modified. For internal use only."
+  descriptionLines: 	[Ljava.lang.String;@f4168b8
   id: 	FMethod_modified
   modified: 	false
   name: 	modified
@@ -428,11 +465,14 @@
 
 - fMethod_modifiers: 	Attribute
   clazz: 	fMethod
+  description: 	"the modifiers. Defaults to \"public\""
+  descriptionLines: 	[Ljava.lang.String;@3bd94634
   id: 	FMethod_modifiers
   initialization: 	"\"public\""
   modified: 	false
   name: 	modifiers
   propertyStyle: 	Bean
+  since: 	1.2
   type: 	String
   typeSignature: 	String
 

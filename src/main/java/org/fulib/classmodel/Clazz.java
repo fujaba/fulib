@@ -1,5 +1,7 @@
 package org.fulib.classmodel;
 
+import org.fulib.builder.Type;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -762,11 +764,22 @@ public class Clazz
       return this;
    }
 
+   /**
+    * @return the default property style for attributes and roles.
+    * Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
+    */
    public String getPropertyStyle()
    {
       return this.propertyStyle;
    }
 
+   /**
+    * @param value
+    *    the default property style for attributes and roles.
+    *    Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
+    *
+    * @return this
+    */
    public Clazz setPropertyStyle(String value)
    {
       if (Objects.equals(value, this.propertyStyle))
@@ -780,11 +793,20 @@ public class Clazz
       return this;
    }
 
+   /**
+    * @return a boolean indicating whether this attribute was modified. For internal use only.
+    */
    public boolean getModified()
    {
       return this.modified;
    }
 
+   /**
+    * @param value
+    *    a boolean indicating whether this attribute was modified. For internal use only.
+    *
+    * @return this
+    */
    public Clazz setModified(boolean value)
    {
       if (value == this.modified)

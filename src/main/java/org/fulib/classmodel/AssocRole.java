@@ -171,9 +171,9 @@ public class AssocRole
 
    /**
     * @param value
-    *    the new collection type
+    *    the collection type
     *
-    * @return this instance, to allow method chaining
+    * @return this
     *
     * @since 1.2
     */
@@ -217,7 +217,8 @@ public class AssocRole
 
    /**
     * @return a boolean indicating whether this role is an aggregation,
-    * i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or {@code removeYou} on the source object
+    * i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or
+    * {@code removeYou} on the source object
     */
    public boolean getAggregation()
    {
@@ -227,9 +228,10 @@ public class AssocRole
    /**
     * @param value
     *    a boolean indicating whether this role is an aggregation,
-    *    i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or {@code removeYou} on the source object
+    *    i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or
+    *    {@code removeYou} on the source object
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public AssocRole setAggregation(boolean value)
    {
@@ -245,7 +247,8 @@ public class AssocRole
    }
 
    /**
-    * @return the property style of this role
+    * @return the property style.
+    * Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     */
    public String getPropertyStyle()
    {
@@ -254,10 +257,10 @@ public class AssocRole
 
    /**
     * @param value
-    *    the property style to use for this role.
+    *    the property style.
     *    Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public AssocRole setPropertyStyle(String value)
    {
@@ -284,7 +287,7 @@ public class AssocRole
     * @param value
     *    a boolean indicating whether this role was modified. For internal use only.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public AssocRole setModified(boolean value)
    {
