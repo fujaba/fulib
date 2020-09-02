@@ -62,6 +62,9 @@ propertyGet(attr) ::= <<
 >>
 
 attrWithItem(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)> value)
    {
       this.<attr.name>.add(value);
@@ -70,6 +73,9 @@ attrWithItem(attr) ::= <<
 >>
 
 attrWithoutItem(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)> value)
    {
       this.<attr.name>.removeAll(value);
