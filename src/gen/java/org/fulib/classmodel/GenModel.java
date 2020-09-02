@@ -78,6 +78,14 @@ public class GenModel implements ClassModelDecorator
             .setDescription("the property style.\n"
                             + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
          c
+            .attribute("description", STRING)
+            .setDescription("the description of this role, used for generating JavaDocs")
+            .setSince("1.3");
+         c
+            .attribute("since", STRING)
+            .setDescription("the version when this role was introduced, used for generating JavaDocs")
+            .setSince("1.3");
+         c
             .attribute("modified", BOOLEAN)
             .setDescription("a boolean indicating whether this role was modified. For internal use only.");
       });

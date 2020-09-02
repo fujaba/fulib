@@ -32,7 +32,7 @@
   roles: 	attribute_clazz
 
 - assocRole: 	Clazz
-  attributes: 	assocRole_name 	assocRole_cardinality 	assocRole_collectionType 	assocRole_aggregation 	assocRole_propertyStyle 	assocRole_modified
+  attributes: 	assocRole_name 	assocRole_cardinality 	assocRole_collectionType 	assocRole_aggregation 	assocRole_propertyStyle 	assocRole_modified 	assocRole_description 	assocRole_since
   model: 	c
   modified: 	false
   name: 	AssocRole
@@ -423,6 +423,30 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   propertyStyle: 	Bean
   type: 	boolean
   typeSignature: 	boolean
+
+- assocRole_description: 	Attribute
+  clazz: 	assocRole
+  description: 	"the description of this role, used for generating JavaDocs"
+  descriptionLines: 	"the description of this role, used for generating JavaDocs"
+  id: 	AssocRole_description
+  modified: 	false
+  name: 	description
+  propertyStyle: 	Bean
+  since: 	1.3
+  type: 	String
+  typeSignature: 	String
+
+- assocRole_since: 	Attribute
+  clazz: 	assocRole
+  description: 	"the version when this role was introduced, used for generating JavaDocs"
+  descriptionLines: 	"the version when this role was introduced, used for generating JavaDocs"
+  id: 	AssocRole_since
+  modified: 	false
+  name: 	since
+  propertyStyle: 	Bean
+  since: 	1.3
+  type: 	String
+  typeSignature: 	String
 
 - assocRole_clazz: 	AssocRole
   aggregation: 	false

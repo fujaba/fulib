@@ -22,6 +22,10 @@ public class AssocRole
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_clazz = "clazz";
    public static final String PROPERTY_other = "other";
+   /** @since 1.3 */
+   public static final String PROPERTY_description = "description";
+   /** @since 1.3 */
+   public static final String PROPERTY_since = "since";
 
    // =============== Fields ===============
 
@@ -34,6 +38,8 @@ public class AssocRole
    private CollectionType collectionType;
    private boolean aggregation;
    private String propertyStyle;
+   private String description;
+   private String since;
    private boolean modified;
 
    // =============== Properties ===============
@@ -276,6 +282,68 @@ public class AssocRole
    }
 
    /**
+    * @return the description of this role, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String getDescription()
+   {
+      return this.description;
+   }
+
+   /**
+    * @param value
+    *    the description of this role, used for generating JavaDocs
+    *
+    * @return this
+    *
+    * @since 1.3
+    */
+   public AssocRole setDescription(String value)
+   {
+      if (Objects.equals(value, this.description))
+      {
+         return this;
+      }
+
+      final String oldValue = this.description;
+      this.description = value;
+      this.firePropertyChange(PROPERTY_description, oldValue, value);
+      return this;
+   }
+
+   /**
+    * @return the version when this role was introduced, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String getSince()
+   {
+      return this.since;
+   }
+
+   /**
+    * @param value
+    *    the version when this role was introduced, used for generating JavaDocs
+    *
+    * @return this
+    *
+    * @since 1.3
+    */
+   public AssocRole setSince(String value)
+   {
+      if (Objects.equals(value, this.since))
+      {
+         return this;
+      }
+
+      final String oldValue = this.since;
+      this.since = value;
+      this.firePropertyChange(PROPERTY_since, oldValue, value);
+      return this;
+   }
+
+   /**
     * @return a boolean indicating whether this role was modified. For internal use only.
     */
    public boolean getModified()
@@ -375,6 +443,8 @@ public class AssocRole
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getName());
       result.append(' ').append(this.getPropertyStyle());
+      result.append(' ').append(this.getDescription());
+      result.append(' ').append(this.getSince());
       return result.substring(1);
    }
 }
