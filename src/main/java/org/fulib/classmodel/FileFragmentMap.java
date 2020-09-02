@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.Objects;
 
 public class FileFragmentMap
 {
@@ -805,6 +806,7 @@ public class FileFragmentMap
 
    public void removeYou()
    {
+      // no fulib
    }
 
    @Override // no fulib
