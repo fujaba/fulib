@@ -250,14 +250,11 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap)
    {
-      if (clazz.getAttributes().isEmpty() && clazz.getRoles().isEmpty())
-      {
-         return;
-      }
-
       final STGroup group = this.getSTGroup("org/fulib/templates/propertyChangeSupport.stg");
-      this.generateFromSignatures(fragmentMap, group, "propertyChangeSignatures", clazz.getModified(),
-                                  st -> st.add("clazz", clazz));
+      final boolean hasSuperClass = clazz.getSuperClass() != null;
+      final boolean hasNoDataMembers = clazz.getAttributes().isEmpty() && clazz.getRoles().isEmpty();
+      final boolean remove = clazz.getModified() || hasSuperClass || hasNoDataMembers;
+      this.generateFromSignatures(fragmentMap, group, "propertyChangeSignatures", remove, st -> st.add("clazz", clazz));
    }
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
