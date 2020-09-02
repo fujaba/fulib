@@ -14,39 +14,67 @@ public class GenModel implements ClassModelDecorator
       final Clazz ClassModel = mb.haveClass("ClassModel", c -> {
          c.attribute("packageName", STRING);
          c.attribute("mainJavaDir", STRING);
-         c.attribute("defaultCollectionType", "CollectionType");
-         c.attribute("defaultPropertyStyle", STRING, "\"POJO\"");
+         c
+            .attribute("defaultCollectionType", "CollectionType")
+            .setDescription("the default collection type for to-n roles");
+         c
+            .attribute("defaultPropertyStyle", STRING, "\"POJO\"")
+            .setDescription("the default property style to use for attributes and roles.\n"
+                            + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
       });
 
       final Clazz Clazz = mb.haveClass("Clazz", c -> {
          c.attribute("name", STRING);
-         c.attribute("propertyStyle", STRING);
-         c.attribute("modified", BOOLEAN);
+         c
+            .attribute("propertyStyle", STRING)
+            .setDescription("the default property style to use for attributes and roles.\n"
+                            + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
+         c
+            .attribute("modified", BOOLEAN)
+            .setDescription("a boolean indicating whether this attribute was modified. For internal use only.");
          c.attribute("imports", STRING).setCollectionType(CollectionType.LinkedHashSet);
       });
 
       final Clazz Attribute = mb.haveClass("Attribute", c -> {
          c.attribute("name", STRING);
          c.attribute("type", STRING);
-         c.attribute("collectionType", "CollectionType");
+         c.attribute("collectionType", "CollectionType").setDescription("the collection type");
          c.attribute("initialization", STRING);
-         c.attribute("propertyStyle", STRING);
-         c.attribute("modified", BOOLEAN);
-         c.attribute("description", STRING);
+         c
+            .attribute("propertyStyle", STRING)
+            .setDescription("the property style to use for this attribute.\n"
+                            + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
+         c
+            .attribute("modified", BOOLEAN)
+            .setDescription("a boolean indicating whether this attribute was modified. For internal use only.");
+         c
+            .attribute("description", STRING)
+            .setDescription("the description of this attribute, used for generating JavaDocs");
       });
 
       final Clazz AssocRole = mb.haveClass("AssocRole", c -> {
          c.attribute("name", STRING);
          c.attribute("cardinality", INT);
-         c.attribute("collectionType", "CollectionType");
-         c.attribute("aggregation", BOOLEAN);
-         c.attribute("propertyStyle", STRING);
-         c.attribute("modified", BOOLEAN);
+         c.attribute("collectionType", "CollectionType").setDescription("the collection type");
+         c
+            .attribute("aggregation", BOOLEAN)
+            .setDescription("a boolean indicating whether this role is an aggregation,\n"
+                            + "i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or\n"
+                            + "{@code removeYou} on the source object");
+         c
+            .attribute("propertyStyle", STRING)
+            .setDescription("the property style to use for this role.\n"
+                            + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
+         c
+            .attribute("modified", BOOLEAN)
+            .setDescription("a boolean indicating whether this role was modified. For internal use only.");
       });
 
       final Clazz FMethod = mb.haveClass("FMethod", c -> {
          c.attribute("methodBody", STRING);
-         c.attribute("modified", BOOLEAN);
+         c
+            .attribute("modified", BOOLEAN)
+            .setDescription("a boolean indicating whether this method was modified. For internal use only.");
          c.attribute("modifiers", STRING, "\"public\"");
          c.attribute("annotations", STRING);
       });
