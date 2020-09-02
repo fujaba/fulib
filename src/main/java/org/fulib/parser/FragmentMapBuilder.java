@@ -35,7 +35,21 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    // =============== Constructors ===============
 
-   public FragmentMapBuilder(CharStream input, CommonTokenStream tokenStream, FileFragmentMap map)
+   /**
+    * @param input
+    *    the character input
+    * @param map
+    *    the fragment map that should be populated
+    *
+    * @deprecated since 1.3; for internal use only - use one of the public static methods
+    */
+   @Deprecated
+   public FragmentMapBuilder(CharStream input, FileFragmentMap map)
+   {
+      this(input, null, map);
+   }
+
+   private FragmentMapBuilder(CharStream input, CommonTokenStream tokenStream, FileFragmentMap map)
    {
       this.input = input;
       this.tokenStream = tokenStream;
@@ -251,6 +265,14 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    private Token getStartOrJavaDoc(ParserRuleContext memberCtx)
    {
       final Token start = memberCtx.getStart();
+
+      // TODO remove if statement when removing the public constructor in v2
+      if (this.tokenStream == null)
+      {
+         // for compatibility, the constructor without the tokenStream parameter is still available.
+         return start;
+      }
+
       for (int i = start.getTokenIndex() - 1; i >= 0; i--)
       {
          final Token prev = this.tokenStream.get(i);
