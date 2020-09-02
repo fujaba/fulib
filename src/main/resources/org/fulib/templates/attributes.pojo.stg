@@ -47,9 +47,29 @@ propertyDecl(attr) ::= <<
    public static final String PROPERTY_<attr.name> = "<attr.name>";
 >>
 
+// --------------- JavaDocs ---------------
+
+getterJavaDoc(attr) ::= <<
+/**
+ * @return <attr.descriptionLines; separator="\n * ">
+ */
+>>
+
+setterJavaDoc(attr) ::= <<
+/**
+ * @param value
+ *    <attr.descriptionLines; separator="\n *    ">
+ *
+ * @return this
+ */
+>>
+
 // --------------- Simple Accessors ---------------
 
 attrGet(attr) ::= <<
+<if(attr.description)>
+   <getterJavaDoc(attr)>
+<endif>
    public <attrType(attr)> get<attr.name; format="cap">()
    {
 <if(attr.collection)>
@@ -61,6 +81,9 @@ attrGet(attr) ::= <<
 >>
 
 attrSet(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
       this.<attr.name> = value;

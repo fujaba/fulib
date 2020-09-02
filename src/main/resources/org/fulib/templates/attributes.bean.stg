@@ -3,6 +3,9 @@ import "attributes.pojo.stg"
 // --------------- Simple Accessors ---------------
 
 attrSet(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
       if (<if(primitive.(attr.type))>value == this.<attr.name><else>import(java.util.Objects).equals(value, this.<attr.name>)<endif>)

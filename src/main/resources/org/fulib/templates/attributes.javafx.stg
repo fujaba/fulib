@@ -24,6 +24,9 @@ initMethod(attr) ::= <<
 >>
 
 attrGet(attr) ::= <<
+<if(attr.description)>
+   <getterJavaDoc(attr)>
+<endif>
 <if(attr.collection)>
    public java.util.List\<<box(attr.type)>\> get<attr.name; format="cap">()
 <else>
@@ -35,6 +38,9 @@ attrGet(attr) ::= <<
 >>
 
 attrSet(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
       if (<if(primitive.(attr.type))>value != this.<attr.name>.getValue()<else>!import(java.util.Objects).equals(value, this.<attr.name>.getValue())<endif>)
@@ -46,6 +52,9 @@ attrSet(attr) ::= <<
 >>
 
 propertyGet(attr) ::= <<
+<if(attr.description)>
+   <getterJavaDoc(attr)>
+<endif>
    public <propertyType(attr)> <attr.name>Property()
    {
       return this.<attr.name>;
