@@ -527,9 +527,7 @@ public class ClassModelManager implements IModelManager
    // --------------- Associations ---------------
 
    /**
-    * Creates an association like {@link #associate(Clazz, String, int, Clazz, String, int)},
-    * but with the target role name inferred from the name of the source class,
-    * and the target cardinality 1.
+    * Alias {@link #haveRole(Clazz, String, int, Clazz)}, but with the last two parameters swapped.
     *
     * @param srcClass
     *    the source class
@@ -542,10 +540,31 @@ public class ClassModelManager implements IModelManager
     *
     * @return the new {@link AssocRole} in the source class.
     *
-    * @deprecated since 1.2; use {@link #associate(Clazz, String, int, Clazz)}, which provides better parameter symmetry.
+    * @deprecated since 1.2; use {@link #haveRole(Clazz, String, int, Clazz)}, which provides better parameter symmetry.
     */
    @Deprecated
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize)
+   {
+      return this.associate(srcClass, srcRole, srcSize, tgtClass);
+   }
+
+   /**
+    * Alias for {@link #associate(Clazz, String, int, Clazz)}.
+    *
+    * @param srcClass
+    *    the source class
+    * @param srcRole
+    *    the role name in the source class
+    * @param srcSize
+    *    the cardinality in the source class
+    * @param tgtClass
+    *    the target class
+    *
+    * @return the new {@link AssocRole} in the source class.
+    *
+    * @since 1.3
+    */
+   public AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass)
    {
       return this.associate(srcClass, srcRole, srcSize, tgtClass);
    }
@@ -575,7 +594,8 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
-    * Creates an association from the source class to the target class.
+    * Alias for {@link #haveRole(Clazz, String, int, Clazz, String, int)}, but with the third and fourth parameters
+    * swapped.
     *
     * @param srcClass
     *    the source class
@@ -592,10 +612,36 @@ public class ClassModelManager implements IModelManager
     *
     * @return the new {@link AssocRole} in the source class.
     *
-    * @deprecated since 1.2; use {@link #associate(Clazz, String, int, Clazz, String, int)}, which provides better parameter symmetry.
+    * @deprecated since 1.2; use {@link #haveRole(Clazz, String, int, Clazz, String, int)}, which provides better
+    * parameter symmetry.
     */
    @Deprecated
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize, String tgtRole, int tgtSize)
+   {
+      return this.associate(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize);
+   }
+
+   /**
+    * Alias for {@link #associate(Clazz, String, int, Clazz, String, int)}.
+    *
+    * @param srcClass
+    *    the source class
+    * @param srcRole
+    *    the role name in the source class
+    * @param srcSize
+    *    the cardinality in the source class
+    * @param tgtClass
+    *    the target class
+    * @param tgtRole
+    *    the role name in the target class
+    * @param tgtSize
+    *    the cardinality in the target class
+    *
+    * @return the new {@link AssocRole} in the source class.
+    *
+    * @since 1.3
+    */
+   public AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize)
    {
       return this.associate(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize);
    }
