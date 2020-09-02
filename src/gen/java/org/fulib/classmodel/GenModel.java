@@ -16,7 +16,8 @@ public class GenModel implements ClassModelDecorator
          c.attribute("mainJavaDir", STRING);
          c
             .attribute("defaultCollectionType", "CollectionType")
-            .setDescription("the default collection type for to-n roles");
+            .setDescription("the default collection type for to-n roles")
+            .setSince("1.2");
          c
             .attribute("defaultPropertyStyle", STRING, "\"POJO\"")
             .setDescription("the default property style to use for attributes and roles.\n"
@@ -38,7 +39,7 @@ public class GenModel implements ClassModelDecorator
       final Clazz Attribute = mb.haveClass("Attribute", c -> {
          c.attribute("name", STRING);
          c.attribute("type", STRING);
-         c.attribute("collectionType", "CollectionType").setDescription("the collection type");
+         c.attribute("collectionType", "CollectionType").setDescription("the collection type").setSince("1.2");
          c.attribute("initialization", STRING);
          c
             .attribute("propertyStyle", STRING)
@@ -49,16 +50,18 @@ public class GenModel implements ClassModelDecorator
             .setDescription("a boolean indicating whether this attribute was modified. For internal use only.");
          c
             .attribute("description", STRING)
-            .setDescription("the description of this attribute, used for generating JavaDocs");
+            .setDescription("the description of this attribute, used for generating JavaDocs")
+            .setSince("1.3");
          c
             .attribute("since", STRING)
-            .setDescription("the version when this attribute was introduced, used for generating JavaDocs");
+            .setDescription("the version when this attribute was introduced, used for generating JavaDocs")
+            .setSince("1.3");
       });
 
       final Clazz AssocRole = mb.haveClass("AssocRole", c -> {
          c.attribute("name", STRING);
          c.attribute("cardinality", INT);
-         c.attribute("collectionType", "CollectionType").setDescription("the collection type");
+         c.attribute("collectionType", "CollectionType").setDescription("the collection type").setSince("1.2");
          c
             .attribute("aggregation", BOOLEAN)
             .setDescription("a boolean indicating whether this role is an aggregation,\n"
@@ -78,7 +81,10 @@ public class GenModel implements ClassModelDecorator
          c
             .attribute("modified", BOOLEAN)
             .setDescription("a boolean indicating whether this method was modified. For internal use only.");
-         c.attribute("modifiers", STRING, "\"public\"");
+         c
+            .attribute("modifiers", STRING, "\"public\"")
+            .setDescription("the modifiers. Defaults to \"public\"")
+            .setSince("1.2");
          c.attribute("annotations", STRING);
       });
 
