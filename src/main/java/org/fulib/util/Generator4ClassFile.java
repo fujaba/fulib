@@ -251,10 +251,33 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
    private void generatePropertyChangeSupport(Clazz clazz, FileFragmentMap fragmentMap)
    {
       final STGroup group = this.getSTGroup("org/fulib/templates/propertyChangeSupport.stg");
-      final boolean hasSuperClass = clazz.getSuperClass() != null;
-      final boolean hasNoDataMembers = clazz.getAttributes().isEmpty() && clazz.getRoles().isEmpty();
-      final boolean remove = clazz.getModified() || hasSuperClass || hasNoDataMembers;
+      final boolean remove = clazz.getModified() || !needsPropertyChangeSupport(clazz);
       this.generateFromSignatures(fragmentMap, group, "propertyChangeSignatures", remove, st -> st.add("clazz", clazz));
+   }
+
+   private static boolean needsPropertyChangeSupport(Clazz clazz)
+   {
+      if (!hasDataMembers(clazz))
+      {
+         // no data members means no PropertyChange is needed at all, regardless of superclasses
+         return false;
+      }
+      Clazz superClazz = clazz;
+      while ((superClazz = superClazz.getSuperClass()) != null)
+      {
+         if (hasDataMembers(superClazz))
+         {
+            // one of the super classes already contains PropertyChange members, no need to duplicate them
+            return false;
+         }
+      }
+      // no super class or none with PropertyChange members, we need to generate them ourselves
+      return true;
+   }
+
+   private static boolean hasDataMembers(Clazz superClazz)
+   {
+      return !superClazz.getAttributes().isEmpty() || superClazz.getRoles().stream().anyMatch(r -> r.getName() != null);
    }
 
    private void generateToString(Clazz clazz, FileFragmentMap fragmentMap)
