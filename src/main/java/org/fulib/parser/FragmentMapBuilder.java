@@ -389,10 +389,12 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    @Override
    public void exitClassDecl(ClassDeclContext ctx)
    {
-      // make sure the method/ and attribute/ sections get created by adding dummies
-      this.map.append(
+      // make sure the attribute, property and method sections exist by adding dummies
+      this.map.insert(
          new CodeFragment().setKey(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + "#start").setText(""));
-      this.map.append(
+      this.map.insert(
+         new CodeFragment().setKey(CLASS + '/' + this.className + '/' + PROPERTY + '/' + "#start").setText(""));
+      this.map.insert(
          new CodeFragment().setKey(CLASS + '/' + this.className + '/' + METHOD + '/' + "#start").setText(""));
       this.addCodeFragment(CLASS + '/' + this.className + '/' + CLASS_END, ctx.classMember().classBody().RBRACE());
    }
