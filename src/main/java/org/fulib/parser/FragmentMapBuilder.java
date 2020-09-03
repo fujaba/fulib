@@ -164,11 +164,14 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final List<FieldNamePartContext> nameParts = ctx.fieldNamePart();
       final int size = nameParts.size();
 
+      final boolean isStatic = memberCtx.modifier().stream().anyMatch(m -> m.STATIC() != null);
+      final String kind = isStatic ? STATIC_ATTRIBUTE : ATTRIBUTE;
+
       final String firstName = nameParts.get(0).IDENTIFIER().getText();
       if (size == 1)
       {
          // only one field, straightforward (pass the whole ctx)
-         this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName, memberCtx);
+         this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + firstName, memberCtx);
          return;
       }
 
@@ -185,20 +188,20 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final List<TerminalNode> commas = ctx.COMMA();
 
       // first part includes type and annotations and first comma
-      this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName, memberCtx.getStart(),
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + firstName, memberCtx.getStart(),
                            commas.get(0).getSymbol());
 
       // all but the first and last part range from name to comma
       for (int i = 1; i < size - 1; i++)
       {
          final FieldNamePartContext namePart = nameParts.get(i);
-         this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + namePart.IDENTIFIER().getText(),
+         this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + namePart.IDENTIFIER().getText(),
                               namePart.getStart(), commas.get(i).getSymbol());
       }
 
       // last part includes semicolon
       final FieldNamePartContext lastPart = nameParts.get(size - 1);
-      this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + lastPart.IDENTIFIER().getText(),
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + lastPart.IDENTIFIER().getText(),
                            lastPart.getStart(), memberCtx.getStop());
    }
 
@@ -389,7 +392,9 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    @Override
    public void exitClassDecl(ClassDeclContext ctx)
    {
-      // make sure the attribute, property and method sections exist by adding dummies
+      // make sure the major sections exist by adding dummies
+      this.map.insert(
+         new CodeFragment().setKey(CLASS + '/' + this.className + '/' + STATIC_ATTRIBUTE + '/' + "#start").setText(""));
       this.map.insert(
          new CodeFragment().setKey(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + "#start").setText(""));
       this.map.insert(

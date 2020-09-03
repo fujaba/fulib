@@ -20,7 +20,7 @@ roleType(role, other) ::= <%
 // --------------- Declarations ---------------
 
 roleSignatures(role, other) ::= <<
-   propertyDecl:           class/<role.clazz.name>/attribute/PROPERTY_<role.name>
+   propertyDecl:           class/<role.clazz.name>/staticAttribute/PROPERTY_<role.name>
    roleAttrDecl:           class/<role.clazz.name>/attribute/<role.name>
    getMethod:              class/<role.clazz.name>/property/get<role.name; format="cap">()
    <if(javaFX.(role.propertyStyle))>

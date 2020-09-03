@@ -20,7 +20,7 @@ attrType(attr) ::= <%
 // --------------- Declarations ---------------
 
 attrSignatures(attr) ::= <<
-   propertyDecl:     class/<attr.clazz.name>/attribute/PROPERTY_<attr.name>
+   propertyDecl:     class/<attr.clazz.name>/staticAttribute/PROPERTY_<attr.name>
    attrDecl:         class/<attr.clazz.name>/attribute/<attr.name>
    attrGet:          class/<attr.clazz.name>/property/get<attr.name; format="cap">()
    <if(javaFX.(attr.propertyStyle))>
