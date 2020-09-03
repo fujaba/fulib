@@ -18,6 +18,7 @@ import static org.fulib.classmodel.FileFragmentMap.EOF;
 import static org.fulib.classmodel.FileFragmentMap.IMPORT;
 import static org.fulib.classmodel.FileFragmentMap.PACKAGE;
 import static org.fulib.classmodel.FileFragmentMap.*;
+import static org.fulib.util.Validator.isProperty;
 
 /**
  * @since 1.2
@@ -231,7 +232,8 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       signature.append('/');
       signature.append(this.className);
       signature.append('/');
-      signature.append(METHOD);
+      final int parameterCount = (int) ctx.parameterList().parameter().stream().filter(p -> p.THIS() == null).count();
+      signature.append(isProperty(methodName, parameterCount) ? PROPERTY : METHOD);
       signature.append('/');
       signature.append(methodName);
       writeParams(signature, ctx.parameterList());

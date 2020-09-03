@@ -32,6 +32,7 @@ public class FileFragmentMap
    /** @since 1.2 */ public static final String CONSTRUCTOR = "constructor";
    /** @since 1.2 */ public static final String ATTRIBUTE = "attribute";
    /** @since 1.2 */ public static final String METHOD = "method";
+   /** @since 1.3 */ public static final String PROPERTY = "property";
    /** @since 1.2 */ public static final String IMPORT = "import";
    /** @since 1.2 */ public static final String CLASS_BODY = "classBody";
    /** @since 1.2 */ public static final String CLASS_DECL = "classDecl";
