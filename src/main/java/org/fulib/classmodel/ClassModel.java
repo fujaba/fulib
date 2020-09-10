@@ -27,7 +27,7 @@ public class ClassModel
    /** @since 1.2 */
    public static final String PROPERTY_defaultCollectionType = "defaultCollectionType";
    public static final String PROPERTY_defaultPropertyStyle = "defaultPropertyStyle";
-   public static final String PROPERTY_classes = "classes";
+   public static final String PROPERTY_classes = "classes" /* no fulib */;
 
    // =============== Fields ===============
 
@@ -217,7 +217,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withClasses(Clazz value)
    {
       if (this.classes == null)
@@ -233,7 +240,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -243,7 +257,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)
@@ -279,7 +300,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withoutClasses(Clazz value)
    {
       if (this.classes != null && this.classes.remove(value))
@@ -290,7 +318,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withoutClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -300,7 +335,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withoutClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)

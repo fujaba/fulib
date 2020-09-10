@@ -38,11 +38,11 @@ public class Clazz
    public static final String PROPERTY_propertyStyle = "propertyStyle";
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_model = "model";
-   public static final String PROPERTY_attributes = "attributes";
-   public static final String PROPERTY_roles = "roles";
+   public static final String PROPERTY_attributes = "attributes" /* no fulib */;
+   public static final String PROPERTY_roles = "roles" /* no fulib */;
    public static final String PROPERTY_superClass = "superClass";
-   public static final String PROPERTY_subClasses = "subClasses";
-   public static final String PROPERTY_methods = "methods";
+   public static final String PROPERTY_subClasses = "subClasses" /* no fulib */;
+   public static final String PROPERTY_methods = "methods" /* no fulib */;
    /** @since 1.2 */
    public static final String PROPERTY_imports = "imports";
    /** @deprecated since 1.2; use {@link #PROPERTY_imports} instead */
@@ -178,7 +178,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withSubClasses(Clazz value)
    {
       if (this.subClasses == null)
@@ -194,7 +201,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withSubClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -204,7 +218,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withSubClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)
@@ -240,7 +261,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutSubClasses(Clazz value)
    {
       if (this.subClasses != null && this.subClasses.remove(value))
@@ -251,7 +279,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutSubClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -261,7 +296,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutSubClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)
@@ -318,7 +360,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withAttributes(Attribute value)
    {
       if (this.attributes == null)
@@ -334,7 +383,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withAttributes(Attribute... value)
    {
       for (final Attribute item : value)
@@ -344,7 +400,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withAttributes(Collection<? extends Attribute> value)
    {
       for (final Attribute item : value)
@@ -380,7 +443,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutAttributes(Attribute value)
    {
       if (this.attributes != null && this.attributes.remove(value))
@@ -391,7 +461,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutAttributes(Attribute... value)
    {
       for (final Attribute item : value)
@@ -401,7 +478,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutAttributes(Collection<? extends Attribute> value)
    {
       for (final Attribute item : value)
@@ -458,7 +542,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withRoles(AssocRole value)
    {
       if (this.roles == null)
@@ -474,7 +565,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withRoles(AssocRole... value)
    {
       for (final AssocRole item : value)
@@ -484,7 +582,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withRoles(Collection<? extends AssocRole> value)
    {
       for (final AssocRole item : value)
@@ -520,7 +625,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutRoles(AssocRole value)
    {
       if (this.roles != null && this.roles.remove(value))
@@ -531,7 +643,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutRoles(AssocRole... value)
    {
       for (final AssocRole item : value)
@@ -541,7 +660,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutRoles(Collection<? extends AssocRole> value)
    {
       for (final AssocRole item : value)
@@ -586,7 +712,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withMethods(FMethod value)
    {
       if (this.methods == null)
@@ -602,7 +735,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withMethods(FMethod... value)
    {
       for (final FMethod item : value)
@@ -612,7 +752,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withMethods(Collection<? extends FMethod> value)
    {
       for (final FMethod item : value)
@@ -648,7 +795,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutMethods(FMethod value)
    {
       if (this.methods != null && this.methods.remove(value))
@@ -659,7 +813,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutMethods(FMethod... value)
    {
       for (final FMethod item : value)
@@ -669,7 +830,14 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutMethods(Collection<? extends FMethod> value)
    {
       for (final FMethod item : value)
@@ -941,8 +1109,8 @@ public class Clazz
       this.withoutAttributes(new ArrayList<>(this.getAttributes()));
       this.withoutRoles(new ArrayList<>(this.getRoles()));
       this.withoutMethods(new ArrayList<>(this.getMethods()));
-      this.setSuperClass(null);
       this.withoutSubClasses(new ArrayList<>(this.getSubClasses()));
+      this.setSuperClass(null);
    }
 
    @Override

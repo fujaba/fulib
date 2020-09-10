@@ -21,7 +21,7 @@
   modified: 	false
   name: 	Clazz
   propertyStyle: 	Bean
-  roles: 	clazz_model 	clazz_attributes 	clazz_roles 	clazz_methods 	clazz_superClass 	clazz_subClasses
+  roles: 	clazz_model 	clazz_attributes 	clazz_roles 	clazz_methods 	clazz_subClasses 	clazz_superClass
 
 - attribute: 	Clazz
   attributes: 	attribute_name 	attribute_type 	attribute_collectionType 	attribute_initialization 	attribute_propertyStyle 	attribute_modified 	attribute_description 	attribute_since
@@ -32,7 +32,7 @@
   roles: 	attribute_clazz
 
 - assocRole: 	Clazz
-  attributes: 	assocRole_name 	assocRole_cardinality 	assocRole_collectionType 	assocRole_aggregation 	assocRole_propertyStyle 	assocRole_modified 	assocRole_description 	assocRole_since
+  attributes: 	assocRole_name 	assocRole_cardinality 	assocRole_collectionType 	assocRole_aggregation 	assocRole_propertyStyle 	assocRole_description 	assocRole_since 	assocRole_modified
   model: 	c
   modified: 	false
   name: 	AssocRole
@@ -134,12 +134,15 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   cardinality: 	42
   clazz: 	classModel
   collectionType: 	c1
+  description: 	"the classes contained in this model"
+  descriptionLines: 	"the classes contained in this model"
   id: 	ClassModel_classes
   modified: 	false
   name: 	classes
   other: 	clazz_model
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
 
 - clazz_name: 	Attribute
   clazz: 	clazz
@@ -205,36 +208,60 @@ Elements can have one of the formats {@code org.example.Foo}, {@code static org.
   cardinality: 	42
   clazz: 	clazz
   collectionType: 	c1
+  description: 	"the attributes"
+  descriptionLines: 	"the attributes"
   id: 	Clazz_attributes
   modified: 	false
   name: 	attributes
   other: 	attribute_clazz
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
 
 - clazz_roles: 	AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz
   collectionType: 	c1
+  description: 	"the roles"
+  descriptionLines: 	"the roles"
   id: 	Clazz_roles
   modified: 	false
   name: 	roles
   other: 	assocRole_clazz
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
 
 - clazz_methods: 	AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz
   collectionType: 	c1
+  description: 	"the methods"
+  descriptionLines: 	"the methods"
   id: 	Clazz_methods
   modified: 	false
   name: 	methods
   other: 	fMethod_clazz
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
+
+- clazz_subClasses: 	AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	clazz
+  collectionType: 	c1
+  description: 	"the subclasses"
+  descriptionLines: 	"the subclasses"
+  id: 	Clazz_subClasses
+  modified: 	false
+  name: 	subClasses
+  other: 	clazz_superClass
+  propertyStyle: 	Bean
+  roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
 
 - clazz_superClass: 	AssocRole
   aggregation: 	false
@@ -245,18 +272,6 @@ Elements can have one of the formats {@code org.example.Foo}, {@code static org.
   modified: 	false
   name: 	superClass
   other: 	clazz_subClasses
-  propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
-
-- clazz_subClasses: 	AssocRole
-  aggregation: 	false
-  cardinality: 	42
-  clazz: 	clazz
-  collectionType: 	c1
-  id: 	Clazz_subClasses
-  modified: 	false
-  name: 	subClasses
-  other: 	clazz_superClass
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
@@ -413,17 +428,6 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   type: 	String
   typeSignature: 	String
 
-- assocRole_modified: 	Attribute
-  clazz: 	assocRole
-  description: 	"a boolean indicating whether this role was modified. For internal use only."
-  descriptionLines: 	"a boolean indicating whether this role was modified. For internal use only."
-  id: 	AssocRole_modified
-  modified: 	false
-  name: 	modified
-  propertyStyle: 	Bean
-  type: 	boolean
-  typeSignature: 	boolean
-
 - assocRole_description: 	Attribute
   clazz: 	assocRole
   description: 	"the description of this role, used for generating JavaDocs"
@@ -447,6 +451,17 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   since: 	1.3
   type: 	String
   typeSignature: 	String
+
+- assocRole_modified: 	Attribute
+  clazz: 	assocRole
+  description: 	"a boolean indicating whether this role was modified. For internal use only."
+  descriptionLines: 	"a boolean indicating whether this role was modified. For internal use only."
+  id: 	AssocRole_modified
+  modified: 	false
+  name: 	modified
+  propertyStyle: 	Bean
+  type: 	boolean
+  typeSignature: 	boolean
 
 - assocRole_clazz: 	AssocRole
   aggregation: 	false

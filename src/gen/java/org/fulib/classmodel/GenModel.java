@@ -102,15 +102,21 @@ public class GenModel implements ClassModelDecorator
          c.attribute("annotations", STRING);
       });
 
-      mb.associate(ClassModel, "classes", MANY, Clazz, "model", ONE);
+      mb
+         .associate(ClassModel, "classes", MANY, Clazz, "model", ONE)
+         .setDescription("the classes contained in this model")
+         .setSince("1.2");
 
-      mb.associate(Clazz, "attributes", MANY, Attribute, "clazz", ONE);
+      mb.associate(Clazz, "attributes", MANY, Attribute, "clazz", ONE).setDescription("the attributes").setSince("1.2");
 
-      mb.associate(Clazz, "roles", MANY, AssocRole, "clazz", ONE);
+      mb.associate(Clazz, "roles", MANY, AssocRole, "clazz", ONE).setDescription("the roles").setSince("1.2");
 
-      mb.associate(Clazz, "methods", MANY, FMethod, "clazz", ONE);
+      mb.associate(Clazz, "methods", MANY, FMethod, "clazz", ONE).setDescription("the methods").setSince("1.2");
 
-      mb.associate(Clazz, "superClass", ONE, Clazz, "subClasses", MANY);
+      mb
+         .associate(Clazz, "subClasses", MANY, Clazz, "superClass", ONE)
+         .setDescription("the subclasses")
+         .setSince("1.2");
 
       mb.associate(AssocRole, "other", ONE, AssocRole, "other", ONE);
 
