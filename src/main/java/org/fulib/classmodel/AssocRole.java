@@ -4,6 +4,9 @@ import org.fulib.builder.Type;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class AssocRole
@@ -310,6 +313,19 @@ public class AssocRole
       this.description = value;
       this.firePropertyChange(PROPERTY_description, oldValue, value);
       return this;
+   }
+
+   /**
+    * @return the lines of the description of this attribute, used for generating JavaDocs
+    *
+    * @since 1.3
+    *
+    * @deprecated for internal use only
+    */
+   @Deprecated
+   public List<String> getDescriptionLines()
+   {
+      return this.getDescription() == null ? Collections.emptyList() : Arrays.asList(this.getDescription().split("\n"));
    }
 
    /**
