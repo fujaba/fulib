@@ -865,7 +865,7 @@ public class Clazz
    /**
     * @return the set of imported members.
     * Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
-    * {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    * {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
     *
     * @since 1.2
     */
@@ -878,7 +878,7 @@ public class Clazz
     * @param value
     *    the set of imported members.
     *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
-    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
     *
     * @return this
     *
@@ -901,7 +901,7 @@ public class Clazz
     * @param value
     *    the set of imported members.
     *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
-    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
     *
     * @return this
     *
@@ -920,7 +920,7 @@ public class Clazz
     * @param value
     *    the set of imported members.
     *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
-    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
     *
     * @return this
     *
@@ -939,7 +939,7 @@ public class Clazz
     * @param value
     *    the set of imported members.
     *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
-    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
     *
     * @return this
     *
@@ -958,7 +958,7 @@ public class Clazz
     * @param value
     *    the set of imported members.
     *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
-    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
     *
     * @return this
     *
@@ -977,7 +977,7 @@ public class Clazz
     * @param value
     *    the set of imported members.
     *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
-    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
     *
     * @return this
     *

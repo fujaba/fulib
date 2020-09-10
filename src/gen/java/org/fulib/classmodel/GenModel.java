@@ -38,7 +38,7 @@ public class GenModel implements ClassModelDecorator
             .setCollectionType(CollectionType.LinkedHashSet)
             .setDescription("the set of imported members.\n"
                             + "Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},\n"
-                            + "{@code import org.example.Foo;} or {@code import static org.example.Foo.bar;")
+                            + "{@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}")
             .setSince("1.2");
       });
 
