@@ -1,4 +1,5 @@
 import "java.dicts.stg"
+import "javadoc.stg"
 
 collectionImpl(attr) ::= <%
 <attr.collectionType.simpleImplName>
@@ -44,12 +45,18 @@ attrDecl(attr) ::= <<
 >>
 
 propertyDecl(attr) ::= <<
+<if(attr.since)>
+   /** @since <attr.since> */
+<endif>
    public static final String PROPERTY_<attr.name> = "<attr.name>";
 >>
 
 // --------------- Simple Accessors ---------------
 
 attrGet(attr) ::= <<
+<if(attr.description)>
+   <getterJavaDoc(attr)>
+<endif>
    public <attrType(attr)> get<attr.name; format="cap">()
    {
 <if(attr.collection)>
@@ -61,6 +68,9 @@ attrGet(attr) ::= <<
 >>
 
 attrSet(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
       this.<attr.name> = value;
@@ -71,6 +81,9 @@ attrSet(attr) ::= <<
 // --------------- With ---------------
 
 attrWithItem(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)> value)
    {
       if (this.<attr.name> == null)
@@ -83,6 +96,9 @@ attrWithItem(attr) ::= <<
 >>
 
 attrWithArray(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)>... value)
    {
       this.with<attr.name; format="cap">(import(java.util.Arrays).asList(value));
@@ -91,6 +107,9 @@ attrWithArray(attr) ::= <<
 >>
 
 attrWithColl(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> with<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
       if (this.<attr.name> == null)
@@ -108,6 +127,9 @@ attrWithColl(attr) ::= <<
 // --------------- Without ---------------
 
 attrWithoutItem(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)> value)
    {
       this.<attr.name>.removeAll(import(java.util.Collections).singleton(value));
@@ -116,6 +138,9 @@ attrWithoutItem(attr) ::= <<
 >>
 
 attrWithoutArray(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)>... value)
    {
       this.without<attr.name; format="cap">(import(java.util.Arrays).asList(value));
@@ -124,6 +149,9 @@ attrWithoutArray(attr) ::= <<
 >>
 
 attrWithoutColl(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> without<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
       if (this.<attr.name> != null)

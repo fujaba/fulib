@@ -217,6 +217,8 @@ public class FMethod
    }
 
    /**
+    * @return the modifiers. Defaults to "public"
+    *
     * @since 1.2
     */
    public String getModifiers()
@@ -225,6 +227,11 @@ public class FMethod
    }
 
    /**
+    * @param value
+    *    the modifiers. Defaults to "public"
+    *
+    * @return this
+    *
     * @since 1.2
     */
    public FMethod setModifiers(String value)
@@ -332,11 +339,20 @@ public class FMethod
       return this;
    }
 
+   /**
+    * @return a boolean indicating whether this method was modified. For internal use only.
+    */
    public boolean getModified()
    {
       return this.modified;
    }
 
+   /**
+    * @param value
+    *    a boolean indicating whether this method was modified. For internal use only.
+    *
+    * @return this
+    */
    public FMethod setModified(boolean value)
    {
       if (value == this.modified)

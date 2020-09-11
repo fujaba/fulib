@@ -21,10 +21,10 @@
   modified: 	false
   name: 	Clazz
   propertyStyle: 	Bean
-  roles: 	clazz_model 	clazz_attributes 	clazz_roles 	clazz_methods 	clazz_superClass 	clazz_subClasses
+  roles: 	clazz_model 	clazz_attributes 	clazz_roles 	clazz_methods 	clazz_subClasses 	clazz_superClass
 
 - attribute: 	Clazz
-  attributes: 	attribute_name 	attribute_type 	attribute_collectionType 	attribute_initialization 	attribute_propertyStyle 	attribute_modified
+  attributes: 	attribute_name 	attribute_type 	attribute_collectionType 	attribute_initialization 	attribute_propertyStyle 	attribute_modified 	attribute_description 	attribute_since
   model: 	c
   modified: 	false
   name: 	Attribute
@@ -32,7 +32,7 @@
   roles: 	attribute_clazz
 
 - assocRole: 	Clazz
-  attributes: 	assocRole_name 	assocRole_cardinality 	assocRole_collectionType 	assocRole_aggregation 	assocRole_propertyStyle 	assocRole_modified
+  attributes: 	assocRole_name 	assocRole_cardinality 	assocRole_collectionType 	assocRole_aggregation 	assocRole_propertyStyle 	assocRole_description 	assocRole_since 	assocRole_modified
   model: 	c
   modified: 	false
   name: 	AssocRole
@@ -106,15 +106,21 @@
 
 - classModel_defaultCollectionType: 	Attribute
   clazz: 	classModel
+  description: 	"the default collection type for to-n roles"
+  descriptionLines: 	"the default collection type for to-n roles"
   id: 	ClassModel_defaultCollectionType
   modified: 	false
   name: 	defaultCollectionType
   propertyStyle: 	Bean
+  since: 	1.2
   type: 	CollectionType
   typeSignature: 	CollectionType
 
 - classModel_defaultPropertyStyle: 	Attribute
   clazz: 	classModel
+  description: 	"the default property style for attributes and roles.
+Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  descriptionLines: 	"the default property style for attributes and roles." 	"Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
   id: 	ClassModel_defaultPropertyStyle
   initialization: 	"\"POJO\""
   modified: 	false
@@ -128,12 +134,15 @@
   cardinality: 	42
   clazz: 	classModel
   collectionType: 	c1
+  description: 	"the classes contained in this model"
+  descriptionLines: 	"the classes contained in this model"
   id: 	ClassModel_classes
   modified: 	false
   name: 	classes
   other: 	clazz_model
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
 
 - clazz_name: 	Attribute
   clazz: 	clazz
@@ -146,6 +155,9 @@
 
 - clazz_propertyStyle: 	Attribute
   clazz: 	clazz
+  description: 	"the default property style for attributes and roles.
+Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  descriptionLines: 	"the default property style for attributes and roles." 	"Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
   id: 	Clazz_propertyStyle
   modified: 	false
   name: 	propertyStyle
@@ -155,6 +167,8 @@
 
 - clazz_modified: 	Attribute
   clazz: 	clazz
+  description: 	"a boolean indicating whether this attribute was modified. For internal use only."
+  descriptionLines: 	"a boolean indicating whether this attribute was modified. For internal use only."
   id: 	Clazz_modified
   modified: 	false
   name: 	modified
@@ -165,10 +179,15 @@
 - clazz_imports: 	Attribute
   clazz: 	clazz
   collectionType: 	c3
+  description: 	"the set of imported members.
+Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+{@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}"
+  descriptionLines: 	"the set of imported members." 	"Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar}," 	"{@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}"
   id: 	Clazz_imports
   modified: 	false
   name: 	imports
   propertyStyle: 	Bean
+  since: 	1.2
   type: 	String
   typeSignature: 	String
 
@@ -189,36 +208,60 @@
   cardinality: 	42
   clazz: 	clazz
   collectionType: 	c1
+  description: 	"the attributes"
+  descriptionLines: 	"the attributes"
   id: 	Clazz_attributes
   modified: 	false
   name: 	attributes
   other: 	attribute_clazz
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
 
 - clazz_roles: 	AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz
   collectionType: 	c1
+  description: 	"the roles"
+  descriptionLines: 	"the roles"
   id: 	Clazz_roles
   modified: 	false
   name: 	roles
   other: 	assocRole_clazz
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
 
 - clazz_methods: 	AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz
   collectionType: 	c1
+  description: 	"the methods"
+  descriptionLines: 	"the methods"
   id: 	Clazz_methods
   modified: 	false
   name: 	methods
   other: 	fMethod_clazz
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
+
+- clazz_subClasses: 	AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	clazz
+  collectionType: 	c1
+  description: 	"the subclasses"
+  descriptionLines: 	"the subclasses"
+  id: 	Clazz_subClasses
+  modified: 	false
+  name: 	subClasses
+  other: 	clazz_superClass
+  propertyStyle: 	Bean
+  roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
 
 - clazz_superClass: 	AssocRole
   aggregation: 	false
@@ -229,18 +272,6 @@
   modified: 	false
   name: 	superClass
   other: 	clazz_subClasses
-  propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
-
-- clazz_subClasses: 	AssocRole
-  aggregation: 	false
-  cardinality: 	42
-  clazz: 	clazz
-  collectionType: 	c1
-  id: 	Clazz_subClasses
-  modified: 	false
-  name: 	subClasses
-  other: 	clazz_superClass
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
@@ -264,10 +295,13 @@
 
 - attribute_collectionType: 	Attribute
   clazz: 	attribute
+  description: 	"the collection type"
+  descriptionLines: 	"the collection type"
   id: 	Attribute_collectionType
   modified: 	false
   name: 	collectionType
   propertyStyle: 	Bean
+  since: 	1.2
   type: 	CollectionType
   typeSignature: 	CollectionType
 
@@ -282,6 +316,9 @@
 
 - attribute_propertyStyle: 	Attribute
   clazz: 	attribute
+  description: 	"the property style.
+Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  descriptionLines: 	"the property style." 	"Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
   id: 	Attribute_propertyStyle
   modified: 	false
   name: 	propertyStyle
@@ -291,12 +328,38 @@
 
 - attribute_modified: 	Attribute
   clazz: 	attribute
+  description: 	"a boolean indicating whether this attribute was modified. For internal use only."
+  descriptionLines: 	"a boolean indicating whether this attribute was modified. For internal use only."
   id: 	Attribute_modified
   modified: 	false
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
   typeSignature: 	boolean
+
+- attribute_description: 	Attribute
+  clazz: 	attribute
+  description: 	"the description of this attribute, used for generating JavaDocs"
+  descriptionLines: 	"the description of this attribute, used for generating JavaDocs"
+  id: 	Attribute_description
+  modified: 	false
+  name: 	description
+  propertyStyle: 	Bean
+  since: 	1.3
+  type: 	String
+  typeSignature: 	String
+
+- attribute_since: 	Attribute
+  clazz: 	attribute
+  description: 	"the version when this attribute was introduced, used for generating JavaDocs"
+  descriptionLines: 	"the version when this attribute was introduced, used for generating JavaDocs"
+  id: 	Attribute_since
+  modified: 	false
+  name: 	since
+  propertyStyle: 	Bean
+  since: 	1.3
+  type: 	String
+  typeSignature: 	String
 
 - attribute_clazz: 	AssocRole
   aggregation: 	false
@@ -330,15 +393,22 @@
 
 - assocRole_collectionType: 	Attribute
   clazz: 	assocRole
+  description: 	"the collection type"
+  descriptionLines: 	"the collection type"
   id: 	AssocRole_collectionType
   modified: 	false
   name: 	collectionType
   propertyStyle: 	Bean
+  since: 	1.2
   type: 	CollectionType
   typeSignature: 	CollectionType
 
 - assocRole_aggregation: 	Attribute
   clazz: 	assocRole
+  description: 	"a boolean indicating whether this role is an aggregation,
+i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or
+{@code removeYou} on the source object"
+  descriptionLines: 	"a boolean indicating whether this role is an aggregation," 	"i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or" 	"{@code removeYou} on the source object"
   id: 	AssocRole_aggregation
   modified: 	false
   name: 	aggregation
@@ -348,6 +418,9 @@
 
 - assocRole_propertyStyle: 	Attribute
   clazz: 	assocRole
+  description: 	"the property style.
+Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  descriptionLines: 	"the property style." 	"Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
   id: 	AssocRole_propertyStyle
   modified: 	false
   name: 	propertyStyle
@@ -355,8 +428,34 @@
   type: 	String
   typeSignature: 	String
 
+- assocRole_description: 	Attribute
+  clazz: 	assocRole
+  description: 	"the description of this role, used for generating JavaDocs"
+  descriptionLines: 	"the description of this role, used for generating JavaDocs"
+  id: 	AssocRole_description
+  modified: 	false
+  name: 	description
+  propertyStyle: 	Bean
+  since: 	1.3
+  type: 	String
+  typeSignature: 	String
+
+- assocRole_since: 	Attribute
+  clazz: 	assocRole
+  description: 	"the version when this role was introduced, used for generating JavaDocs"
+  descriptionLines: 	"the version when this role was introduced, used for generating JavaDocs"
+  id: 	AssocRole_since
+  modified: 	false
+  name: 	since
+  propertyStyle: 	Bean
+  since: 	1.3
+  type: 	String
+  typeSignature: 	String
+
 - assocRole_modified: 	Attribute
   clazz: 	assocRole
+  description: 	"a boolean indicating whether this role was modified. For internal use only."
+  descriptionLines: 	"a boolean indicating whether this role was modified. For internal use only."
   id: 	AssocRole_modified
   modified: 	false
   name: 	modified
@@ -399,6 +498,8 @@
 
 - fMethod_modified: 	Attribute
   clazz: 	fMethod
+  description: 	"a boolean indicating whether this method was modified. For internal use only."
+  descriptionLines: 	"a boolean indicating whether this method was modified. For internal use only."
   id: 	FMethod_modified
   modified: 	false
   name: 	modified
@@ -408,11 +509,14 @@
 
 - fMethod_modifiers: 	Attribute
   clazz: 	fMethod
+  description: 	"the modifiers. Defaults to \"public\""
+  descriptionLines: 	"the modifiers. Defaults to \"public\""
   id: 	FMethod_modifiers
   initialization: 	"\"public\""
   modified: 	false
   name: 	modifiers
   propertyStyle: 	Bean
+  since: 	1.2
   type: 	String
   typeSignature: 	String
 
