@@ -278,7 +278,9 @@ public class Attribute
     * @return the lines of the description of this attribute, used for generating JavaDocs
     *
     * @since 1.3
+    * @deprecated for internal use only
     */
+   @Deprecated
    public List<String> getDescriptionLines()
    {
       return this.getDescription() == null ? Collections.emptyList() : Arrays.asList(this.getDescription().split("\n"));

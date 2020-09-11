@@ -319,7 +319,6 @@ public class AssocRole
     * @return the lines of the description of this attribute, used for generating JavaDocs
     *
     * @since 1.3
-    *
     * @deprecated for internal use only
     */
    @Deprecated
