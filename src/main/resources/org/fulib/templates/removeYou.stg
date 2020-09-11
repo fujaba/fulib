@@ -1,16 +1,16 @@
 import "java.dicts.stg"
 
-removeYouSignatures(clazz, roles) ::= <<
+removeYouSignatures(clazz, roles, superCall) ::= <<
    removeYou: class/<clazz.name>/method/removeYou()
 >>
 
-removeYou(clazz, roles) ::= <<
-   <if(clazz.superClass)>
+removeYou(clazz, roles, superCall) ::= <<
+   <if(superCall)>
    @Override
    <endif>
    public void removeYou()
    {
-      <if(clazz.superClass)>
+      <if(superCall)>
       super.removeYou();
       <endif>
       <roles:removeRole(); separator="\n">

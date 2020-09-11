@@ -17,8 +17,8 @@ importDecl: IMPORT STATIC? qualifiedName (DOT STAR)? SEMI;
 classDecl: (modifier | annotation)* classMember;
 classMember: (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            typeParamList?
-           (EXTENDS annotatedTypeList)?
-           (IMPLEMENTS annotatedTypeList)?
+           (EXTENDS extendsTypes=annotatedTypeList)?
+           (IMPLEMENTS implementsTypes=annotatedTypeList)?
            classBody;
 
 classBody: LBRACE (enumConstants (SEMI (member | SEMI)*)? | (member | SEMI)*) RBRACE;
@@ -38,7 +38,7 @@ constructorMember: typeParamList? IDENTIFIER
 enumConstants: enumConstant (COMMA enumConstant)*;
 enumConstant: annotation* IDENTIFIER balancedParens? balancedBraces?;
 
-// field: (modifier | annotation)* fieldMember;
+field: (modifier | annotation)* fieldMember;
 fieldMember: type fieldNamePart (COMMA fieldNamePart)* SEMI;
 fieldNamePart: IDENTIFIER arraySuffix* (EQ expr)?;
 
@@ -51,7 +51,7 @@ methodMember: (typeParamList annotatedType | type) IDENTIFIER
         (balancedBraces | SEMI);
 
 parameterList: LPAREN (parameter (COMMA parameter)*)? RPAREN;
-parameter: (modifier | annotation)* type ELLIPSIS? (IDENTIFIER | (IDENTIFIER DOT)? THIS);
+parameter: (modifier | annotation)* type ELLIPSIS? (IDENTIFIER arraySuffix* | (IDENTIFIER DOT)? THIS);
 
 // --------------- Types ---------------
 
@@ -59,7 +59,7 @@ typeParamList: LANGLE (typeParam (COMMA typeParam)*)? RANGLE;
 typeParam: annotation* IDENTIFIER (EXTENDS annotatedType (AMP annotatedType)*)?;
 typeArg: annotation* (QMARK (EXTENDS annotatedType | SUPER annotatedType)? | type);
 
-type: (primitiveType | referenceType) arraySuffix*;
+type: (primitiveType | referenceType | importType) arraySuffix*;
 arraySuffix: annotation* LBRACKET RBRACKET;
 annotatedType: annotation* type;
 annotatedTypeList: annotatedType (COMMA annotatedType)*;
@@ -67,12 +67,14 @@ annotatedTypeList: annotatedType (COMMA annotatedType)*;
 primitiveType: VOID | BOOLEAN | BYTE | SHORT | CHAR | INT | LONG | FLOAT | DOUBLE;
 referenceType: referenceTypePart (DOT annotation* referenceTypePart)*;
 referenceTypePart: IDENTIFIER typeArgList?;
+importTypeName: IMPORT LPAREN qualifiedName RPAREN;
+importType: importTypeName typeArgList?;
 typeArgList: LANGLE (typeArg (COMMA typeArg)*)? RANGLE;
 
 // --------------- Misc. ---------------
 
 modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT | VOLATILE | SYNCHRONIZED | NATIVE | STRICTFP | DEFAULT;
-annotation: AT qualifiedName balancedParens?;
+annotation: AT (qualifiedName | importTypeName) balancedParens?;
 
 expr: (balancedBraces
       | balancedParens
@@ -147,7 +149,7 @@ DOUBLE: 'double';
 THIS: 'this';
 NEW: 'new';
 
-DOC_COMMENT: '/**' .*? '*/' -> channel(2);
+DOC_COMMENT: '/**' .*? '*/' -> channel(3); // TODO named JAVADOC channel (requires separate lexer + parser grammars)
 BLOCK_COMMENT: '/*' .*? '*/' -> channel(2);
 LINE_COMMENT: '//' .*? '\n' -> channel(2);
 

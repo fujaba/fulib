@@ -3,6 +3,9 @@ import "associations.pojo.stg"
 // --------------- Simple Accessors ---------------
 
 setMethod(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> set<role.name; format="cap">(<other.clazz.name> value)
    {
       if (this.<role.name> == value)
@@ -33,6 +36,9 @@ setMethod(role, other) ::= <<
 // --------------- With ---------------
 
 withItem(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> with<role.name; format="cap">(<other.clazz.name> value)
    {
       if (this.<role.name> == null)
@@ -54,6 +60,9 @@ withItem(role, other) ::= <<
 // --------------- Without ---------------
 
 withoutItem(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name> value)
    {
       if (this.<role.name> != null && this.<role.name>.remove(value))

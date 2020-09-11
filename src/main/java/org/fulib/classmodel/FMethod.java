@@ -2,14 +2,15 @@ package org.fulib.classmodel;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
+import org.fulib.parser.FragmentMapBuilder;
 import org.fulib.parser.FulibClassLexer;
 import org.fulib.parser.FulibClassParser;
+import org.fulib.util.Validator;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -153,9 +154,10 @@ public class FMethod
 
       String returnType = inputText(memberCtx.type());
 
-      for (Object ignored : memberCtx.arraySuffix())
+      for (int arrayDimensions = memberCtx.arraySuffix().size(); arrayDimensions > 0; arrayDimensions--)
       {
-         //noinspection StringConcatenationInLoop
+         // C-style arrays are so rare that normal methods don't need to pay the StringBuilder overhead
+         // noinspection StringConcatenationInLoop
          returnType += "[]";
       }
 
@@ -181,7 +183,17 @@ public class FMethod
       for (final FulibClassParser.ParameterContext paramCtx : paramsCtx.parameter())
       {
          final String name = paramCtx.IDENTIFIER().getText();
-         final String type = inputText(paramCtx.type());
+         String type = inputText(paramCtx.type());
+         for (int arrayDimensions = paramCtx.arraySuffix().size(); arrayDimensions > 0; arrayDimensions--)
+         {
+            // C-style arrays are so rare that normal methods don't need to pay the StringBuilder overhead
+            // noinspection StringConcatenationInLoop
+            type += "[]";
+         }
+         if (paramCtx.ELLIPSIS() != null)
+         {
+            type += "...";
+         }
          this.params.put(name, type);
       }
    }
@@ -205,6 +217,8 @@ public class FMethod
    }
 
    /**
+    * @return the modifiers. Defaults to "public"
+    *
     * @since 1.2
     */
    public String getModifiers()
@@ -213,6 +227,11 @@ public class FMethod
    }
 
    /**
+    * @param value
+    *    the modifiers. Defaults to "public"
+    *
+    * @return this
+    *
     * @since 1.2
     */
    public FMethod setModifiers(String value)
@@ -271,10 +290,18 @@ public class FMethod
     */
    public String getSignature()
    {
-      String paramTypes = this.getParams().entrySet().stream().filter(e -> !"this".equals(e.getKey()))
-                              .map(Map.Entry::getValue).collect(Collectors.joining(","));
-      return FileFragmentMap.CLASS + '/' + this.getClazz().getName() + '/' + FileFragmentMap.METHOD + '/'
-             + this.getName() + '(' + paramTypes + ')';
+      final CharStream input = CharStreams.fromString("(" + this.getParamsString() + ")");
+      final FulibClassLexer lexer = new FulibClassLexer(input);
+      final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
+      final FulibClassParser.ParameterListContext paramsCtx = parser.parameterList();
+      final String paramsSignature = FragmentMapBuilder.getParamsSignature(paramsCtx);
+
+      final int parameterCount = this.params.size() - (this.params.containsKey("this") ? 1 : 0);
+      final String kind = Validator.isProperty(this.getName(), parameterCount)
+         ? FileFragmentMap.PROPERTY
+         : FileFragmentMap.METHOD;
+      return FileFragmentMap.CLASS + '/' + this.getClazz().getName() + '/' + kind + '/' + this.getName()
+             + paramsSignature;
    }
 
    /**
@@ -312,11 +339,20 @@ public class FMethod
       return this;
    }
 
+   /**
+    * @return a boolean indicating whether this method was modified. For internal use only.
+    */
    public boolean getModified()
    {
       return this.modified;
    }
 
+   /**
+    * @param value
+    *    a boolean indicating whether this method was modified. For internal use only.
+    *
+    * @return this
+    */
    public FMethod setModified(boolean value)
    {
       if (value == this.modified)

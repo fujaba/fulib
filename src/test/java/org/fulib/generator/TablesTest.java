@@ -256,8 +256,8 @@ public class TablesTest
       };
 
       assignmentsFilterRow.invoke(assignmentsTable, rowPredicate);
-      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
-      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math \tmatrices"));
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \t| wa1337 Math \t| integrals")));
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \t| wa1337 Math \t| matrices"));
 
       // has done
       uniTable = declaredConstructors.newInstance(uniArray);
@@ -266,8 +266,8 @@ public class TablesTest
       assignmentsTable = roomsExpandAssignments.invoke(roomsTable, "Assignments");
 
       studentTablehasDone.invoke(studentsTable, assignmentsTable);
-      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math \tintegrals"));
-      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tmatrices")));
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \t| wa1337 Math \t| integrals"));
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \t| wa1337 Math \t| matrices")));
 
       // select columns
       uniTable = declaredConstructors.newInstance(uniArray);
@@ -276,8 +276,8 @@ public class TablesTest
       assignmentsTable = roomsExpandAssignments.invoke(roomsTable, "Assignments");
 
       studentTableSelectColumns.invoke(studentsTable, new Object[] { new String[] { "Students", "Rooms" } });
-      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math"));
-      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \t| wa1337 Math"));
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \t| wa1337 Math \t| integrals")));
 
       // drop columns
       uniTable = declaredConstructors.newInstance(uniArray);
@@ -286,8 +286,8 @@ public class TablesTest
       assignmentsTable = roomsExpandAssignments.invoke(roomsTable, "Assignments");
 
       studentTableDropColumns.invoke(studentsTable, new Object[] { new String[] { "Assignments" } });
-      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \twa1337 Math"));
-      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \twa1337 Math \tintegrals")));
+      assertThat(assignmentsTable.toString(), containsString("Alice m4242 \t| wa1337 Math"));
+      assertThat(assignmentsTable.toString(), not(containsString("Alice m4242 \t| wa1337 Math \t| integrals")));
 
       // add column
       uniTable = declaredConstructors.newInstance(uniArray);

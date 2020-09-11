@@ -1,71 +1,78 @@
 import "java.dicts.stg"
+import "javadoc.stg"
 
 collectionImpl(attr) ::= <%
 <attr.collectionType.simpleImplName>
 <if(attr.collectionType.generic)>\<><endif>
 %>
 
-box(attr) ::= <%
-<boxMap.(attr.type)>
+collectionItf(attr) ::= <%
+<attr.collectionType.itf.simpleName>\<<box(attr.type)>>
 %>
 
-collectionItf(attr) ::= <%
-<attr.collectionType.itf.simpleName>\<<box(attr)>>
+attrType(attr) ::= <%
+<if(attr.collection)>
+<collectionItf(attr)>
+<else>
+<attr.type>
+<endif>
 %>
 
 // --------------- Declarations ---------------
 
 attrSignatures(attr) ::= <<
-   propertyDecl:     class/<attr.clazz.name>/attribute/PROPERTY_<attr.name>
+   propertyDecl:     class/<attr.clazz.name>/staticAttribute/PROPERTY_<attr.name>
    attrDecl:         class/<attr.clazz.name>/attribute/<attr.name>
-   attrGet:          class/<attr.clazz.name>/method/get<attr.name; format="cap">()
+   attrGet:          class/<attr.clazz.name>/property/get<attr.name; format="cap">()
    <if(javaFX.(attr.propertyStyle))>
-   initMethod:       class/<attr.clazz.name>/method/_init<attr.name; format="cap">()
-   propertyGet:      class/<attr.clazz.name>/method/<attr.name>Property()
+   initMethod:       class/<attr.clazz.name>/property/_init<attr.name; format="cap">()
+   propertyGet:      class/<attr.clazz.name>/property/<attr.name>Property()
    <endif>
    <if(attr.collection)>
-   attrWithItem:     class/<attr.clazz.name>/method/with<attr.name; format="cap">(<box(attr)>)
-   attrWithArray:    class/<attr.clazz.name>/method/with<attr.name; format="cap">(<box(attr)>...)
-   attrWithColl:     class/<attr.clazz.name>/method/with<attr.name; format="cap">(Collection\<? extends <box(attr)>\>)
-   attrWithoutItem:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(<box(attr)>)
-   attrWithoutArray: class/<attr.clazz.name>/method/without<attr.name; format="cap">(<box(attr)>...)
-   attrWithoutColl:  class/<attr.clazz.name>/method/without<attr.name; format="cap">(Collection\<? extends <box(attr)>\>)
+   attrWithItem:     class/<attr.clazz.name>/property/with<attr.name; format="cap">(<box(attr.typeSignature)>)
+   attrWithArray:    class/<attr.clazz.name>/property/with<attr.name; format="cap">(<box(attr.typeSignature)>...)
+   attrWithColl:     class/<attr.clazz.name>/property/with<attr.name; format="cap">(Collection\<? extends <box(attr.typeSignature)>\>)
+   attrWithoutItem:  class/<attr.clazz.name>/property/without<attr.name; format="cap">(<box(attr.typeSignature)>)
+   attrWithoutArray: class/<attr.clazz.name>/property/without<attr.name; format="cap">(<box(attr.typeSignature)>...)
+   attrWithoutColl:  class/<attr.clazz.name>/property/without<attr.name; format="cap">(Collection\<? extends <box(attr.typeSignature)>\>)
    attrSetAllArray:  class/<attr.clazz.name>/method/set<attr.name; format="cap">(<box(attr)>...)
    attrSetAllColl:   class/<attr.clazz.name>/method/set<attr.name; format="cap">(Collection\<? extends <box(attr)>\>)
    <else>
-   attrSet:          class/<attr.clazz.name>/method/set<attr.name; format="cap">(<attr.type>)
+   attrSet:          class/<attr.clazz.name>/property/set<attr.name; format="cap">(<attr.typeSignature>)
    <endif>
 >>
 
 attrDecl(attr) ::= <<
-<if(attr.collection)>
-   private <collectionItf(attr)> <attr.name><if(attr.initialization)> = <attr.initialization><endif>;
-<else>
-   private <attr.type> <attr.name><if(attr.initialization)> = <attr.initialization><endif>;
-<endif>
+   private <attrType(attr)> <attr.name><if(attr.initialization)> = <attr.initialization><endif>;
 >>
 
 propertyDecl(attr) ::= <<
+<if(attr.since)>
+   /** @since <attr.since> */
+<endif>
    public static final String PROPERTY_<attr.name> = "<attr.name>";
 >>
 
 // --------------- Simple Accessors ---------------
 
 attrGet(attr) ::= <<
-<if(attr.collection)>
-   public <collectionItf(attr)> get<attr.name; format="cap">()
-   {
-      return this.<attr.name> != null ? import(java.util.Collections).unmodifiable<attr.collectionType.itf.simpleName>(this.<attr.name>) : import(java.util.Collections).empty<attr.collectionType.itf.simpleName>();
-   }
-<else>
-   public <attr.type> get<attr.name; format="cap">()
-   {
-      return this.<attr.name>;
-   }
+<if(attr.description)>
+   <getterJavaDoc(attr)>
 <endif>
+   public <attrType(attr)> get<attr.name; format="cap">()
+   {
+<if(attr.collection)>
+      return this.<attr.name> != null ? import(java.util.Collections).unmodifiable<attr.collectionType.itf.simpleName>(this.<attr.name>) : import(java.util.Collections).empty<attr.collectionType.itf.simpleName>();
+<else>
+      return this.<attr.name>;
+<endif>
+   }
 >>
 
 attrSet(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
       this.<attr.name> = value;
@@ -76,7 +83,10 @@ attrSet(attr) ::= <<
 // --------------- With ---------------
 
 attrWithItem(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr)> value)
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)> value)
    {
       if (this.<attr.name> == null)
       {
@@ -88,7 +98,10 @@ attrWithItem(attr) ::= <<
 >>
 
 attrWithArray(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr)>... value)
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)>... value)
    {
       this.with<attr.name; format="cap">(import(java.util.Arrays).asList(value));
       return this;
@@ -96,7 +109,10 @@ attrWithArray(attr) ::= <<
 >>
 
 attrWithColl(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> with<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
       if (this.<attr.name> == null)
       {
@@ -113,7 +129,10 @@ attrWithColl(attr) ::= <<
 // --------------- Without ---------------
 
 attrWithoutItem(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr)> value)
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)> value)
    {
       this.<attr.name>.removeAll(import(java.util.Collections).singleton(value));
       return this;
@@ -121,7 +140,10 @@ attrWithoutItem(attr) ::= <<
 >>
 
 attrWithoutArray(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr)>... value)
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)>... value)
    {
       this.without<attr.name; format="cap">(import(java.util.Arrays).asList(value));
       return this;
@@ -129,7 +151,10 @@ attrWithoutArray(attr) ::= <<
 >>
 
 attrWithoutColl(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> without<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
       if (this.<attr.name> != null)
       {
@@ -142,14 +167,14 @@ attrWithoutColl(attr) ::= <<
 // --------------- Set All ---------------
 
 attrSetAllArray(attr) ::= <<
-   public <attr.clazz.name> set<attr.name; format="cap">(<box(attr)>... value)
+   public <attr.clazz.name> set<attr.name; format="cap">(<box(attr.type)>... value)
    {
       return this.set<attr.name; format="cap">(import(java.util.Arrays).asList(value));
    }
 >>
 
 attrSetAllColl(attr) ::= <<
-   public <attr.clazz.name> set<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
+   public <attr.clazz.name> set<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
       if (this.<attr.name> == null)
       {
