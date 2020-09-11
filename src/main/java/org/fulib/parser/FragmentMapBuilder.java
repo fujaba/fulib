@@ -27,6 +27,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    // =============== Fields ===============
 
    private final CharStream input;
+   private final CommonTokenStream tokenStream;
    private final FileFragmentMap map;
 
    private int lastFragmentEndPos = -1;
@@ -34,9 +35,24 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    // =============== Constructors ===============
 
+   /**
+    * @param input
+    *    the character input
+    * @param map
+    *    the fragment map that should be populated
+    *
+    * @deprecated since 1.3; for internal use only - use one of the public static methods
+    */
+   @Deprecated
    public FragmentMapBuilder(CharStream input, FileFragmentMap map)
    {
+      this(input, null, map);
+   }
+
+   private FragmentMapBuilder(CharStream input, CommonTokenStream tokenStream, FileFragmentMap map)
+   {
       this.input = input;
+      this.tokenStream = tokenStream;
       this.map = map;
    }
 
@@ -60,7 +76,8 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    public static FileFragmentMap parse(String fileName, CharStream input)
    {
       final FulibClassLexer lexer = new FulibClassLexer(input);
-      final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
+      final CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+      final FulibClassParser parser = new FulibClassParser(tokenStream);
       parser.removeErrorListeners();
 
       final StringWriter writer = new StringWriter();
@@ -69,7 +86,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final FileContext context = parser.file();
 
       final FileFragmentMap map = new FileFragmentMap(fileName);
-      final FragmentMapBuilder builder = new FragmentMapBuilder(input, map);
+      final FragmentMapBuilder builder = new FragmentMapBuilder(input, tokenStream, map);
       ParseTreeWalker.DEFAULT.walk(builder, context);
 
       final String errors = writer.toString();
@@ -152,8 +169,10 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    {
       final ClassMemberContext classMemberCtx = ctx.classMember();
       this.className = classMemberCtx.IDENTIFIER().getText();
-      this.addCodeFragment(CLASS + '/' + this.className + '/' + CLASS_DECL, ctx.getStart().getStartIndex(),
-                           classMemberCtx.classBody().LBRACE().getSymbol().getStopIndex());
+
+      final Token start = this.getStartOrJavaDoc(ctx);
+      final Token stop = classMemberCtx.classBody().LBRACE().getSymbol();
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + CLASS_DECL, start, stop);
    }
 
    @Override
@@ -167,7 +186,9 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       if (size == 1)
       {
          // only one field, straightforward (pass the whole ctx)
-         this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName, memberCtx);
+         final Token start = this.getStartOrJavaDoc(memberCtx);
+         final Token stop = memberCtx.getStop();
+         this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName, start, stop);
          return;
       }
 
@@ -184,21 +205,21 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final List<TerminalNode> commas = ctx.COMMA();
 
       // first part includes type and annotations and first comma
-      this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName, memberCtx.getStart(),
-                           commas.get(0).getSymbol());
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName,
+                           this.getStartOrJavaDoc(memberCtx), commas.get(0).getSymbol());
 
       // all but the first and last part range from name to comma
       for (int i = 1; i < size - 1; i++)
       {
          final FieldNamePartContext namePart = nameParts.get(i);
          this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + namePart.IDENTIFIER().getText(),
-                              namePart.getStart(), commas.get(i).getSymbol());
+                              this.getStartOrJavaDoc(namePart), commas.get(i).getSymbol());
       }
 
       // last part includes semicolon
       final FieldNamePartContext lastPart = nameParts.get(size - 1);
       this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + lastPart.IDENTIFIER().getText(),
-                           lastPart.getStart(), memberCtx.getStop());
+                           this.getStartOrJavaDoc(lastPart), memberCtx.getStop());
    }
 
    @Override
@@ -216,7 +237,8 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       signature.append(this.className);
       writeParams(signature, ctx.parameterList());
 
-      this.addCodeFragment(signature.toString(), memberCtx);
+      final Token start = this.getStartOrJavaDoc(memberCtx);
+      this.addCodeFragment(signature.toString(), start, memberCtx.getStop());
    }
 
    @Override
@@ -236,7 +258,37 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       signature.append(methodName);
       writeParams(signature, ctx.parameterList());
 
-      this.addCodeFragment(signature.toString(), memberCtx);
+      final Token start = this.getStartOrJavaDoc(memberCtx);
+      this.addCodeFragment(signature.toString(), start, memberCtx.getStop());
+   }
+
+   private Token getStartOrJavaDoc(ParserRuleContext memberCtx)
+   {
+      final Token start = memberCtx.getStart();
+
+      // TODO remove if statement when removing the public constructor in v2
+      if (this.tokenStream == null)
+      {
+         // for compatibility, the constructor without the tokenStream parameter is still available.
+         return start;
+      }
+
+      for (int i = start.getTokenIndex() - 1; i >= 0; i--)
+      {
+         final Token prev = this.tokenStream.get(i);
+         switch (prev.getChannel())
+         {
+         case 2: // TODO FulibClassLexer.COMMENT
+            // regular comments between the JavaDoc comment and the declaration are ok
+            continue;
+         case 3: // TODO FulibClassLexer.JAVADOC
+            return prev;
+         default:
+            // anything other than a comment indicates that there is no JavaDoc comment for this declaration
+            return start;
+         }
+      }
+      return start;
    }
 
    public static String getParamsSignature(ParameterListContext paramsCtx)

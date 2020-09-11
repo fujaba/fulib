@@ -11,6 +11,9 @@ import org.fulib.util.Validator;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class Attribute
@@ -23,6 +26,10 @@ public class Attribute
    public static final String PROPERTY_collectionType = "collectionType";
    public static final String PROPERTY_initialization = "initialization";
    public static final String PROPERTY_propertyStyle = "propertyStyle";
+   /** @since 1.3 */
+   public static final String PROPERTY_description = "description";
+   /** @since 1.3 */
+   public static final String PROPERTY_since = "since";
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_clazz = "clazz";
 
@@ -36,6 +43,8 @@ public class Attribute
    private CollectionType collectionType;
    private String initialization;
    private String propertyStyle;
+   private String description;
+   private String since;
    private boolean modified;
 
    private String typeSignature;
@@ -158,9 +167,9 @@ public class Attribute
 
    /**
     * @param value
-    *    the new collection type
+    *    the collection type
     *
-    * @return this instance, to allow method chaining
+    * @return this
     *
     * @since 1.2
     */
@@ -206,7 +215,8 @@ public class Attribute
    }
 
    /**
-    * @return the property style of this attribute
+    * @return the property style.
+    * Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     */
    public String getPropertyStyle()
    {
@@ -215,10 +225,10 @@ public class Attribute
 
    /**
     * @param value
-    *    the property style to use for this attribute.
+    *    the property style.
     *    Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public Attribute setPropertyStyle(String value)
    {
@@ -234,6 +244,80 @@ public class Attribute
    }
 
    /**
+    * @return the description of this attribute, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String getDescription()
+   {
+      return this.description;
+   }
+
+   /**
+    * @param value
+    *    the description of this attribute, used for generating JavaDocs
+    *
+    * @return this
+    *
+    * @since 1.3
+    */
+   public Attribute setDescription(String value)
+   {
+      if (Objects.equals(value, this.description))
+      {
+         return this;
+      }
+
+      final String oldValue = this.description;
+      this.description = value;
+      this.firePropertyChange(PROPERTY_description, oldValue, value);
+      return this;
+   }
+
+   /**
+    * @return the lines of the description of this attribute, used for generating JavaDocs
+    *
+    * @since 1.3
+    * @deprecated for internal use only
+    */
+   @Deprecated
+   public List<String> getDescriptionLines()
+   {
+      return this.getDescription() == null ? Collections.emptyList() : Arrays.asList(this.getDescription().split("\n"));
+   }
+
+   /**
+    * @return the version when this attribute was introduced, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String getSince()
+   {
+      return this.since;
+   }
+
+   /**
+    * @param value
+    *    the version when this attribute was introduced, used for generating JavaDocs
+    *
+    * @return this
+    *
+    * @since 1.3
+    */
+   public Attribute setSince(String value)
+   {
+      if (Objects.equals(value, this.since))
+      {
+         return this;
+      }
+
+      final String oldValue = this.since;
+      this.since = value;
+      this.firePropertyChange(PROPERTY_since, oldValue, value);
+      return this;
+   }
+
+   /**
     * @return a boolean indicating whether this attribute was modified. For internal use only.
     */
    public boolean getModified()
@@ -245,7 +329,7 @@ public class Attribute
     * @param value
     *    a boolean indicating whether this attribute was modified. For internal use only.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public Attribute setModified(boolean value)
    {
@@ -334,6 +418,8 @@ public class Attribute
       result.append(' ').append(this.getType());
       result.append(' ').append(this.getInitialization());
       result.append(' ').append(this.getPropertyStyle());
+      result.append(' ').append(this.getDescription());
+      result.append(' ').append(this.getSince());
       return result.substring(1);
    }
 }

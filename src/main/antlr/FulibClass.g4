@@ -149,7 +149,7 @@ DOUBLE: 'double';
 THIS: 'this';
 NEW: 'new';
 
-DOC_COMMENT: '/**' .*? '*/' -> channel(2);
+DOC_COMMENT: '/**' .*? '*/' -> channel(3); // TODO named JAVADOC channel (requires separate lexer + parser grammars)
 BLOCK_COMMENT: '/*' .*? '*/' -> channel(2);
 LINE_COMMENT: '//' .*? '\n' -> channel(2);
 

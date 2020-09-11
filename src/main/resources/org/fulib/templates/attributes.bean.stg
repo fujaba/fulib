@@ -3,6 +3,9 @@ import "attributes.pojo.stg"
 // --------------- Simple Accessors ---------------
 
 attrSet(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
       if (<if(primitive.(attr.type))>value == this.<attr.name><else>import(java.util.Objects).equals(value, this.<attr.name>)<endif>)
@@ -20,6 +23,9 @@ attrSet(attr) ::= <<
 // --------------- With ---------------
 
 attrWithItem(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)> value)
    {
       if (this.<attr.name> == null)
@@ -35,6 +41,9 @@ attrWithItem(attr) ::= <<
 >>
 
 attrWithArray(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)>... value)
    {
       for (final <attr.type> item : value)
@@ -46,6 +55,9 @@ attrWithArray(attr) ::= <<
 >>
 
 attrWithColl(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> with<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
       for (final <box(attr.type)> item : value)
@@ -59,6 +71,9 @@ attrWithColl(attr) ::= <<
 // --------------- Without ---------------
 
 attrWithoutItem(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)> value)
    {
       if (this.<attr.name> != null && this.<attr.name>.removeAll(import(java.util.Collections).singleton(value)))
@@ -70,6 +85,9 @@ attrWithoutItem(attr) ::= <<
 >>
 
 attrWithoutArray(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)>... value)
    {
       for (final <box(attr.type)> item : value)
@@ -81,6 +99,9 @@ attrWithoutArray(attr) ::= <<
 >>
 
 attrWithoutColl(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> without<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
       for (final <box(attr.type)> item : value)
