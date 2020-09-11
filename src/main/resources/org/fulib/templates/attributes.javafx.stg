@@ -87,7 +87,7 @@ attrSetAllArray(attr) ::= <<
 <if(attr.description)>
    <setterJavaDoc(attr)>
 <endif>
-   public <attr.clazz.name> set<attr.name; format="cap">(<box(attr)>... value)
+   public <attr.clazz.name> set<attr.name; format="cap">(<box(attr.type)>... value)
    {
       this.<attr.name>.setAll(value);
       return this;
@@ -98,7 +98,7 @@ attrSetAllColl(attr) ::= <<
 <if(attr.description)>
    <setterJavaDoc(attr)>
 <endif>
-   public <attr.clazz.name> set<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
+   public <attr.clazz.name> set<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
       this.<attr.name>.setAll(value);
       return this;
