@@ -166,24 +166,27 @@ toSet(clazz) ::= <<
 tableToString(clazz) ::= <<
    public String toString()
    {
-      StringBuilder buf = new StringBuilder("| ");
-      StringBuilder columnLine = new StringBuilder("| ");
+      StringBuilder buf = new StringBuilder();
       for (String key : this.columnMap.keySet())
       {
-         buf.append(key).append(" \t| ");
-         columnLine.append("--- \t| ");
+         buf.append("| ").append(key).append(" \t");
       }
-      buf.append("\n").append(columnLine.toString()).append("\n");
+      buf.append("|\n");
+
+      for (String ignored : this.columnMap.keySet())
+      {
+         buf.append("| --- ");
+      }
+      buf.append("|\n");
+
       for (List\<?> row : this.table)
       {
-         buf.append("| ");
          for (Object cell : row)
          {
-            buf.append(cell).append(" \t| ");
+            buf.append("| ").append(cell).append(" \t");
          }
-         buf.append("\n");
+         buf.append("|\n");
       }
-      buf.append("\n");
       return buf.toString();
    }
 >>
