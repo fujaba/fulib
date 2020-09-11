@@ -18,6 +18,7 @@ import static org.fulib.classmodel.FileFragmentMap.EOF;
 import static org.fulib.classmodel.FileFragmentMap.IMPORT;
 import static org.fulib.classmodel.FileFragmentMap.PACKAGE;
 import static org.fulib.classmodel.FileFragmentMap.*;
+import static org.fulib.util.Validator.isProperty;
 
 /**
  * @since 1.2
@@ -182,13 +183,16 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final List<FieldNamePartContext> nameParts = ctx.fieldNamePart();
       final int size = nameParts.size();
 
+      final boolean isStatic = memberCtx.modifier().stream().anyMatch(m -> m.STATIC() != null);
+      final String kind = isStatic ? STATIC_ATTRIBUTE : ATTRIBUTE;
+
       final String firstName = nameParts.get(0).IDENTIFIER().getText();
       if (size == 1)
       {
          // only one field, straightforward (pass the whole ctx)
          final Token start = this.getStartOrJavaDoc(memberCtx);
          final Token stop = memberCtx.getStop();
-         this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName, start, stop);
+         this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + firstName, start, stop);
          return;
       }
 
@@ -205,20 +209,20 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final List<TerminalNode> commas = ctx.COMMA();
 
       // first part includes type and annotations and first comma
-      this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + firstName,
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + firstName,
                            this.getStartOrJavaDoc(memberCtx), commas.get(0).getSymbol());
 
       // all but the first and last part range from name to comma
       for (int i = 1; i < size - 1; i++)
       {
          final FieldNamePartContext namePart = nameParts.get(i);
-         this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + namePart.IDENTIFIER().getText(),
+         this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + namePart.IDENTIFIER().getText(),
                               this.getStartOrJavaDoc(namePart), commas.get(i).getSymbol());
       }
 
       // last part includes semicolon
       final FieldNamePartContext lastPart = nameParts.get(size - 1);
-      this.addCodeFragment(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + lastPart.IDENTIFIER().getText(),
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + lastPart.IDENTIFIER().getText(),
                            this.getStartOrJavaDoc(lastPart), memberCtx.getStop());
    }
 
@@ -253,7 +257,8 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       signature.append('/');
       signature.append(this.className);
       signature.append('/');
-      signature.append(METHOD);
+      final int parameterCount = (int) ctx.parameterList().parameter().stream().filter(p -> p.THIS() == null).count();
+      signature.append(isProperty(methodName, parameterCount) ? PROPERTY : METHOD);
       signature.append('/');
       signature.append(methodName);
       writeParams(signature, ctx.parameterList());
@@ -439,10 +444,14 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    @Override
    public void exitClassDecl(ClassDeclContext ctx)
    {
-      // make sure the method/ and attribute/ sections get created by adding dummies
-      this.map.append(
+      // make sure the major sections exist by adding dummies
+      this.map.insert(
+         new CodeFragment().setKey(CLASS + '/' + this.className + '/' + STATIC_ATTRIBUTE + '/' + "#start").setText(""));
+      this.map.insert(
          new CodeFragment().setKey(CLASS + '/' + this.className + '/' + ATTRIBUTE + '/' + "#start").setText(""));
-      this.map.append(
+      this.map.insert(
+         new CodeFragment().setKey(CLASS + '/' + this.className + '/' + PROPERTY + '/' + "#start").setText(""));
+      this.map.insert(
          new CodeFragment().setKey(CLASS + '/' + this.className + '/' + METHOD + '/' + "#start").setText(""));
       this.addCodeFragment(CLASS + '/' + this.className + '/' + CLASS_END, ctx.classMember().classBody().RBRACE());
    }

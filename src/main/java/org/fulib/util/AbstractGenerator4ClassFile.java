@@ -216,7 +216,9 @@ public abstract class AbstractGenerator4ClassFile
          else
          {
             final String templateName = matcher.group(1);
-            final int newLines = signature.contains("/attribute/") ? FIELD_NEWLINES : METHOD_NEWLINES;
+            final int newLines = signature.contains("/attribute/") || signature.contains("/staticAttribute/")
+               ? FIELD_NEWLINES
+               : METHOD_NEWLINES;
             final ST namedST = group.getInstanceOf(templateName);
             addTarget.accept(namedST);
 

@@ -21,24 +21,24 @@ roleType(role, other) ::= <%
 // --------------- Declarations ---------------
 
 roleSignatures(role, other) ::= <<
-   propertyDecl:           class/<role.clazz.name>/attribute/PROPERTY_<role.name>
+   propertyDecl:           class/<role.clazz.name>/staticAttribute/PROPERTY_<role.name>
    roleAttrDecl:           class/<role.clazz.name>/attribute/<role.name>
-   getMethod:              class/<role.clazz.name>/method/get<role.name; format="cap">()
+   getMethod:              class/<role.clazz.name>/property/get<role.name; format="cap">()
    <if(javaFX.(role.propertyStyle))>
-      initMethod:          class/<role.clazz.name>/method/_init<role.name; format="cap">()
+      initMethod:          class/<role.clazz.name>/property/_init<role.name; format="cap">()
       <if(!role.toMany)>
-         propertyMethod:   class/<role.clazz.name>/method/<role.name>Property()
+         propertyMethod:   class/<role.clazz.name>/property/<role.name>Property()
       <endif>
    <endif>
    <if(role.toMany)>
-      withItem:            class/<role.clazz.name>/method/with<role.name; format="cap">(<other.clazz.name>)
-      withArray:           class/<role.clazz.name>/method/with<role.name; format="cap">(<other.clazz.name>...)
-      withColl:            class/<role.clazz.name>/method/with<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
-      withoutItem:         class/<role.clazz.name>/method/without<role.name; format="cap">(<other.clazz.name>)
-      withoutArray:        class/<role.clazz.name>/method/without<role.name; format="cap">(<other.clazz.name>...)
-      withoutColl:         class/<role.clazz.name>/method/without<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
+      withItem:            class/<role.clazz.name>/property/with<role.name; format="cap">(<other.clazz.name>)
+      withArray:           class/<role.clazz.name>/property/with<role.name; format="cap">(<other.clazz.name>...)
+      withColl:            class/<role.clazz.name>/property/with<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
+      withoutItem:         class/<role.clazz.name>/property/without<role.name; format="cap">(<other.clazz.name>)
+      withoutArray:        class/<role.clazz.name>/property/without<role.name; format="cap">(<other.clazz.name>...)
+      withoutColl:         class/<role.clazz.name>/property/without<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
    <else>
-      setMethod:           class/<role.clazz.name>/method/set<role.name; format="cap">(<other.clazz.name>)
+      setMethod:           class/<role.clazz.name>/property/set<role.name; format="cap">(<other.clazz.name>)
    <endif>
 >>
 

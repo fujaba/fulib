@@ -31,7 +31,9 @@ public class FileFragmentMap
    /** @since 1.2 */ public static final String PACKAGE = "package";
    /** @since 1.2 */ public static final String CONSTRUCTOR = "constructor";
    /** @since 1.2 */ public static final String ATTRIBUTE = "attribute";
+   /** @since 1.3 */ public static final String STATIC_ATTRIBUTE = "staticAttribute";
    /** @since 1.2 */ public static final String METHOD = "method";
+   /** @since 1.3 */ public static final String PROPERTY = "property";
    /** @since 1.2 */ public static final String IMPORT = "import";
    /** @since 1.2 */ public static final String CLASS_BODY = "classBody";
    /** @since 1.2 */ public static final String CLASS_DECL = "classDecl";
@@ -55,7 +57,8 @@ public class FileFragmentMap
 
    private static final Pattern CLASS_DECL_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_DECL + "$");
    private static final Pattern CLASS_END_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + CLASS_END + "$");
-   private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("^" + CLASS + "/(\\w+)/" + ATTRIBUTE + "/(\\w+)$");
+   private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile(
+      "^" + CLASS + "/(\\w+)/(" + ATTRIBUTE + "|" + STATIC_ATTRIBUTE + ")/(\\w+)$");
 
    private static final String GAP_BEFORE = "#gap-before";
 
