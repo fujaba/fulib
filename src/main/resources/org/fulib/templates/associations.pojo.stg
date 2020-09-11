@@ -37,8 +37,8 @@ roleSignatures(role, other) ::= <<
       withoutItem:         class/<role.clazz.name>/property/without<role.name; format="cap">(<other.clazz.name>)
       withoutArray:        class/<role.clazz.name>/property/without<role.name; format="cap">(<other.clazz.name>...)
       withoutColl:         class/<role.clazz.name>/property/without<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
-      setAllArray:         class/<role.clazz.name>/method/set<role.name; format="cap">(<other.clazz.name>...)
-      setAllColl:          class/<role.clazz.name>/method/set<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
+      setAllArray:         class/<role.clazz.name>/property/set<role.name; format="cap">(<other.clazz.name>...)
+      setAllColl:          class/<role.clazz.name>/property/set<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
    <else>
       setMethod:           class/<role.clazz.name>/property/set<role.name; format="cap">(<other.clazz.name>)
    <endif>
