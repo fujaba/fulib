@@ -77,6 +77,9 @@ withoutItem(role, other) ::= <<
 >>
 
 setAllColl(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> set<role.name; format="cap">(import(java.util.Collection)\<? extends <other.clazz.name>\> value)
    {
       if (this.<role.name> == null)
