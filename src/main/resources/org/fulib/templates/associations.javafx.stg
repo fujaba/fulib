@@ -46,7 +46,7 @@ setMethod(role, other) ::= <<
 
 withItem(role, other) ::= <<
 <if(role.description)>
-   <setterJavaDoc(role)>
+   <witherJavaDoc(role)>
 <endif>
    public <role.clazz.name> with<role.name; format="cap">(<other.clazz.name> value)
    {
@@ -60,7 +60,7 @@ withItem(role, other) ::= <<
 
 withoutItem(role, other) ::= <<
 <if(role.description)>
-   <setterJavaDoc(role)>
+   <withouterJavaDoc(role)>
 <endif>
    public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name> value)
    {

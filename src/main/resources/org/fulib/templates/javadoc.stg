@@ -22,3 +22,7 @@ setterJavaDoc(attr) ::= <<
 <endif>
  */
 >>
+
+witherJavaDoc(attr) ::= "<setterJavaDoc(attr)>"
+
+withouterJavaDoc(attr) ::= "<setterJavaDoc(attr)>"

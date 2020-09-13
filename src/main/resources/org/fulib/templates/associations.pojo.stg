@@ -103,7 +103,7 @@ setMethod(role, other) ::= <<
 
 withItem(role, other) ::= <<
 <if(role.description)>
-   <setterJavaDoc(role)>
+   <witherJavaDoc(role)>
 <endif>
    public <role.clazz.name> with<role.name; format="cap">(<other.clazz.name> value)
    {
@@ -124,7 +124,7 @@ withItem(role, other) ::= <<
 
 withArray(role, other) ::= <<
 <if(role.description)>
-   <setterJavaDoc(role)>
+   <witherJavaDoc(role)>
 <endif>
    public <role.clazz.name> with<role.name; format="cap">(<other.clazz.name>... value)
    {
@@ -138,7 +138,7 @@ withArray(role, other) ::= <<
 
 withColl(role, other) ::= <<
 <if(role.description)>
-   <setterJavaDoc(role)>
+   <witherJavaDoc(role)>
 <endif>
    public <role.clazz.name> with<role.name; format="cap">(import(java.util.Collection)\<? extends <other.clazz.name>\> value)
    {
@@ -154,7 +154,7 @@ withColl(role, other) ::= <<
 
 withoutItem(role, other) ::= <<
 <if(role.description)>
-   <setterJavaDoc(role)>
+   <withouterJavaDoc(role)>
 <endif>
    public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name> value)
    {
@@ -170,7 +170,7 @@ withoutItem(role, other) ::= <<
 
 withoutArray(role, other) ::= <<
 <if(role.description)>
-   <setterJavaDoc(role)>
+   <withouterJavaDoc(role)>
 <endif>
    public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name>... value)
    {
@@ -184,7 +184,7 @@ withoutArray(role, other) ::= <<
 
 withoutColl(role, other) ::= <<
 <if(role.description)>
-   <setterJavaDoc(role)>
+   <withouterJavaDoc(role)>
 <endif>
    public <role.clazz.name> without<role.name; format="cap">(import(java.util.Collection)\<? extends <other.clazz.name>\> value)
    {
