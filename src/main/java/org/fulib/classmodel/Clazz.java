@@ -184,6 +184,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Clazz#setSuperClass(Clazz)
     * @since 1.2
     */
    public Clazz withSubClasses(Clazz value)
@@ -207,6 +208,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Clazz#setSuperClass(Clazz)
     * @since 1.2
     */
    public Clazz withSubClasses(Clazz... value)
@@ -224,6 +226,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Clazz#setSuperClass(Clazz)
     * @since 1.2
     */
    public Clazz withSubClasses(Collection<? extends Clazz> value)
@@ -267,6 +270,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Clazz#setSuperClass(Clazz)
     * @since 1.2
     */
    public Clazz withoutSubClasses(Clazz value)
@@ -285,6 +289,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Clazz#setSuperClass(Clazz)
     * @since 1.2
     */
    public Clazz withoutSubClasses(Clazz... value)
@@ -302,6 +307,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Clazz#setSuperClass(Clazz)
     * @since 1.2
     */
    public Clazz withoutSubClasses(Collection<? extends Clazz> value)
@@ -366,6 +372,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Attribute#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withAttributes(Attribute value)
@@ -389,6 +396,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Attribute#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withAttributes(Attribute... value)
@@ -406,6 +414,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Attribute#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withAttributes(Collection<? extends Attribute> value)
@@ -449,6 +458,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Attribute#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withoutAttributes(Attribute value)
@@ -467,6 +477,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Attribute#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withoutAttributes(Attribute... value)
@@ -484,6 +495,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see Attribute#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withoutAttributes(Collection<? extends Attribute> value)
@@ -548,6 +560,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see AssocRole#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withRoles(AssocRole value)
@@ -571,6 +584,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see AssocRole#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withRoles(AssocRole... value)
@@ -588,6 +602,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see AssocRole#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withRoles(Collection<? extends AssocRole> value)
@@ -631,6 +646,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see AssocRole#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withoutRoles(AssocRole value)
@@ -649,6 +665,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see AssocRole#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withoutRoles(AssocRole... value)
@@ -666,6 +683,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see AssocRole#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withoutRoles(Collection<? extends AssocRole> value)
@@ -718,6 +736,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see FMethod#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withMethods(FMethod value)
@@ -741,6 +760,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see FMethod#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withMethods(FMethod... value)
@@ -758,6 +778,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see FMethod#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withMethods(Collection<? extends FMethod> value)
@@ -801,6 +822,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see FMethod#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withoutMethods(FMethod value)
@@ -819,6 +841,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see FMethod#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withoutMethods(FMethod... value)
@@ -836,6 +859,7 @@ public class Clazz
     *
     * @return this
     *
+    * @see FMethod#setClazz(Clazz)
     * @since 1.2
     */
    public Clazz withoutMethods(Collection<? extends FMethod> value)
