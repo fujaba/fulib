@@ -7,10 +7,14 @@ getterJavaDoc(attr) ::= <<
  *
  * @since <attr.since>
 <endif>
+<if(attr.other)>
+ *
+ * @see <attr.other.clazz.name>#get<attr.other.name; format="cap">()
+<endif>
  */
 >>
 
-setterJavaDoc(attr) ::= <<
+setterJavaDocImpl(attr, withouter) ::= <<
 /**
  * @param value
  *    <attr.descriptionLines; separator="\n *    ">
@@ -20,9 +24,26 @@ setterJavaDoc(attr) ::= <<
  *
  * @since <attr.since>
 <endif>
+<if(attr.other)>
+ *
+ * @see <attr.other.clazz.name>#<otherSetterName(attr, withouter)>(<attr.clazz.name>)
+<endif>
  */
 >>
 
-witherJavaDoc(attr) ::= "<setterJavaDoc(attr)>"
+setterJavaDoc(attr) ::= "<setterJavaDocImpl(attr, false)>"
 
-withouterJavaDoc(attr) ::= "<setterJavaDoc(attr)>"
+witherJavaDoc(attr) ::= "<setterJavaDocImpl(attr, false)>"
+
+withouterJavaDoc(attr) ::= "<setterJavaDocImpl(attr, true)>"
+
+otherSetterName(role, without) ::= <%
+<if(!attr.other.toMany)>
+    set
+<elseif(without)>
+    without
+<else>
+    with
+<endif>
+<role.other.name; format="cap">
+%>
