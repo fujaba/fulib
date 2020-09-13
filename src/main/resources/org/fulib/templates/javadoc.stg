@@ -20,13 +20,14 @@ setterJavaDocImpl(attr, withouter) ::= <<
  *    <attr.descriptionLines; separator="\n *    ">
  *
  * @return this
-<if(attr.since)>
+<if(attr.since||attr.other)>
  *
- * @since <attr.since>
 <endif>
 <if(attr.other)>
- *
  * @see <attr.other.clazz.name>#<otherSetterName(attr, withouter)>(<attr.clazz.name>)
+<endif>
+<if(attr.since)>
+ * @since <attr.since>
 <endif>
  */
 >>
