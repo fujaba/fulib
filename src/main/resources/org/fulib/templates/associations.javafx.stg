@@ -92,12 +92,12 @@ initMethod(role, other) ::= <<
             for (final <other.clazz.name> value : change.getRemoved())
             {
                value.<withoutThis(other)>;
-               this.firePropertyChange(PROPERTY_<role.name>, value, null);
+               this.firePropertyChange(PROPERTY_<role.name; format="upper">, value, null);
             }
             for (final <other.clazz.name> value : change.getAddedSubList())
             {
                value.<withThis(other)>;
-               this.firePropertyChange(PROPERTY_<role.name>, null, value);
+               this.firePropertyChange(PROPERTY_<role.name; format="upper">, null, value);
             }
          }
       });
@@ -113,7 +113,7 @@ initMethod(role, other) ::= <<
          {
             newValue.<withThis(other)>;
          }
-         this.firePropertyChange(PROPERTY_<role.name>, oldValue, newValue);
+         this.firePropertyChange(PROPERTY_<role.name; format="upper">, oldValue, newValue);
       });
       return result;
 <endif>

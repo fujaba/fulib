@@ -7,6 +7,8 @@ public class Student
 {
 
    public static final String PROPERTY_name = "name";
+public static final String PROPERTY_UNI = "uni";
+public static final String PROPERTY_IN = "in";
 
    private String name;
 
@@ -131,7 +133,7 @@ public static final String PROPERTY_MOTIVATION = "motivation";
       {
          value.withStudents(this);
       }
-      this.firePropertyChange(PROPERTY_uni, oldValue, value);
+      this.firePropertyChange(PROPERTY_UNI, oldValue, value);
       return this;
    }
 
@@ -158,7 +160,7 @@ public static final String PROPERTY_MOTIVATION = "motivation";
       {
          value.withStudents(this);
       }
-      this.firePropertyChange(PROPERTY_in, oldValue, value);
+      this.firePropertyChange(PROPERTY_IN, oldValue, value);
       return this;
    }
 

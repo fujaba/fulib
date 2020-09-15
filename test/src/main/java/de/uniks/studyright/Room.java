@@ -12,6 +12,8 @@ public class Room
 {
 
    public static final String PROPERTY_roomNo = "roomNo";
+public static final String PROPERTY_UNI = "uni";
+public static final String PROPERTY_STUDENTS = "students";
 
    private String roomNo;
 
@@ -113,7 +115,7 @@ public static final String PROPERTY_CREDITS = "credits";
       {
          value.withRooms(this);
       }
-      this.firePropertyChange(PROPERTY_uni, oldValue, value);
+      this.firePropertyChange(PROPERTY_UNI, oldValue, value);
       return this;
    }
 
@@ -132,7 +134,7 @@ public static final String PROPERTY_CREDITS = "credits";
       {
          this.students.add(value);
          value.setIn(this);
-         this.firePropertyChange(PROPERTY_students, null, value);
+         this.firePropertyChange(PROPERTY_STUDENTS, null, value);
       }
       return this;
    }
@@ -160,7 +162,7 @@ public static final String PROPERTY_CREDITS = "credits";
       if (this.students != null && this.students.remove(value))
       {
          value.setIn(null);
-         this.firePropertyChange(PROPERTY_students, value, null);
+         this.firePropertyChange(PROPERTY_STUDENTS, value, null);
       }
       return this;
    }

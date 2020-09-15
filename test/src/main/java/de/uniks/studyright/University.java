@@ -12,6 +12,8 @@ public class University
 {
 
    public static final String PROPERTY_name = "name";
+public static final String PROPERTY_STUDENTS = "students";
+public static final String PROPERTY_ROOMS = "rooms";
 
    private String name;
 
@@ -59,7 +61,7 @@ public static final String PROPERTY_NAME = "name";
       {
          this.students.add(value);
          value.setUni(this);
-         this.firePropertyChange(PROPERTY_students, null, value);
+         this.firePropertyChange(PROPERTY_STUDENTS, null, value);
       }
       return this;
    }
@@ -87,7 +89,7 @@ public static final String PROPERTY_NAME = "name";
       if (this.students != null && this.students.remove(value))
       {
          value.setUni(null);
-         this.firePropertyChange(PROPERTY_students, value, null);
+         this.firePropertyChange(PROPERTY_STUDENTS, value, null);
       }
       return this;
    }
@@ -125,7 +127,7 @@ public static final String PROPERTY_NAME = "name";
       {
          this.rooms.add(value);
          value.setUni(this);
-         this.firePropertyChange(PROPERTY_rooms, null, value);
+         this.firePropertyChange(PROPERTY_ROOMS, null, value);
       }
       return this;
    }
@@ -153,7 +155,7 @@ public static final String PROPERTY_NAME = "name";
       if (this.rooms != null && this.rooms.remove(value))
       {
          value.setUni(null);
-         this.firePropertyChange(PROPERTY_rooms, value, null);
+         this.firePropertyChange(PROPERTY_ROOMS, value, null);
       }
       return this;
    }
