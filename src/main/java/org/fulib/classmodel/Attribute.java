@@ -49,6 +49,8 @@ public class Attribute
    public static final String PROPERTY_DESCRIPTION = "description";
    /** @since 1.4 */
    public static final String PROPERTY_SINCE = "since";
+   /** @since 1.4 */
+   public static final String PROPERTY_CLAZZ = "clazz";
 
    // =============== Fields ===============
 
@@ -91,7 +93,7 @@ public class Attribute
       {
          value.withAttributes(this);
       }
-      this.firePropertyChange(PROPERTY_clazz, oldValue, value);
+      this.firePropertyChange(PROPERTY_CLAZZ, oldValue, value);
       return this;
    }
 

@@ -37,6 +37,8 @@ public class ClassModel
    public static final String PROPERTY_DEFAULTCOLLECTIONTYPE = "defaultCollectionType";
    /** @since 1.4 */
    public static final String PROPERTY_DEFAULTPROPERTYSTYLE = "defaultPropertyStyle";
+   /** @since 1.4 */
+   public static final String PROPERTY_CLASSES = "classes";
 
    // =============== Fields ===============
 
@@ -244,7 +246,7 @@ public class ClassModel
       {
          this.classes.add(value);
          value.setModel(this);
-         this.firePropertyChange(PROPERTY_classes, null, value);
+         this.firePropertyChange(PROPERTY_CLASSES, null, value);
       }
       return this;
    }
@@ -322,7 +324,7 @@ public class ClassModel
       if (this.classes != null && this.classes.remove(value))
       {
          value.setModel(null);
-         this.firePropertyChange(PROPERTY_classes, value, null);
+         this.firePropertyChange(PROPERTY_CLASSES, value, null);
       }
       return this;
    }

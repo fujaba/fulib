@@ -46,6 +46,10 @@ public class AssocRole
    public static final String PROPERTY_SINCE = "since";
    /** @since 1.4 */
    public static final String PROPERTY_MODIFIED = "modified";
+   /** @since 1.4 */
+   public static final String PROPERTY_CLAZZ = "clazz";
+   /** @since 1.4 */
+   public static final String PROPERTY_OTHER = "other";
 
    // =============== Fields ===============
 
@@ -87,7 +91,7 @@ public class AssocRole
       {
          value.withRoles(this);
       }
-      this.firePropertyChange(PROPERTY_clazz, oldValue, value);
+      this.firePropertyChange(PROPERTY_CLAZZ, oldValue, value);
       return this;
    }
 
@@ -114,7 +118,7 @@ public class AssocRole
       {
          value.setOther(this);
       }
-      this.firePropertyChange(PROPERTY_other, oldValue, value);
+      this.firePropertyChange(PROPERTY_OTHER, oldValue, value);
       return this;
    }
 

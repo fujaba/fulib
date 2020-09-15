@@ -34,6 +34,8 @@ public class FMethod
    public static final String PROPERTY_MODIFIERS = "modifiers";
    /** @since 1.4 */
    public static final String PROPERTY_ANNOTATIONS = "annotations";
+   /** @since 1.4 */
+   public static final String PROPERTY_CLAZZ = "clazz";
 
    // =============== Fields ===============
 
@@ -74,7 +76,7 @@ public class FMethod
       {
          value.withMethods(this);
       }
-      this.firePropertyChange(PROPERTY_clazz, oldValue, value);
+      this.firePropertyChange(PROPERTY_CLAZZ, oldValue, value);
       return this;
    }
 
