@@ -4,6 +4,7 @@ import org.fulib.builder.Type;
 import org.fulib.classmodel.*;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.StringRenderer;
 
 import java.util.List;
 import java.util.Set;
@@ -184,6 +185,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
    {
       final STGroup group = this.getSTGroup(
          "org/fulib/templates/attributes." + attr.getPropertyStyle().toLowerCase() + ".stg");
+      group.registerRenderer(String.class, new StringRenderer());
 
       this.generateFromSignatures(fragmentMap, group, "attrSignatures", attr.getModified(), st -> st.add("attr", attr));
    }

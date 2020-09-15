@@ -44,7 +44,10 @@ attrDecl(attr) ::= <<
 >>
 
 propertyDecl(attr) ::= <<
-   public static final String PROPERTY_<attr.name> = "<attr.name>";
+<if(attr.since)>
+   /** @since <attr.since> */
+<endif>
+   public static final String PROPERTY_<attr.name; format="upper"> = "<attr.name>";
 >>
 
 // --------------- Simple Accessors ---------------
