@@ -32,6 +32,9 @@ public class Room
    private List<Student> students;
 
    protected PropertyChangeSupport listeners;
+public static final String PROPERTY_ROOMNO = "roomNo";
+public static final String PROPERTY_TOPIC = "topic";
+public static final String PROPERTY_CREDITS = "credits";
 
    public String getRoomNo()
    {
@@ -47,7 +50,7 @@ public class Room
 
       final String oldValue = this.roomNo;
       this.roomNo = value;
-      this.firePropertyChange(PROPERTY_roomNo, oldValue, value);
+      this.firePropertyChange(PROPERTY_ROOMNO, oldValue, value);
       return this;
    }
 
@@ -65,7 +68,7 @@ public class Room
 
       final String oldValue = this.topic;
       this.topic = value;
-      this.firePropertyChange(PROPERTY_topic, oldValue, value);
+      this.firePropertyChange(PROPERTY_TOPIC, oldValue, value);
       return this;
    }
 
@@ -83,7 +86,7 @@ public class Room
 
       final int oldValue = this.credits;
       this.credits = value;
-      this.firePropertyChange(PROPERTY_credits, oldValue, value);
+      this.firePropertyChange(PROPERTY_CREDITS, oldValue, value);
       return this;
    }
 

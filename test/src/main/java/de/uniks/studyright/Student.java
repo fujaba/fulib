@@ -31,6 +31,10 @@ public class Student
    private Room in;
 
    protected PropertyChangeSupport listeners;
+public static final String PROPERTY_NAME = "name";
+public static final String PROPERTY_STUDENTID = "studentId";
+public static final String PROPERTY_CREDITS = "credits";
+public static final String PROPERTY_MOTIVATION = "motivation";
 
    public String getName()
    {
@@ -46,7 +50,7 @@ public class Student
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
@@ -64,7 +68,7 @@ public class Student
 
       final String oldValue = this.studentId;
       this.studentId = value;
-      this.firePropertyChange(PROPERTY_studentId, oldValue, value);
+      this.firePropertyChange(PROPERTY_STUDENTID, oldValue, value);
       return this;
    }
 
@@ -82,7 +86,7 @@ public class Student
 
       final int oldValue = this.credits;
       this.credits = value;
-      this.firePropertyChange(PROPERTY_credits, oldValue, value);
+      this.firePropertyChange(PROPERTY_CREDITS, oldValue, value);
       return this;
    }
 
@@ -100,7 +104,7 @@ public class Student
 
       final double oldValue = this.motivation;
       this.motivation = value;
-      this.firePropertyChange(PROPERTY_motivation, oldValue, value);
+      this.firePropertyChange(PROPERTY_MOTIVATION, oldValue, value);
       return this;
    }
 

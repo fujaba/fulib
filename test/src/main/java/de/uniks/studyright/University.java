@@ -24,6 +24,7 @@ public class University
    private List<Room> rooms;
 
    protected PropertyChangeSupport listeners;
+public static final String PROPERTY_NAME = "name";
 
    public String getName()
    {
@@ -39,7 +40,7 @@ public class University
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
