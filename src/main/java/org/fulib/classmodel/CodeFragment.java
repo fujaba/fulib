@@ -12,7 +12,7 @@ public class CodeFragment extends Fragment
    @Deprecated
    public static final String PROPERTY_key = "key";
    public static final String PROPERTY_text = "text";
-public static final String PROPERTY_TEXT = "text";
+   public static final String PROPERTY_TEXT = "text";
 
    // =============== Fields ===============
 

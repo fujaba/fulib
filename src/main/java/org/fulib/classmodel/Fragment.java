@@ -13,7 +13,7 @@ public class Fragment
 
    public static final String PROPERTY_key = "key";
    public static final String PROPERTY_parent = "parent";
-public static final String PROPERTY_KEY = "key";
+   public static final String PROPERTY_KEY = "key";
 
    // =============== Fields ===============
 

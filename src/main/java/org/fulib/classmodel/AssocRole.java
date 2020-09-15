@@ -29,17 +29,17 @@ public class AssocRole
    public static final String PROPERTY_description = "description";
    /** @since 1.3 */
    public static final String PROPERTY_since = "since";
-public static final String PROPERTY_NAME = "name";
-public static final String PROPERTY_CARDINALITY = "cardinality";
-/** @since 1.2 */
-   public static final String PROPERTY_COLLECTIONTYPE = "collectionType";
-public static final String PROPERTY_AGGREGATION = "aggregation";
-public static final String PROPERTY_PROPERTYSTYLE = "propertyStyle";
-/** @since 1.3 */
-   public static final String PROPERTY_DESCRIPTION = "description";
-/** @since 1.3 */
+   public static final String PROPERTY_NAME = "name";
+   public static final String PROPERTY_CARDINALITY = "cardinality";
+   /** @since 1.2 */
+      public static final String PROPERTY_COLLECTIONTYPE = "collectionType";
+   public static final String PROPERTY_AGGREGATION = "aggregation";
+   public static final String PROPERTY_PROPERTYSTYLE = "propertyStyle";
+   /** @since 1.3 */
+      public static final String PROPERTY_DESCRIPTION = "description";
+   /** @since 1.3 */
    public static final String PROPERTY_SINCE = "since";
-public static final String PROPERTY_MODIFIED = "modified";
+   public static final String PROPERTY_MODIFIED = "modified";
 
    // =============== Fields ===============
 

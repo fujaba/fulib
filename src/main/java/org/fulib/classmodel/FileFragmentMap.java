@@ -61,7 +61,7 @@ public class FileFragmentMap
       "^" + CLASS + "/(\\w+)/(" + ATTRIBUTE + "|" + STATIC_ATTRIBUTE + ")/(\\w+)$");
 
    private static final String GAP_BEFORE = "#gap-before";
-public static final String PROPERTY_FILENAME = "fileName";
+   public static final String PROPERTY_FILENAME = "fileName";
 
    // =============== Fields ===============
 

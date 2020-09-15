@@ -25,11 +25,11 @@ public class FMethod
    public static final String PROPERTY_annotations = "annotations";
    /** @since 1.2 */
    public static final String PROPERTY_modifiers = "modifiers";
-public static final String PROPERTY_METHODBODY = "methodBody";
-public static final String PROPERTY_MODIFIED = "modified";
-/** @since 1.2 */
+   public static final String PROPERTY_METHODBODY = "methodBody";
+   public static final String PROPERTY_MODIFIED = "modified";
+   /** @since 1.2 */
    public static final String PROPERTY_MODIFIERS = "modifiers";
-public static final String PROPERTY_ANNOTATIONS = "annotations";
+   public static final String PROPERTY_ANNOTATIONS = "annotations";
 
    // =============== Fields ===============
 
