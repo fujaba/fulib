@@ -30,7 +30,7 @@ public class FMethod
    public static final String PROPERTY_METHODBODY = "methodBody";
    /** @since 1.3 */
    public static final String PROPERTY_MODIFIED = "modified";
-   /** @since 1.3 */
+   /** @since 1.3 */ // no fulib
    public static final String PROPERTY_MODIFIERS = "modifiers";
    /** @since 1.3 */
    public static final String PROPERTY_ANNOTATIONS = "annotations";

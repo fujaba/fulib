@@ -33,11 +33,11 @@ public class ClassModel
    public static final String PROPERTY_PACKAGENAME = "packageName";
    /** @since 1.3 */
    public static final String PROPERTY_MAINJAVADIR = "mainJavaDir";
-   /** @since 1.3 */
+   /** @since 1.3 */ // no fulib
    public static final String PROPERTY_DEFAULTCOLLECTIONTYPE = "defaultCollectionType";
    /** @since 1.3 */
    public static final String PROPERTY_DEFAULTPROPERTYSTYLE = "defaultPropertyStyle";
-   /** @since 1.3 */
+   /** @since 1.3 */ // no fulib
    public static final String PROPERTY_CLASSES = "classes";
 
    // =============== Fields ===============

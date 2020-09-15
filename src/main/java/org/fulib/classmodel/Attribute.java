@@ -37,7 +37,7 @@ public class Attribute
    public static final String PROPERTY_NAME = "name";
    /** @since 1.3 */
    public static final String PROPERTY_TYPE = "type";
-   /** @since 1.3 */
+   /** @since 1.3 */ // no fulib
    public static final String PROPERTY_COLLECTIONTYPE = "collectionType";
    /** @since 1.3 */
    public static final String PROPERTY_INITIALIZATION = "initialization";

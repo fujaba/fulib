@@ -34,7 +34,7 @@ public class AssocRole
    public static final String PROPERTY_NAME = "name";
    /** @since 1.3 */
    public static final String PROPERTY_CARDINALITY = "cardinality";
-   /** @since 1.3 */
+   /** @since 1.3 */ // no fulib
    public static final String PROPERTY_COLLECTIONTYPE = "collectionType";
    /** @since 1.3 */
    public static final String PROPERTY_AGGREGATION = "aggregation";
