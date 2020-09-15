@@ -61,6 +61,7 @@ public class FileFragmentMap
       "^" + CLASS + "/(\\w+)/(" + ATTRIBUTE + "|" + STATIC_ATTRIBUTE + ")/(\\w+)$");
 
    private static final String GAP_BEFORE = "#gap-before";
+public static final String PROPERTY_FILENAME = "fileName";
 
    // =============== Fields ===============
 
@@ -99,7 +100,7 @@ public class FileFragmentMap
 
       final String oldValue = this.fileName;
       this.fileName = value;
-      this.firePropertyChange(PROPERTY_fileName, oldValue, value);
+      this.firePropertyChange(PROPERTY_FILENAME, oldValue, value);
       return this;
    }
 

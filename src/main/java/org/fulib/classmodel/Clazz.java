@@ -48,6 +48,11 @@ public class Clazz
    /** @deprecated since 1.2; use {@link #PROPERTY_imports} instead */
    @Deprecated
    public static final String PROPERTY_importList = "importList";
+public static final String PROPERTY_NAME = "name";
+public static final String PROPERTY_PROPERTYSTYLE = "propertyStyle";
+public static final String PROPERTY_MODIFIED = "modified";
+/** @since 1.2 */
+   public static final String PROPERTY_IMPORTS = "imports";
 
    // =============== Fields ===============
 
@@ -112,7 +117,7 @@ public class Clazz
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
@@ -892,7 +897,7 @@ public class Clazz
       }
       if (this.imports.add(value))
       {
-         this.firePropertyChange(PROPERTY_imports, null, value);
+         this.firePropertyChange(PROPERTY_IMPORTS, null, value);
       }
       return this;
    }
@@ -949,7 +954,7 @@ public class Clazz
    {
       if (this.imports != null && this.imports.removeAll(Collections.singleton(value)))
       {
-         this.firePropertyChange(PROPERTY_imports, value, null);
+         this.firePropertyChange(PROPERTY_IMPORTS, value, null);
       }
       return this;
    }
@@ -1017,7 +1022,7 @@ public class Clazz
 
       final String oldValue = this.propertyStyle;
       this.propertyStyle = value;
-      this.firePropertyChange(PROPERTY_propertyStyle, oldValue, value);
+      this.firePropertyChange(PROPERTY_PROPERTYSTYLE, oldValue, value);
       return this;
    }
 
@@ -1044,7 +1049,7 @@ public class Clazz
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange(PROPERTY_modified, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODIFIED, oldValue, value);
       return this;
    }
 

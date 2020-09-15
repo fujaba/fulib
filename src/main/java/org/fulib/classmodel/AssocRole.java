@@ -29,6 +29,17 @@ public class AssocRole
    public static final String PROPERTY_description = "description";
    /** @since 1.3 */
    public static final String PROPERTY_since = "since";
+public static final String PROPERTY_NAME = "name";
+public static final String PROPERTY_CARDINALITY = "cardinality";
+/** @since 1.2 */
+   public static final String PROPERTY_COLLECTIONTYPE = "collectionType";
+public static final String PROPERTY_AGGREGATION = "aggregation";
+public static final String PROPERTY_PROPERTYSTYLE = "propertyStyle";
+/** @since 1.3 */
+   public static final String PROPERTY_DESCRIPTION = "description";
+/** @since 1.3 */
+   public static final String PROPERTY_SINCE = "since";
+public static final String PROPERTY_MODIFIED = "modified";
 
    // =============== Fields ===============
 
@@ -126,7 +137,7 @@ public class AssocRole
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
@@ -144,7 +155,7 @@ public class AssocRole
 
       final int oldValue = this.cardinality;
       this.cardinality = value;
-      this.firePropertyChange(PROPERTY_cardinality, oldValue, value);
+      this.firePropertyChange(PROPERTY_CARDINALITY, oldValue, value);
       return this;
    }
 
@@ -195,7 +206,7 @@ public class AssocRole
 
       final CollectionType oldValue = this.collectionType;
       this.collectionType = value;
-      this.firePropertyChange(PROPERTY_collectionType, oldValue, value);
+      this.firePropertyChange(PROPERTY_COLLECTIONTYPE, oldValue, value);
       return this;
    }
 
@@ -251,7 +262,7 @@ public class AssocRole
 
       final boolean oldValue = this.aggregation;
       this.aggregation = value;
-      this.firePropertyChange(PROPERTY_aggregation, oldValue, value);
+      this.firePropertyChange(PROPERTY_AGGREGATION, oldValue, value);
       return this;
    }
 
@@ -280,7 +291,7 @@ public class AssocRole
 
       final String oldValue = this.propertyStyle;
       this.propertyStyle = value;
-      this.firePropertyChange(PROPERTY_propertyStyle, oldValue, value);
+      this.firePropertyChange(PROPERTY_PROPERTYSTYLE, oldValue, value);
       return this;
    }
 
@@ -311,7 +322,7 @@ public class AssocRole
 
       final String oldValue = this.description;
       this.description = value;
-      this.firePropertyChange(PROPERTY_description, oldValue, value);
+      this.firePropertyChange(PROPERTY_DESCRIPTION, oldValue, value);
       return this;
    }
 
@@ -354,7 +365,7 @@ public class AssocRole
 
       final String oldValue = this.since;
       this.since = value;
-      this.firePropertyChange(PROPERTY_since, oldValue, value);
+      this.firePropertyChange(PROPERTY_SINCE, oldValue, value);
       return this;
    }
 
@@ -381,7 +392,7 @@ public class AssocRole
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange(PROPERTY_modified, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODIFIED, oldValue, value);
       return this;
    }
 

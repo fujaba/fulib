@@ -13,6 +13,7 @@ public class Fragment
 
    public static final String PROPERTY_key = "key";
    public static final String PROPERTY_parent = "parent";
+public static final String PROPERTY_KEY = "key";
 
    // =============== Fields ===============
 
@@ -37,7 +38,7 @@ public class Fragment
 
       final String oldValue = this.key;
       this.key = value;
-      this.firePropertyChange(PROPERTY_key, oldValue, value);
+      this.firePropertyChange(PROPERTY_KEY, oldValue, value);
       return this;
    }
 
