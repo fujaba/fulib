@@ -185,7 +185,6 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
    {
       final STGroup group = this.getSTGroup(
          "org/fulib/templates/attributes." + attr.getPropertyStyle().toLowerCase() + ".stg");
-      group.registerRenderer(String.class, new StringRenderer());
 
       this.generateFromSignatures(fragmentMap, group, "attrSignatures", attr.getModified(), st -> st.add("attr", attr));
    }
