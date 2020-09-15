@@ -26,15 +26,15 @@ public class FMethod
    /** @since 1.2 */
    public static final String PROPERTY_modifiers = "modifiers";
 
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_METHODBODY = "methodBody";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_MODIFIED = "modified";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_MODIFIERS = "modifiers";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_ANNOTATIONS = "annotations";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_CLAZZ = "clazz";
 
    // =============== Fields ===============

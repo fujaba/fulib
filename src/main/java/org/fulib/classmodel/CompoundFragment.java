@@ -13,7 +13,7 @@ public class CompoundFragment extends Fragment
    // =============== Constants ===============
 
    public static final String PROPERTY_children = "children";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_CHILDREN = "children";
 
    // =============== Fields ===============

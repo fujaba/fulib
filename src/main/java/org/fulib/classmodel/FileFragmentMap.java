@@ -51,7 +51,7 @@ public class FileFragmentMap
 
    public static final String PROPERTY_fileName = "fileName";
 
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_FILENAME = "fileName";
 
    // comments containing "no fulib", case insensitive, and with any whitespace between the words.

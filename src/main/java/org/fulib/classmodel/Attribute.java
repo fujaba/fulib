@@ -33,23 +33,23 @@ public class Attribute
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_clazz = "clazz";
 
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_NAME = "name";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_TYPE = "type";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_COLLECTIONTYPE = "collectionType";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_INITIALIZATION = "initialization";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_PROPERTYSTYLE = "propertyStyle";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_MODIFIED = "modified";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_DESCRIPTION = "description";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_SINCE = "since";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_CLAZZ = "clazz";
 
    // =============== Fields ===============

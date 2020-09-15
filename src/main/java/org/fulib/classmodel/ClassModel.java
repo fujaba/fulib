@@ -29,15 +29,15 @@ public class ClassModel
    public static final String PROPERTY_defaultPropertyStyle = "defaultPropertyStyle";
    public static final String PROPERTY_classes = "classes" /* no fulib */;
 
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_PACKAGENAME = "packageName";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_MAINJAVADIR = "mainJavaDir";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_DEFAULTCOLLECTIONTYPE = "defaultCollectionType";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_DEFAULTPROPERTYSTYLE = "defaultPropertyStyle";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_CLASSES = "classes";
 
    // =============== Fields ===============

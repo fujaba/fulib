@@ -49,25 +49,25 @@ public class Clazz
    @Deprecated
    public static final String PROPERTY_importList = "importList";
 
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_NAME = "name";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_PROPERTYSTYLE = "propertyStyle";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_MODIFIED = "modified";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_IMPORTS = "imports";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_MODEL = "model";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_ATTRIBUTES = "attributes";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_ROLES = "roles";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_METHODS = "methods";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_SUBCLASSES = "subClasses";
-   /** @since 1.4 */
+   /** @since 1.3 */
    public static final String PROPERTY_SUPERCLASS = "superClass";
 
    // =============== Fields ===============
