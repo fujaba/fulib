@@ -663,14 +663,42 @@ public class FileFragmentMap
 
    private CodeFragment addNew(String key, String newText, int newLines)
    {
-      final CodeFragment result = new CodeFragment().setKey(key).setText(newText);
-      final String newLinesStr = String.join("", Collections.nCopies(newLines, "\n"));
-      final CodeFragment gap = new CodeFragment().setKey(key + GAP_BEFORE).setText(newLinesStr);
+
+      // we need to add the leading whitespace of the newText to the gap and trim newText.
+      // this is to prevent a problem where a fragment was inserted with leading whitespace in the first generation
+      // phase, and later replaced without whitespace (replacing always does trim()).
+      // the effect was that new members were not indented correctly.
+
+      final int start = trimStartIndex(newText);
+      final String trimmedText = newText.trim();
+
+      final StringBuilder gapBuilder = new StringBuilder(newLines + start);
+      for (int i = 0; i < newLines; i++)
+      {
+         gapBuilder.append('\n');
+      }
+      gapBuilder.append(newText, 0, start);
+
+      final String gapText = gapBuilder.toString();
+
+      final CodeFragment gap = new CodeFragment().setKey(key + GAP_BEFORE).setText(gapText);
+      final CodeFragment result = new CodeFragment().setKey(key).setText(trimmedText);
 
       this.insert(gap);
       this.insert(result);
 
       return result;
+   }
+
+   private static int trimStartIndex(String str)
+   {
+      // adapted from String.trim()
+      int start = 0;
+      while (start < str.length() && str.charAt(start) <= ' ')
+      {
+         start++;
+      }
+      return start;
    }
 
    // --------------- Post-Processing ---------------
