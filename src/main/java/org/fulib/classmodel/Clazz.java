@@ -48,10 +48,14 @@ public class Clazz
    /** @deprecated since 1.2; use {@link #PROPERTY_imports} instead */
    @Deprecated
    public static final String PROPERTY_importList = "importList";
+
+   /** @since 1.4 */
    public static final String PROPERTY_NAME = "name";
+   /** @since 1.4 */
    public static final String PROPERTY_PROPERTYSTYLE = "propertyStyle";
+   /** @since 1.4 */
    public static final String PROPERTY_MODIFIED = "modified";
-   /** @since 1.2 */
+   /** @since 1.4 */
    public static final String PROPERTY_IMPORTS = "imports";
 
    // =============== Fields ===============

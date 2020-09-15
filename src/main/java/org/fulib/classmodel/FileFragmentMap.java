@@ -51,6 +51,9 @@ public class FileFragmentMap
 
    public static final String PROPERTY_fileName = "fileName";
 
+   /** @since 1.4 */
+   public static final String PROPERTY_FILENAME = "fileName";
+
    // comments containing "no fulib", case insensitive, and with any whitespace between the words.
    private static final Pattern NO_FULIB_PATTERN = Pattern.compile("//.*no\\s+fulib|/\\*.*no\\s+fulib.*\\*/",
                                                                    Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
@@ -61,7 +64,6 @@ public class FileFragmentMap
       "^" + CLASS + "/(\\w+)/(" + ATTRIBUTE + "|" + STATIC_ATTRIBUTE + ")/(\\w+)$");
 
    private static final String GAP_BEFORE = "#gap-before";
-   public static final String PROPERTY_FILENAME = "fileName";
 
    // =============== Fields ===============
 
