@@ -1,0 +1,24 @@
+// --------------- JavaDocs ---------------
+
+getterJavaDoc(attr) ::= <<
+/**
+ * @return <attr.descriptionLines; separator="\n * ">
+<if(attr.since)>
+ *
+ * @since <attr.since>
+<endif>
+ */
+>>
+
+setterJavaDoc(attr) ::= <<
+/**
+ * @param value
+ *    <attr.descriptionLines; separator="\n *    ">
+ *
+ * @return this
+<if(attr.since)>
+ *
+ * @since <attr.since>
+<endif>
+ */
+>>

@@ -5,12 +5,12 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.fulib.parser.FragmentMapBuilder;
 import org.fulib.parser.FulibClassLexer;
 import org.fulib.parser.FulibClassParser;
+import org.fulib.util.Validator;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -217,6 +217,8 @@ public class FMethod
    }
 
    /**
+    * @return the modifiers. Defaults to "public"
+    *
     * @since 1.2
     */
    public String getModifiers()
@@ -225,6 +227,11 @@ public class FMethod
    }
 
    /**
+    * @param value
+    *    the modifiers. Defaults to "public"
+    *
+    * @return this
+    *
     * @since 1.2
     */
    public FMethod setModifiers(String value)
@@ -289,8 +296,12 @@ public class FMethod
       final FulibClassParser.ParameterListContext paramsCtx = parser.parameterList();
       final String paramsSignature = FragmentMapBuilder.getParamsSignature(paramsCtx);
 
-      return FileFragmentMap.CLASS + '/' + this.getClazz().getName() + '/' + FileFragmentMap.METHOD + '/'
-             + this.getName() + paramsSignature;
+      final int parameterCount = this.params.size() - (this.params.containsKey("this") ? 1 : 0);
+      final String kind = Validator.isProperty(this.getName(), parameterCount)
+         ? FileFragmentMap.PROPERTY
+         : FileFragmentMap.METHOD;
+      return FileFragmentMap.CLASS + '/' + this.getClazz().getName() + '/' + kind + '/' + this.getName()
+             + paramsSignature;
    }
 
    /**
@@ -328,11 +339,20 @@ public class FMethod
       return this;
    }
 
+   /**
+    * @return a boolean indicating whether this method was modified. For internal use only.
+    */
    public boolean getModified()
    {
       return this.modified;
    }
 
+   /**
+    * @param value
+    *    a boolean indicating whether this method was modified. For internal use only.
+    *
+    * @return this
+    */
    public FMethod setModified(boolean value)
    {
       if (value == this.modified)

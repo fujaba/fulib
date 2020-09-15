@@ -1,4 +1,5 @@
 import "java.dicts.stg"
+import "javadoc.stg"
 
 collectionImpl(role, other) ::= <%
 <role.collectionType.simpleImplName>
@@ -20,24 +21,24 @@ roleType(role, other) ::= <%
 // --------------- Declarations ---------------
 
 roleSignatures(role, other) ::= <<
-   propertyDecl:           class/<role.clazz.name>/attribute/PROPERTY_<role.name>
+   propertyDecl:           class/<role.clazz.name>/staticAttribute/PROPERTY_<role.name>
    roleAttrDecl:           class/<role.clazz.name>/attribute/<role.name>
-   getMethod:              class/<role.clazz.name>/method/get<role.name; format="cap">()
+   getMethod:              class/<role.clazz.name>/property/get<role.name; format="cap">()
    <if(javaFX.(role.propertyStyle))>
-      initMethod:          class/<role.clazz.name>/method/_init<role.name; format="cap">()
+      initMethod:          class/<role.clazz.name>/property/_init<role.name; format="cap">()
       <if(!role.toMany)>
-         propertyMethod:   class/<role.clazz.name>/method/<role.name>Property()
+         propertyMethod:   class/<role.clazz.name>/property/<role.name>Property()
       <endif>
    <endif>
    <if(role.toMany)>
-      withItem:            class/<role.clazz.name>/method/with<role.name; format="cap">(<other.clazz.name>)
-      withArray:           class/<role.clazz.name>/method/with<role.name; format="cap">(<other.clazz.name>...)
-      withColl:            class/<role.clazz.name>/method/with<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
-      withoutItem:         class/<role.clazz.name>/method/without<role.name; format="cap">(<other.clazz.name>)
-      withoutArray:        class/<role.clazz.name>/method/without<role.name; format="cap">(<other.clazz.name>...)
-      withoutColl:         class/<role.clazz.name>/method/without<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
+      withItem:            class/<role.clazz.name>/property/with<role.name; format="cap">(<other.clazz.name>)
+      withArray:           class/<role.clazz.name>/property/with<role.name; format="cap">(<other.clazz.name>...)
+      withColl:            class/<role.clazz.name>/property/with<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
+      withoutItem:         class/<role.clazz.name>/property/without<role.name; format="cap">(<other.clazz.name>)
+      withoutArray:        class/<role.clazz.name>/property/without<role.name; format="cap">(<other.clazz.name>...)
+      withoutColl:         class/<role.clazz.name>/property/without<role.name; format="cap">(Collection\<? extends <other.clazz.name>\>)
    <else>
-      setMethod:           class/<role.clazz.name>/method/set<role.name; format="cap">(<other.clazz.name>)
+      setMethod:           class/<role.clazz.name>/property/set<role.name; format="cap">(<other.clazz.name>)
    <endif>
 >>
 
@@ -46,12 +47,18 @@ roleAttrDecl(role, other) ::= <<
 >>
 
 propertyDecl(role, other) ::= <<
+<if(role.since)>
+   /** @since <role.since> */
+<endif>
    public static final String PROPERTY_<role.name> = "<role.name>";
 >>
 
 // --------------- Simple Accessors ---------------
 
 getMethod(role, other) ::= <<
+<if(role.description)>
+   <getterJavaDoc(role)>
+<endif>
    public <roleType(role, other)> get<role.name; format="cap">()
    {
 <if(role.toMany)>
@@ -63,6 +70,9 @@ getMethod(role, other) ::= <<
 >>
 
 setMethod(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> set<role.name; format="cap">(<other.clazz.name> value)
    {
       if (this.<role.name> == value)
@@ -92,6 +102,9 @@ setMethod(role, other) ::= <<
 // --------------- With ---------------
 
 withItem(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> with<role.name; format="cap">(<other.clazz.name> value)
    {
       if (this.<role.name> == null)
@@ -110,6 +123,9 @@ withItem(role, other) ::= <<
 >>
 
 withArray(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> with<role.name; format="cap">(<other.clazz.name>... value)
    {
       for (final <other.clazz.name> item : value)
@@ -121,6 +137,9 @@ withArray(role, other) ::= <<
 >>
 
 withColl(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> with<role.name; format="cap">(import(java.util.Collection)\<? extends <other.clazz.name>\> value)
    {
       for (final <other.clazz.name> item : value)
@@ -134,6 +153,9 @@ withColl(role, other) ::= <<
 // --------------- Without ---------------
 
 withoutItem(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name> value)
    {
       if (this.<role.name> != null && this.<role.name>.remove(value))
@@ -147,6 +169,9 @@ withoutItem(role, other) ::= <<
 >>
 
 withoutArray(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name>... value)
    {
       for (final <other.clazz.name> item : value)
@@ -158,6 +183,9 @@ withoutArray(role, other) ::= <<
 >>
 
 withoutColl(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> without<role.name; format="cap">(import(java.util.Collection)\<? extends <other.clazz.name>\> value)
    {
       for (final <other.clazz.name> item : value)

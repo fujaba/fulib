@@ -90,6 +90,7 @@
 
 * The code generator no longer generates duplicate members when an attribute has a generic or annotated types. #43 #59
 * The code generator no longer generates duplicate methods with parameters of generic or annotated types. #43 #59
+* The `ClassModelManager.haveMethod` method now correctly supports two methods with the same declaration in different classes. #44
 * The code generator now treats the types `void` and `boolean` as primitives. #46
 * The code generator no longer removes newlines at the end of existing files. #47
 * The code generator now correctly determines when classes are empty and removes them if necessary. #49
@@ -109,5 +110,5 @@
 
 ## Bugfixes
 
+* The code generator now correctly determines when PropertyChange members are needed, depending on attributes, associations, potential super classes and the use of `POJO` property style. #21 #63
 * The code generator now properly removes PropertyChange members when they are not needed. #63
-* The code generator now correctly determines when PropertyChange members are needed, depending on attributes, associations, potential super classes and the use of `POJO` property style. #63

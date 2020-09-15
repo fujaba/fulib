@@ -1,5 +1,7 @@
 package org.fulib.classmodel;
 
+import org.fulib.builder.Type;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -22,9 +24,10 @@ public class ClassModel
    /** @deprecated since 1.2; use {@link #PROPERTY_defaultCollectionType} instead */
    @Deprecated
    public static final String PROPERTY_defaultRoleType = "defaultRoleType";
+   /** @since 1.2 */
    public static final String PROPERTY_defaultCollectionType = "defaultCollectionType";
    public static final String PROPERTY_defaultPropertyStyle = "defaultPropertyStyle";
-   public static final String PROPERTY_classes = "classes";
+   public static final String PROPERTY_classes = "classes" /* no fulib */;
 
    // =============== Fields ===============
 
@@ -82,7 +85,7 @@ public class ClassModel
    }
 
    /**
-    * @return the default collection type
+    * @return the default collection type for to-n roles
     *
     * @since 1.2
     */
@@ -93,9 +96,9 @@ public class ClassModel
 
    /**
     * @param value
-    *    the new default collection type
+    *    the default collection type for to-n roles
     *
-    * @return this instance, to allow method chaining
+    * @return this
     *
     * @since 1.2
     */
@@ -138,11 +141,22 @@ public class ClassModel
       return this.setDefaultCollectionType(CollectionType.of(value));
    }
 
+   /**
+    * @return the default property style for attributes and roles.
+    * Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
+    */
    public String getDefaultPropertyStyle()
    {
       return this.defaultPropertyStyle;
    }
 
+   /**
+    * @param value
+    *    the default property style for attributes and roles.
+    *    Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
+    *
+    * @return this
+    */
    public ClassModel setDefaultPropertyStyle(String value)
    {
       if (Objects.equals(value, this.defaultPropertyStyle))
@@ -203,7 +217,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withClasses(Clazz value)
    {
       if (this.classes == null)
@@ -219,7 +240,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -229,7 +257,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)
@@ -265,7 +300,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withoutClasses(Clazz value)
    {
       if (this.classes != null && this.classes.remove(value))
@@ -276,7 +318,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withoutClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -286,7 +335,14 @@ public class ClassModel
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the classes contained in this model
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public ClassModel withoutClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)

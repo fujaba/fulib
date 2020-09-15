@@ -169,18 +169,24 @@ tableToString(clazz) ::= <<
       StringBuilder buf = new StringBuilder();
       for (String key : this.columnMap.keySet())
       {
-         buf.append(key).append(" \t");
+         buf.append("| ").append(key).append(" \t");
       }
-      buf.append("\n");
+      buf.append("|\n");
+
+      for (String ignored : this.columnMap.keySet())
+      {
+         buf.append("| --- ");
+      }
+      buf.append("|\n");
+
       for (List\<?> row : this.table)
       {
          for (Object cell : row)
          {
-            buf.append(cell).append(" \t");
+            buf.append("| ").append(cell).append(" \t");
          }
-         buf.append("\n");
+         buf.append("|\n");
       }
-      buf.append("\n");
       return buf.toString();
    }
 >>

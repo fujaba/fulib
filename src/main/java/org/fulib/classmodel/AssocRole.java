@@ -4,6 +4,9 @@ import org.fulib.builder.Type;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class AssocRole
@@ -22,6 +25,10 @@ public class AssocRole
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_clazz = "clazz";
    public static final String PROPERTY_other = "other";
+   /** @since 1.3 */
+   public static final String PROPERTY_description = "description";
+   /** @since 1.3 */
+   public static final String PROPERTY_since = "since";
 
    // =============== Fields ===============
 
@@ -34,6 +41,8 @@ public class AssocRole
    private CollectionType collectionType;
    private boolean aggregation;
    private String propertyStyle;
+   private String description;
+   private String since;
    private boolean modified;
 
    // =============== Properties ===============
@@ -171,9 +180,9 @@ public class AssocRole
 
    /**
     * @param value
-    *    the new collection type
+    *    the collection type
     *
-    * @return this instance, to allow method chaining
+    * @return this
     *
     * @since 1.2
     */
@@ -217,7 +226,8 @@ public class AssocRole
 
    /**
     * @return a boolean indicating whether this role is an aggregation,
-    * i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or {@code removeYou} on the source object
+    * i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or
+    * {@code removeYou} on the source object
     */
    public boolean getAggregation()
    {
@@ -227,9 +237,10 @@ public class AssocRole
    /**
     * @param value
     *    a boolean indicating whether this role is an aggregation,
-    *    i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or {@code removeYou} on the source object
+    *    i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or
+    *    {@code removeYou} on the source object
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public AssocRole setAggregation(boolean value)
    {
@@ -245,7 +256,8 @@ public class AssocRole
    }
 
    /**
-    * @return the property style of this role
+    * @return the property style.
+    * Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     */
    public String getPropertyStyle()
    {
@@ -254,10 +266,10 @@ public class AssocRole
 
    /**
     * @param value
-    *    the property style to use for this role.
+    *    the property style.
     *    Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public AssocRole setPropertyStyle(String value)
    {
@@ -273,6 +285,80 @@ public class AssocRole
    }
 
    /**
+    * @return the description of this role, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String getDescription()
+   {
+      return this.description;
+   }
+
+   /**
+    * @param value
+    *    the description of this role, used for generating JavaDocs
+    *
+    * @return this
+    *
+    * @since 1.3
+    */
+   public AssocRole setDescription(String value)
+   {
+      if (Objects.equals(value, this.description))
+      {
+         return this;
+      }
+
+      final String oldValue = this.description;
+      this.description = value;
+      this.firePropertyChange(PROPERTY_description, oldValue, value);
+      return this;
+   }
+
+   /**
+    * @return the lines of the description of this attribute, used for generating JavaDocs
+    *
+    * @since 1.3
+    * @deprecated for internal use only
+    */
+   @Deprecated
+   public List<String> getDescriptionLines()
+   {
+      return this.getDescription() == null ? Collections.emptyList() : Arrays.asList(this.getDescription().split("\n"));
+   }
+
+   /**
+    * @return the version when this role was introduced, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String getSince()
+   {
+      return this.since;
+   }
+
+   /**
+    * @param value
+    *    the version when this role was introduced, used for generating JavaDocs
+    *
+    * @return this
+    *
+    * @since 1.3
+    */
+   public AssocRole setSince(String value)
+   {
+      if (Objects.equals(value, this.since))
+      {
+         return this;
+      }
+
+      final String oldValue = this.since;
+      this.since = value;
+      this.firePropertyChange(PROPERTY_since, oldValue, value);
+      return this;
+   }
+
+   /**
     * @return a boolean indicating whether this role was modified. For internal use only.
     */
    public boolean getModified()
@@ -284,7 +370,7 @@ public class AssocRole
     * @param value
     *    a boolean indicating whether this role was modified. For internal use only.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public AssocRole setModified(boolean value)
    {
@@ -372,6 +458,8 @@ public class AssocRole
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getName());
       result.append(' ').append(this.getPropertyStyle());
+      result.append(' ').append(this.getDescription());
+      result.append(' ').append(this.getSince());
       return result.substring(1);
    }
 }
