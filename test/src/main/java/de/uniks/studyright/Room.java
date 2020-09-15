@@ -10,10 +10,13 @@ import java.util.List;
 import java.util.Objects;
 public class Room
 {
+   public static final String PROPERTY_ROOMNO = "roomNo";
+   public static final String PROPERTY_TOPIC = "topic";
+   public static final String PROPERTY_CREDITS = "credits";
+   public static final String PROPERTY_UNI = "uni";
+   public static final String PROPERTY_STUDENTS = "students";
 
    public static final String PROPERTY_roomNo = "roomNo";
-public static final String PROPERTY_UNI = "uni";
-public static final String PROPERTY_STUDENTS = "students";
 
    private String roomNo;
 
@@ -34,9 +37,6 @@ public static final String PROPERTY_STUDENTS = "students";
    private List<Student> students;
 
    protected PropertyChangeSupport listeners;
-public static final String PROPERTY_ROOMNO = "roomNo";
-public static final String PROPERTY_TOPIC = "topic";
-public static final String PROPERTY_CREDITS = "credits";
 
    public String getRoomNo()
    {

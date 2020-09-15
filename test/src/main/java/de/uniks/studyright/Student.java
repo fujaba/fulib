@@ -5,10 +5,14 @@ import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 public class Student
 {
+   public static final String PROPERTY_UNI = "uni";
+   public static final String PROPERTY_IN = "in";
+   public static final String PROPERTY_NAME = "name";
+   public static final String PROPERTY_STUDENTID = "studentId";
+   public static final String PROPERTY_CREDITS = "credits";
+   public static final String PROPERTY_MOTIVATION = "motivation";
 
    public static final String PROPERTY_name = "name";
-public static final String PROPERTY_UNI = "uni";
-public static final String PROPERTY_IN = "in";
 
    private String name;
 
@@ -33,10 +37,6 @@ public static final String PROPERTY_IN = "in";
    private Room in;
 
    protected PropertyChangeSupport listeners;
-public static final String PROPERTY_NAME = "name";
-public static final String PROPERTY_STUDENTID = "studentId";
-public static final String PROPERTY_CREDITS = "credits";
-public static final String PROPERTY_MOTIVATION = "motivation";
 
    public String getName()
    {
