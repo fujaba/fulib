@@ -35,11 +35,11 @@ public class AssocRole
    /** @since 1.3 */
    public static final String PROPERTY_CARDINALITY = "cardinality";
    /** @since 1.3 */ // no fulib
-   public static final String PROPERTY_COLLECTIONTYPE = "collectionType";
+   public static final String PROPERTY_COLLECTION_TYPE = "collectionType";
    /** @since 1.3 */
    public static final String PROPERTY_AGGREGATION = "aggregation";
    /** @since 1.3 */
-   public static final String PROPERTY_PROPERTYSTYLE = "propertyStyle";
+   public static final String PROPERTY_PROPERTY_STYLE = "propertyStyle";
    /** @since 1.3 */
    public static final String PROPERTY_DESCRIPTION = "description";
    /** @since 1.3 */
@@ -216,7 +216,7 @@ public class AssocRole
 
       final CollectionType oldValue = this.collectionType;
       this.collectionType = value;
-      this.firePropertyChange(PROPERTY_COLLECTIONTYPE, oldValue, value);
+      this.firePropertyChange(PROPERTY_COLLECTION_TYPE, oldValue, value);
       return this;
    }
 
@@ -301,7 +301,7 @@ public class AssocRole
 
       final String oldValue = this.propertyStyle;
       this.propertyStyle = value;
-      this.firePropertyChange(PROPERTY_PROPERTYSTYLE, oldValue, value);
+      this.firePropertyChange(PROPERTY_PROPERTY_STYLE, oldValue, value);
       return this;
    }
 

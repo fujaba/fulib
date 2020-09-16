@@ -7,10 +7,9 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Collections;
+
 public class ClassModel
 {
    // =============== Constants ===============
@@ -30,13 +29,13 @@ public class ClassModel
    public static final String PROPERTY_classes = "classes" /* no fulib */;
 
    /** @since 1.3 */
-   public static final String PROPERTY_PACKAGENAME = "packageName";
+   public static final String PROPERTY_PACKAGE_NAME = "packageName";
    /** @since 1.3 */
-   public static final String PROPERTY_MAINJAVADIR = "mainJavaDir";
+   public static final String PROPERTY_MAIN_JAVA_DIR = "mainJavaDir";
    /** @since 1.3 */ // no fulib
-   public static final String PROPERTY_DEFAULTCOLLECTIONTYPE = "defaultCollectionType";
+   public static final String PROPERTY_DEFAULT_COLLECTION_TYPE = "defaultCollectionType";
    /** @since 1.3 */
-   public static final String PROPERTY_DEFAULTPROPERTYSTYLE = "defaultPropertyStyle";
+   public static final String PROPERTY_DEFAULT_PROPERTY_STYLE = "defaultPropertyStyle";
    /** @since 1.3 */ // no fulib
    public static final String PROPERTY_CLASSES = "classes";
 
@@ -73,7 +72,7 @@ public class ClassModel
 
       final String oldValue = this.mainJavaDir;
       this.mainJavaDir = value;
-      this.firePropertyChange(PROPERTY_MAINJAVADIR, oldValue, value);
+      this.firePropertyChange(PROPERTY_MAIN_JAVA_DIR, oldValue, value);
       return this;
    }
 
@@ -91,7 +90,7 @@ public class ClassModel
 
       final String oldValue = this.packageName;
       this.packageName = value;
-      this.firePropertyChange(PROPERTY_PACKAGENAME, oldValue, value);
+      this.firePropertyChange(PROPERTY_PACKAGE_NAME, oldValue, value);
       return this;
    }
 
@@ -122,7 +121,7 @@ public class ClassModel
 
       final CollectionType oldValue = this.defaultCollectionType;
       this.defaultCollectionType = value;
-      this.firePropertyChange(PROPERTY_DEFAULTCOLLECTIONTYPE, oldValue, value);
+      this.firePropertyChange(PROPERTY_DEFAULT_COLLECTION_TYPE, oldValue, value);
       return this;
    }
 
@@ -177,7 +176,7 @@ public class ClassModel
 
       final String oldValue = this.defaultPropertyStyle;
       this.defaultPropertyStyle = value;
-      this.firePropertyChange(PROPERTY_DEFAULTPROPERTYSTYLE, oldValue, value);
+      this.firePropertyChange(PROPERTY_DEFAULT_PROPERTY_STYLE, oldValue, value);
       return this;
    }
 

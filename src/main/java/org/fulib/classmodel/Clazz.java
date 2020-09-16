@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.List;
 public class Clazz
 {
    // =============== Constants ===============
@@ -52,7 +51,7 @@ public class Clazz
    /** @since 1.3 */
    public static final String PROPERTY_NAME = "name";
    /** @since 1.3 */
-   public static final String PROPERTY_PROPERTYSTYLE = "propertyStyle";
+   public static final String PROPERTY_PROPERTY_STYLE = "propertyStyle";
    /** @since 1.3 */
    public static final String PROPERTY_MODIFIED = "modified";
    /** @since 1.3 */ // no fulib
@@ -66,9 +65,9 @@ public class Clazz
    /** @since 1.3 */ // no fulib
    public static final String PROPERTY_METHODS = "methods";
    /** @since 1.3 */ // no fulib
-   public static final String PROPERTY_SUBCLASSES = "subClasses";
+   public static final String PROPERTY_SUB_CLASSES = "subClasses";
    /** @since 1.3 */
-   public static final String PROPERTY_SUPERCLASS = "superClass";
+   public static final String PROPERTY_SUPER_CLASS = "superClass";
 
    // =============== Fields ===============
 
@@ -160,7 +159,7 @@ public class Clazz
       {
          value.withSubClasses(this);
       }
-      this.firePropertyChange(PROPERTY_SUPERCLASS, oldValue, value);
+      this.firePropertyChange(PROPERTY_SUPER_CLASS, oldValue, value);
       return this;
    }
 
@@ -217,7 +216,7 @@ public class Clazz
       {
          this.subClasses.add(value);
          value.setSuperClass(this);
-         this.firePropertyChange(PROPERTY_SUBCLASSES, null, value);
+         this.firePropertyChange(PROPERTY_SUB_CLASSES, null, value);
       }
       return this;
    }
@@ -295,7 +294,7 @@ public class Clazz
       if (this.subClasses != null && this.subClasses.remove(value))
       {
          value.setSuperClass(null);
-         this.firePropertyChange(PROPERTY_SUBCLASSES, value, null);
+         this.firePropertyChange(PROPERTY_SUB_CLASSES, value, null);
       }
       return this;
    }
@@ -1038,7 +1037,7 @@ public class Clazz
 
       final String oldValue = this.propertyStyle;
       this.propertyStyle = value;
-      this.firePropertyChange(PROPERTY_PROPERTYSTYLE, oldValue, value);
+      this.firePropertyChange(PROPERTY_PROPERTY_STYLE, oldValue, value);
       return this;
    }
 

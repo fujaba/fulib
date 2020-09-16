@@ -17,6 +17,7 @@ public class Room
    public static final String PROPERTY_STUDENTS = "students";
 
    public static final String PROPERTY_roomNo = "roomNo";
+   public static final String PROPERTY_ROOM_NO = "roomNo";
 
    private String roomNo;
 
@@ -52,7 +53,7 @@ public class Room
 
       final String oldValue = this.roomNo;
       this.roomNo = value;
-      this.firePropertyChange(PROPERTY_ROOMNO, oldValue, value);
+      this.firePropertyChange(PROPERTY_ROOM_NO, oldValue, value);
       return this;
    }
 

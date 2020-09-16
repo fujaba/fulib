@@ -13,6 +13,7 @@ public class Student
    public static final String PROPERTY_MOTIVATION = "motivation";
 
    public static final String PROPERTY_name = "name";
+   public static final String PROPERTY_STUDENT_ID = "studentId";
 
    private String name;
 
@@ -70,7 +71,7 @@ public class Student
 
       final String oldValue = this.studentId;
       this.studentId = value;
-      this.firePropertyChange(PROPERTY_STUDENTID, oldValue, value);
+      this.firePropertyChange(PROPERTY_STUDENT_ID, oldValue, value);
       return this;
    }
 

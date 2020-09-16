@@ -27,7 +27,7 @@ public class FMethod
    public static final String PROPERTY_modifiers = "modifiers";
 
    /** @since 1.3 */
-   public static final String PROPERTY_METHODBODY = "methodBody";
+   public static final String PROPERTY_METHOD_BODY = "methodBody";
    /** @since 1.3 */
    public static final String PROPERTY_MODIFIED = "modified";
    /** @since 1.3 */ // no fulib
@@ -346,7 +346,7 @@ public class FMethod
 
       final String oldValue = this.methodBody;
       this.methodBody = value;
-      this.firePropertyChange(PROPERTY_METHODBODY, oldValue, value);
+      this.firePropertyChange(PROPERTY_METHOD_BODY, oldValue, value);
       return this;
    }
 

@@ -21,7 +21,7 @@ attrType(attr) ::= <%
 // --------------- Declarations ---------------
 
 attrSignatures(attr) ::= <<
-   propertyDecl:     class/<attr.clazz.name>/staticAttribute/PROPERTY_<attr.name; format="upper">
+   propertyDecl:     class/<attr.clazz.name>/staticAttribute/PROPERTY_<attr.name; format="upper_snake">
    attrDecl:         class/<attr.clazz.name>/attribute/<attr.name>
    attrGet:          class/<attr.clazz.name>/property/get<attr.name; format="cap">()
    <if(javaFX.(attr.propertyStyle))>
@@ -48,7 +48,7 @@ propertyDecl(attr) ::= <<
 <if(attr.since)>
    /** @since <attr.since> */
 <endif>
-   public static final String PROPERTY_<attr.name; format="upper"> = "<attr.name>";
+   public static final String PROPERTY_<attr.name; format="upper_snake"> = "<attr.name>";
 >>
 
 // --------------- Simple Accessors ---------------
