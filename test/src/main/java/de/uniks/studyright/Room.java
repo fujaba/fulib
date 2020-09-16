@@ -10,8 +10,14 @@ import java.util.List;
 import java.util.Objects;
 public class Room
 {
+   public static final String PROPERTY_ROOMNO = "roomNo";
+   public static final String PROPERTY_TOPIC = "topic";
+   public static final String PROPERTY_CREDITS = "credits";
+   public static final String PROPERTY_UNI = "uni";
+   public static final String PROPERTY_STUDENTS = "students";
 
    public static final String PROPERTY_roomNo = "roomNo";
+   public static final String PROPERTY_ROOM_NO = "roomNo";
 
    private String roomNo;
 
@@ -47,7 +53,7 @@ public class Room
 
       final String oldValue = this.roomNo;
       this.roomNo = value;
-      this.firePropertyChange(PROPERTY_roomNo, oldValue, value);
+      this.firePropertyChange(PROPERTY_ROOM_NO, oldValue, value);
       return this;
    }
 
@@ -65,7 +71,7 @@ public class Room
 
       final String oldValue = this.topic;
       this.topic = value;
-      this.firePropertyChange(PROPERTY_topic, oldValue, value);
+      this.firePropertyChange(PROPERTY_TOPIC, oldValue, value);
       return this;
    }
 
@@ -83,7 +89,7 @@ public class Room
 
       final int oldValue = this.credits;
       this.credits = value;
-      this.firePropertyChange(PROPERTY_credits, oldValue, value);
+      this.firePropertyChange(PROPERTY_CREDITS, oldValue, value);
       return this;
    }
 
@@ -110,7 +116,7 @@ public class Room
       {
          value.withRooms(this);
       }
-      this.firePropertyChange(PROPERTY_uni, oldValue, value);
+      this.firePropertyChange(PROPERTY_UNI, oldValue, value);
       return this;
    }
 
@@ -129,7 +135,7 @@ public class Room
       {
          this.students.add(value);
          value.setIn(this);
-         this.firePropertyChange(PROPERTY_students, null, value);
+         this.firePropertyChange(PROPERTY_STUDENTS, null, value);
       }
       return this;
    }
@@ -157,7 +163,7 @@ public class Room
       if (this.students != null && this.students.remove(value))
       {
          value.setIn(null);
-         this.firePropertyChange(PROPERTY_students, value, null);
+         this.firePropertyChange(PROPERTY_STUDENTS, value, null);
       }
       return this;
    }

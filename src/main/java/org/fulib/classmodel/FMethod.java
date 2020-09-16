@@ -26,6 +26,17 @@ public class FMethod
    /** @since 1.2 */
    public static final String PROPERTY_modifiers = "modifiers";
 
+   /** @since 1.3 */
+   public static final String PROPERTY_METHOD_BODY = "methodBody";
+   /** @since 1.3 */
+   public static final String PROPERTY_MODIFIED = "modified";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_MODIFIERS = "modifiers";
+   /** @since 1.3 */
+   public static final String PROPERTY_ANNOTATIONS = "annotations";
+   /** @since 1.3 */
+   public static final String PROPERTY_CLAZZ = "clazz";
+
    // =============== Fields ===============
 
    protected PropertyChangeSupport listeners;
@@ -65,7 +76,7 @@ public class FMethod
       {
          value.withMethods(this);
       }
-      this.firePropertyChange(PROPERTY_clazz, oldValue, value);
+      this.firePropertyChange(PROPERTY_CLAZZ, oldValue, value);
       return this;
    }
 
@@ -212,7 +223,7 @@ public class FMethod
 
       final String oldValue = this.annotations;
       this.annotations = value;
-      this.firePropertyChange(PROPERTY_annotations, oldValue, value);
+      this.firePropertyChange(PROPERTY_ANNOTATIONS, oldValue, value);
       return this;
    }
 
@@ -243,7 +254,7 @@ public class FMethod
 
       final String oldValue = this.modifiers;
       this.modifiers = value;
-      this.firePropertyChange(PROPERTY_modifiers, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODIFIERS, oldValue, value);
       return this;
    }
 
@@ -335,7 +346,7 @@ public class FMethod
 
       final String oldValue = this.methodBody;
       this.methodBody = value;
-      this.firePropertyChange(PROPERTY_methodBody, oldValue, value);
+      this.firePropertyChange(PROPERTY_METHOD_BODY, oldValue, value);
       return this;
    }
 
@@ -362,7 +373,7 @@ public class FMethod
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange(PROPERTY_modified, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODIFIED, oldValue, value);
       return this;
    }
 

@@ -126,7 +126,7 @@ public abstract class AbstractGenerator4ClassFile
       {
          group = new STGroupFile(origFileName);
       }
-      group.registerRenderer(String.class, new StringRenderer());
+      group.registerRenderer(String.class, new FulibStringRenderer());
       return group;
    }
 

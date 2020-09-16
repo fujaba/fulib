@@ -51,6 +51,9 @@ public class FileFragmentMap
 
    public static final String PROPERTY_fileName = "fileName";
 
+   /** @since 1.3 */
+   public static final String PROPERTY_FILE_NAME = "fileName";
+
    // comments containing "no fulib", case insensitive, and with any whitespace between the words.
    private static final Pattern NO_FULIB_PATTERN = Pattern.compile("//.*no\\s+fulib|/\\*.*no\\s+fulib.*\\*/",
                                                                    Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
@@ -99,7 +102,7 @@ public class FileFragmentMap
 
       final String oldValue = this.fileName;
       this.fileName = value;
-      this.firePropertyChange(PROPERTY_fileName, oldValue, value);
+      this.firePropertyChange(PROPERTY_FILE_NAME, oldValue, value);
       return this;
    }
 
