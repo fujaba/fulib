@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.fulib.parser.FragmentMapBuilder;
 import org.fulib.parser.FulibClassLexer;
 import org.fulib.parser.FulibClassParser;
+import org.fulib.parser.FulibErrorHandler;
 import org.fulib.util.Validator;
 
 import java.beans.PropertyChangeListener;
@@ -98,8 +99,7 @@ public class FMethod
    }
 
    /**
-    * @return the declaration of this method.
-    * Includes header, including annotations, modifiers, return type, name, and parameters.
+    * @return the declaration of this method, including annotations, modifiers, return type, name, and parameters
     */
    public String getDeclaration() // no fulib
    {
@@ -135,6 +135,15 @@ public class FMethod
       return inputStream.getText(Interval.of(start.getStartIndex(), rule.getStop().getStopIndex()));
    }
 
+   /**
+    * @param value
+    *    the declaration of this method, including annotations, modifiers, return type, name, and parameters
+    *
+    * @return this
+    *
+    * @throws IllegalArgumentException
+    *    if the declaration has syntax errors
+    */
    public FMethod setDeclaration(String value) // no fulib
    {
       // a declaration looks like
@@ -151,7 +160,17 @@ public class FMethod
       final FulibClassLexer lexer = new FulibClassLexer(input);
       final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
 
+      final StringBuilder errors = new StringBuilder("syntax errors in declaration:\n").append(value).append('\n');
+      parser.removeErrorListeners();
+      parser.addErrorListener(new FulibErrorHandler(errors));
+
       final FulibClassParser.MethodContext methodCtx = parser.method();
+
+      if (parser.getNumberOfSyntaxErrors() > 0)
+      {
+         throw new IllegalArgumentException(errors.toString());
+      }
+
       final FulibClassParser.MethodMemberContext memberCtx = methodCtx.methodMember();
 
       final String annotations = methodCtx
