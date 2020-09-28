@@ -106,8 +106,8 @@ public class Attribute
    @Deprecated
    public String getId()
    {
-      final String className = this.getClazz() != null ? this.getClazz().getName() : "___";
-      return className + "_" + this.getName();
+      final Clazz clazz = this.getClazz();
+      return (clazz != null ? clazz.getName() : "_") + "_" + this.getName();
    }
 
    public String getName()

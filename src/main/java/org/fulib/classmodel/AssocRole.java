@@ -131,8 +131,8 @@ public class AssocRole
    @Deprecated
    public String getId()
    {
-      final String className = this.getClazz() == null ? "___" : this.getClazz().getName();
-      return className + "_" + this.getName();
+      final Clazz clazz = this.getClazz();
+      return (clazz != null ? clazz.getName() : "_") + "_" + this.getName();
    }
 
    public String getName()
