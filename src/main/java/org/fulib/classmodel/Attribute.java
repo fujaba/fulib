@@ -101,11 +101,13 @@ public class Attribute
     * @return a string that uniquely identifies this attribute within the enclosing class model
     *
     * @since 1.2
+    * @deprecated since 1.3; for serialization purposes only
     */
+   @Deprecated
    public String getId()
    {
-      final String className = this.getClazz() != null ? this.getClazz().getName() : "___";
-      return className + "_" + this.getName();
+      final Clazz clazz = this.getClazz();
+      return (clazz != null ? clazz.getName() : "_") + "_" + this.getName();
    }
 
    public String getName()
