@@ -81,6 +81,19 @@ public class FMethod
    }
 
    /**
+    * @return a string that identifies this method within the enclosing class model
+    *
+    * @since 1.3
+    * @deprecated for serialization purposes only
+    */
+   @Deprecated
+   public String getId()
+   {
+      final Clazz clazz = this.getClazz();
+      return (clazz != null ? clazz.getName() : "_") + "_" + this.getName();
+   }
+
+   /**
     * @since 1.2
     */
    public String getName()
