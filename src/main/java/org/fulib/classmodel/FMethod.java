@@ -99,8 +99,7 @@ public class FMethod
    }
 
    /**
-    * @return the declaration of this method.
-    * Includes header, including annotations, modifiers, return type, name, and parameters.
+    * @return the declaration of this method, including annotations, modifiers, return type, name, and parameters
     */
    public String getDeclaration() // no fulib
    {
@@ -136,6 +135,15 @@ public class FMethod
       return inputStream.getText(Interval.of(start.getStartIndex(), rule.getStop().getStopIndex()));
    }
 
+   /**
+    * @param value
+    *    the declaration of this method, including annotations, modifiers, return type, name, and parameters
+    *
+    * @return this
+    *
+    * @throws IllegalArgumentException
+    *    if the declaration has syntax errors
+    */
    public FMethod setDeclaration(String value) // no fulib
    {
       // a declaration looks like
