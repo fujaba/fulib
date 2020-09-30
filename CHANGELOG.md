@@ -112,3 +112,23 @@
 
 * The code generator now correctly determines when PropertyChange members are needed, depending on attributes, associations, potential super classes and the use of `POJO` property style. #21 #63
 * The code generator now properly removes PropertyChange members when they are not needed. #63
+
+# fulib v1.3.0
+
+## New Features
+
++ Attributes and roles can now specify a description and a since version that is copied to their JavaDocs. #32 #64
++ Added `ClassModelManager.haveRole` methods as aliases for `associate`. #61
++ Static fields are now grouped together in newly generated classes. #65
++ Property accessors are now grouped together in newly generated classes. #65
+
+## Improvements
+
+* Updated to fulibYaml v1.4.0.
+* Generated table `toString` methods now produce Markdown. #67
+* Generated property constants are now fully uppercase. #68
+* The `FMethod.setDeclaration` method now throws an `IllegalArgumentException` if the new value has syntax errors. #72
+
+## Bugfixes
+
+* The code generator now correctly indents new members. #69
