@@ -381,6 +381,25 @@ public class ClassModelManager implements IModelManager
 
    /**
     * Gets or creates a class with the given name and super class.
+    *
+    * @param name
+    *    the class name
+    * @param superClass
+    *    the super class
+    *
+    * @return the class with the given name
+    *
+    * @since 1.4
+    */
+   public Clazz haveClass(String name, Clazz superClass)
+   {
+      final Clazz clazz = this.haveClass(name);
+      this.haveSuper(clazz, superClass);
+      return clazz;
+   }
+
+   /**
+    * Gets or creates a class with the given name and super class.
     * In either case, the consumer is invoked to configure the resulting class using the {@link ClassManager} API.
     *
     * @param name
@@ -396,8 +415,7 @@ public class ClassModelManager implements IModelManager
     */
    public Clazz haveClass(String name, Clazz superClass, Consumer<? super ClassManager> body)
    {
-      final Clazz clazz = this.haveClass(name);
-      this.haveSuper(clazz, superClass);
+      final Clazz clazz = this.haveClass(name, superClass);
       body.accept(new ClassManager(clazz));
       return clazz;
    }
