@@ -333,6 +333,14 @@ public class ClassModelManager implements IModelManager
 
    // --------------- Classes ---------------
 
+   /**
+    * Gets or creates a class with the given name.
+    *
+    * @param name
+    *    the name of the class
+    *
+    * @return the class with the given name
+    */
    public Clazz haveClass(String name)
    {
       Clazz clazz = this.classModel.getClazz(name);
