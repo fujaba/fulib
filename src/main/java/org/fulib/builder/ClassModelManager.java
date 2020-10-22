@@ -246,7 +246,7 @@ public class ClassModelManager implements IModelManager
    // --------------- Settings ---------------
 
    /**
-    * @param packagename
+    * @param packageName
     *    the package name
     *
     * @return this instance, to allow method chaining
@@ -254,9 +254,9 @@ public class ClassModelManager implements IModelManager
     * @deprecated since 1.2; use {@link #setPackageName(String)} instead
     */
    @Deprecated
-   public ClassModelManager havePackageName(String packagename)
+   public ClassModelManager havePackageName(String packageName)
    {
-      this.setPackageName(packagename);
+      this.setPackageName(packageName);
       return this;
    }
 
@@ -289,7 +289,7 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
-    * @param sourceDir
+    * @param mainJavaDir
     *    the source directory
     *
     * @return this instance, to allow method chaining
@@ -297,9 +297,9 @@ public class ClassModelManager implements IModelManager
     * @deprecated since 1.2; use {@link #setMainJavaDir(String)} instead
     */
    @Deprecated
-   public ClassModelManager haveMainJavaDir(String sourceDir)
+   public ClassModelManager haveMainJavaDir(String mainJavaDir)
    {
-      this.setMainJavaDir(sourceDir);
+      this.setMainJavaDir(mainJavaDir);
       return this;
    }
 
