@@ -13,9 +13,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class ReflectiveClassBuilderTest
 {
-   class Student
+   class Person
    {
       String name;
+   }
+
+   class Student extends Person
+   {
       int studId;
 
       LinkedList<String> notes;
@@ -37,16 +41,19 @@ public class ReflectiveClassBuilderTest
    public void test()
    {
       final ClassModelManager cmm = new ClassModelManager();
+      ReflectiveClassBuilder.load(Person.class, cmm);
       ReflectiveClassBuilder.load(Student.class, cmm);
       ReflectiveClassBuilder.load(University.class, cmm);
 
       final ClassModel model = cmm.getClassModel();
 
-      final Clazz student = model.getClazz("Student");
+      final Clazz person = model.getClazz("Person");
+      final Attribute personName = person.getAttribute("name");
+      assertThat(personName.getType(), equalTo("String"));
+      assertThat(personName.getCollectionType(), nullValue());
 
-      final Attribute studentName = student.getAttribute("name");
-      assertThat(studentName.getType(), equalTo("String"));
-      assertThat(studentName.getCollectionType(), nullValue());
+      final Clazz student = model.getClazz("Student");
+      assertThat(student.getSuperClass(), is(person));
 
       final Attribute studentId = student.getAttribute("studId");
       assertThat(studentId.getType(), equalTo("int"));

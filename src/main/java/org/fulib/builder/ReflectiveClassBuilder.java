@@ -19,6 +19,14 @@ class ReflectiveClassBuilder
    {
       final Clazz clazz = manager.haveClass(classDef.getSimpleName());
 
+      final Class<?> superClass = classDef.getSuperclass();
+      if (superClass != null && superClass != Object.class)
+      {
+         final String superName = superClass.getSimpleName();
+         final Clazz superClazz = manager.haveClass(superName);
+         manager.haveSuper(clazz, superClazz);
+      }
+
       for (final Field field : classDef.getDeclaredFields())
       {
          loadField(field, clazz, manager);
