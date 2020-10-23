@@ -60,6 +60,28 @@ public enum CollectionInterface
       return this.itf;
    }
 
+   /**
+    * @return the default implementation {@link CollectionType} for this interface
+    *
+    * @since 1.4
+    */
+   public CollectionType getDefaultImpl()
+   {
+      switch (this)
+      {
+      case Collection:
+      case Set:
+         return CollectionType.LinkedHashSet;
+      case List:
+         return CollectionType.ArrayList;
+      case SortedSet:
+      case NavigableSet:
+         return CollectionType.TreeSet;
+      default:
+         throw new AssertionError(this + " does not have a default implementation type");
+      }
+   }
+
    public String getSimpleName()
    {
       return this.itf.getSimpleName();
