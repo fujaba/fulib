@@ -15,6 +15,7 @@ public class ReflectiveClassBuilderTest
 {
    class Person
    {
+      @Description("the full name")
       String name;
    }
 
@@ -22,6 +23,7 @@ public class ReflectiveClassBuilderTest
    {
       int studId;
 
+      @Since("1.2")
       LinkedList<String> notes;
 
       @Link("students")
@@ -51,6 +53,7 @@ public class ReflectiveClassBuilderTest
       final Attribute personName = person.getAttribute("name");
       assertThat(personName.getType(), equalTo("String"));
       assertThat(personName.getCollectionType(), nullValue());
+      assertThat(personName.getDescription(), equalTo("the full name"));
 
       final Clazz student = model.getClazz("Student");
       assertThat(student.getSuperClass(), is(person));
@@ -61,6 +64,7 @@ public class ReflectiveClassBuilderTest
 
       final Attribute studentNotes = student.getAttribute("notes");
       assertThat(studentNotes.getType(), equalTo("String"));
+      assertThat(studentNotes.getSince(), equalTo("1.2"));
 
       final CollectionType notesCollectionType = studentNotes.getCollectionType();
       assertThat(notesCollectionType.getImplClass(), is(LinkedList.class));

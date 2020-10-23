@@ -1,9 +1,6 @@
 package org.fulib.builder;
 
-import org.fulib.classmodel.AssocRole;
-import org.fulib.classmodel.Clazz;
-import org.fulib.classmodel.CollectionInterface;
-import org.fulib.classmodel.CollectionType;
+import org.fulib.classmodel.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -52,7 +49,10 @@ class ReflectiveClassBuilder
       final CollectionType collectionType = getCollectionType(field.getType());
       final String type = getType(field, collectionType);
 
-      manager.haveAttribute(clazz, name, type).setCollectionType(collectionType);
+      final Attribute attribute = manager.haveAttribute(clazz, name, type);
+      attribute.setCollectionType(collectionType);
+      attribute.setDescription(getDescription(field));
+      attribute.setSince(getSince(field));
    }
 
    private static String getType(Field field, CollectionType collectionType)
@@ -108,6 +108,8 @@ class ReflectiveClassBuilder
 
       final AssocRole role = manager.associate(clazz, name, collectionType != null ? MANY : ONE, other, otherName, 0);
       role.setCollectionType(collectionType);
+      role.setDescription(getDescription(field));
+      role.setSince(getSince(field));
    }
 
    private static String getOther(Field field, CollectionType collectionType)
@@ -128,5 +130,17 @@ class ReflectiveClassBuilder
       }
 
       throw new InvalidClassModelException("cannot determine element type for " + field);
+   }
+
+   private static String getDescription(Field field)
+   {
+      final Description annotation = field.getAnnotation(Description.class);
+      return annotation != null ? annotation.value() : null;
+   }
+
+   private static String getSince(Field field)
+   {
+      final Since annotation = field.getAnnotation(Since.class);
+      return annotation != null ? annotation.value() : null;
    }
 }
