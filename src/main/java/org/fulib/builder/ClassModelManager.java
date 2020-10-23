@@ -742,7 +742,7 @@ public class ClassModelManager implements IModelManager
             .setPropertyStyle(owner.getPropertyStyle())
             .setCollectionType(owner.getModel().getDefaultCollectionType());
       }
-      else if (role.getCardinality() == cardinality)
+      else if (role.getCardinality() == cardinality || cardinality == 0)
       {
          return role;
       }
