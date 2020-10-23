@@ -27,6 +27,26 @@ public enum CollectionInterface
 
    // =============== Static Methods ===============
 
+   /**
+    * @param itfClass
+    *    the interface class
+    *
+    * @return the {@link CollectionInterface} instance with the given class, or {@code null} if none matches
+    *
+    * @since 1.4
+    */
+   public static CollectionInterface valueOf(Class<? extends Collection> itfClass)
+   {
+      for (final CollectionInterface value : values())
+      {
+         if (value.getItfClass() == itfClass)
+         {
+            return value;
+         }
+      }
+      return null;
+   }
+
    static CollectionInterface deriveFrom(String implClassName)
    {
       if (implClassName.contains("List"))
