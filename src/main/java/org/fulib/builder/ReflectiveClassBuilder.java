@@ -35,6 +35,11 @@ class ReflectiveClassBuilder
 
    private static void loadField(Field field, Clazz clazz, ClassModelManager manager)
    {
+      if (field.isSynthetic())
+      {
+         return;
+      }
+
       final Link link = field.getAnnotation(Link.class);
       if (link == null)
       {
