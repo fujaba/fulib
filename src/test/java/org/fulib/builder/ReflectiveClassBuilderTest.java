@@ -1,9 +1,6 @@
 package org.fulib.builder;
 
-import org.fulib.builder.reflect.Description;
-import org.fulib.builder.reflect.InvalidClassModelException;
-import org.fulib.builder.reflect.Link;
-import org.fulib.builder.reflect.Since;
+import org.fulib.builder.reflect.*;
 import org.fulib.classmodel.*;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +22,7 @@ public class ReflectiveClassBuilderTest
 
    class Student extends Person
    {
+      @InitialValue("1")
       int studId;
 
       @Since("1.2")
@@ -64,6 +62,7 @@ public class ReflectiveClassBuilderTest
 
       final Attribute studentId = student.getAttribute("studId");
       assertThat(studentId.getType(), equalTo("int"));
+      assertThat(studentId.getInitialization(), equalTo("1"));
       assertThat(studentId.getCollectionType(), nullValue());
 
       final Attribute studentNotes = student.getAttribute("notes");

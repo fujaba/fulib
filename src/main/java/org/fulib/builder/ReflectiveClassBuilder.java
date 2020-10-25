@@ -1,9 +1,6 @@
 package org.fulib.builder;
 
-import org.fulib.builder.reflect.Description;
-import org.fulib.builder.reflect.InvalidClassModelException;
-import org.fulib.builder.reflect.Link;
-import org.fulib.builder.reflect.Since;
+import org.fulib.builder.reflect.*;
 import org.fulib.classmodel.*;
 
 import java.lang.reflect.Field;
@@ -55,10 +52,17 @@ class ReflectiveClassBuilder
       final CollectionType collectionType = getCollectionType(field.getType());
       final String type = getType(field, collectionType);
 
+
       final Attribute attribute = manager.haveAttribute(clazz, name, type);
       attribute.setCollectionType(collectionType);
       attribute.setDescription(getDescription(field));
       attribute.setSince(getSince(field));
+
+      final InitialValue initialValue = field.getAnnotation(InitialValue.class);
+      if (initialValue != null)
+      {
+         attribute.setInitialization(initialValue.value());
+      }
    }
 
    private static String getType(Field field, CollectionType collectionType)
