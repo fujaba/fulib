@@ -52,7 +52,6 @@ class ReflectiveClassBuilder
       final CollectionType collectionType = getCollectionType(field.getType());
       final String type = getType(field, collectionType);
 
-
       final Attribute attribute = manager.haveAttribute(clazz, name, type);
       attribute.setCollectionType(collectionType);
       attribute.setDescription(getDescription(field));
@@ -67,6 +66,12 @@ class ReflectiveClassBuilder
 
    private static String getType(Field field, CollectionType collectionType)
    {
+      final org.fulib.builder.reflect.Type type = field.getAnnotation(org.fulib.builder.reflect.Type.class);
+      if (type != null)
+      {
+         return type.value();
+      }
+
       if (collectionType == null)
       {
          return toSource(field.getGenericType());
@@ -124,6 +129,12 @@ class ReflectiveClassBuilder
 
    private static String getOther(Field field, CollectionType collectionType)
    {
+      final org.fulib.builder.reflect.Type type = field.getAnnotation(org.fulib.builder.reflect.Type.class);
+      if (type != null)
+      {
+         return type.value();
+      }
+
       if (collectionType == null)
       {
          return field.getType().getSimpleName();
