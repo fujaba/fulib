@@ -12,7 +12,7 @@ import static org.fulib.builder.Type.ONE;
 
 class ReflectiveClassBuilder
 {
-   static void load(Class<?> classDef, ClassModelManager manager)
+   static Clazz load(Class<?> classDef, ClassModelManager manager)
    {
       final Clazz clazz = manager.haveClass(classDef.getSimpleName());
 
@@ -28,6 +28,8 @@ class ReflectiveClassBuilder
       {
          loadField(field, clazz, manager);
       }
+
+      return clazz;
    }
 
    private static void loadField(Field field, Clazz clazz, ClassModelManager manager)

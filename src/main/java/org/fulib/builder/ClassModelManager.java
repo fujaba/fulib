@@ -429,6 +429,19 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
+    * @since 1.4
+    */
+   public Clazz haveClass(Class<?> classDef)
+   {
+      final Clazz existing = this.classModel.getClazz(classDef.getSimpleName());
+      if (existing != null)
+      {
+         return existing;
+      }
+      return ReflectiveClassBuilder.load(classDef, this);
+   }
+
+   /**
     * Configures the sub class to extend the given super class.
     *
     * @param subClass
