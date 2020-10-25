@@ -1,5 +1,9 @@
 package org.fulib.builder;
 
+import org.fulib.builder.reflect.Description;
+import org.fulib.builder.reflect.InvalidClassModelException;
+import org.fulib.builder.reflect.Link;
+import org.fulib.builder.reflect.Since;
 import org.fulib.classmodel.*;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package org.fulib.builder;
+package org.fulib.builder.reflect;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

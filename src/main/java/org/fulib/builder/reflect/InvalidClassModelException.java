@@ -1,4 +1,4 @@
-package org.fulib.builder;
+package org.fulib.builder.reflect;
 
 /**
  * @since 1.4
