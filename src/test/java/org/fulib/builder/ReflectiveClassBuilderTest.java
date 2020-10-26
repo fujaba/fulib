@@ -12,12 +12,16 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@SuppressWarnings("unused")
 public class ReflectiveClassBuilderTest
 {
    class Person
    {
       @Description("the full name")
       String name;
+
+      @Link("friends")
+      List<Person> friends;
    }
 
    class Student extends Person
@@ -30,6 +34,15 @@ public class ReflectiveClassBuilderTest
 
       @Link("students")
       University uni;
+   }
+
+   class Employee extends Person
+   {
+      @Link("subordinates")
+      Employee manager;
+
+      @Link("manager")
+      List<Employee> subordinates;
    }
 
    class University
@@ -47,6 +60,7 @@ public class ReflectiveClassBuilderTest
       final ClassModelManager cmm = new ClassModelManager();
       ReflectiveClassBuilder.load(Person.class, cmm);
       ReflectiveClassBuilder.load(Student.class, cmm);
+      ReflectiveClassBuilder.load(Employee.class, cmm);
       ReflectiveClassBuilder.load(University.class, cmm);
 
       final ClassModel model = cmm.getClassModel();
@@ -56,6 +70,10 @@ public class ReflectiveClassBuilderTest
       assertThat(personName.getType(), equalTo("String"));
       assertThat(personName.getCollectionType(), nullValue());
       assertThat(personName.getDescription(), equalTo("the full name"));
+
+      final AssocRole personFriends = person.getRole("friends");
+      assertThat(personFriends.getOther(), is(personFriends));
+      assertThat(personFriends.getCardinality(), equalTo(Type.MANY));
 
       final Clazz student = model.getClazz("Student");
       assertThat(student.getSuperClass(), is(person));
@@ -72,6 +90,19 @@ public class ReflectiveClassBuilderTest
       final CollectionType notesCollectionType = studentNotes.getCollectionType();
       assertThat(notesCollectionType.getImplClass(), is(LinkedList.class));
       assertThat(notesCollectionType.getItf(), is(CollectionInterface.List));
+
+      final Clazz employee = model.getClazz("Employee");
+
+      final AssocRole manager = employee.getRole("manager");
+      final AssocRole subordinates = employee.getRole("subordinates");
+
+      assertThat(manager.getOther(), is(subordinates));
+      assertThat(manager.getCardinality(), equalTo(Type.ONE));
+      assertThat(manager.getCollectionType(), nullValue());
+
+      assertThat(subordinates.getOther(), is(manager));
+      assertThat(subordinates.getCardinality(), equalTo(Type.MANY));
+      assertThat(subordinates.getCollectionType(), is(CollectionType.ArrayList));
 
       final Clazz university = model.getClazz("University");
 
