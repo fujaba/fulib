@@ -48,7 +48,9 @@ public class ReflectiveClassBuilderTest
    class University
    {
       String name;
-      String address;
+
+      @org.fulib.builder.reflect.Type("SomeEnum")
+      Object type;
 
       @Link("uni")
       List<Student> students;
@@ -105,6 +107,9 @@ public class ReflectiveClassBuilderTest
       assertThat(subordinates.getCollectionType(), is(CollectionType.ArrayList));
 
       final Clazz university = model.getClazz("University");
+
+      final Attribute universityType = university.getAttribute("type");
+      assertThat(universityType.getType(), equalTo("SomeEnum"));
 
       final AssocRole students = university.getRole("students");
       final AssocRole uni = student.getRole("uni");
