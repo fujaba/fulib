@@ -111,25 +111,21 @@
   aggregation: 	false
   cardinality: 	1
   clazz: 	student
-  collectionType: 	c1
   id: 	Student_uni
   modified: 	false
   name: 	uni
   other: 	university_students
   propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
 
 - student_in: 	AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	student
-  collectionType: 	c1
   id: 	Student_in
   modified: 	false
   name: 	in
   other: 	room_students
   propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
 
 - room_roomNo: 	Attribute
   clazz: 	room
@@ -162,13 +158,11 @@
   aggregation: 	false
   cardinality: 	1
   clazz: 	room
-  collectionType: 	c1
   id: 	Room_uni
   modified: 	false
   name: 	uni
   other: 	university_rooms
   propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
 
 - room_students: 	AssocRole
   aggregation: 	false
