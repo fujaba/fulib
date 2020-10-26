@@ -11,7 +11,6 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("unused")
 public class ReflectiveClassBuilderTest
@@ -128,20 +127,14 @@ public class ReflectiveClassBuilderTest
    }
 
    @Test
-   public void stringList()
+   public void unknownAttributeElementType()
    {
       final ClassModelManager cmm = new ClassModelManager();
 
-      try
-      {
-         ReflectiveClassBuilder.load(StringListObj.class, cmm);
-         fail("did not throw exception");
-      }
-      catch (InvalidClassModelException ex)
-      {
-         assertThat(ex.getMessage(), equalTo(
-            "cannot determine element type for org.fulib.builder.ReflectiveClassBuilderTest$StringList org.fulib.builder.ReflectiveClassBuilderTest$StringListObj.list"));
-      }
+      final InvalidClassModelException ex = assertThrows(InvalidClassModelException.class,
+                                                         () -> ReflectiveClassBuilder.load(StringListObj.class, cmm));
+      assertThat(ex.getMessage(), equalTo(
+         "cannot determine element type for org.fulib.builder.ReflectiveClassBuilderTest$StringList org.fulib.builder.ReflectiveClassBuilderTest$StringListObj.list"));
    }
 
    class StudentList extends ArrayList<Student>
@@ -154,20 +147,14 @@ public class ReflectiveClassBuilderTest
    }
 
    @Test
-   public void studentList()
+   public void unknownAssocElementType()
    {
       final ClassModelManager cmm = new ClassModelManager();
 
-      try
-      {
-         ReflectiveClassBuilder.load(StudentListObj.class, cmm);
-         fail("did not throw exception");
-      }
-      catch (InvalidClassModelException ex)
-      {
-         assertThat(ex.getMessage(), equalTo(
-            "cannot determine element type for org.fulib.builder.ReflectiveClassBuilderTest$StudentList org.fulib.builder.ReflectiveClassBuilderTest$StudentListObj.students"));
-      }
+      final InvalidClassModelException ex = assertThrows(InvalidClassModelException.class,
+                                                         () -> ReflectiveClassBuilder.load(StudentListObj.class, cmm));
+      assertThat(ex.getMessage(), equalTo(
+         "cannot determine element type for org.fulib.builder.ReflectiveClassBuilderTest$StudentList org.fulib.builder.ReflectiveClassBuilderTest$StudentListObj.students"));
    }
 
    class InvalidLinkTargetType
