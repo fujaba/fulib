@@ -746,9 +746,8 @@ public class ClassModelManager implements IModelManager
          role = new AssocRole()
             .setClazz(owner)
             .setName(name)
-            .setCardinality(cardinality)
-            .setPropertyStyle(owner.getPropertyStyle())
-            .setCollectionType(owner.getModel().getDefaultCollectionType());
+            .setPropertyStyle(owner.getPropertyStyle());
+         this.setCardinality(owner, cardinality, role);
       }
       else if (role.getCardinality() == cardinality || cardinality == 0)
       {
@@ -756,8 +755,17 @@ public class ClassModelManager implements IModelManager
       }
 
       modified.set(true);
-      role.setCardinality(cardinality);
+      this.setCardinality(owner, cardinality, role);
       return role;
+   }
+
+   private void setCardinality(Clazz owner, int cardinality, AssocRole role)
+   {
+      role.setCardinality(cardinality);
+      if (cardinality != Type.ONE)
+      {
+         role.setCollectionType(owner.getModel().getDefaultCollectionType());
+      }
    }
 
    private void link(AssocRole src, AssocRole tgt, AtomicBoolean modified)
