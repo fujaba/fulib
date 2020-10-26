@@ -433,11 +433,6 @@ public class ClassModelManager implements IModelManager
     */
    public Clazz haveClass(Class<?> classDef)
    {
-      final Clazz existing = this.classModel.getClazz(classDef.getSimpleName());
-      if (existing != null)
-      {
-         return existing;
-      }
       return ReflectiveClassBuilder.load(classDef, this);
    }
 
