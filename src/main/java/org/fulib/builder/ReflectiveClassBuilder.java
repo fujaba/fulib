@@ -121,28 +121,71 @@ class ReflectiveClassBuilder
       final String name = field.getName();
       final CollectionType collectionType = getCollectionType(field.getType());
 
-      final String otherClazzName = getOther(field, collectionType);
-      final Clazz other = manager.haveClass(otherClazzName);
-
       final String otherName = link.value();
 
-      final AssocRole role = manager.associate(clazz, name, collectionType != null ? MANY : ONE, other, otherName, 0);
+      final Class<?> other = getOther(field, collectionType);
+
+      validateLinkTarget(field.getDeclaringClass(), name, otherName, other);
+
+      final String otherClazzName = other.getSimpleName();
+      final Clazz otherClazz = manager.haveClass(otherClazzName);
+
+      final AssocRole role = manager.associate(clazz, name, collectionType != null ? MANY : ONE, otherClazz, otherName,
+                                               0);
       role.setCollectionType(collectionType);
       role.setDescription(getDescription(field));
       role.setSince(getSince(field));
    }
 
-   private static String getOther(Field field, CollectionType collectionType)
+   private static void validateLinkTarget(Class<?> owner, String name, String otherName, Class<?> other)
+   {
+      final Field targetField;
+      try
+      {
+         targetField = other.getDeclaredField(otherName);
+      }
+      catch (NoSuchFieldException e)
+      {
+         throw new InvalidClassModelException(
+            String.format("invalid link target: field %s.%s not found", other.getSimpleName(), otherName), e);
+      }
+
+      final Link targetLink = targetField.getAnnotation(Link.class);
+      if (targetLink == null)
+      {
+         throw new InvalidClassModelException(
+            String.format("invalid link target: field %s.%s is not annotated with @Link", other.getSimpleName(),
+                          otherName));
+      }
+
+      final String targetLinkName = targetLink.value();
+      if (!name.equals(targetLinkName))
+      {
+         throw new InvalidClassModelException(
+            String.format("invalid link target: field %s.%s is annotated as @Link(\"%s\") instead of @Link(\"%s\")",
+                          other.getSimpleName(), otherName, targetLinkName, name));
+      }
+
+      final Class<?> otherOther = getOther(targetField, getCollectionType(targetField.getType()));
+      if (otherOther != owner)
+      {
+         throw new InvalidClassModelException(
+            String.format("invalid link target: field %s.%s has target type %s instead of %s", other.getSimpleName(),
+                          otherName, otherOther.getSimpleName(), owner.getSimpleName()));
+      }
+   }
+
+   private static Class<?> getOther(Field field, CollectionType collectionType)
    {
       final org.fulib.builder.reflect.Type type = field.getAnnotation(org.fulib.builder.reflect.Type.class);
       if (type != null)
       {
-         return type.value();
+         return getSiblingClass(field.getDeclaringClass(), type.value());
       }
 
       if (collectionType == null)
       {
-         return field.getType().getSimpleName();
+         return field.getType();
       }
 
       final Type genericType = field.getGenericType();
@@ -151,11 +194,27 @@ class ReflectiveClassBuilder
          final Type typeArgument = ((ParameterizedType) genericType).getActualTypeArguments()[0];
          if (typeArgument instanceof Class)
          {
-            return ((Class<?>) typeArgument).getSimpleName();
+            return (Class<?>) typeArgument;
          }
       }
 
       throw new InvalidClassModelException("cannot determine element type for " + field);
+   }
+
+   private static Class<?> getSiblingClass(Class<?> declaringClass, String simpleSiblingName)
+   {
+      final String name = declaringClass.getName();
+      final String simpleName = declaringClass.getSimpleName();
+      final String siblingName = name.substring(0, name.length() - simpleName.length()) + simpleSiblingName;
+
+      try
+      {
+         return Class.forName(siblingName);
+      }
+      catch (ClassNotFoundException e)
+      {
+         throw new InvalidClassModelException("invalid link target: class " + simpleSiblingName + " not found", e);
+      }
    }
 
    private static String getDescription(Field field)

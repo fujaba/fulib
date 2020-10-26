@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("unused")
@@ -167,5 +168,100 @@ public class ReflectiveClassBuilderTest
          assertThat(ex.getMessage(), equalTo(
             "cannot determine element type for org.fulib.builder.ReflectiveClassBuilderTest$StudentList org.fulib.builder.ReflectiveClassBuilderTest$StudentListObj.students"));
       }
+   }
+
+   class InvalidLinkTargetType
+   {
+      @org.fulib.builder.reflect.Type("Foo")
+      @Link("f")
+      StudentList students;
+   }
+
+   @Test
+   public void invalidLinkTargetType()
+   {
+      final ClassModelManager cmm = new ClassModelManager();
+
+      final InvalidClassModelException ex = assertThrows(InvalidClassModelException.class,
+                                                         () -> ReflectiveClassBuilder.load(InvalidLinkTargetType.class,
+                                                                                           cmm));
+
+      assertThat(ex.getMessage(), equalTo("invalid link target: class Foo not found"));
+      assertThat(ex.getCause(), instanceOf(ClassNotFoundException.class));
+      assertThat(ex.getCause().getMessage(), equalTo("org.fulib.builder.ReflectiveClassBuilderTest$Foo"));
+   }
+
+   class InvalidLinkTargetField
+   {
+      @Link("foo")
+      Student student;
+   }
+
+   @Test
+   public void invalidLinkTargetField()
+   {
+      final ClassModelManager cmm = new ClassModelManager();
+
+      final InvalidClassModelException ex = assertThrows(InvalidClassModelException.class,
+                                                         () -> ReflectiveClassBuilder.load(InvalidLinkTargetField.class,
+                                                                                           cmm));
+
+      assertThat(ex.getMessage(), equalTo("invalid link target: field Student.foo not found"));
+   }
+
+   class InvalidLinkTargetAnnotation
+   {
+      @Link("studId")
+      Student student;
+   }
+
+   @Test
+   public void invalidLinkTargetAnnotation()
+   {
+      final ClassModelManager cmm = new ClassModelManager();
+
+      final InvalidClassModelException ex = assertThrows(InvalidClassModelException.class,
+                                                         () -> ReflectiveClassBuilder.load(
+                                                            InvalidLinkTargetAnnotation.class, cmm));
+
+      assertThat(ex.getMessage(), equalTo("invalid link target: field Student.studId is not annotated with @Link"));
+   }
+
+   class InvalidLinkTargetName
+   {
+      @Link("uni")
+      Student student;
+   }
+
+   @Test
+   public void invalidLinkTargetName()
+   {
+      final ClassModelManager cmm = new ClassModelManager();
+
+      final InvalidClassModelException ex = assertThrows(InvalidClassModelException.class,
+                                                         () -> ReflectiveClassBuilder.load(InvalidLinkTargetName.class,
+                                                                                           cmm));
+
+      assertThat(ex.getMessage(), equalTo(
+         "invalid link target: field Student.uni is annotated as @Link(\"students\") instead of @Link(\"student\")"));
+   }
+
+   class InvalidLinkTargetClass
+   {
+      @Link("uni")
+      Student students;
+   }
+
+   @Test
+   public void invalidLinkTargetClass()
+   {
+      final ClassModelManager cmm = new ClassModelManager();
+
+      final InvalidClassModelException ex = assertThrows(InvalidClassModelException.class,
+                                                         () -> ReflectiveClassBuilder.load(InvalidLinkTargetClass.class,
+                                                                                           cmm));
+
+      assertThat(ex.getMessage(), equalTo(
+         "invalid link target: field Student.uni has target type University instead of InvalidLinkTargetClass"));
    }
 }
