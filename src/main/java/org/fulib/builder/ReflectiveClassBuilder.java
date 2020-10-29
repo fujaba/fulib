@@ -88,7 +88,9 @@ class ReflectiveClassBuilder
          return toSource(((ParameterizedType) genericType).getActualTypeArguments()[0]);
       }
 
-      throw new InvalidClassModelException("cannot determine element type for " + field);
+      throw new InvalidClassModelException(
+         String.format("%s.%s: cannot determine element type of %s", field.getDeclaringClass().getSimpleName(),
+                       field.getName(), field.getType().getSimpleName()));
    }
 
    private static String toSource(Type type)
@@ -147,31 +149,33 @@ class ReflectiveClassBuilder
       catch (NoSuchFieldException e)
       {
          throw new InvalidClassModelException(
-            String.format("invalid link target: field %s.%s not found", other.getSimpleName(), otherName), e);
+            String.format("%s.%s: invalid link target: field %s.%s not found", owner.getSimpleName(), name,
+                          other.getSimpleName(), otherName), e);
       }
 
       final Link targetLink = targetField.getAnnotation(Link.class);
       if (targetLink == null)
       {
          throw new InvalidClassModelException(
-            String.format("invalid link target: field %s.%s is not annotated with @Link", other.getSimpleName(),
-                          otherName));
+            String.format("%s.%s: invalid link target: field %s.%s is not annotated with @Link", owner.getSimpleName(),
+                          name, other.getSimpleName(), otherName));
       }
 
       final String targetLinkName = targetLink.value();
       if (!name.equals(targetLinkName))
       {
-         throw new InvalidClassModelException(
-            String.format("invalid link target: field %s.%s is annotated as @Link(\"%s\") instead of @Link(\"%s\")",
-                          other.getSimpleName(), otherName, targetLinkName, name));
+         throw new InvalidClassModelException(String.format(
+            "%s.%s: invalid link target: field %s.%s is annotated as @Link(\"%s\") instead of @Link(\"%s\")",
+            owner.getSimpleName(), name, other.getSimpleName(), otherName, targetLinkName, name));
       }
 
       final Class<?> otherOther = getOther(targetField, getCollectionType(targetField.getType()));
       if (otherOther != owner)
       {
          throw new InvalidClassModelException(
-            String.format("invalid link target: field %s.%s has target type %s instead of %s", other.getSimpleName(),
-                          otherName, otherOther.getSimpleName(), owner.getSimpleName()));
+            String.format("%s.%s: invalid link target: field %s.%s has target type %s instead of %s",
+                          owner.getSimpleName(), name, other.getSimpleName(), otherName, otherOther.getSimpleName(),
+                          owner.getSimpleName()));
       }
    }
 
@@ -180,7 +184,7 @@ class ReflectiveClassBuilder
       final org.fulib.builder.reflect.Type type = field.getAnnotation(org.fulib.builder.reflect.Type.class);
       if (type != null)
       {
-         return getSiblingClass(field.getDeclaringClass(), type.value());
+         return getSiblingClass(field, type.value());
       }
 
       if (collectionType == null)
@@ -198,11 +202,14 @@ class ReflectiveClassBuilder
          }
       }
 
-      throw new InvalidClassModelException("cannot determine element type for " + field);
+      throw new InvalidClassModelException(
+         String.format("%s.%s: cannot determine element type of %s", field.getDeclaringClass().getSimpleName(),
+                       field.getName(), field.getType().getSimpleName()));
    }
 
-   private static Class<?> getSiblingClass(Class<?> declaringClass, String simpleSiblingName)
+   private static Class<?> getSiblingClass(Field field, String simpleSiblingName)
    {
+      final Class<?> declaringClass = field.getDeclaringClass();
       final String name = declaringClass.getName();
       final String simpleName = declaringClass.getSimpleName();
       final String siblingName = name.substring(0, name.length() - simpleName.length()) + simpleSiblingName;
@@ -213,7 +220,9 @@ class ReflectiveClassBuilder
       }
       catch (ClassNotFoundException e)
       {
-         throw new InvalidClassModelException("invalid link target: class " + simpleSiblingName + " not found", e);
+         throw new InvalidClassModelException(
+            String.format("%s.%s: invalid link target: class %s not found", simpleName, field.getName(),
+                          simpleSiblingName), e);
       }
    }
 

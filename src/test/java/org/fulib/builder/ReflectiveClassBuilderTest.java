@@ -138,8 +138,7 @@ public class ReflectiveClassBuilderTest
 
       final InvalidClassModelException ex = assertThrows(InvalidClassModelException.class,
                                                          () -> ReflectiveClassBuilder.load(StringListObj.class, cmm));
-      assertThat(ex.getMessage(), equalTo(
-         "cannot determine element type for org.fulib.builder.ReflectiveClassBuilderTest$StringList org.fulib.builder.ReflectiveClassBuilderTest$StringListObj.list"));
+      assertThat(ex.getMessage(), equalTo("StringListObj.list: cannot determine element type of StringList"));
    }
 
    class StudentList extends ArrayList<Student>
@@ -158,8 +157,7 @@ public class ReflectiveClassBuilderTest
 
       final InvalidClassModelException ex = assertThrows(InvalidClassModelException.class,
                                                          () -> ReflectiveClassBuilder.load(StudentListObj.class, cmm));
-      assertThat(ex.getMessage(), equalTo(
-         "cannot determine element type for org.fulib.builder.ReflectiveClassBuilderTest$StudentList org.fulib.builder.ReflectiveClassBuilderTest$StudentListObj.students"));
+      assertThat(ex.getMessage(), equalTo("StudentListObj.students: cannot determine element type of StudentList"));
    }
 
    class InvalidLinkTargetType
@@ -178,7 +176,7 @@ public class ReflectiveClassBuilderTest
                                                          () -> ReflectiveClassBuilder.load(InvalidLinkTargetType.class,
                                                                                            cmm));
 
-      assertThat(ex.getMessage(), equalTo("invalid link target: class Foo not found"));
+      assertThat(ex.getMessage(), equalTo("InvalidLinkTargetType.students: invalid link target: class Foo not found"));
       assertThat(ex.getCause(), instanceOf(ClassNotFoundException.class));
       assertThat(ex.getCause().getMessage(), equalTo("org.fulib.builder.ReflectiveClassBuilderTest$Foo"));
    }
@@ -198,7 +196,8 @@ public class ReflectiveClassBuilderTest
                                                          () -> ReflectiveClassBuilder.load(InvalidLinkTargetField.class,
                                                                                            cmm));
 
-      assertThat(ex.getMessage(), equalTo("invalid link target: field Student.foo not found"));
+      assertThat(ex.getMessage(),
+                 equalTo("InvalidLinkTargetField.student: invalid link target: field Student.foo not found"));
    }
 
    class InvalidLinkTargetAnnotation
@@ -216,7 +215,8 @@ public class ReflectiveClassBuilderTest
                                                          () -> ReflectiveClassBuilder.load(
                                                             InvalidLinkTargetAnnotation.class, cmm));
 
-      assertThat(ex.getMessage(), equalTo("invalid link target: field Student.studId is not annotated with @Link"));
+      assertThat(ex.getMessage(), equalTo(
+         "InvalidLinkTargetAnnotation.student: invalid link target: field Student.studId is not annotated with @Link"));
    }
 
    class InvalidLinkTargetName
@@ -235,7 +235,7 @@ public class ReflectiveClassBuilderTest
                                                                                            cmm));
 
       assertThat(ex.getMessage(), equalTo(
-         "invalid link target: field Student.uni is annotated as @Link(\"students\") instead of @Link(\"student\")"));
+         "InvalidLinkTargetName.student: invalid link target: field Student.uni is annotated as @Link(\"students\") instead of @Link(\"student\")"));
    }
 
    class InvalidLinkTargetClass
@@ -254,6 +254,6 @@ public class ReflectiveClassBuilderTest
                                                                                            cmm));
 
       assertThat(ex.getMessage(), equalTo(
-         "invalid link target: field Student.uni has target type University instead of InvalidLinkTargetClass"));
+         "InvalidLinkTargetClass.students: invalid link target: field Student.uni has target type University instead of InvalidLinkTargetClass"));
    }
 }
