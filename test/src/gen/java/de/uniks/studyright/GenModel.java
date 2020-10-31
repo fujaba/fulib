@@ -50,9 +50,7 @@ public class GenModel implements ClassModelDecorator
    @Override
    public void decorate(ClassModelManager mm)
    {
-      mm.haveClass(University.class);
-      mm.haveClass(Student.class);
-      mm.haveClass(Room.class);
+      mm.haveClasses(GenModel.class);
    }
 }
 // end_code_fragment:

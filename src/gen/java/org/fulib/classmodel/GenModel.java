@@ -190,14 +190,6 @@ public class GenModel implements ClassModelDecorator
    @Override
    public void decorate(ClassModelManager cmm)
    {
-      cmm.haveClass(ClassModel.class);
-      cmm.haveClass(Clazz.class);
-      cmm.haveClass(Attribute.class);
-      cmm.haveClass(AssocRole.class);
-      cmm.haveClass(FMethod.class);
-      cmm.haveClass(FileFragmentMap.class);
-      cmm.haveClass(Fragment.class);
-      cmm.haveClass(CodeFragment.class);
-      cmm.haveClass(CompoundFragment.class);
+      cmm.haveClasses(GenModel.class);
    }
 }

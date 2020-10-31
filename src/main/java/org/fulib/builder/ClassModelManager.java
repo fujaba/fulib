@@ -6,12 +6,10 @@ import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
 import org.fulib.yaml.EventSource;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static org.fulib.builder.Type.BEAN;
 import static org.fulib.classmodel.ClassModel.PROPERTY_mainJavaDir;
@@ -434,6 +432,14 @@ public class ClassModelManager implements IModelManager
    public Clazz haveClass(Class<?> classDef)
    {
       return ReflectiveClassBuilder.load(classDef, this);
+   }
+
+   /**
+    * @since 1.4
+    */
+   public List<Clazz> haveClasses(Class<?> genModel)
+   {
+      return Arrays.stream(genModel.getDeclaredClasses()).map(this::haveClass).collect(Collectors.toList());
    }
 
    /**
