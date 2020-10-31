@@ -1,5 +1,5 @@
 - c: 	ClassModel
-  classes: 	person 	page
+  classes: 	person 	page 	student 	university
   defaultCollectionType: 	c1
   defaultPropertyStyle: 	POJO
   defaultRoleType: 	"java.util.ArrayList<%s>"
@@ -20,6 +20,20 @@
   modified: 	false
   name: 	Page
   propertyStyle: 	POJO
+
+- student: 	Clazz
+  model: 	c
+  modified: 	false
+  name: 	Student
+  propertyStyle: 	POJO
+  roles: 	student_uni
+
+- university: 	Clazz
+  model: 	c
+  modified: 	false
+  name: 	University
+  propertyStyle: 	POJO
+  roles: 	university_students
 
 - c1: 	CollectionType
   implClass: 	class java.util.ArrayList
@@ -55,4 +69,26 @@
   propertyStyle: 	POJO
   type: 	String
   typeSignature: 	String
+
+- student_uni: 	AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	student
+  id: 	Student_uni
+  modified: 	false
+  name: 	uni
+  other: 	university_students
+  propertyStyle: 	POJO
+
+- university_students: 	AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	university
+  collectionType: 	c1
+  id: 	University_students
+  modified: 	false
+  name: 	students
+  other: 	student_uni
+  propertyStyle: 	POJO
+  roleType: 	"java.util.ArrayList<%s>"
 
