@@ -1,5 +1,5 @@
 - c: 	ClassModel
-  classes: 	person 	page 	student 	university
+  classes: 	example 	university 	student 	page 	person
   defaultCollectionType: 	c1
   defaultPropertyStyle: 	POJO
   defaultRoleType: 	"java.util.ArrayList<%s>"
@@ -7,26 +7,12 @@
   packageName: 	org.fulib.docs
   packageSrcFolder: 	"src/main/java/org/fulib/docs"
 
-- person: 	Clazz
-  attributes: 	person_name 	person_age
+- example: 	Clazz
+  attributes: 	example_label 	example_score
   model: 	c
   modified: 	false
-  name: 	Person
+  name: 	Example
   propertyStyle: 	POJO
-
-- page: 	Clazz
-  attributes: 	page_lines
-  model: 	c
-  modified: 	false
-  name: 	Page
-  propertyStyle: 	POJO
-
-- student: 	Clazz
-  model: 	c
-  modified: 	false
-  name: 	Student
-  propertyStyle: 	POJO
-  roles: 	student_uni
 
 - university: 	Clazz
   model: 	c
@@ -35,12 +21,85 @@
   propertyStyle: 	POJO
   roles: 	university_students
 
+- student: 	Clazz
+  model: 	c
+  modified: 	false
+  name: 	Student
+  propertyStyle: 	POJO
+  roles: 	student_uni
+
+- page: 	Clazz
+  attributes: 	page_lines
+  model: 	c
+  modified: 	false
+  name: 	Page
+  propertyStyle: 	POJO
+
+- person: 	Clazz
+  attributes: 	person_name 	person_age
+  model: 	c
+  modified: 	false
+  name: 	Person
+  propertyStyle: 	POJO
+
 - c1: 	CollectionType
   implClass: 	class java.util.ArrayList
   implTemplate: 	"java.util.ArrayList<%s>"
   itf: 	org.fulib.classmodel.CollectionInterface.List
   qualifiedImplName: 	java.util.ArrayList
   simpleImplName: 	ArrayList
+
+- example_label: 	Attribute
+  clazz: 	example
+  id: 	Example_label
+  initialization: 	"\"P1\""
+  modified: 	false
+  name: 	label
+  propertyStyle: 	POJO
+  type: 	String
+  typeSignature: 	String
+
+- example_score: 	Attribute
+  clazz: 	example
+  id: 	Example_score
+  initialization: 	100
+  modified: 	false
+  name: 	score
+  propertyStyle: 	POJO
+  type: 	int
+  typeSignature: 	int
+
+- university_students: 	AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	university
+  collectionType: 	c1
+  id: 	University_students
+  modified: 	false
+  name: 	students
+  other: 	student_uni
+  propertyStyle: 	POJO
+  roleType: 	"java.util.ArrayList<%s>"
+
+- student_uni: 	AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	student
+  id: 	Student_uni
+  modified: 	false
+  name: 	uni
+  other: 	university_students
+  propertyStyle: 	POJO
+
+- page_lines: 	Attribute
+  clazz: 	page
+  collectionType: 	c1
+  id: 	Page_lines
+  modified: 	false
+  name: 	lines
+  propertyStyle: 	POJO
+  type: 	String
+  typeSignature: 	String
 
 - person_name: 	Attribute
   clazz: 	person
@@ -59,36 +118,4 @@
   propertyStyle: 	POJO
   type: 	int
   typeSignature: 	int
-
-- page_lines: 	Attribute
-  clazz: 	page
-  collectionType: 	c1
-  id: 	Page_lines
-  modified: 	false
-  name: 	lines
-  propertyStyle: 	POJO
-  type: 	String
-  typeSignature: 	String
-
-- student_uni: 	AssocRole
-  aggregation: 	false
-  cardinality: 	1
-  clazz: 	student
-  id: 	Student_uni
-  modified: 	false
-  name: 	uni
-  other: 	university_students
-  propertyStyle: 	POJO
-
-- university_students: 	AssocRole
-  aggregation: 	false
-  cardinality: 	42
-  clazz: 	university
-  collectionType: 	c1
-  id: 	University_students
-  modified: 	false
-  name: 	students
-  other: 	student_uni
-  propertyStyle: 	POJO
-  roleType: 	"java.util.ArrayList<%s>"
 
