@@ -3,8 +3,10 @@ package org.fulib.docs;
 import org.fulib.builder.ClassModelDecorator;
 import org.fulib.builder.ClassModelManager;
 import org.fulib.builder.Type;
+import org.fulib.builder.reflect.Description;
 import org.fulib.builder.reflect.InitialValue;
 import org.fulib.builder.reflect.Link;
+import org.fulib.builder.reflect.Since;
 
 import java.util.List;
 
@@ -49,6 +51,15 @@ public class GenModel implements ClassModelDecorator
 
       @InitialValue("100")
       int score;
+      // end_code_fragment:
+
+      // start_code_fragment: docs.GenModel.Description
+      @Description("the full name including first, middle and last names")
+      String fullName;
+
+      @Description("the height in meters")
+      @Since("1.2")
+      double height;
       // end_code_fragment:
    }
 

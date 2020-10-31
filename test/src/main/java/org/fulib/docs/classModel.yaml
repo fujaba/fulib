@@ -8,7 +8,7 @@
   packageSrcFolder: 	"src/main/java/org/fulib/docs"
 
 - example: 	Clazz
-  attributes: 	example_label 	example_score
+  attributes: 	example_label 	example_score 	example_fullName 	example_height
   model: 	c
   modified: 	false
   name: 	Example
@@ -68,6 +68,29 @@
   propertyStyle: 	POJO
   type: 	int
   typeSignature: 	int
+
+- example_fullName: 	Attribute
+  clazz: 	example
+  description: 	"the full name including first, middle and last names"
+  descriptionLines: 	"the full name including first, middle and last names"
+  id: 	Example_fullName
+  modified: 	false
+  name: 	fullName
+  propertyStyle: 	POJO
+  type: 	String
+  typeSignature: 	String
+
+- example_height: 	Attribute
+  clazz: 	example
+  description: 	"the height in meters"
+  descriptionLines: 	"the height in meters"
+  id: 	Example_height
+  modified: 	false
+  name: 	height
+  propertyStyle: 	POJO
+  since: 	1.2
+  type: 	double
+  typeSignature: 	double
 
 - university_students: 	AssocRole
   aggregation: 	false
