@@ -8,7 +8,7 @@
   packageSrcFolder: 	"src/main/java/org/fulib/docs"
 
 - example: 	Clazz
-  attributes: 	example_label 	example_score 	example_fullName 	example_height
+  attributes: 	example_label 	example_score 	example_fullName 	example_height 	example_color 	example_ints 	example_students
   model: 	c
   modified: 	false
   name: 	Example
@@ -92,6 +92,35 @@
   type: 	double
   typeSignature: 	double
 
+- example_color: 	Attribute
+  clazz: 	example
+  id: 	Example_color
+  modified: 	false
+  name: 	color
+  propertyStyle: 	POJO
+  type: 	Color
+  typeSignature: 	Color
+
+- example_ints: 	Attribute
+  clazz: 	example
+  collectionType: 	c3
+  id: 	Example_ints
+  modified: 	false
+  name: 	ints
+  propertyStyle: 	POJO
+  type: 	int
+  typeSignature: 	int
+
+- example_students: 	Attribute
+  clazz: 	example
+  collectionType: 	c4
+  id: 	Example_students
+  modified: 	false
+  name: 	students
+  propertyStyle: 	POJO
+  type: 	Student
+  typeSignature: 	Student
+
 - university_students: 	AssocRole
   aggregation: 	false
   cardinality: 	42
@@ -141,4 +170,18 @@
   propertyStyle: 	POJO
   type: 	int
   typeSignature: 	int
+
+- c3: 	CollectionType
+  implClass: 	class it.unimi.dsi.fastutil.ints.IntArrayList
+  implTemplate: 	it.unimi.dsi.fastutil.ints.IntArrayList
+  itf: 	org.fulib.classmodel.CollectionInterface.List
+  qualifiedImplName: 	it.unimi.dsi.fastutil.ints.IntArrayList
+  simpleImplName: 	IntArrayList
+
+- c4: 	CollectionType
+  implClass: 	class org.fulib.docs.StudentRegister
+  implTemplate: 	org.fulib.docs.StudentRegister
+  itf: 	org.fulib.classmodel.CollectionInterface.List
+  qualifiedImplName: 	org.fulib.docs.StudentRegister
+  simpleImplName: 	StudentRegister
 

@@ -1,9 +1,18 @@
 package org.fulib.docs;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import java.util.List;
+import org.fulib.docs.StudentRegister;
+import java.util.Collections;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class Example
 {
    public static final String PROPERTY_LABEL = "label";
    public static final String PROPERTY_SCORE = "score";
+   public static final String PROPERTY_COLOR = "color";
+   public static final String PROPERTY_INTS = "ints";
+   public static final String PROPERTY_STUDENTS = "students";
 
    // start_code_fragment: docs.InitialValue
    private String label = "P1";
@@ -29,6 +38,133 @@ public class Example
    public Example setScore(int value)
    {
       this.score = value;
+      return this;
+   }
+
+   // start_code_fragment: docs.Type
+   private Color color;
+   private List<Integer> ints;
+   private List<Student> students;
+
+   public Color getColor()
+   {
+      return this.color;
+   }
+
+   public Example setColor(Color value)
+   {
+      this.color = value;
+      return this;
+   }
+
+   public List<Integer> getInts()
+   {
+      return this.ints != null ? Collections.unmodifiableList(this.ints) : Collections.emptyList();
+   }
+
+   public Example withInts(Integer value)
+   {
+      if (this.ints == null)
+      {
+         this.ints = new IntArrayList();
+      }
+      this.ints.add(value);
+      return this;
+   }
+
+   public Example withInts(Collection<? extends Integer> value)
+   {
+      if (this.ints == null)
+      {
+         this.ints = new IntArrayList(value);
+      }
+      else
+      {
+         this.ints.addAll(value);
+      }
+      return this;
+   }
+
+   public List<Student> getStudents()
+   {
+      return this.students != null ? Collections.unmodifiableList(this.students) : Collections.emptyList();
+   }
+
+   public Example withStudents(Student value)
+   {
+      if (this.students == null)
+      {
+         this.students = new StudentRegister();
+      }
+      this.students.add(value);
+      return this;
+   }
+
+   public Example withStudents(Collection<? extends Student> value)
+   {
+      if (this.students == null)
+      {
+         this.students = new StudentRegister(value);
+      }
+      else
+      {
+         this.students.addAll(value);
+      }
+      return this;
+   }
+   // end_code_fragment:
+
+   public Example withInts(Integer... value)
+   {
+      this.withInts(Arrays.asList(value));
+      return this;
+   }
+
+   public Example withoutInts(Integer value)
+   {
+      this.ints.removeAll(Collections.singleton(value));
+      return this;
+   }
+
+   public Example withoutInts(Integer... value)
+   {
+      this.withoutInts(Arrays.asList(value));
+      return this;
+   }
+
+   public Example withoutInts(Collection<? extends Integer> value)
+   {
+      if (this.ints != null)
+      {
+         this.ints.removeAll(value);
+      }
+      return this;
+   }
+
+   public Example withStudents(Student... value)
+   {
+      this.withStudents(Arrays.asList(value));
+      return this;
+   }
+
+   public Example withoutStudents(Student value)
+   {
+      this.students.removeAll(Collections.singleton(value));
+      return this;
+   }
+
+   public Example withoutStudents(Student... value)
+   {
+      this.withoutStudents(Arrays.asList(value));
+      return this;
+   }
+
+   public Example withoutStudents(Collection<? extends Student> value)
+   {
+      if (this.students != null)
+      {
+         this.students.removeAll(value);
+      }
       return this;
    }
 

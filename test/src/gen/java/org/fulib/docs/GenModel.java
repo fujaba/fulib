@@ -1,13 +1,15 @@
 package org.fulib.docs;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.fulib.builder.ClassModelDecorator;
 import org.fulib.builder.ClassModelManager;
-import org.fulib.builder.Type;
+import org.fulib.builder.reflect.Type;
 import org.fulib.builder.reflect.Description;
 import org.fulib.builder.reflect.InitialValue;
 import org.fulib.builder.reflect.Link;
 import org.fulib.builder.reflect.Since;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GenModel implements ClassModelDecorator
@@ -61,12 +63,26 @@ public class GenModel implements ClassModelDecorator
       @Since("1.2")
       double height;
       // end_code_fragment:
+
+      // start_code_fragment: docs.GenModel.Type
+      @Type("Color")
+      Object color;
+
+      @Type("int")
+      IntArrayList ints; // it.unimi.dsi.fastutil.ints.IntArrayList
+
+      @Type("Student")
+      StudentRegister students;
+      // end_code_fragment:
    }
 
    @Override
    public void decorate(ClassModelManager cmm)
    {
-      cmm.getClassModel().setDefaultPropertyStyle(Type.POJO);
+      cmm.getClassModel().setDefaultPropertyStyle(org.fulib.builder.Type.POJO);
       cmm.haveClasses(GenModel.class);
    }
 }
+
+class StudentRegister extends ArrayList<GenModel.Student>
+{}
