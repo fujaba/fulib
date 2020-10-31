@@ -236,8 +236,8 @@ public class University
 
    public void removeYou()
    {
-      this.withoutStudents(new ArrayList<>(this.getStudents()));
       this.withoutRooms(new ArrayList<>(this.getRooms()));
+      this.withoutStudents(new ArrayList<>(this.getStudents()));
    }
 
 }

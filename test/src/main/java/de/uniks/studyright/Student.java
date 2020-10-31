@@ -224,8 +224,8 @@ public class Student
 
    public void removeYou()
    {
-      this.setUni(null);
       this.setIn(null);
+      this.setUni(null);
    }
 
 }
