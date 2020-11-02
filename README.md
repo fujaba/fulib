@@ -121,6 +121,8 @@ public class GenModel implements ClassModelDecorator
 ```
 <!-- end_code_fragment: -->
 
+Check out [Class Model Definition](doc/ClassModelDefinition.md) in the docs for more details and options.
+
 ### Generating Java Code
 
 Now, run `gradle generateScenarioSource`.
