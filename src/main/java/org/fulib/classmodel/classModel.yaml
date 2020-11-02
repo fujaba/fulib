@@ -1,5 +1,5 @@
 - c: 	ClassModel
-  classes: 	classModel 	clazz 	attribute 	assocRole 	fMethod 	fileFragmentMap 	fragment 	codeFragment 	compoundFragment
+  classes: 	classModel 	clazz 	attribute 	assocRole 	fMethod 	fileFragmentMap 	fragment 	compoundFragment 	codeFragment
   defaultCollectionType: 	c1
   defaultPropertyStyle: 	Bean
   defaultRoleType: 	"java.util.ArrayList<%s>"
@@ -63,20 +63,20 @@
   roles: 	fragment_parent
   subClasses: 	codeFragment 	compoundFragment
 
-- codeFragment: 	Clazz
-  attributes: 	codeFragment_text
-  model: 	c
-  modified: 	false
-  name: 	CodeFragment
-  propertyStyle: 	Bean
-  superClass: 	fragment
-
 - compoundFragment: 	Clazz
   model: 	c
   modified: 	false
   name: 	CompoundFragment
   propertyStyle: 	Bean
   roles: 	compoundFragment_children
+  superClass: 	fragment
+
+- codeFragment: 	Clazz
+  attributes: 	codeFragment_text
+  model: 	c
+  modified: 	false
+  name: 	CodeFragment
+  propertyStyle: 	Bean
   superClass: 	fragment
 
 - c1: 	CollectionType
@@ -195,13 +195,11 @@ Elements can have one of the formats {@code org.example.Foo}, {@code static org.
   aggregation: 	false
   cardinality: 	1
   clazz: 	clazz
-  collectionType: 	c1
   id: 	Clazz_model
   modified: 	false
   name: 	model
   other: 	classModel_classes
   propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
 
 - clazz_attributes: 	AssocRole
   aggregation: 	false
@@ -267,13 +265,11 @@ Elements can have one of the formats {@code org.example.Foo}, {@code static org.
   aggregation: 	false
   cardinality: 	1
   clazz: 	clazz
-  collectionType: 	c1
   id: 	Clazz_superClass
   modified: 	false
   name: 	superClass
   other: 	clazz_subClasses
   propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
 
 - attribute_name: 	Attribute
   clazz: 	attribute
@@ -365,13 +361,11 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   aggregation: 	false
   cardinality: 	1
   clazz: 	attribute
-  collectionType: 	c1
   id: 	Attribute_clazz
   modified: 	false
   name: 	clazz
   other: 	clazz_attributes
   propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
 
 - assocRole_name: 	Attribute
   clazz: 	assocRole
@@ -467,25 +461,21 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   aggregation: 	false
   cardinality: 	1
   clazz: 	assocRole
-  collectionType: 	c1
   id: 	AssocRole_clazz
   modified: 	false
   name: 	clazz
   other: 	clazz_roles
   propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
 
 - assocRole_other: 	AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	assocRole
-  collectionType: 	c1
   id: 	AssocRole_other
   modified: 	false
   name: 	other
   other: 	assocRole_other
   propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
 
 - fMethod_methodBody: 	Attribute
   clazz: 	fMethod
@@ -533,13 +523,11 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   aggregation: 	false
   cardinality: 	1
   clazz: 	fMethod
-  collectionType: 	c1
   id: 	FMethod_clazz
   modified: 	false
   name: 	clazz
   other: 	clazz_methods
   propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
 
 - fileFragmentMap_fileName: 	Attribute
   clazz: 	fileFragmentMap
@@ -563,22 +551,11 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   aggregation: 	false
   cardinality: 	1
   clazz: 	fragment
-  collectionType: 	c1
   id: 	Fragment_parent
   modified: 	false
   name: 	parent
   other: 	compoundFragment_children
   propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
-
-- codeFragment_text: 	Attribute
-  clazz: 	codeFragment
-  id: 	CodeFragment_text
-  modified: 	false
-  name: 	text
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
 
 - compoundFragment_children: 	AssocRole
   aggregation: 	false
@@ -591,6 +568,15 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   other: 	fragment_parent
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
+
+- codeFragment_text: 	Attribute
+  clazz: 	codeFragment
+  id: 	CodeFragment_text
+  modified: 	false
+  name: 	text
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
 
 - c3: 	CollectionType
   implClass: 	class java.util.LinkedHashSet

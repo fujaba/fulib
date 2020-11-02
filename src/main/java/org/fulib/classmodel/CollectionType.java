@@ -18,6 +18,8 @@ public class CollectionType
 
    public static final CollectionType ArrayList = of(java.util.ArrayList.class);
    public static final CollectionType LinkedHashSet = of(java.util.LinkedHashSet.class);
+   /** @since 1.4 */
+   public static final CollectionType TreeSet = of(java.util.TreeSet.class);
 
    // =============== Fields ===============
 

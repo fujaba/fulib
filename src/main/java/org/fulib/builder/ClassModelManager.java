@@ -6,12 +6,10 @@ import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
 import org.fulib.yaml.EventSource;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static org.fulib.builder.Type.BEAN;
 import static org.fulib.classmodel.ClassModel.PROPERTY_mainJavaDir;
@@ -429,6 +427,40 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
+    * Creates a {@link Clazz} by reflectively inspecting the given {@link Class}.
+    * All fields define attributes no matter the visibility,
+    * unless the {@link org.fulib.builder.reflect.Link} annotation is present, in which case they define associations.
+    * Other annotations in {@link org.fulib.builder.reflect} can be used for more customization.
+    *
+    * @param classDef the reflective class that defines the {@link Clazz}
+    *
+    * @return the newly created or existing {@link Clazz}
+    *
+    * @see <a href="https://fujaba.github.io/fulib/ClassModelDefinition.md">Class Model Definition</a>
+    *
+    * @since 1.4
+    */
+   public Clazz haveClass(Class<?> classDef)
+   {
+      return ReflectiveClassBuilder.load(classDef, this);
+   }
+
+   /**
+    * Adds all nested classes of the given class using {@link #haveClass(Class)}.
+    *
+    * @param genModel
+    *    the class from which to add nested classes
+    *
+    * @return a list of newly created or existing {@link Clazz} objects
+    *
+    * @since 1.4
+    */
+   public List<Clazz> haveNestedClasses(Class<?> genModel)
+   {
+      return Arrays.stream(genModel.getDeclaredClasses()).map(this::haveClass).collect(Collectors.toList());
+   }
+
+   /**
     * Configures the sub class to extend the given super class.
     *
     * @param subClass
@@ -738,18 +770,26 @@ public class ClassModelManager implements IModelManager
          role = new AssocRole()
             .setClazz(owner)
             .setName(name)
-            .setCardinality(cardinality)
-            .setPropertyStyle(owner.getPropertyStyle())
-            .setCollectionType(owner.getModel().getDefaultCollectionType());
+            .setPropertyStyle(owner.getPropertyStyle());
+         this.setCardinality(owner, cardinality, role);
       }
-      else if (role.getCardinality() == cardinality)
+      else if (role.getCardinality() == cardinality || cardinality == 0)
       {
          return role;
       }
 
       modified.set(true);
-      role.setCardinality(cardinality);
+      this.setCardinality(owner, cardinality, role);
       return role;
+   }
+
+   private void setCardinality(Clazz owner, int cardinality, AssocRole role)
+   {
+      role.setCardinality(cardinality);
+      if (cardinality != Type.ONE)
+      {
+         role.setCollectionType(owner.getModel().getDefaultCollectionType());
+      }
    }
 
    private void link(AssocRole src, AssocRole tgt, AtomicBoolean modified)

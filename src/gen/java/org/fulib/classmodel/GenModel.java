@@ -2,141 +2,194 @@ package org.fulib.classmodel;
 
 import org.fulib.builder.ClassModelDecorator;
 import org.fulib.builder.ClassModelManager;
+import org.fulib.builder.reflect.*;
 
-import static org.fulib.builder.Type.*;
+import java.util.LinkedHashSet;
+import java.util.List;
 
+@SuppressWarnings("unused")
 public class GenModel implements ClassModelDecorator
 {
-   @Override
-   public void decorate(ClassModelManager mb)
+   class ClassModel
    {
-      // Classes
-      final Clazz ClassModel = mb.haveClass("ClassModel", c -> {
-         c.attribute("packageName", STRING);
-         c.attribute("mainJavaDir", STRING);
-         c
-            .attribute("defaultCollectionType", "CollectionType")
-            .setDescription("the default collection type for to-n roles")
-            .setSince("1.2");
-         c
-            .attribute("defaultPropertyStyle", STRING, "\"POJO\"")
-            .setDescription("the default property style for attributes and roles.\n"
-                            + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
-      });
+      String packageName;
+      String mainJavaDir;
 
-      final Clazz Clazz = mb.haveClass("Clazz", c -> {
-         c.attribute("name", STRING);
-         c
-            .attribute("propertyStyle", STRING)
-            .setDescription("the default property style for attributes and roles.\n"
-                            + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
-         c
-            .attribute("modified", BOOLEAN)
-            .setDescription("a boolean indicating whether this attribute was modified. For internal use only.");
-         c
-            .attribute("imports", STRING)
-            .setCollectionType(CollectionType.LinkedHashSet)
-            .setDescription("the set of imported members.\n"
-                            + "Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},\n"
-                            + "{@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}")
-            .setSince("1.2");
-      });
+      @Description("the default collection type for to-n roles")
+      @Since("1.2")
+      @Type("CollectionType")
+      Object defaultCollectionType;
 
-      final Clazz Attribute = mb.haveClass("Attribute", c -> {
-         c.attribute("name", STRING);
-         c.attribute("type", STRING);
-         c.attribute("collectionType", "CollectionType").setDescription("the collection type").setSince("1.2");
-         c.attribute("initialization", STRING);
-         c
-            .attribute("propertyStyle", STRING)
-            .setDescription("the property style.\n"
-                            + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
-         c
-            .attribute("modified", BOOLEAN)
-            .setDescription("a boolean indicating whether this attribute was modified. For internal use only.");
-         c
-            .attribute("description", STRING)
-            .setDescription("the description of this attribute, used for generating JavaDocs")
-            .setSince("1.3");
-         c
-            .attribute("since", STRING)
-            .setDescription("the version when this attribute was introduced, used for generating JavaDocs")
-            .setSince("1.3");
-      });
+      @Description("the default property style for attributes and roles.\n"
+                   + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.")
+      @InitialValue("\"POJO\"")
+      String defaultPropertyStyle;
 
-      final Clazz AssocRole = mb.haveClass("AssocRole", c -> {
-         c.attribute("name", STRING);
-         c.attribute("cardinality", INT);
-         c.attribute("collectionType", "CollectionType").setDescription("the collection type").setSince("1.2");
-         c
-            .attribute("aggregation", BOOLEAN)
-            .setDescription("a boolean indicating whether this role is an aggregation,\n"
-                            + "i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or\n"
-                            + "{@code removeYou} on the source object");
-         c
-            .attribute("propertyStyle", STRING)
-            .setDescription("the property style.\n"
-                            + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.");
-         c
-            .attribute("description", STRING)
-            .setDescription("the description of this role, used for generating JavaDocs")
-            .setSince("1.3");
-         c
-            .attribute("since", STRING)
-            .setDescription("the version when this role was introduced, used for generating JavaDocs")
-            .setSince("1.3");
-         c
-            .attribute("modified", BOOLEAN)
-            .setDescription("a boolean indicating whether this role was modified. For internal use only.");
-      });
+      @Description("the classes contained in this model")
+      @Since("1.2")
+      @Link("model")
+      List<Clazz> classes;
+   }
 
-      final Clazz FMethod = mb.haveClass("FMethod", c -> {
-         c.attribute("methodBody", STRING);
-         c
-            .attribute("modified", BOOLEAN)
-            .setDescription("a boolean indicating whether this method was modified. For internal use only.");
-         c
-            .attribute("modifiers", STRING, "\"public\"")
-            .setDescription("the modifiers. Defaults to \"public\"")
-            .setSince("1.2");
-         c.attribute("annotations", STRING);
-      });
+   class Clazz
+   {
+      String name;
 
-      mb
-         .associate(ClassModel, "classes", MANY, Clazz, "model", ONE)
-         .setDescription("the classes contained in this model")
-         .setSince("1.2");
+      @Description("the default property style for attributes and roles.\n"
+                   + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.")
+      String propertyStyle;
 
-      mb.associate(Clazz, "attributes", MANY, Attribute, "clazz", ONE).setDescription("the attributes").setSince("1.2");
+      @Description("a boolean indicating whether this attribute was modified. For internal use only.")
+      boolean modified;
 
-      mb.associate(Clazz, "roles", MANY, AssocRole, "clazz", ONE).setDescription("the roles").setSince("1.2");
+      @Description("the set of imported members.\n"
+                   + "Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},\n"
+                   + "{@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}")
+      @Since("1.2")
+      LinkedHashSet<String> imports;
 
-      mb.associate(Clazz, "methods", MANY, FMethod, "clazz", ONE).setDescription("the methods").setSince("1.2");
+      @Link("classes")
+      ClassModel model;
 
-      mb
-         .associate(Clazz, "subClasses", MANY, Clazz, "superClass", ONE)
-         .setDescription("the subclasses")
-         .setSince("1.2");
+      @Description("the attributes")
+      @Since("1.2")
+      @Link("clazz")
+      List<Attribute> attributes;
 
-      mb.associate(AssocRole, "other", ONE, AssocRole, "other", ONE);
+      @Description("the roles")
+      @Since("1.2")
+      @Link("clazz")
+      List<AssocRole> roles;
 
-      mb.haveClass("FileFragmentMap", c -> {
-         c.attribute("fileName", STRING);
-      });
+      @Description("the methods")
+      @Since("1.2")
+      @Link("clazz")
+      List<FMethod> methods;
 
-      final Clazz Fragment = mb.haveClass("Fragment", c -> {
-         c.attribute("key", STRING);
-      });
+      @Description("the subclasses")
+      @Since("1.2")
+      @Link("superClass")
+      List<Clazz> subClasses;
 
-      mb.haveClass("CodeFragment", c -> {
-         c.extend(Fragment);
-         c.attribute("text", STRING);
-      });
+      @Link("subClasses")
+      Clazz superClass;
+   }
 
-      final Clazz CompoundFragment = mb.haveClass("CompoundFragment", c -> {
-         c.extend(Fragment);
-      });
+   class Attribute
+   {
+      @Link("attributes")
+      Clazz clazz;
 
-      mb.associate(CompoundFragment, "children", MANY, Fragment, "parent", ONE);
+      String name;
+
+      String type;
+
+      @Description("the collection type")
+      @Since("1.2")
+      @Type("CollectionType")
+      Object collectionType;
+
+      String initialization;
+
+      @Description("the property style.\n"
+                   + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.")
+      String propertyStyle;
+
+      @Description("a boolean indicating whether this attribute was modified. For internal use only.")
+      boolean modified;
+
+      @Description("the description of this attribute, used for generating JavaDocs")
+      @Since("1.3")
+      String description;
+
+      @Description("the version when this attribute was introduced, used for generating JavaDocs")
+      @Since("1.3")
+      String since;
+   }
+
+   class AssocRole
+   {
+      @Link("roles")
+      Clazz clazz;
+
+      @Link("other")
+      AssocRole other;
+
+      String name;
+
+      int cardinality;
+
+      @Description("the collection type")
+      @Since("1.2")
+      @Type("CollectionType")
+      Object collectionType;
+
+      @Description("a boolean indicating whether this role is an aggregation,\n"
+                   + "i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or\n"
+                   + "{@code removeYou} on the source object")
+      boolean aggregation;
+
+      @Description("the property style.\n"
+                   + "Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.")
+      String propertyStyle;
+
+      @Description("the description of this role, used for generating JavaDocs")
+      @Since("1.3")
+      String description;
+
+      @Description("the version when this role was introduced, used for generating JavaDocs")
+      @Since("1.3")
+      String since;
+
+      @Description("a boolean indicating whether this role was modified. For internal use only.")
+      boolean modified;
+   }
+
+   class FMethod
+   {
+      @Link("methods")
+      Clazz clazz;
+
+      String methodBody;
+
+      @Description("a boolean indicating whether this method was modified. For internal use only.")
+      boolean modified;
+
+      @Description("the modifiers. Defaults to \"public\"")
+      @Since("1.2")
+      @InitialValue("\"public\"")
+      String modifiers;
+
+      String annotations;
+   }
+
+   class FileFragmentMap
+   {
+      String fileName;
+   }
+
+   class Fragment
+   {
+      String key;
+
+      @Link("children")
+      CompoundFragment parent;
+   }
+
+   class CodeFragment extends Fragment
+   {
+      String text;
+   }
+
+   class CompoundFragment extends Fragment
+   {
+      @Link("parent")
+      List<Fragment> children;
+   }
+
+   @Override
+   public void decorate(ClassModelManager cmm)
+   {
+      cmm.haveNestedClasses(GenModel.class);
    }
 }

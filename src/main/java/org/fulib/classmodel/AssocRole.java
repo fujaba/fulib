@@ -230,7 +230,8 @@ public class AssocRole
    @Deprecated
    public String getRoleType()
    {
-      return this.getCollectionType().getImplTemplate();
+      final CollectionType collectionType = this.getCollectionType();
+      return collectionType != null ? collectionType.getImplTemplate() : null;
    }
 
    /**
