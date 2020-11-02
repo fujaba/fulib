@@ -21,7 +21,7 @@ roleType(role, other) ::= <%
 // --------------- Declarations ---------------
 
 roleSignatures(role, other) ::= <<
-   propertyDecl:           class/<role.clazz.name>/staticAttribute/PROPERTY_<role.name>
+   propertyDecl:           class/<role.clazz.name>/staticAttribute/PROPERTY_<role.name; format="upper_snake">
    roleAttrDecl:           class/<role.clazz.name>/attribute/<role.name>
    getMethod:              class/<role.clazz.name>/property/get<role.name; format="cap">()
    <if(javaFX.(role.propertyStyle))>
@@ -50,7 +50,7 @@ propertyDecl(role, other) ::= <<
 <if(role.since)>
    /** @since <role.since> */
 <endif>
-   public static final String PROPERTY_<role.name> = "<role.name>";
+   public static final String PROPERTY_<role.name; format="upper_snake"> = "<role.name>";
 >>
 
 // --------------- Simple Accessors ---------------

@@ -6,12 +6,10 @@ import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
 import org.fulib.yaml.EventSource;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static org.fulib.builder.Type.BEAN;
 import static org.fulib.classmodel.ClassModel.PROPERTY_mainJavaDir;
@@ -246,7 +244,7 @@ public class ClassModelManager implements IModelManager
    // --------------- Settings ---------------
 
    /**
-    * @param packagename
+    * @param packageName
     *    the package name
     *
     * @return this instance, to allow method chaining
@@ -254,9 +252,9 @@ public class ClassModelManager implements IModelManager
     * @deprecated since 1.2; use {@link #setPackageName(String)} instead
     */
    @Deprecated
-   public ClassModelManager havePackageName(String packagename)
+   public ClassModelManager havePackageName(String packageName)
    {
-      this.setPackageName(packagename);
+      this.setPackageName(packageName);
       return this;
    }
 
@@ -289,7 +287,7 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
-    * @param sourceDir
+    * @param mainJavaDir
     *    the source directory
     *
     * @return this instance, to allow method chaining
@@ -297,9 +295,9 @@ public class ClassModelManager implements IModelManager
     * @deprecated since 1.2; use {@link #setMainJavaDir(String)} instead
     */
    @Deprecated
-   public ClassModelManager haveMainJavaDir(String sourceDir)
+   public ClassModelManager haveMainJavaDir(String mainJavaDir)
    {
-      this.setMainJavaDir(sourceDir);
+      this.setMainJavaDir(mainJavaDir);
       return this;
    }
 
@@ -333,6 +331,14 @@ public class ClassModelManager implements IModelManager
 
    // --------------- Classes ---------------
 
+   /**
+    * Gets or creates a class with the given name.
+    *
+    * @param name
+    *    the name of the class
+    *
+    * @return the class with the given name
+    */
    public Clazz haveClass(String name)
    {
       Clazz clazz = this.classModel.getClazz(name);
@@ -381,6 +387,25 @@ public class ClassModelManager implements IModelManager
 
    /**
     * Gets or creates a class with the given name and super class.
+    *
+    * @param name
+    *    the class name
+    * @param superClass
+    *    the super class
+    *
+    * @return the class with the given name
+    *
+    * @since 1.4
+    */
+   public Clazz haveClass(String name, Clazz superClass)
+   {
+      final Clazz clazz = this.haveClass(name);
+      this.haveSuper(clazz, superClass);
+      return clazz;
+   }
+
+   /**
+    * Gets or creates a class with the given name and super class.
     * In either case, the consumer is invoked to configure the resulting class using the {@link ClassManager} API.
     *
     * @param name
@@ -396,10 +421,43 @@ public class ClassModelManager implements IModelManager
     */
    public Clazz haveClass(String name, Clazz superClass, Consumer<? super ClassManager> body)
    {
-      final Clazz clazz = this.haveClass(name);
-      this.haveSuper(clazz, superClass);
+      final Clazz clazz = this.haveClass(name, superClass);
       body.accept(new ClassManager(clazz));
       return clazz;
+   }
+
+   /**
+    * Creates a {@link Clazz} by reflectively inspecting the given {@link Class}.
+    * All fields define attributes no matter the visibility,
+    * unless the {@link org.fulib.builder.reflect.Link} annotation is present, in which case they define associations.
+    * Other annotations in {@link org.fulib.builder.reflect} can be used for more customization.
+    *
+    * @param classDef the reflective class that defines the {@link Clazz}
+    *
+    * @return the newly created or existing {@link Clazz}
+    *
+    * @see <a href="https://fujaba.github.io/fulib/ClassModelDefinition.md">Class Model Definition</a>
+    *
+    * @since 1.4
+    */
+   public Clazz haveClass(Class<?> classDef)
+   {
+      return ReflectiveClassBuilder.load(classDef, this);
+   }
+
+   /**
+    * Adds all nested classes of the given class using {@link #haveClass(Class)}.
+    *
+    * @param genModel
+    *    the class from which to add nested classes
+    *
+    * @return a list of newly created or existing {@link Clazz} objects
+    *
+    * @since 1.4
+    */
+   public List<Clazz> haveNestedClasses(Class<?> genModel)
+   {
+      return Arrays.stream(genModel.getDeclaredClasses()).map(this::haveClass).collect(Collectors.toList());
    }
 
    /**
@@ -712,18 +770,26 @@ public class ClassModelManager implements IModelManager
          role = new AssocRole()
             .setClazz(owner)
             .setName(name)
-            .setCardinality(cardinality)
-            .setPropertyStyle(owner.getPropertyStyle())
-            .setCollectionType(owner.getModel().getDefaultCollectionType());
+            .setPropertyStyle(owner.getPropertyStyle());
+         this.setCardinality(owner, cardinality, role);
       }
-      else if (role.getCardinality() == cardinality)
+      else if (role.getCardinality() == cardinality || cardinality == 0)
       {
          return role;
       }
 
       modified.set(true);
-      role.setCardinality(cardinality);
+      this.setCardinality(owner, cardinality, role);
       return role;
+   }
+
+   private void setCardinality(Clazz owner, int cardinality, AssocRole role)
+   {
+      role.setCardinality(cardinality);
+      if (cardinality != Type.ONE)
+      {
+         role.setCollectionType(owner.getModel().getDefaultCollectionType());
+      }
    }
 
    private void link(AssocRole src, AssocRole tgt, AtomicBoolean modified)

@@ -13,6 +13,8 @@ public class CompoundFragment extends Fragment
    // =============== Constants ===============
 
    public static final String PROPERTY_children = "children";
+   /** @since 1.3 */
+   public static final String PROPERTY_CHILDREN = "children";
 
    // =============== Fields ===============
 
@@ -64,7 +66,7 @@ public class CompoundFragment extends Fragment
       {
          this.children.add(value);
          value.setParent(this);
-         this.firePropertyChange(PROPERTY_children, null, value);
+         this.firePropertyChange(PROPERTY_CHILDREN, null, value);
       }
       return this;
    }
@@ -92,7 +94,7 @@ public class CompoundFragment extends Fragment
       if (this.children != null && this.children.remove(value))
       {
          value.setParent(null);
-         this.firePropertyChange(PROPERTY_children, value, null);
+         this.firePropertyChange(PROPERTY_CHILDREN, value, null);
       }
       return this;
    }

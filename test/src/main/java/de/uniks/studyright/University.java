@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Objects;
 public class University
 {
+   public static final String PROPERTY_STUDENTS = "students";
+   public static final String PROPERTY_ROOMS = "rooms";
+   public static final String PROPERTY_NAME = "name";
 
    public static final String PROPERTY_name = "name";
 
@@ -39,7 +42,7 @@ public class University
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
@@ -58,7 +61,7 @@ public class University
       {
          this.students.add(value);
          value.setUni(this);
-         this.firePropertyChange(PROPERTY_students, null, value);
+         this.firePropertyChange(PROPERTY_STUDENTS, null, value);
       }
       return this;
    }
@@ -86,7 +89,7 @@ public class University
       if (this.students != null && this.students.remove(value))
       {
          value.setUni(null);
-         this.firePropertyChange(PROPERTY_students, value, null);
+         this.firePropertyChange(PROPERTY_STUDENTS, value, null);
       }
       return this;
    }
@@ -124,7 +127,7 @@ public class University
       {
          this.rooms.add(value);
          value.setUni(this);
-         this.firePropertyChange(PROPERTY_rooms, null, value);
+         this.firePropertyChange(PROPERTY_ROOMS, null, value);
       }
       return this;
    }
@@ -152,7 +155,7 @@ public class University
       if (this.rooms != null && this.rooms.remove(value))
       {
          value.setUni(null);
-         this.firePropertyChange(PROPERTY_rooms, value, null);
+         this.firePropertyChange(PROPERTY_ROOMS, value, null);
       }
       return this;
    }
@@ -233,8 +236,8 @@ public class University
 
    public void removeYou()
    {
-      this.withoutStudents(new ArrayList<>(this.getStudents()));
       this.withoutRooms(new ArrayList<>(this.getRooms()));
+      this.withoutStudents(new ArrayList<>(this.getStudents()));
    }
 
 }

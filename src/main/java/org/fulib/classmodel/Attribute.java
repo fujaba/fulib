@@ -33,6 +33,25 @@ public class Attribute
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_clazz = "clazz";
 
+   /** @since 1.3 */
+   public static final String PROPERTY_NAME = "name";
+   /** @since 1.3 */
+   public static final String PROPERTY_TYPE = "type";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_COLLECTION_TYPE = "collectionType";
+   /** @since 1.3 */
+   public static final String PROPERTY_INITIALIZATION = "initialization";
+   /** @since 1.3 */
+   public static final String PROPERTY_PROPERTY_STYLE = "propertyStyle";
+   /** @since 1.3 */
+   public static final String PROPERTY_MODIFIED = "modified";
+   /** @since 1.3 */
+   public static final String PROPERTY_DESCRIPTION = "description";
+   /** @since 1.3 */
+   public static final String PROPERTY_SINCE = "since";
+   /** @since 1.3 */
+   public static final String PROPERTY_CLAZZ = "clazz";
+
    // =============== Fields ===============
 
    protected PropertyChangeSupport listeners;
@@ -74,7 +93,7 @@ public class Attribute
       {
          value.withAttributes(this);
       }
-      this.firePropertyChange(PROPERTY_clazz, oldValue, value);
+      this.firePropertyChange(PROPERTY_CLAZZ, oldValue, value);
       return this;
    }
 
@@ -82,11 +101,13 @@ public class Attribute
     * @return a string that uniquely identifies this attribute within the enclosing class model
     *
     * @since 1.2
+    * @deprecated since 1.3; for serialization purposes only
     */
+   @Deprecated
    public String getId()
    {
-      final String className = this.getClazz() != null ? this.getClazz().getName() : "___";
-      return className + "_" + this.getName();
+      final Clazz clazz = this.getClazz();
+      return (clazz != null ? clazz.getName() : "_") + "_" + this.getName();
    }
 
    public String getName()
@@ -103,7 +124,7 @@ public class Attribute
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
@@ -182,7 +203,7 @@ public class Attribute
 
       final CollectionType oldValue = this.collectionType;
       this.collectionType = value;
-      this.firePropertyChange(PROPERTY_collectionType, oldValue, value);
+      this.firePropertyChange(PROPERTY_COLLECTION_TYPE, oldValue, value);
       return this;
    }
 
@@ -210,7 +231,7 @@ public class Attribute
 
       final String oldValue = this.initialization;
       this.initialization = value;
-      this.firePropertyChange(PROPERTY_initialization, oldValue, value);
+      this.firePropertyChange(PROPERTY_INITIALIZATION, oldValue, value);
       return this;
    }
 
@@ -239,7 +260,7 @@ public class Attribute
 
       final String oldValue = this.propertyStyle;
       this.propertyStyle = value;
-      this.firePropertyChange(PROPERTY_propertyStyle, oldValue, value);
+      this.firePropertyChange(PROPERTY_PROPERTY_STYLE, oldValue, value);
       return this;
    }
 
@@ -270,7 +291,7 @@ public class Attribute
 
       final String oldValue = this.description;
       this.description = value;
-      this.firePropertyChange(PROPERTY_description, oldValue, value);
+      this.firePropertyChange(PROPERTY_DESCRIPTION, oldValue, value);
       return this;
    }
 
@@ -313,7 +334,7 @@ public class Attribute
 
       final String oldValue = this.since;
       this.since = value;
-      this.firePropertyChange(PROPERTY_since, oldValue, value);
+      this.firePropertyChange(PROPERTY_SINCE, oldValue, value);
       return this;
    }
 
@@ -340,7 +361,7 @@ public class Attribute
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange(PROPERTY_modified, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODIFIED, oldValue, value);
       return this;
    }
 

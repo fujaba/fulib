@@ -15,7 +15,7 @@ attrSet(attr) ::= <<
 
       final <attr.type> oldValue = this.<attr.name>;
       this.<attr.name> = value;
-      this.firePropertyChange(PROPERTY_<attr.name>, oldValue, value);
+      this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, oldValue, value);
       return this;
    }
 >>
@@ -34,7 +34,7 @@ attrWithItem(attr) ::= <<
       }
       if (this.<attr.name>.add(value))<! the collection could be a set, in which case we don't want a PCE!>
       {
-         this.firePropertyChange(PROPERTY_<attr.name>, null, value);
+         this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, null, value);
       }
       return this;
    }
@@ -78,7 +78,7 @@ attrWithoutItem(attr) ::= <<
    {
       if (this.<attr.name> != null && this.<attr.name>.removeAll(import(java.util.Collections).singleton(value)))
       {
-         this.firePropertyChange(PROPERTY_<attr.name>, value, null);
+         this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, value, null);
       }
       return this;
    }
@@ -129,7 +129,7 @@ attrSetAllColl(attr) ::= <<
          this.<attr.name> = new <collectionImpl(attr)>(value);
          for (final <box(attr.type)> newItem : value)
          {
-            this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);
+            this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, null, newItem);
          }
          return this;
       }
@@ -143,7 +143,7 @@ attrSetAllColl(attr) ::= <<
       {
          if (!value.contains(oldItem))
          {
-            this.firePropertyChange(PROPERTY_<attr.name>, oldItem, null);
+            this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, oldItem, null);
          }
       }
 
@@ -151,7 +151,7 @@ attrSetAllColl(attr) ::= <<
       {
          if (!this.<attr.name>.contains(newItem))
          {
-            this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);
+            this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, null, newItem);
          }
       }
 

@@ -4,6 +4,7 @@ import org.fulib.builder.Type;
 import org.fulib.classmodel.*;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.StringRenderer;
 
 import java.util.List;
 import java.util.Set;

@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.fulib.parser.FragmentMapBuilder;
 import org.fulib.parser.FulibClassLexer;
 import org.fulib.parser.FulibClassParser;
+import org.fulib.parser.FulibErrorHandler;
 import org.fulib.util.Validator;
 
 import java.beans.PropertyChangeListener;
@@ -25,6 +26,17 @@ public class FMethod
    public static final String PROPERTY_annotations = "annotations";
    /** @since 1.2 */
    public static final String PROPERTY_modifiers = "modifiers";
+
+   /** @since 1.3 */
+   public static final String PROPERTY_METHOD_BODY = "methodBody";
+   /** @since 1.3 */
+   public static final String PROPERTY_MODIFIED = "modified";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_MODIFIERS = "modifiers";
+   /** @since 1.3 */
+   public static final String PROPERTY_ANNOTATIONS = "annotations";
+   /** @since 1.3 */
+   public static final String PROPERTY_CLAZZ = "clazz";
 
    // =============== Fields ===============
 
@@ -65,8 +77,21 @@ public class FMethod
       {
          value.withMethods(this);
       }
-      this.firePropertyChange(PROPERTY_clazz, oldValue, value);
+      this.firePropertyChange(PROPERTY_CLAZZ, oldValue, value);
       return this;
+   }
+
+   /**
+    * @return a string that identifies this method within the enclosing class model
+    *
+    * @since 1.3
+    * @deprecated for serialization purposes only
+    */
+   @Deprecated
+   public String getId()
+   {
+      final Clazz clazz = this.getClazz();
+      return (clazz != null ? clazz.getName() : "_") + "_" + this.getName();
    }
 
    /**
@@ -87,8 +112,7 @@ public class FMethod
    }
 
    /**
-    * @return the declaration of this method.
-    * Includes header, including annotations, modifiers, return type, name, and parameters.
+    * @return the declaration of this method, including annotations, modifiers, return type, name, and parameters
     */
    public String getDeclaration() // no fulib
    {
@@ -124,6 +148,15 @@ public class FMethod
       return inputStream.getText(Interval.of(start.getStartIndex(), rule.getStop().getStopIndex()));
    }
 
+   /**
+    * @param value
+    *    the declaration of this method, including annotations, modifiers, return type, name, and parameters
+    *
+    * @return this
+    *
+    * @throws IllegalArgumentException
+    *    if the declaration has syntax errors
+    */
    public FMethod setDeclaration(String value) // no fulib
    {
       // a declaration looks like
@@ -140,7 +173,17 @@ public class FMethod
       final FulibClassLexer lexer = new FulibClassLexer(input);
       final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
 
+      final StringBuilder errors = new StringBuilder("syntax errors in declaration:\n").append(value).append('\n');
+      parser.removeErrorListeners();
+      parser.addErrorListener(new FulibErrorHandler(errors));
+
       final FulibClassParser.MethodContext methodCtx = parser.method();
+
+      if (parser.getNumberOfSyntaxErrors() > 0)
+      {
+         throw new IllegalArgumentException(errors.toString());
+      }
+
       final FulibClassParser.MethodMemberContext memberCtx = methodCtx.methodMember();
 
       final String annotations = methodCtx
@@ -212,7 +255,7 @@ public class FMethod
 
       final String oldValue = this.annotations;
       this.annotations = value;
-      this.firePropertyChange(PROPERTY_annotations, oldValue, value);
+      this.firePropertyChange(PROPERTY_ANNOTATIONS, oldValue, value);
       return this;
    }
 
@@ -243,7 +286,7 @@ public class FMethod
 
       final String oldValue = this.modifiers;
       this.modifiers = value;
-      this.firePropertyChange(PROPERTY_modifiers, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODIFIERS, oldValue, value);
       return this;
    }
 
@@ -335,7 +378,7 @@ public class FMethod
 
       final String oldValue = this.methodBody;
       this.methodBody = value;
-      this.firePropertyChange(PROPERTY_methodBody, oldValue, value);
+      this.firePropertyChange(PROPERTY_METHOD_BODY, oldValue, value);
       return this;
    }
 
@@ -362,7 +405,7 @@ public class FMethod
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange(PROPERTY_modified, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODIFIED, oldValue, value);
       return this;
    }
 

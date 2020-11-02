@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.List;
 public class Clazz
 {
    // =============== Constants ===============
@@ -48,6 +47,27 @@ public class Clazz
    /** @deprecated since 1.2; use {@link #PROPERTY_imports} instead */
    @Deprecated
    public static final String PROPERTY_importList = "importList";
+
+   /** @since 1.3 */
+   public static final String PROPERTY_NAME = "name";
+   /** @since 1.3 */
+   public static final String PROPERTY_PROPERTY_STYLE = "propertyStyle";
+   /** @since 1.3 */
+   public static final String PROPERTY_MODIFIED = "modified";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_IMPORTS = "imports";
+   /** @since 1.3 */
+   public static final String PROPERTY_MODEL = "model";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_ATTRIBUTES = "attributes";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_ROLES = "roles";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_METHODS = "methods";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_SUB_CLASSES = "subClasses";
+   /** @since 1.3 */
+   public static final String PROPERTY_SUPER_CLASS = "superClass";
 
    // =============== Fields ===============
 
@@ -94,7 +114,7 @@ public class Clazz
       {
          value.withClasses(this);
       }
-      this.firePropertyChange(PROPERTY_model, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODEL, oldValue, value);
       return this;
    }
 
@@ -112,7 +132,7 @@ public class Clazz
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
@@ -139,7 +159,7 @@ public class Clazz
       {
          value.withSubClasses(this);
       }
-      this.firePropertyChange(PROPERTY_superClass, oldValue, value);
+      this.firePropertyChange(PROPERTY_SUPER_CLASS, oldValue, value);
       return this;
    }
 
@@ -197,7 +217,7 @@ public class Clazz
       {
          this.subClasses.add(value);
          value.setSuperClass(this);
-         this.firePropertyChange(PROPERTY_subClasses, null, value);
+         this.firePropertyChange(PROPERTY_SUB_CLASSES, null, value);
       }
       return this;
    }
@@ -278,7 +298,7 @@ public class Clazz
       if (this.subClasses != null && this.subClasses.remove(value))
       {
          value.setSuperClass(null);
-         this.firePropertyChange(PROPERTY_subClasses, value, null);
+         this.firePropertyChange(PROPERTY_SUB_CLASSES, value, null);
       }
       return this;
    }
@@ -385,7 +405,7 @@ public class Clazz
       {
          this.attributes.add(value);
          value.setClazz(this);
-         this.firePropertyChange(PROPERTY_attributes, null, value);
+         this.firePropertyChange(PROPERTY_ATTRIBUTES, null, value);
       }
       return this;
    }
@@ -466,7 +486,7 @@ public class Clazz
       if (this.attributes != null && this.attributes.remove(value))
       {
          value.setClazz(null);
-         this.firePropertyChange(PROPERTY_attributes, value, null);
+         this.firePropertyChange(PROPERTY_ATTRIBUTES, value, null);
       }
       return this;
    }
@@ -573,7 +593,7 @@ public class Clazz
       {
          this.roles.add(value);
          value.setClazz(this);
-         this.firePropertyChange(PROPERTY_roles, null, value);
+         this.firePropertyChange(PROPERTY_ROLES, null, value);
       }
       return this;
    }
@@ -654,7 +674,7 @@ public class Clazz
       if (this.roles != null && this.roles.remove(value))
       {
          value.setClazz(null);
-         this.firePropertyChange(PROPERTY_roles, value, null);
+         this.firePropertyChange(PROPERTY_ROLES, value, null);
       }
       return this;
    }
@@ -749,7 +769,7 @@ public class Clazz
       {
          this.methods.add(value);
          value.setClazz(this);
-         this.firePropertyChange(PROPERTY_methods, null, value);
+         this.firePropertyChange(PROPERTY_METHODS, null, value);
       }
       return this;
    }
@@ -830,7 +850,7 @@ public class Clazz
       if (this.methods != null && this.methods.remove(value))
       {
          value.setClazz(null);
-         this.firePropertyChange(PROPERTY_methods, value, null);
+         this.firePropertyChange(PROPERTY_METHODS, value, null);
       }
       return this;
    }
@@ -916,7 +936,7 @@ public class Clazz
       }
       if (this.imports.add(value))
       {
-         this.firePropertyChange(PROPERTY_imports, null, value);
+         this.firePropertyChange(PROPERTY_IMPORTS, null, value);
       }
       return this;
    }
@@ -973,7 +993,7 @@ public class Clazz
    {
       if (this.imports != null && this.imports.removeAll(Collections.singleton(value)))
       {
-         this.firePropertyChange(PROPERTY_imports, value, null);
+         this.firePropertyChange(PROPERTY_IMPORTS, value, null);
       }
       return this;
    }
@@ -1041,7 +1061,7 @@ public class Clazz
 
       final String oldValue = this.propertyStyle;
       this.propertyStyle = value;
-      this.firePropertyChange(PROPERTY_propertyStyle, oldValue, value);
+      this.firePropertyChange(PROPERTY_PROPERTY_STYLE, oldValue, value);
       return this;
    }
 
@@ -1068,7 +1088,7 @@ public class Clazz
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange(PROPERTY_modified, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODIFIED, oldValue, value);
       return this;
    }
 

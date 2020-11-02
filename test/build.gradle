@@ -14,12 +14,18 @@ repositories {
 
 dependencies {
    // https://mvnrepository.com/artifact/org.fulib/fulibScenarios
-   fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.4.1', {
+   fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.4.2', {
       exclude group: 'org.fulib', module: 'fulib'
    }
 
    // override fulib dependency
    fulibScenarios rootProject
+
+   // https://mvnrepository.com/artifact/it.unimi.dsi/fastutil
+   def fastUtil = [ group: 'it.unimi.dsi', name: 'fastutil', version: '8.4.2' ]
+
+   compile fastUtil
+   genCompile fastUtil
 
    // https://mvnrepository.com/artifact/junit/junit
    testCompile group: 'junit', name: 'junit', version: '4.13'

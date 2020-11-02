@@ -7,10 +7,9 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Collections;
+
 public class ClassModel
 {
    // =============== Constants ===============
@@ -28,6 +27,17 @@ public class ClassModel
    public static final String PROPERTY_defaultCollectionType = "defaultCollectionType";
    public static final String PROPERTY_defaultPropertyStyle = "defaultPropertyStyle";
    public static final String PROPERTY_classes = "classes" /* no fulib */;
+
+   /** @since 1.3 */
+   public static final String PROPERTY_PACKAGE_NAME = "packageName";
+   /** @since 1.3 */
+   public static final String PROPERTY_MAIN_JAVA_DIR = "mainJavaDir";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_DEFAULT_COLLECTION_TYPE = "defaultCollectionType";
+   /** @since 1.3 */
+   public static final String PROPERTY_DEFAULT_PROPERTY_STYLE = "defaultPropertyStyle";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_CLASSES = "classes";
 
    // =============== Fields ===============
 
@@ -62,7 +72,7 @@ public class ClassModel
 
       final String oldValue = this.mainJavaDir;
       this.mainJavaDir = value;
-      this.firePropertyChange(PROPERTY_mainJavaDir, oldValue, value);
+      this.firePropertyChange(PROPERTY_MAIN_JAVA_DIR, oldValue, value);
       return this;
    }
 
@@ -80,7 +90,7 @@ public class ClassModel
 
       final String oldValue = this.packageName;
       this.packageName = value;
-      this.firePropertyChange(PROPERTY_packageName, oldValue, value);
+      this.firePropertyChange(PROPERTY_PACKAGE_NAME, oldValue, value);
       return this;
    }
 
@@ -111,7 +121,7 @@ public class ClassModel
 
       final CollectionType oldValue = this.defaultCollectionType;
       this.defaultCollectionType = value;
-      this.firePropertyChange(PROPERTY_defaultCollectionType, oldValue, value);
+      this.firePropertyChange(PROPERTY_DEFAULT_COLLECTION_TYPE, oldValue, value);
       return this;
    }
 
@@ -166,7 +176,7 @@ public class ClassModel
 
       final String oldValue = this.defaultPropertyStyle;
       this.defaultPropertyStyle = value;
-      this.firePropertyChange(PROPERTY_defaultPropertyStyle, oldValue, value);
+      this.firePropertyChange(PROPERTY_DEFAULT_PROPERTY_STYLE, oldValue, value);
       return this;
    }
 
@@ -236,7 +246,7 @@ public class ClassModel
       {
          this.classes.add(value);
          value.setModel(this);
-         this.firePropertyChange(PROPERTY_classes, null, value);
+         this.firePropertyChange(PROPERTY_CLASSES, null, value);
       }
       return this;
    }
@@ -317,7 +327,7 @@ public class ClassModel
       if (this.classes != null && this.classes.remove(value))
       {
          value.setModel(null);
-         this.firePropertyChange(PROPERTY_classes, value, null);
+         this.firePropertyChange(PROPERTY_CLASSES, value, null);
       }
       return this;
    }

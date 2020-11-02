@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FMethodTest
 {
@@ -90,5 +91,19 @@ class FMethodTest
       assertThat(cStyleMixedArrays.getParams(), aMapWithSize(1));
       assertThat(cStyleMixedArrays.getParams(), hasEntry("args", "String[][]"));
       assertThat(cStyleMixedArrays.getSignature(), equalTo("class/Foo/method/cStyleMixedArrays(String[][])"));
+   }
+
+   @Test
+   void setDeclaration_syntaxErrors()
+   {
+      final FMethod syntaxErrors = new FMethod();
+
+      final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+         syntaxErrors.setDeclaration("void (x, y)");
+      });
+
+      assertThat(ex.getMessage(), equalTo("syntax errors in declaration:\n" + "void (x, y)\n"
+                                          + "<unknown>:1:5: syntax: extraneous input '(' expecting IDENTIFIER\n"
+                                          + "<unknown>:1:7: syntax: mismatched input ',' expecting {'@', '[', IDENTIFIER}\n"));
    }
 }

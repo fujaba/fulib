@@ -13,6 +13,9 @@ public class CodeFragment extends Fragment
    public static final String PROPERTY_key = "key";
    public static final String PROPERTY_text = "text";
 
+   /** @since 1.3 */
+   public static final String PROPERTY_TEXT = "text";
+
    // =============== Fields ===============
 
    private String text;
@@ -43,7 +46,7 @@ public class CodeFragment extends Fragment
 
       final String oldValue = this.text;
       this.text = value;
-      this.firePropertyChange(PROPERTY_text, oldValue, value);
+      this.firePropertyChange(PROPERTY_TEXT, oldValue, value);
       return this;
    }
 
