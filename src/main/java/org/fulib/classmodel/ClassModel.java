@@ -233,6 +233,7 @@ public class ClassModel
     *
     * @return this
     *
+    * @see Clazz#setModel(ClassModel)
     * @since 1.2
     */
    public ClassModel withClasses(Clazz value)
@@ -256,6 +257,7 @@ public class ClassModel
     *
     * @return this
     *
+    * @see Clazz#setModel(ClassModel)
     * @since 1.2
     */
    public ClassModel withClasses(Clazz... value)
@@ -273,6 +275,7 @@ public class ClassModel
     *
     * @return this
     *
+    * @see Clazz#setModel(ClassModel)
     * @since 1.2
     */
    public ClassModel withClasses(Collection<? extends Clazz> value)
@@ -316,6 +319,7 @@ public class ClassModel
     *
     * @return this
     *
+    * @see Clazz#setModel(ClassModel)
     * @since 1.2
     */
    public ClassModel withoutClasses(Clazz value)
@@ -334,6 +338,7 @@ public class ClassModel
     *
     * @return this
     *
+    * @see Clazz#setModel(ClassModel)
     * @since 1.2
     */
    public ClassModel withoutClasses(Clazz... value)
@@ -351,6 +356,7 @@ public class ClassModel
     *
     * @return this
     *
+    * @see Clazz#setModel(ClassModel)
     * @since 1.2
     */
    public ClassModel withoutClasses(Collection<? extends Clazz> value)

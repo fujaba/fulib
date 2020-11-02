@@ -24,7 +24,7 @@ attrSet(attr) ::= <<
 
 attrWithItem(attr) ::= <<
 <if(attr.description)>
-   <setterJavaDoc(attr)>
+   <witherJavaDoc(attr)>
 <endif>
    public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)> value)
    {
@@ -42,7 +42,7 @@ attrWithItem(attr) ::= <<
 
 attrWithArray(attr) ::= <<
 <if(attr.description)>
-   <setterJavaDoc(attr)>
+   <witherJavaDoc(attr)>
 <endif>
    public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)>... value)
    {
@@ -56,7 +56,7 @@ attrWithArray(attr) ::= <<
 
 attrWithColl(attr) ::= <<
 <if(attr.description)>
-   <setterJavaDoc(attr)>
+   <witherJavaDoc(attr)>
 <endif>
    public <attr.clazz.name> with<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
@@ -72,7 +72,7 @@ attrWithColl(attr) ::= <<
 
 attrWithoutItem(attr) ::= <<
 <if(attr.description)>
-   <setterJavaDoc(attr)>
+   <withouterJavaDoc(attr)>
 <endif>
    public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)> value)
    {
@@ -86,7 +86,7 @@ attrWithoutItem(attr) ::= <<
 
 attrWithoutArray(attr) ::= <<
 <if(attr.description)>
-   <setterJavaDoc(attr)>
+   <withouterJavaDoc(attr)>
 <endif>
    public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)>... value)
    {
@@ -100,7 +100,7 @@ attrWithoutArray(attr) ::= <<
 
 attrWithoutColl(attr) ::= <<
 <if(attr.description)>
-   <setterJavaDoc(attr)>
+   <withouterJavaDoc(attr)>
 <endif>
    public <attr.clazz.name> without<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
