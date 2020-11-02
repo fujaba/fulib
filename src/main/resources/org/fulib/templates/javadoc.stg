@@ -3,12 +3,13 @@
 getterJavaDoc(attr) ::= <<
 /**
  * @return <attr.descriptionLines; separator="\n * ">
-<if(attr.since)>
+<if(attr.since||attr.other)>
  *
+<endif>
+<if(attr.since)>
  * @since <attr.since>
 <endif>
 <if(attr.other)>
- *
  * @see <attr.other.clazz.name>#get<attr.other.name; format="cap">()
 <endif>
  */
