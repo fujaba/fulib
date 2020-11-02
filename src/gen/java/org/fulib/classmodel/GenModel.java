@@ -190,6 +190,6 @@ public class GenModel implements ClassModelDecorator
    @Override
    public void decorate(ClassModelManager cmm)
    {
-      cmm.haveClasses(GenModel.class);
+      cmm.haveNestedClasses(GenModel.class);
    }
 }

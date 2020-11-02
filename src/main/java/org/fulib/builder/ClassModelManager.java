@@ -437,7 +437,7 @@ public class ClassModelManager implements IModelManager
    /**
     * @since 1.4
     */
-   public List<Clazz> haveClasses(Class<?> genModel)
+   public List<Clazz> haveNestedClasses(Class<?> genModel)
    {
       return Arrays.stream(genModel.getDeclaredClasses()).map(this::haveClass).collect(Collectors.toList());
    }

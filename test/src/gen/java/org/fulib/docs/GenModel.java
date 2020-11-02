@@ -80,7 +80,7 @@ public class GenModel implements ClassModelDecorator
    public void decorate(ClassModelManager cmm)
    {
       cmm.getClassModel().setDefaultPropertyStyle(org.fulib.builder.Type.POJO);
-      cmm.haveClasses(GenModel.class);
+      cmm.haveNestedClasses(GenModel.class);
    }
 }
 
