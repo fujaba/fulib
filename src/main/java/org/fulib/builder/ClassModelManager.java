@@ -427,6 +427,17 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
+    * Creates a {@link Clazz} by reflectively inspecting the given {@link Class}.
+    * All fields define attributes no matter the visibility,
+    * unless the {@link org.fulib.builder.reflect.Link} annotation is present, in which case they define associations.
+    * Other annotations in {@link org.fulib.builder.reflect} can be used for more customization.
+    *
+    * @param classDef the reflective class that defines the {@link Clazz}
+    *
+    * @return the newly created or existing {@link Clazz}
+    *
+    * @see <a href="https://fujaba.github.io/fulib/ClassModelDefinition.md">Class Model Definition</a>
+    *
     * @since 1.4
     */
    public Clazz haveClass(Class<?> classDef)
@@ -435,6 +446,13 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
+    * Adds all nested classes of the given class using {@link #haveClass(Class)}.
+    *
+    * @param genModel
+    *    the class from which to add nested classes
+    *
+    * @return a list of newly created or existing {@link Clazz} objects
+    *
     * @since 1.4
     */
    public List<Clazz> haveNestedClasses(Class<?> genModel)
