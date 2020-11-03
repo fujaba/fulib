@@ -5,6 +5,7 @@ import org.fulib.classmodel.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class ReflectiveClassBuilderTest
 
       @Link("friends")
       List<Person> friends;
+
+      Date dateOfBirth;
    }
 
    class Student extends Person
@@ -54,6 +57,8 @@ public class ReflectiveClassBuilderTest
 
       @Link("uni")
       List<Student> students;
+
+      Person president;
    }
 
    @Test
@@ -72,6 +77,9 @@ public class ReflectiveClassBuilderTest
       assertThat(personName.getType(), equalTo("String"));
       assertThat(personName.getCollectionType(), nullValue());
       assertThat(personName.getDescription(), equalTo("the full name"));
+
+      final Attribute dateOfBirth = person.getAttribute("dateOfBirth");
+      assertThat(dateOfBirth.getType(), equalTo("import(java.util.Date)"));
 
       final AssocRole personFriends = person.getRole("friends");
       assertThat(personFriends.getOther(), is(personFriends));
@@ -121,6 +129,9 @@ public class ReflectiveClassBuilderTest
       assertThat(uni.getOther(), is(students));
       assertThat(uni.getCardinality(), is(Type.ONE));
       assertThat(uni.getCollectionType(), nullValue());
+
+      final Attribute president = university.getAttribute("president");
+      assertThat(president.getType(), equalTo("Person"));
    }
 
    class StringList extends ArrayList<String>

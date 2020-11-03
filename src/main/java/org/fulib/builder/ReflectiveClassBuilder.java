@@ -7,12 +7,17 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.fulib.builder.Type.MANY;
 import static org.fulib.builder.Type.ONE;
 
 class ReflectiveClassBuilder
 {
+   private static final String ID_PATTERN = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
+   private static final Pattern CLASS_PATTERN = Pattern.compile("class (" + ID_PATTERN + "(?:\\." + ID_PATTERN + ")*)");
+
    static Clazz load(Class<?> classDef, ClassModelManager manager)
    {
       final Clazz clazz = manager.haveClass(classDef.getSimpleName());
@@ -77,28 +82,63 @@ class ReflectiveClassBuilder
          return type.value();
       }
 
+      final Class<?> declaringClass = field.getDeclaringClass();
       if (collectionType == null)
       {
-         return toSource(field.getGenericType());
+         return toSource(declaringClass, field.getGenericType());
       }
 
       final Type genericType = field.getGenericType();
       if (genericType instanceof ParameterizedType)
       {
-         return toSource(((ParameterizedType) genericType).getActualTypeArguments()[0]);
+         return toSource(declaringClass, ((ParameterizedType) genericType).getActualTypeArguments()[0]);
       }
 
       throw new InvalidClassModelException(
-         String.format("%s.%s: cannot determine element type of %s", field.getDeclaringClass().getSimpleName(),
+         String.format("%s.%s: cannot determine element type of %s", declaringClass.getSimpleName(),
                        field.getName(), field.getType().getSimpleName()));
    }
 
-   private static String toSource(Type type)
+   private static String toSource(Class<?> base, Type type)
    {
-      return type
-         .toString()
-         .replaceAll("class java\\.lang\\.(\\w+)", "$1")
-         .replaceAll("class (\\w+(?:\\.\\w+)*)", "import($1)");
+      final String input = type.toString();
+      final Matcher matcher = CLASS_PATTERN.matcher(input);
+      final StringBuilder sb = new StringBuilder();
+      int prev = 0;
+      while (matcher.find())
+      {
+         final String className = matcher.group(1);
+         sb.append(input, prev, matcher.start());
+         toSource(base, className, sb);
+         prev = matcher.end();
+      }
+      sb.append(input, prev, input.length());
+      return sb.toString();
+   }
+
+   private static void toSource(Class<?> base, String className, StringBuilder out) {
+      try
+      {
+         final Class<?> resolved = Class.forName(className);
+         final Package resolvedPackage = resolved.getPackage();
+         final String canonicalName = resolved.getCanonicalName();
+         if ("java.lang".equals(resolvedPackage.getName()))
+         {
+            out.append(canonicalName, "java.lang.".length(), canonicalName.length());
+         }
+         else if (resolvedPackage == base.getPackage())
+         {
+            out.append(resolved.getSimpleName());
+         }
+         else
+         {
+            out.append("import(").append(canonicalName).append(')');
+         }
+      }
+      catch (ClassNotFoundException e)
+      {
+         throw new InvalidClassModelException("cannot determine source representation of " + className, e);
+      }
    }
 
    private static CollectionType getCollectionType(Class<?> type)
