@@ -150,8 +150,16 @@ public class Page
 
 The generated code shows that `ArrayList` was automatically chosen as the implementation class for `List`.
 Other collection int, like `Set`, have other default implementation types.
-You can also specify the implement directly if you don't want to use the default.
-The following tables shows interfaces 
+You can also specify the implementation type manually if you don't want to use the default -- fulib will automatically infer the most specific interface.
+The following tables shows the mapping from interfaces to default implementations.
+
+| Interface      | Default Implementation |
+|----------------|------------------------|
+| `Collection`   | `LinkedHashSet`        |
+| `Set`          | `LinkedHashSet`        |
+| `SortedSet`    | `TreeSet`              |
+| `NavigableSet` | `TreeSet`              |
+| `List`         | `ArrayList`            |
 
 Attributes can be turned into associations and customized using a number of annotations, which are covered in the following sections.
 
