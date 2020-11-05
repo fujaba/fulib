@@ -132,3 +132,15 @@
 ## Bugfixes
 
 * The code generator now correctly indents new members. #69
+
+# fulib v1.4.0
+
+## New Features
+
++ Added the `ClassModelManager.haveClass(String, Clazz)` method. #76
++ Added the new `ClassModelManager.haveClass(Class)` and `haveNestedClasses(Class)` methods for defining classes with reflection. #77 #78
++ JavaDocs for association methods now contain a `@see` link to the reverse role. #79
+
+## Improvements
+
+* Improved JavaDocs in `ClassModelManager`. #76
