@@ -121,7 +121,24 @@ public class GenModel implements ClassModelDecorator
 ```
 <!-- end_code_fragment: -->
 
-Check out [Class Model Definition](doc/ClassModelDefinition.md) in the docs for more details and options.
+Within `GenModel`, we define our data model using a familiar yet shortened Java syntax.
+Every nested class is translated to a top-level class in the `src/main/java` source directory.
+[Class Model Definition](doc/ClassModelDefinition.md) in the docs describes this with more details and options.
+For now, we present a simple example in which we define three classes each with some attributes and associations.
+
+Attributes are defined just like a normal field.
+Fulib takes care of generating getters and setters.
+It also ensures the correct access modifiers (`private`, `public`) are used in the generated code.
+We can simply omit them when defining the model within `GenModel`.
+
+Associations are defined using the `@Link` annotation.
+You specify the name of the reverse role as the annotation argument.
+This way, fulib can generate setters that ensure referential integrity.
+To-many associations are specified by wrapping the target type in a collection, e.g. `List<Student>`.
+Instead of a setter, fulib will generate `with` and `without` methods for these associations.
+
+For brevity, we do not show the generated code here.
+However, you can [browse the generated files](test/src/main/java/de/uniks/studyright).
 
 ### Generating Java Code
 
