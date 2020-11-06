@@ -118,6 +118,21 @@ class ReflectiveClassBuilder
 
    private static void toSource(Class<?> base, String className, StringBuilder out)
    {
+      switch (className)
+      {
+      case "void":
+      case "boolean":
+      case "byte":
+      case "short":
+      case "char":
+      case "int":
+      case "long":
+      case "float":
+      case "double":
+         out.append(className);
+         return;
+      }
+
       try
       {
          final Class<?> resolved = Class.forName(className);
