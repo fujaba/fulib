@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -46,6 +47,8 @@ public class ReflectiveClassBuilderTest
 
       @Link("manager")
       List<Employee> subordinates;
+
+      Predicate<?> predicate;
    }
 
    class University
@@ -102,6 +105,9 @@ public class ReflectiveClassBuilderTest
       assertThat(notesCollectionType.getItf(), is(CollectionInterface.List));
 
       final Clazz employee = model.getClazz("Employee");
+
+      final Attribute predicate = employee.getAttribute("predicate");
+      assertThat(predicate.getType(), equalTo("import(java.util.function.Predicate)<?>"));
 
       final AssocRole manager = employee.getRole("manager");
       final AssocRole subordinates = employee.getRole("subordinates");

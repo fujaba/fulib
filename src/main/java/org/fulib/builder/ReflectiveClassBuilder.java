@@ -16,7 +16,7 @@ import static org.fulib.builder.Type.ONE;
 class ReflectiveClassBuilder
 {
    private static final String ID_PATTERN = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
-   private static final Pattern CLASS_PATTERN = Pattern.compile("class (" + ID_PATTERN + "(?:\\." + ID_PATTERN + ")*)");
+   private static final Pattern CLASS_PATTERN = Pattern.compile(ID_PATTERN + "(?:\\." + ID_PATTERN + ")*");
 
    static Clazz load(Class<?> classDef, ClassModelManager manager)
    {
@@ -101,13 +101,13 @@ class ReflectiveClassBuilder
 
    private static String toSource(Class<?> base, Type type)
    {
-      final String input = type.toString();
+      final String input = type.getTypeName();
       final Matcher matcher = CLASS_PATTERN.matcher(input);
       final StringBuilder sb = new StringBuilder();
       int prev = 0;
       while (matcher.find())
       {
-         final String className = matcher.group(1);
+         final String className = matcher.group();
          sb.append(input, prev, matcher.start());
          toSource(base, className, sb);
          prev = matcher.end();
@@ -116,7 +116,23 @@ class ReflectiveClassBuilder
       return sb.toString();
    }
 
-   private static void toSource(Class<?> base, String className, StringBuilder out) {
+   private static void toSource(Class<?> base, String className, StringBuilder out)
+   {
+      switch (className)
+      {
+      case "void":
+      case "boolean":
+      case "byte":
+      case "short":
+      case "char":
+      case "int":
+      case "long":
+      case "float":
+      case "double":
+         out.append(className);
+         return;
+      }
+
       try
       {
          final Class<?> resolved = Class.forName(className);
