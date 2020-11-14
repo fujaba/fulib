@@ -664,7 +664,7 @@ public class ClassModelManager implements IModelManager
     * @param srcSize
     *    the cardinality in the source class
     * @param tgtRole
-    *    the role name in the target class
+    *    the role name in the target class, or {@code null} to make the association unidirectional
     * @param tgtSize
     *    the cardinality in the target class
     *
@@ -691,7 +691,7 @@ public class ClassModelManager implements IModelManager
     * @param tgtClass
     *    the target class
     * @param tgtRole
-    *    the role name in the target class
+    *    the role name in the target class, or {@code null} to make the association unidirectional
     * @param tgtSize
     *    the cardinality in the target class
     *
@@ -716,7 +716,7 @@ public class ClassModelManager implements IModelManager
     * @param tgtClass
     *    the target class
     * @param tgtRole
-    *    the role name in the target class
+    *    the role name in the target class, or {@code null} to make the association unidirectional
     * @param tgtSize
     *    the cardinality in the target class
     *
@@ -726,6 +726,11 @@ public class ClassModelManager implements IModelManager
     */
    public AssocRole associate(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize)
    {
+      if (srcRole == null)
+      {
+         throw new NullPointerException("srcRole must not be null");
+      }
+
       final AtomicBoolean modified = new AtomicBoolean(false);
 
       final AssocRole role = this.haveRole(srcClass, srcRole, srcSize, modified);

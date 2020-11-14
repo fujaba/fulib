@@ -132,7 +132,8 @@ public class AssocRole
    public String getId()
    {
       final Clazz clazz = this.getClazz();
-      return (clazz != null ? clazz.getName() : "_") + "_" + this.getName();
+      final String name = this.getName();
+      return (clazz != null ? clazz.getName() : "_") + "_" + (name != null ? name : this.getOther().getId());
    }
 
    public String getName()

@@ -91,12 +91,16 @@ initMethod(role, other) ::= <<
          {
             for (final <other.clazz.name> value : change.getRemoved())
             {
+               <if(role.other.name)>
                value.<withoutThis(other)>;
+               <endif>
                this.firePropertyChange(PROPERTY_<role.name; format="upper_snake">, value, null);
             }
             for (final <other.clazz.name> value : change.getAddedSubList())
             {
+               <if(role.other.name)>
                value.<withThis(other)>;
+               <endif>
                this.firePropertyChange(PROPERTY_<role.name; format="upper_snake">, null, value);
             }
          }
@@ -105,6 +109,7 @@ initMethod(role, other) ::= <<
 <else>
       final import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> result = new import(javafx.beans.property.SimpleObjectProperty)\<>();
       result.addListener((observable, oldValue, newValue) -> {
+         <if(role.other.name)>
          if (oldValue != null)
          {
             oldValue.<withoutThis(other)>;
@@ -113,6 +118,7 @@ initMethod(role, other) ::= <<
          {
             newValue.<withThis(other)>;
          }
+         <endif>
          this.firePropertyChange(PROPERTY_<role.name; format="upper_snake">, oldValue, newValue);
       });
       return result;

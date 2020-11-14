@@ -529,6 +529,12 @@ public class Clazz
 
    public AssocRole getRole(String name)
    {
+      if (name == null)
+      {
+         // searching for an anonymous role by name is nonsensical,
+         // especially since multiple of them can exist.
+         return null;
+      }
       for (AssocRole role : this.getRoles())
       {
          if (Objects.equals(role.getName(), name))

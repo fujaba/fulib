@@ -1,5 +1,5 @@
 - c: 	ClassModel
-  classes: 	example 	university 	student 	page 	person
+  classes: 	example 	university 	student 	person 	page
   defaultCollectionType: 	c1
   defaultPropertyStyle: 	POJO
   defaultRoleType: 	"java.util.ArrayList<%s>"
@@ -19,7 +19,7 @@
   modified: 	false
   name: 	University
   propertyStyle: 	POJO
-  roles: 	university_students
+  roles: 	university_students 	university_president 	university_employees
 
 - student: 	Clazz
   model: 	c
@@ -28,18 +28,19 @@
   propertyStyle: 	POJO
   roles: 	student_uni
 
-- page: 	Clazz
-  attributes: 	page_lines
-  model: 	c
-  modified: 	false
-  name: 	Page
-  propertyStyle: 	POJO
-
 - person: 	Clazz
   attributes: 	person_name 	person_age
   model: 	c
   modified: 	false
   name: 	Person
+  propertyStyle: 	POJO
+  roles: 	person_University_president 	person_University_employees
+
+- page: 	Clazz
+  attributes: 	page_lines
+  model: 	c
+  modified: 	false
+  name: 	Page
   propertyStyle: 	POJO
 
 - c1: 	CollectionType
@@ -133,6 +134,28 @@
   propertyStyle: 	POJO
   roleType: 	"java.util.ArrayList<%s>"
 
+- university_president: 	AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	university
+  id: 	University_president
+  modified: 	false
+  name: 	president
+  other: 	person_University_president
+  propertyStyle: 	POJO
+
+- university_employees: 	AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	university
+  collectionType: 	c1
+  id: 	University_employees
+  modified: 	false
+  name: 	employees
+  other: 	person_University_employees
+  propertyStyle: 	POJO
+  roleType: 	"java.util.ArrayList<%s>"
+
 - student_uni: 	AssocRole
   aggregation: 	false
   cardinality: 	1
@@ -142,16 +165,6 @@
   name: 	uni
   other: 	university_students
   propertyStyle: 	POJO
-
-- page_lines: 	Attribute
-  clazz: 	page
-  collectionType: 	c1
-  id: 	Page_lines
-  modified: 	false
-  name: 	lines
-  propertyStyle: 	POJO
-  type: 	String
-  typeSignature: 	String
 
 - person_name: 	Attribute
   clazz: 	person
@@ -170,6 +183,38 @@
   propertyStyle: 	POJO
   type: 	int
   typeSignature: 	int
+
+- person_University_president: 	AssocRole
+  aggregation: 	false
+  cardinality: 	0
+  clazz: 	person
+  collectionType: 	c1
+  id: 	Person_University_president
+  modified: 	false
+  other: 	university_president
+  propertyStyle: 	POJO
+  roleType: 	"java.util.ArrayList<%s>"
+
+- person_University_employees: 	AssocRole
+  aggregation: 	false
+  cardinality: 	0
+  clazz: 	person
+  collectionType: 	c1
+  id: 	Person_University_employees
+  modified: 	false
+  other: 	university_employees
+  propertyStyle: 	POJO
+  roleType: 	"java.util.ArrayList<%s>"
+
+- page_lines: 	Attribute
+  clazz: 	page
+  collectionType: 	c1
+  id: 	Page_lines
+  modified: 	false
+  name: 	lines
+  propertyStyle: 	POJO
+  type: 	String
+  typeSignature: 	String
 
 - c3: 	CollectionType
   implClass: 	class it.unimi.dsi.fastutil.ints.IntArrayList

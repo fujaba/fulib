@@ -16,6 +16,7 @@ public @interface Link
 {
    /**
     * @return the name of the attribute in the other class.
+    * An omitted or empty value makes the association unidirectional.
     */
-   String value();
+   String value() default "";
 }

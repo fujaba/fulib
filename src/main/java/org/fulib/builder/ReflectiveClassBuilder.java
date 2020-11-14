@@ -179,11 +179,18 @@ class ReflectiveClassBuilder
       final String name = field.getName();
       final CollectionType collectionType = getCollectionType(field.getType());
 
-      final String otherName = link.value();
+      String otherName = link.value();
+      if (otherName.isEmpty())
+      {
+         otherName = null;
+      }
 
       final Class<?> other = getOther(field, collectionType);
 
-      validateLinkTarget(field.getDeclaringClass(), name, otherName, other);
+      if (otherName != null)
+      {
+         validateLinkTarget(field.getDeclaringClass(), name, otherName, other);
+      }
 
       final String otherClazzName = other.getSimpleName();
       final Clazz otherClazz = manager.haveClass(otherClazzName);
