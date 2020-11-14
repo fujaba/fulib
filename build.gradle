@@ -140,7 +140,7 @@ test {
 }
 
 revapi {
-   oldVersion = '1.3.0'
+   oldVersion = '1.4.1'
 }
 
 // --------------- ANTLR ---------------
