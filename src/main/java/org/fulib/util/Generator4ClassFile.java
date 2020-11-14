@@ -141,7 +141,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
    {
       for (final AssocRole role : clazz.getRoles())
       {
-         if (role.isToMany())
+         if (role.getName() != null && role.isToMany())
          {
             this.addCollectionTypeImports(role.getCollectionType(), qualifiedNames);
          }
