@@ -6,17 +6,18 @@ import org.fulib.builder.ClassBuilder;
 import org.fulib.builder.ClassModelBuilder;
 import org.fulib.builder.Type;
 import org.fulib.classmodel.ClassModel;
+import org.fulib.classmodel.CollectionType;
 import org.junit.jupiter.api.Test;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -79,24 +80,28 @@ public class AssociationTest
 
    protected final void buildModel(ClassModelBuilder mb)
    {
-      ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
-      // end_code_fragment:
-
+      ClassBuilder university = mb.buildClass("University").buildAttribute("name", Type.STRING);
       ClassBuilder studi = mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"");
-
-      universitiy.buildAssociation(studi, "students", Type.MANY, "uni", Type.ONE);
-
       ClassBuilder room = mb.buildClass("Room").buildAttribute("no", Type.STRING);
+      ClassBuilder assignment = mb.buildClass("Assignment").buildAttribute("topic", Type.STRING);
 
-      universitiy.buildAssociation(room, "rooms", Type.MANY, "uni", Type.ONE)
-                 .setSourceRoleCollection(LinkedHashSet.class).setAggregation();
+      // n to 1
+      university.buildAssociation(studi, "students", Type.MANY, "uni", Type.ONE);
 
+      // n to 1 - custom collection type
+      university
+         .buildAssociation(room, "rooms", Type.MANY, "uni", Type.ONE)
+         .setSourceRoleCollection(CollectionType.LinkedHashSet)
+         .setAggregation();
+
+      // 1 to 1
       studi.buildAssociation(room, "condo", Type.ONE, "owner", Type.ONE);
-
+      // n to n
       studi.buildAssociation(room, "in", Type.MANY, "students", Type.MANY);
 
-      ClassBuilder assignment = mb.buildClass("Assignment").buildAttribute("topic", Type.STRING);
-      studi.buildAssociation(assignment, "done", Type.MANY, "students", Type.MANY);
+      // unidirectional - the assignment does not need to know who did it
+      studi.buildAssociation(assignment, "workingOn", Type.ONE, null, 0);
+      studi.buildAssociation(assignment, "done", Type.MANY, null, 0);
    }
 
    protected void runDataTests(ClassLoader classLoader, String packageName) throws Exception
