@@ -2,6 +2,8 @@ package org.fulib.docs;
 import java.util.Objects;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 // start_code_fragment: docs.Person
 public class Person
