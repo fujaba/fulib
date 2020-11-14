@@ -61,7 +61,11 @@ public class ReflectiveClassBuilderTest
       @Link("uni")
       List<Student> students;
 
+      @Link()
       Person president;
+
+      @Link()
+      List<Person> employees;
    }
 
    @Test
@@ -136,8 +140,15 @@ public class ReflectiveClassBuilderTest
       assertThat(uni.getCardinality(), is(Type.ONE));
       assertThat(uni.getCollectionType(), nullValue());
 
-      final Attribute president = university.getAttribute("president");
-      assertThat(president.getType(), equalTo("Person"));
+      final AssocRole president = university.getRole("president");
+      assertThat(president.getCardinality(), is(Type.ONE));
+      assertThat(president.getOther().getName(), nullValue());
+      assertThat(president.getOther().getClazz(), is(person));
+
+      final AssocRole employees = university.getRole("employees");
+      assertThat(employees.getCardinality(), is(Type.MANY));
+      assertThat(employees.getOther().getName(), nullValue());
+      assertThat(employees.getOther().getClazz(), is(person));
    }
 
    class StringList extends ArrayList<String>
