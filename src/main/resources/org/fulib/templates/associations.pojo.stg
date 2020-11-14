@@ -75,25 +75,25 @@ setMethod(role, other) ::= <<
 <endif>
    public <role.clazz.name> set<role.name; format="cap">(<other.clazz.name> value)
    {
+<if(other.name)>
       if (this.<role.name> == value)
       {
          return this;
       }
 
       final <other.clazz.name> oldValue = this.<role.name>;
-<if(other.name)>
       if (this.<role.name> != null)
       {
          this.<role.name> = null;
          oldValue.<withoutThis(other)>;
       }
-<endif>
       this.<role.name> = value;
-<if(other.name)>
       if (value != null)
       {
          value.<withThis(other)>;
       }
+<else>
+      this.<role.name> = value;
 <endif>
       return this;
    }
@@ -158,12 +158,17 @@ withoutItem(role, other) ::= <<
 <endif>
    public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name> value)
    {
+<if(other.name)>
       if (this.<role.name> != null && this.<role.name>.remove(value))
       {
-<if(other.name)>
          value.<withoutThis(other)>;
-<endif>
       }
+<else>
+      if (this.<role.name> != null)
+      {
+         this.<role.name>.remove(value);
+      }
+<endif>
       return this;
    }
 >>
