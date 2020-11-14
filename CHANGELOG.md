@@ -144,3 +144,16 @@
 ## Improvements
 
 * Improved JavaDocs in `ClassModelManager`. #76
+
+# fulib v1.4.1
+
+## Improvements
+
+* `@Link` without an argument or with empty string now creates a unidirectional association. #81
+* Improved POJO templates for unidirectional associations. #81
+* `ClassModelManager` now properly handles and documents unidirectional associations. #81
+
+## Bugfixes
+
+* The reflective class model builder now properly replaces fully qualified class names with imports. #80
+* Fixed JavaFX templates generating invalid code for unidirectional associations. #81
