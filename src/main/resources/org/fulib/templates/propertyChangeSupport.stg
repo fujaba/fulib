@@ -1,59 +1,21 @@
 propertyChangeSignatures(clazz) ::= <<
-   listenersField:                  class/<clazz.name>/attribute/listeners
-   firePropertyChange:              class/<clazz.name>/method/firePropertyChange(String,Object,Object)
-   addPropertyChangeListener1:      class/<clazz.name>/method/addPropertyChangeListener(PropertyChangeListener)
-   addPropertyChangeListener2:      class/<clazz.name>/method/addPropertyChangeListener(String,PropertyChangeListener)
-   removePropertyChangeListener1:   class/<clazz.name>/method/removePropertyChangeListener(PropertyChangeListener)
-   removePropertyChangeListener2:   class/<clazz.name>/method/removePropertyChangeListener(String,PropertyChangeListener)
+   listenersField:     class/<clazz.name>/attribute/listeners
+   firePropertyChange: class/<clazz.name>/method/firePropertyChange(String,Object,Object)
+   listenersMethod:    class/<clazz.name>/method/listeners()
 >>
 
 listenersField(clazz) ::= <<
    protected import(java.beans.PropertyChangeSupport) listeners;
 >>
 
-addPropertyChangeListener1(clazz) ::= <<
-   public boolean addPropertyChangeListener(import(java.beans.PropertyChangeListener) listener)
+listenersMethod(clazz) ::= <<
+   public import(java.beans.PropertyChangeSupport) listeners()
    {
       if (this.listeners == null)
       {
-         this.listeners = new import(java.beans.PropertyChangeSupport)(this);
+         this.listeners = new PropertyChangeSupport(this);
       }
-      this.listeners.addPropertyChangeListener(listener);
-      return true;
-   }
->>
-
-addPropertyChangeListener2(clazz) ::= <<
-   public boolean addPropertyChangeListener(String propertyName, import(java.beans.PropertyChangeListener) listener)
-   {
-      if (this.listeners == null)
-      {
-         this.listeners = new import(java.beans.PropertyChangeSupport)(this);
-      }
-      this.listeners.addPropertyChangeListener(propertyName, listener);
-      return true;
-   }
->>
-
-removePropertyChangeListener1(clazz) ::= <<
-   public boolean removePropertyChangeListener(import(java.beans.PropertyChangeListener) listener)
-   {
-      if (this.listeners != null)
-      {
-         this.listeners.removePropertyChangeListener(listener);
-      }
-      return true;
-   }
->>
-
-removePropertyChangeListener2(clazz) ::= <<
-   public boolean removePropertyChangeListener(String propertyName, import(java.beans.PropertyChangeListener) listener)
-   {
-      if (this.listeners != null)
-      {
-         this.listeners.removePropertyChangeListener(propertyName, listener);
-      }
-      return true;
+      return this.listeners;
    }
 >>
 
