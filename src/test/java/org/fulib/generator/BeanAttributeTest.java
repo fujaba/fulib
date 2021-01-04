@@ -97,6 +97,8 @@ public class BeanAttributeTest extends AttributeTest
       setMatrNo.invoke(karli, 23);
       assertThat("got property change", eventList.size() == 2);
 
+      checkBoolean(studClass, karli);
+
       // test toString()
       Method toString = studClass.getMethod("toString");
       Object txt = toString.invoke(karli);

@@ -75,7 +75,7 @@ public class AttributeTest
       mb.buildClass("University").buildAttribute("name", Type.STRING);
 
       mb.buildClass("Student").buildAttribute("name", Type.STRING, "\"Karli\"")
-        .buildAttribute("matrNo", Type.LONG, "0");
+        .buildAttribute("matrNo", Type.LONG, "0").buildAttribute("master", Type.BOOLEAN);
    }
 
    protected void runDataTests(ClassLoader classLoader, String packageName) throws Exception
@@ -122,6 +122,8 @@ public class AttributeTest
 
       assertThat("set method returned this", setMatrNoReturn, is(sameInstance(karli)));
 
+      checkBoolean(studClass, karli);
+
       // test toString()
       Method toString = studClass.getMethod("toString");
       Object txt = toString.invoke(karli);
@@ -130,5 +132,14 @@ public class AttributeTest
       toString = uniClass.getMethod("toString");
       txt = toString.invoke(studyRight);
       assertThat("toString", txt, is(equalTo("Hello")));
+   }
+
+   protected void checkBoolean(Class<?> studClass, Object karli) throws Exception
+   {
+      Method setMaster = studClass.getMethod("setMaster", boolean.class);
+      assertThat(setMaster.invoke(karli, true), sameInstance(karli));
+
+      Method isMaster = studClass.getMethod("isMaster");
+      assertThat(isMaster.invoke(karli), is(true));
    }
 }
