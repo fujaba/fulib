@@ -87,9 +87,8 @@ public class Validator
     */
    public static boolean isSetter(String methodName, int parameterCount)
    {
-      return
-         (hasPrefixVerb(methodName, "set") || hasPrefixVerb(methodName, "with") || hasPrefixVerb(methodName, "without"))
-         && parameterCount == 1;
+      return parameterCount == 1 && (hasPrefixVerb(methodName, "set") || hasPrefixVerb(methodName, "with")
+                                     || hasPrefixVerb(methodName, "without"));
    }
 
    /**
@@ -99,14 +98,15 @@ public class Validator
     *    the number of parameters
     *
     * @return whether a method with the given name and number of parameters is a getter.
-    * A getter is defined as a method with no parameters, whose name starts with {@code get} or {@code _init}
-    * followed by a character that is not lowercase, or whose name ends with {@code Property} (for JavaFX properties).
+    * A getter is defined as a method with no parameters, whose name starts with {@code get}, {@code is} or
+    * {@code _init} followed by a character that is not lowercase, or whose name ends with {@code Property} (for JavaFX
+    * properties).
     *
     * @since 1.3
     */
    public static boolean isGetter(String methodName, int parameterCount)
    {
-      return (hasPrefixVerb(methodName, "get") || hasPrefixVerb(methodName, "_init") || methodName.endsWith("Property"))
-             && parameterCount == 0;
+      return parameterCount == 0 && (hasPrefixVerb(methodName, "get") || hasPrefixVerb(methodName, "is")
+                                     || hasPrefixVerb(methodName, "_init") || methodName.endsWith("Property"));
    }
 }

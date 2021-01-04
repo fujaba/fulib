@@ -164,6 +164,19 @@ public class Attribute
    }
 
    /**
+    *
+    * @return whether the {@link #getType() type} of this attribute is {@code boolean}.
+    *
+    * @deprecated for internal use only
+    *
+    * @since 1.5
+    */
+   public boolean isBoolean()
+   {
+      return Type.BOOLEAN.equals(this.type);
+   }
+
+   /**
     * @return the signature of this attribute's {@linkplain #getType() type}
     *
     * @deprecated for internal use only
