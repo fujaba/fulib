@@ -19,6 +19,7 @@ public class GenModel implements ClassModelDecorator
    {
       String name;
       int age;
+      boolean vip;
    }
    // end_code_fragment:
 

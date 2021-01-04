@@ -10,8 +10,10 @@ public class Person
 {
    public static final String PROPERTY_NAME = "name";
    public static final String PROPERTY_AGE = "age";
+   public static final String PROPERTY_VIP = "vip";
    private String name;
    private int age;
+   private boolean vip;
 
    public String getName()
    {
@@ -32,6 +34,17 @@ public class Person
    public Person setAge(int value)
    {
       this.age = value;
+      return this;
+   }
+
+   public boolean isVip()
+   {
+      return this.vip;
+   }
+
+   public Person setVip(boolean value)
+   {
+      this.vip = value;
       return this;
    }
 

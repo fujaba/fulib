@@ -29,7 +29,7 @@
   roles: 	student_uni
 
 - person: 	Clazz
-  attributes: 	person_name 	person_age
+  attributes: 	person_name 	person_age 	person_vip
   model: 	c
   modified: 	false
   name: 	Person
@@ -183,6 +183,15 @@
   propertyStyle: 	POJO
   type: 	int
   typeSignature: 	int
+
+- person_vip: 	Attribute
+  clazz: 	person
+  id: 	Person_vip
+  modified: 	false
+  name: 	vip
+  propertyStyle: 	POJO
+  type: 	boolean
+  typeSignature: 	boolean
 
 - person_University_president: 	AssocRole
   aggregation: 	false
