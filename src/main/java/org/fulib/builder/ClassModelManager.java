@@ -235,7 +235,9 @@ public class ClassModelManager implements IModelManager
     * @return a {@link ClassModelBuilder} that operates on the same underlying class model as this manager
     *
     * @since 1.2
+    * @deprecated since 1.5; see {@link ClassModelBuilder}
     */
+   @Deprecated
    public ClassModelBuilder asBuilder()
    {
       return new ClassModelBuilder(this.classModel);
