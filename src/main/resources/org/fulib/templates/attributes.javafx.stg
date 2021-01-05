@@ -28,9 +28,9 @@ attrGet(attr) ::= <<
    <getterJavaDoc(attr)>
 <endif>
 <if(attr.collection)>
-   public java.util.List\<<box(attr.type)>\> get<attr.name; format="cap">()
+   public java.util.List\<<box(attr.type)>\> <getterName(attr)>()
 <else>
-   public <attr.type> get<attr.name; format="cap">()
+   public <attr.type> <getterName(attr)>()
 <endif>
    {
       return this.<attr.name>.getValue();

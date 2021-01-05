@@ -1,3 +1,12 @@
+getterName(attr) ::= <%
+<if(attr.boolean)>
+is
+<else>
+get
+<endif>
+<attr.name; format="cap">
+%>
+
 tableAttributeSignatures(attr) ::= <<
    expandMethod: class/<attr.clazz.name>Table/method/expand<attr.name; format="cap">(String)
 >>
@@ -20,7 +29,7 @@ expandMethod(attr) ::= <<
       for (List\<Object> row : this.table)
       {
          <attr.clazz.name> start = (<attr.clazz.name>) row.get(column);
-         row.add(start.get<attr.name; format="cap">());
+         row.add(start.<getterName(attr)>());
       }
 
       <attr.type>Table result = new <attr.type>Table();

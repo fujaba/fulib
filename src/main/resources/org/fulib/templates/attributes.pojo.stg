@@ -18,12 +18,21 @@ attrType(attr) ::= <%
 <endif>
 %>
 
+getterName(attr) ::= <%
+<if(attr.boolean)>
+is
+<else>
+get
+<endif>
+<attr.name; format="cap">
+%>
+
 // --------------- Declarations ---------------
 
 attrSignatures(attr) ::= <<
    propertyDecl:     class/<attr.clazz.name>/staticAttribute/PROPERTY_<attr.name; format="upper_snake">
    attrDecl:         class/<attr.clazz.name>/attribute/<attr.name>
-   attrGet:          class/<attr.clazz.name>/property/get<attr.name; format="cap">()
+   attrGet:          class/<attr.clazz.name>/property/<getterName(attr)>()
    <if(javaFX.(attr.propertyStyle))>
    initMethod:       class/<attr.clazz.name>/property/_init<attr.name; format="cap">()
    propertyGet:      class/<attr.clazz.name>/property/<attr.name>Property()
@@ -57,7 +66,7 @@ attrGet(attr) ::= <<
 <if(attr.description)>
    <getterJavaDoc(attr)>
 <endif>
-   public <attrType(attr)> get<attr.name; format="cap">()
+   public <attrType(attr)> <getterName(attr)>()
    {
 <if(attr.collection)>
       return this.<attr.name> != null ? import(java.util.Collections).unmodifiable<attr.collectionType.itf.simpleName>(this.<attr.name>) : import(java.util.Collections).empty<attr.collectionType.itf.simpleName>();
