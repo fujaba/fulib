@@ -15,7 +15,10 @@ import org.fulib.util.Validator;
  * ClassBuilder universitiy = mb.buildClass("University").buildAttribute("name", Type.STRING);
  * <!-- end_code_fragment:  -->
  * </pre>
+ *
+ * @deprecated since 1.5; use {@link ClassModelManager} instead
  */
+@Deprecated
 public class ClassBuilder
 {
    // =============== Fields ===============
