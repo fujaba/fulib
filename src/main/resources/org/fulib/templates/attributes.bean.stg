@@ -3,6 +3,9 @@ import "attributes.pojo.stg"
 // --------------- Simple Accessors ---------------
 
 attrSet(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
       if (<if(primitive.(attr.type))>value == this.<attr.name><else>import(java.util.Objects).equals(value, this.<attr.name>)<endif>)
@@ -12,7 +15,7 @@ attrSet(attr) ::= <<
 
       final <attr.type> oldValue = this.<attr.name>;
       this.<attr.name> = value;
-      this.firePropertyChange(PROPERTY_<attr.name>, oldValue, value);
+      this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, oldValue, value);
       return this;
    }
 >>
@@ -20,7 +23,10 @@ attrSet(attr) ::= <<
 // --------------- With ---------------
 
 attrWithItem(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr)> value)
+<if(attr.description)>
+   <witherJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)> value)
    {
       if (this.<attr.name> == null)
       {
@@ -28,14 +34,17 @@ attrWithItem(attr) ::= <<
       }
       if (this.<attr.name>.add(value))<! the collection could be a set, in which case we don't want a PCE!>
       {
-         this.firePropertyChange(PROPERTY_<attr.name>, null, value);
+         this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, null, value);
       }
       return this;
    }
 >>
 
 attrWithArray(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr)>... value)
+<if(attr.description)>
+   <witherJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)>... value)
    {
       for (final <attr.type> item : value)
       {
@@ -46,9 +55,12 @@ attrWithArray(attr) ::= <<
 >>
 
 attrWithColl(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
+<if(attr.description)>
+   <witherJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> with<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
-      for (final <box(attr)> item : value)
+      for (final <box(attr.type)> item : value)
       {
          this.with<attr.name; format="cap">(item);
       }
@@ -59,20 +71,26 @@ attrWithColl(attr) ::= <<
 // --------------- Without ---------------
 
 attrWithoutItem(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr)> value)
+<if(attr.description)>
+   <withouterJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)> value)
    {
       if (this.<attr.name> != null && this.<attr.name>.removeAll(import(java.util.Collections).singleton(value)))
       {
-         this.firePropertyChange(PROPERTY_<attr.name>, value, null);
+         this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, value, null);
       }
       return this;
    }
 >>
 
 attrWithoutArray(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr)>... value)
+<if(attr.description)>
+   <withouterJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)>... value)
    {
-      for (final <box(attr)> item : value)
+      for (final <box(attr.type)> item : value)
       {
          this.without<attr.name; format="cap">(item);
       }
@@ -81,9 +99,12 @@ attrWithoutArray(attr) ::= <<
 >>
 
 attrWithoutColl(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
+<if(attr.description)>
+   <withouterJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> without<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
-      for (final <box(attr)> item : value)
+      for (final <box(attr.type)> item : value)
       {
          this.without<attr.name; format="cap">(item);
       }
@@ -94,21 +115,21 @@ attrWithoutColl(attr) ::= <<
 // --------------- Set All ---------------
 
 attrSetAllArray(attr) ::= <<
-   public <attr.clazz.name> set<attr.name; format="cap">(<box(attr)>... value)
+   public <attr.clazz.name> set<attr.name; format="cap">(<box(attr.type)>... value)
    {
       return this.set<attr.name; format="cap">(import(java.util.Arrays).asList(value));
    }
 >>
 
 attrSetAllColl(attr) ::= <<
-   public <attr.clazz.name> set<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr)>\> value)
+   public <attr.clazz.name> set<attr.name; format="cap">(import(java.util.Collection)\<? extends <box(attr.type)>\> value)
    {
       if (this.<attr.name> == null)
       {
          this.<attr.name> = new <collectionImpl(attr)>(value);
-         for (final <box(attr)> newItem : value)
+         for (final <box(attr.type)> newItem : value)
          {
-            this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);
+            this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, null, newItem);
          }
          return this;
       }
@@ -118,19 +139,19 @@ attrSetAllColl(attr) ::= <<
          return this;
       }
 
-      for (final <box(attr)> oldItem : this.<attr.name>)
+      for (final <box(attr.type)> oldItem : this.<attr.name>)
       {
          if (!value.contains(oldItem))
          {
-            this.firePropertyChange(PROPERTY_<attr.name>, oldItem, null);
+            this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, oldItem, null);
          }
       }
 
-      for (final <box(attr)> newItem : value)
+      for (final <box(attr.type)> newItem : value)
       {
          if (!this.<attr.name>.contains(newItem))
          {
-            this.firePropertyChange(PROPERTY_<attr.name>, null, newItem);
+            this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, null, newItem);
          }
       }
 

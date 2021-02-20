@@ -31,7 +31,7 @@ public abstract class AbstractGenerator4ClassFile
    // =============== Constants ===============
 
    private static final Pattern SIGNATURE_PATTERN = Pattern.compile("^\\s*(\\w+)\\s*:\\s*(.*)\\s*$");
-   private static final Pattern IMPORT_PATTERN = Pattern.compile("import\\(((?:\\w+\\.)*(\\w+))\\)");
+   private static final Pattern IMPORT_PATTERN = Pattern.compile("import\\(((?:static\\s+)?(?:\\w+\\.)*(\\w+))\\)");
 
    // =============== Fields ===============
 
@@ -126,7 +126,7 @@ public abstract class AbstractGenerator4ClassFile
       {
          group = new STGroupFile(origFileName);
       }
-      group.registerRenderer(String.class, new StringRenderer());
+      group.registerRenderer(String.class, new FulibStringRenderer());
       return group;
    }
 
@@ -216,7 +216,9 @@ public abstract class AbstractGenerator4ClassFile
          else
          {
             final String templateName = matcher.group(1);
-            final int newLines = signature.contains("/attribute/") ? FIELD_NEWLINES : METHOD_NEWLINES;
+            final int newLines = signature.contains("/attribute/") || signature.contains("/staticAttribute/")
+               ? FIELD_NEWLINES
+               : METHOD_NEWLINES;
             final ST namedST = group.getInstanceOf(templateName);
             addTarget.accept(namedST);
 

@@ -140,7 +140,7 @@ public class Generator4TableClassFile extends AbstractGenerator4ClassFile
 
       final STGroup attributesGroup = this.getSTGroup("org/fulib/templates/tables/attributes.stg");
       final ST getColumn = attributesGroup.getInstanceOf("getColumn");
-      fragmentMap.add(CLASS + '/' + clazz.getName() + "Table" + '/' + METHOD + "/getColumn()", getColumn.render(),
+      fragmentMap.add(CLASS + '/' + clazz.getName() + "Table" + '/' + PROPERTY + "/getColumn()", getColumn.render(),
                       METHOD_NEWLINES);
 
       final Attribute columnName = new Attribute();

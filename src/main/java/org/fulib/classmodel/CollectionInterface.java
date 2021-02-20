@@ -27,6 +27,26 @@ public enum CollectionInterface
 
    // =============== Static Methods ===============
 
+   /**
+    * @param itfClass
+    *    the interface class
+    *
+    * @return the {@link CollectionInterface} instance with the given class, or {@code null} if none matches
+    *
+    * @since 1.4
+    */
+   public static CollectionInterface valueOf(Class<? extends Collection> itfClass)
+   {
+      for (final CollectionInterface value : values())
+      {
+         if (value.getItfClass() == itfClass)
+         {
+            return value;
+         }
+      }
+      return null;
+   }
+
    static CollectionInterface deriveFrom(String implClassName)
    {
       if (implClassName.contains("List"))
@@ -58,6 +78,28 @@ public enum CollectionInterface
    public Class<? extends java.util.Collection> getItfClass()
    {
       return this.itf;
+   }
+
+   /**
+    * @return the default implementation {@link CollectionType} for this interface
+    *
+    * @since 1.4
+    */
+   public CollectionType getDefaultImpl()
+   {
+      switch (this)
+      {
+      case Collection:
+      case Set:
+         return CollectionType.LinkedHashSet;
+      case List:
+         return CollectionType.ArrayList;
+      case SortedSet:
+      case NavigableSet:
+         return CollectionType.TreeSet;
+      default:
+         throw new AssertionError(this + " does not have a default implementation type");
+      }
    }
 
    public String getSimpleName()

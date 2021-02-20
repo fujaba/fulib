@@ -7,7 +7,10 @@ import java.util.Collection;
 
 /**
  * Allows defining additional properties for associations, e.g. aggregation, property style or collection type.
+ *
+ * @deprecated since 1.5; use {@link ClassModelManager} instead
  */
+@Deprecated
 public class AssociationBuilder
 {
    // =============== Fields ===============

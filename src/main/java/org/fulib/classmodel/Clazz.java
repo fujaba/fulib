@@ -1,16 +1,17 @@
 package org.fulib.classmodel;
 
+import org.fulib.builder.Type;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.List;
 public class Clazz
 {
    // =============== Constants ===============
@@ -36,16 +37,37 @@ public class Clazz
    public static final String PROPERTY_propertyStyle = "propertyStyle";
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_model = "model";
-   public static final String PROPERTY_attributes = "attributes";
-   public static final String PROPERTY_roles = "roles";
+   public static final String PROPERTY_attributes = "attributes" /* no fulib */;
+   public static final String PROPERTY_roles = "roles" /* no fulib */;
    public static final String PROPERTY_superClass = "superClass";
-   public static final String PROPERTY_subClasses = "subClasses";
-   public static final String PROPERTY_methods = "methods";
+   public static final String PROPERTY_subClasses = "subClasses" /* no fulib */;
+   public static final String PROPERTY_methods = "methods" /* no fulib */;
    /** @since 1.2 */
    public static final String PROPERTY_imports = "imports";
    /** @deprecated since 1.2; use {@link #PROPERTY_imports} instead */
    @Deprecated
    public static final String PROPERTY_importList = "importList";
+
+   /** @since 1.3 */
+   public static final String PROPERTY_NAME = "name";
+   /** @since 1.3 */
+   public static final String PROPERTY_PROPERTY_STYLE = "propertyStyle";
+   /** @since 1.3 */
+   public static final String PROPERTY_MODIFIED = "modified";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_IMPORTS = "imports";
+   /** @since 1.3 */
+   public static final String PROPERTY_MODEL = "model";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_ATTRIBUTES = "attributes";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_ROLES = "roles";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_METHODS = "methods";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_SUB_CLASSES = "subClasses";
+   /** @since 1.3 */
+   public static final String PROPERTY_SUPER_CLASS = "superClass";
 
    // =============== Fields ===============
 
@@ -92,7 +114,7 @@ public class Clazz
       {
          value.withClasses(this);
       }
-      this.firePropertyChange(PROPERTY_model, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODEL, oldValue, value);
       return this;
    }
 
@@ -110,7 +132,7 @@ public class Clazz
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
@@ -137,7 +159,7 @@ public class Clazz
       {
          value.withSubClasses(this);
       }
-      this.firePropertyChange(PROPERTY_superClass, oldValue, value);
+      this.firePropertyChange(PROPERTY_SUPER_CLASS, oldValue, value);
       return this;
    }
 
@@ -176,7 +198,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @see Clazz#setSuperClass(Clazz)
+    * @since 1.2
+    */
    public Clazz withSubClasses(Clazz value)
    {
       if (this.subClasses == null)
@@ -187,12 +217,20 @@ public class Clazz
       {
          this.subClasses.add(value);
          value.setSuperClass(this);
-         this.firePropertyChange(PROPERTY_subClasses, null, value);
+         this.firePropertyChange(PROPERTY_SUB_CLASSES, null, value);
       }
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @see Clazz#setSuperClass(Clazz)
+    * @since 1.2
+    */
    public Clazz withSubClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -202,7 +240,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @see Clazz#setSuperClass(Clazz)
+    * @since 1.2
+    */
    public Clazz withSubClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)
@@ -238,18 +284,34 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @see Clazz#setSuperClass(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutSubClasses(Clazz value)
    {
       if (this.subClasses != null && this.subClasses.remove(value))
       {
          value.setSuperClass(null);
-         this.firePropertyChange(PROPERTY_subClasses, value, null);
+         this.firePropertyChange(PROPERTY_SUB_CLASSES, value, null);
       }
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @see Clazz#setSuperClass(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutSubClasses(Clazz... value)
    {
       for (final Clazz item : value)
@@ -259,7 +321,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the subclasses
+    *
+    * @return this
+    *
+    * @see Clazz#setSuperClass(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutSubClasses(Collection<? extends Clazz> value)
    {
       for (final Clazz item : value)
@@ -316,7 +386,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @see Attribute#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withAttributes(Attribute value)
    {
       if (this.attributes == null)
@@ -327,12 +405,20 @@ public class Clazz
       {
          this.attributes.add(value);
          value.setClazz(this);
-         this.firePropertyChange(PROPERTY_attributes, null, value);
+         this.firePropertyChange(PROPERTY_ATTRIBUTES, null, value);
       }
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @see Attribute#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withAttributes(Attribute... value)
    {
       for (final Attribute item : value)
@@ -342,7 +428,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @see Attribute#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withAttributes(Collection<? extends Attribute> value)
    {
       for (final Attribute item : value)
@@ -378,18 +472,34 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @see Attribute#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutAttributes(Attribute value)
    {
       if (this.attributes != null && this.attributes.remove(value))
       {
          value.setClazz(null);
-         this.firePropertyChange(PROPERTY_attributes, value, null);
+         this.firePropertyChange(PROPERTY_ATTRIBUTES, value, null);
       }
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @see Attribute#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutAttributes(Attribute... value)
    {
       for (final Attribute item : value)
@@ -399,7 +509,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the attributes
+    *
+    * @return this
+    *
+    * @see Attribute#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutAttributes(Collection<? extends Attribute> value)
    {
       for (final Attribute item : value)
@@ -411,6 +529,12 @@ public class Clazz
 
    public AssocRole getRole(String name)
    {
+      if (name == null)
+      {
+         // searching for an anonymous role by name is nonsensical,
+         // especially since multiple of them can exist.
+         return null;
+      }
       for (AssocRole role : this.getRoles())
       {
          if (Objects.equals(role.getName(), name))
@@ -456,7 +580,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @see AssocRole#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withRoles(AssocRole value)
    {
       if (this.roles == null)
@@ -467,12 +599,20 @@ public class Clazz
       {
          this.roles.add(value);
          value.setClazz(this);
-         this.firePropertyChange(PROPERTY_roles, null, value);
+         this.firePropertyChange(PROPERTY_ROLES, null, value);
       }
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @see AssocRole#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withRoles(AssocRole... value)
    {
       for (final AssocRole item : value)
@@ -482,7 +622,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @see AssocRole#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withRoles(Collection<? extends AssocRole> value)
    {
       for (final AssocRole item : value)
@@ -518,18 +666,34 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @see AssocRole#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutRoles(AssocRole value)
    {
       if (this.roles != null && this.roles.remove(value))
       {
          value.setClazz(null);
-         this.firePropertyChange(PROPERTY_roles, value, null);
+         this.firePropertyChange(PROPERTY_ROLES, value, null);
       }
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @see AssocRole#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutRoles(AssocRole... value)
    {
       for (final AssocRole item : value)
@@ -539,7 +703,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the roles
+    *
+    * @return this
+    *
+    * @see AssocRole#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutRoles(Collection<? extends AssocRole> value)
    {
       for (final AssocRole item : value)
@@ -584,7 +756,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @see FMethod#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withMethods(FMethod value)
    {
       if (this.methods == null)
@@ -595,12 +775,20 @@ public class Clazz
       {
          this.methods.add(value);
          value.setClazz(this);
-         this.firePropertyChange(PROPERTY_methods, null, value);
+         this.firePropertyChange(PROPERTY_METHODS, null, value);
       }
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @see FMethod#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withMethods(FMethod... value)
    {
       for (final FMethod item : value)
@@ -610,7 +798,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @see FMethod#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withMethods(Collection<? extends FMethod> value)
    {
       for (final FMethod item : value)
@@ -646,18 +842,34 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @see FMethod#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutMethods(FMethod value)
    {
       if (this.methods != null && this.methods.remove(value))
       {
          value.setClazz(null);
-         this.firePropertyChange(PROPERTY_methods, value, null);
+         this.firePropertyChange(PROPERTY_METHODS, value, null);
       }
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @see FMethod#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutMethods(FMethod... value)
    {
       for (final FMethod item : value)
@@ -667,7 +879,15 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the methods
+    *
+    * @return this
+    *
+    * @see FMethod#setClazz(Clazz)
+    * @since 1.2
+    */
    public Clazz withoutMethods(Collection<? extends FMethod> value)
    {
       for (final FMethod item : value)
@@ -692,13 +912,28 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @return the set of imported members.
+    * Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    * {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
+    *
+    * @since 1.2
+    */
    public Set<String> getImports()
    {
       return this.imports != null ? Collections.unmodifiableSet(this.imports) : Collections.emptySet();
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withImports(String value)
    {
       if (this.imports == null)
@@ -707,12 +942,21 @@ public class Clazz
       }
       if (this.imports.add(value))
       {
-         this.firePropertyChange(PROPERTY_imports, null, value);
+         this.firePropertyChange(PROPERTY_IMPORTS, null, value);
       }
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withImports(String... value)
    {
       for (final String item : value)
@@ -722,7 +966,16 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withImports(Collection<? extends String> value)
    {
       for (final String item : value)
@@ -732,17 +985,35 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutImports(String value)
    {
       if (this.imports != null && this.imports.removeAll(Collections.singleton(value)))
       {
-         this.firePropertyChange(PROPERTY_imports, value, null);
+         this.firePropertyChange(PROPERTY_IMPORTS, value, null);
       }
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutImports(String... value)
    {
       for (final String item : value)
@@ -752,7 +1023,16 @@ public class Clazz
       return this;
    }
 
-   /** @since 1.2 */
+   /**
+    * @param value
+    *    the set of imported members.
+    *    Elements can have one of the formats {@code org.example.Foo}, {@code static org.example.Foo.bar},
+    *    {@code import org.example.Foo;} or {@code import static org.example.Foo.bar;}
+    *
+    * @return this
+    *
+    * @since 1.2
+    */
    public Clazz withoutImports(Collection<? extends String> value)
    {
       for (final String item : value)
@@ -762,11 +1042,22 @@ public class Clazz
       return this;
    }
 
+   /**
+    * @return the default property style for attributes and roles.
+    * Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
+    */
    public String getPropertyStyle()
    {
       return this.propertyStyle;
    }
 
+   /**
+    * @param value
+    *    the default property style for attributes and roles.
+    *    Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
+    *
+    * @return this
+    */
    public Clazz setPropertyStyle(String value)
    {
       if (Objects.equals(value, this.propertyStyle))
@@ -776,15 +1067,24 @@ public class Clazz
 
       final String oldValue = this.propertyStyle;
       this.propertyStyle = value;
-      this.firePropertyChange(PROPERTY_propertyStyle, oldValue, value);
+      this.firePropertyChange(PROPERTY_PROPERTY_STYLE, oldValue, value);
       return this;
    }
 
+   /**
+    * @return a boolean indicating whether this attribute was modified. For internal use only.
+    */
    public boolean getModified()
    {
       return this.modified;
    }
 
+   /**
+    * @param value
+    *    a boolean indicating whether this attribute was modified. For internal use only.
+    *
+    * @return this
+    */
    public Clazz setModified(boolean value)
    {
       if (value == this.modified)
@@ -794,7 +1094,7 @@ public class Clazz
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange(PROPERTY_modified, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODIFIED, oldValue, value);
       return this;
    }
 
@@ -859,8 +1159,8 @@ public class Clazz
       this.withoutAttributes(new ArrayList<>(this.getAttributes()));
       this.withoutRoles(new ArrayList<>(this.getRoles()));
       this.withoutMethods(new ArrayList<>(this.getMethods()));
-      this.setSuperClass(null);
       this.withoutSubClasses(new ArrayList<>(this.getSubClasses()));
+      this.setSuperClass(null);
    }
 
    @Override

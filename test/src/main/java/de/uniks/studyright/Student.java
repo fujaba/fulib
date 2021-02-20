@@ -1,12 +1,18 @@
 package de.uniks.studyright;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 public class Student
 {
+   public static final String PROPERTY_UNI = "uni";
+   public static final String PROPERTY_IN = "in";
+   public static final String PROPERTY_NAME = "name";
+   public static final String PROPERTY_STUDENTID = "studentId";
+   public static final String PROPERTY_CREDITS = "credits";
+   public static final String PROPERTY_MOTIVATION = "motivation";
 
    public static final String PROPERTY_name = "name";
+   public static final String PROPERTY_STUDENT_ID = "studentId";
 
    private String name;
 
@@ -46,7 +52,7 @@ public class Student
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
@@ -64,7 +70,7 @@ public class Student
 
       final String oldValue = this.studentId;
       this.studentId = value;
-      this.firePropertyChange(PROPERTY_studentId, oldValue, value);
+      this.firePropertyChange(PROPERTY_STUDENT_ID, oldValue, value);
       return this;
    }
 
@@ -82,7 +88,7 @@ public class Student
 
       final int oldValue = this.credits;
       this.credits = value;
-      this.firePropertyChange(PROPERTY_credits, oldValue, value);
+      this.firePropertyChange(PROPERTY_CREDITS, oldValue, value);
       return this;
    }
 
@@ -100,7 +106,7 @@ public class Student
 
       final double oldValue = this.motivation;
       this.motivation = value;
-      this.firePropertyChange(PROPERTY_motivation, oldValue, value);
+      this.firePropertyChange(PROPERTY_MOTIVATION, oldValue, value);
       return this;
    }
 
@@ -127,7 +133,7 @@ public class Student
       {
          value.withStudents(this);
       }
-      this.firePropertyChange(PROPERTY_uni, oldValue, value);
+      this.firePropertyChange(PROPERTY_UNI, oldValue, value);
       return this;
    }
 
@@ -154,8 +160,17 @@ public class Student
       {
          value.withStudents(this);
       }
-      this.firePropertyChange(PROPERTY_in, oldValue, value);
+      this.firePropertyChange(PROPERTY_IN, oldValue, value);
       return this;
+   }
+
+   public PropertyChangeSupport listeners()
+   {
+      if (this.listeners == null)
+      {
+         this.listeners = new PropertyChangeSupport(this);
+      }
+      return this.listeners;
    }
 
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
@@ -166,44 +181,6 @@ public class Student
          return true;
       }
       return false;
-   }
-
-   public boolean addPropertyChangeListener(PropertyChangeListener listener)
-   {
-      if (this.listeners == null)
-      {
-         this.listeners = new PropertyChangeSupport(this);
-      }
-      this.listeners.addPropertyChangeListener(listener);
-      return true;
-   }
-
-   public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
-   {
-      if (this.listeners == null)
-      {
-         this.listeners = new PropertyChangeSupport(this);
-      }
-      this.listeners.addPropertyChangeListener(propertyName, listener);
-      return true;
-   }
-
-   public boolean removePropertyChangeListener(PropertyChangeListener listener)
-   {
-      if (this.listeners != null)
-      {
-         this.listeners.removePropertyChangeListener(listener);
-      }
-      return true;
-   }
-
-   public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
-   {
-      if (this.listeners != null)
-      {
-         this.listeners.removePropertyChangeListener(propertyName, listener);
-      }
-      return true;
    }
 
    @Override
@@ -217,8 +194,8 @@ public class Student
 
    public void removeYou()
    {
-      this.setUni(null);
       this.setIn(null);
+      this.setUni(null);
    }
 
 }

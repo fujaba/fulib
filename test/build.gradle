@@ -1,29 +1,37 @@
 plugins {
-	id 'java'
-	id 'org.fulib.fulibGradle'
+   id 'java'
+   id 'org.fulib.fulibGradle'
 }
 
 group = 'org.example'
 version = '0.1.0'
 
 repositories {
-	mavenLocal()
-	mavenCentral()
-	jcenter()
+   mavenLocal()
+   mavenCentral()
+   jcenter()
 }
 
 dependencies {
-	// https://mvnrepository.com/artifact/org.fulib/fulibScenarios
-	fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.3.0'
+   // https://mvnrepository.com/artifact/org.fulib/fulibScenarios
+   fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.4.2', {
+      exclude group: 'org.fulib', module: 'fulib'
+   }
 
    // override fulib dependency
    fulibScenarios rootProject
 
-	// https://mvnrepository.com/artifact/junit/junit
-	testCompile group: 'junit', name: 'junit', version: '4.13'
+   // https://mvnrepository.com/artifact/it.unimi.dsi/fastutil
+   def fastUtil = [ group: 'it.unimi.dsi', name: 'fastutil', version: '8.4.2' ]
+
+   compile fastUtil
+   genCompile fastUtil
+
+   // https://mvnrepository.com/artifact/junit/junit
+   testCompile group: 'junit', name: 'junit', version: '4.13'
 
    // https://mvnrepository.com/artifact/org.fulib/fulibTools
-   testCompile group: 'org.fulib', name: 'fulibTools', version: '1.2.0'
+   testCompile group: 'org.fulib', name: 'fulibTools', version: '1.2.1'
 }
 
 generateScenarioSource {

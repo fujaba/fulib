@@ -68,3 +68,92 @@
 * Deprecated the `TypeScript` parser and generator. #27
 * Deprecated the `Parser` class and related classes. #17
 * Deprecated many methods across the codebase. See their Javadoc for replacements or migration instructions.
+
+# fulib v1.2.1
+
+## Bugfixes
+
+* All new members now correctly generate leading whitespace. #35 #36
+* `toString` methods are no longer generated in classes without suitable attributes. #39 #41
+* `removeYou` methods are no longer generated in classes without associations. #40 #42
+
+# fulib v1.2.2
+
+## Improvements
+
+* Improved JavaDocs in `FileFragmentMap`. #50
+* Improved the merging of class and attribute declarations from original source and newly generated code. #60
+  * Class declarations are now mostly kept intact, only the type in the extends clause is updated.
+  * Attribute declarations are now mostly kept intact, only the type and initializer are updated.
+
+## Bugfixes
+
+* The code generator no longer generates duplicate members when an attribute has a generic or annotated types. #43 #59
+* The code generator no longer generates duplicate methods with parameters of generic or annotated types. #43 #59
+* The `ClassModelManager.haveMethod` method now correctly supports two methods with the same declaration in different classes. #44
+* The code generator now treats the types `void` and `boolean` as primitives. #46
+* The code generator no longer removes newlines at the end of existing files. #47
+* The code generator now correctly determines when classes are empty and removes them if necessary. #49
+* The `FMethod.setDeclaration` method no longer ignores varargs `...`. #54 #55
+* The Java parser now supports C-style arrays for parameters. #56
+* The `FMethod.setDeclaration` method now supports C-style arrays for parameters. #56
+* The code generator no longer generates duplicate members when mixing attributes with methods. #58
+* The code generator now intelligently merges the original source with new class and attribute declarations again. #60
+
+# fulib v1.2.3
+
+## Improvements
+
+* `FMethods` now support `import(...)` syntax. #62
+* The parser now supports `import(...)` syntax in type uses and annotations. #62
+* `import(...)` syntax now supports `static` imports via `import(static ...)`. #62
+
+## Bugfixes
+
+* The code generator now correctly determines when PropertyChange members are needed, depending on attributes, associations, potential super classes and the use of `POJO` property style. #21 #63
+* The code generator now properly removes PropertyChange members when they are not needed. #63
+
+# fulib v1.3.0
+
+## New Features
+
++ Attributes and roles can now specify a description and a since version that is copied to their JavaDocs. #32 #64
++ Added `ClassModelManager.haveRole` methods as aliases for `associate`. #61
++ Static fields are now grouped together in newly generated classes. #65
++ Property accessors are now grouped together in newly generated classes. #65
+
+## Improvements
+
+* Updated to fulibYaml v1.4.0.
+* Generated table `toString` methods now produce Markdown. #67
+* Generated property constants are now fully uppercase. #68
+* The `FMethod.setDeclaration` method now throws an `IllegalArgumentException` if the new value has syntax errors. #72
+
+## Bugfixes
+
+* The code generator now correctly indents new members. #69
+
+# fulib v1.4.0
+
+## New Features
+
++ Added the `ClassModelManager.haveClass(String, Clazz)` method. #76
++ Added the new `ClassModelManager.haveClass(Class)` and `haveNestedClasses(Class)` methods for defining classes with reflection. #77 #78
++ JavaDocs for association methods now contain a `@see` link to the reverse role. #79
+
+## Improvements
+
+* Improved JavaDocs in `ClassModelManager`. #76
+
+# fulib v1.4.1
+
+## Improvements
+
+* `@Link` without an argument or with empty string now creates a unidirectional association. #81
+* Improved POJO templates for unidirectional associations. #81
+* `ClassModelManager` now properly handles and documents unidirectional associations. #81
+
+## Bugfixes
+
+* The reflective class model builder now properly replaces fully qualified class names with imports. #80
+* Fixed JavaFX templates generating invalid code for unidirectional associations. #81

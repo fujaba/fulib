@@ -5,6 +5,7 @@ import org.fulib.builder.Type;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -30,6 +31,7 @@ public class BeanAttributeTest extends AttributeTest
    protected void runDataTests(ClassLoader classLoader, String packageName) throws Exception
    {
       final ArrayList<PropertyChangeEvent> eventList = new ArrayList<>();
+      final PropertyChangeListener listener = eventList::add;
 
       // run self test
 
@@ -37,10 +39,7 @@ public class BeanAttributeTest extends AttributeTest
 
       Object studyRight = uniClass.newInstance();
 
-      Method addPropertyChangeListener = uniClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
-
-      PropertyChangeListener listener = eventList::add;
-      addPropertyChangeListener.invoke(studyRight, listener);
+      ((PropertyChangeSupport) uniClass.getMethod("listeners").invoke(studyRight)).addPropertyChangeListener(listener);
 
       assertThat(studyRight, hasProperty("name", nullValue()));
 
@@ -77,8 +76,7 @@ public class BeanAttributeTest extends AttributeTest
       setStudentName.invoke(karli, "Karli");
 
       Method setMatrNo = studClass.getMethod("setMatrNo", long.class);
-      addPropertyChangeListener = studClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
-      addPropertyChangeListener.invoke(karli, listener);
+      ((PropertyChangeSupport) studClass.getMethod("listeners").invoke(karli)).addPropertyChangeListener(listener);
 
       assertThat(karli, hasProperty("matrNo", equalTo(0L)));
 
@@ -98,6 +96,8 @@ public class BeanAttributeTest extends AttributeTest
 
       setMatrNo.invoke(karli, 23);
       assertThat("got property change", eventList.size() == 2);
+
+      checkBoolean(studClass, karli);
 
       // test toString()
       Method toString = studClass.getMethod("toString");

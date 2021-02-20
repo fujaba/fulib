@@ -4,7 +4,6 @@ import javax.lang.model.SourceVersion;
 
 /**
  * @author Adrian Kunz
- *
  * @since 1.2
  */
 public class Validator
@@ -49,5 +48,65 @@ public class Validator
       {
          // that is good
       }
+   }
+
+   private static boolean hasPrefixVerb(String name, String verb)
+   {
+      return name.startsWith(verb) && name.length() > verb.length() && !Character.isLowerCase(
+         name.codePointAt(verb.length()));
+   }
+
+   /**
+    * @param methodName
+    *    the method name
+    * @param parameterCount
+    *    the number of parameters
+    *
+    * @return whether a method with the given name and number of parameters is a property accessor (getter or setter).
+    *
+    * @see #isSetter(String, int)
+    * @see #isGetter(String, int)
+    * @since 1.3
+    */
+   public static boolean isProperty(String methodName, int parameterCount)
+   {
+      return isGetter(methodName, parameterCount) || isSetter(methodName, parameterCount);
+   }
+
+   /**
+    * @param methodName
+    *    the method name
+    * @param parameterCount
+    *    the number of parameters
+    *
+    * @return whether a method with the given name and number of parameters is a setter.
+    * A setter is defined as a method with one parameter, whose name starts with {@code set}, {@code with} or
+    * {@code without} followed by a character that is not lowercase.
+    *
+    * @since 1.3
+    */
+   public static boolean isSetter(String methodName, int parameterCount)
+   {
+      return parameterCount == 1 && (hasPrefixVerb(methodName, "set") || hasPrefixVerb(methodName, "with")
+                                     || hasPrefixVerb(methodName, "without"));
+   }
+
+   /**
+    * @param methodName
+    *    the method name
+    * @param parameterCount
+    *    the number of parameters
+    *
+    * @return whether a method with the given name and number of parameters is a getter.
+    * A getter is defined as a method with no parameters, whose name starts with {@code get}, {@code is} or
+    * {@code _init} followed by a character that is not lowercase, or whose name ends with {@code Property} (for JavaFX
+    * properties).
+    *
+    * @since 1.3
+    */
+   public static boolean isGetter(String methodName, int parameterCount)
+   {
+      return parameterCount == 0 && (hasPrefixVerb(methodName, "get") || hasPrefixVerb(methodName, "is")
+                                     || hasPrefixVerb(methodName, "_init") || methodName.endsWith("Property"));
    }
 }

@@ -1,3 +1,7 @@
+methodSignatures(method, body) ::= <<
+method: <method.signature>
+>>
+
 method(method, body) ::= <<
    <if(method.annotations)><method.annotations>
    <endif>

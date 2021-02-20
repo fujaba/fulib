@@ -6,12 +6,10 @@ import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
 import org.fulib.yaml.EventSource;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static org.fulib.builder.Type.BEAN;
 import static org.fulib.classmodel.ClassModel.PROPERTY_mainJavaDir;
@@ -237,7 +235,9 @@ public class ClassModelManager implements IModelManager
     * @return a {@link ClassModelBuilder} that operates on the same underlying class model as this manager
     *
     * @since 1.2
+    * @deprecated since 1.5; see {@link ClassModelBuilder}
     */
+   @Deprecated
    public ClassModelBuilder asBuilder()
    {
       return new ClassModelBuilder(this.classModel);
@@ -246,7 +246,7 @@ public class ClassModelManager implements IModelManager
    // --------------- Settings ---------------
 
    /**
-    * @param packagename
+    * @param packageName
     *    the package name
     *
     * @return this instance, to allow method chaining
@@ -254,9 +254,9 @@ public class ClassModelManager implements IModelManager
     * @deprecated since 1.2; use {@link #setPackageName(String)} instead
     */
    @Deprecated
-   public ClassModelManager havePackageName(String packagename)
+   public ClassModelManager havePackageName(String packageName)
    {
-      this.setPackageName(packagename);
+      this.setPackageName(packageName);
       return this;
    }
 
@@ -289,7 +289,7 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
-    * @param sourceDir
+    * @param mainJavaDir
     *    the source directory
     *
     * @return this instance, to allow method chaining
@@ -297,9 +297,9 @@ public class ClassModelManager implements IModelManager
     * @deprecated since 1.2; use {@link #setMainJavaDir(String)} instead
     */
    @Deprecated
-   public ClassModelManager haveMainJavaDir(String sourceDir)
+   public ClassModelManager haveMainJavaDir(String mainJavaDir)
    {
-      this.setMainJavaDir(sourceDir);
+      this.setMainJavaDir(mainJavaDir);
       return this;
    }
 
@@ -333,6 +333,14 @@ public class ClassModelManager implements IModelManager
 
    // --------------- Classes ---------------
 
+   /**
+    * Gets or creates a class with the given name.
+    *
+    * @param name
+    *    the name of the class
+    *
+    * @return the class with the given name
+    */
    public Clazz haveClass(String name)
    {
       Clazz clazz = this.classModel.getClazz(name);
@@ -381,6 +389,25 @@ public class ClassModelManager implements IModelManager
 
    /**
     * Gets or creates a class with the given name and super class.
+    *
+    * @param name
+    *    the class name
+    * @param superClass
+    *    the super class
+    *
+    * @return the class with the given name
+    *
+    * @since 1.4
+    */
+   public Clazz haveClass(String name, Clazz superClass)
+   {
+      final Clazz clazz = this.haveClass(name);
+      this.haveSuper(clazz, superClass);
+      return clazz;
+   }
+
+   /**
+    * Gets or creates a class with the given name and super class.
     * In either case, the consumer is invoked to configure the resulting class using the {@link ClassManager} API.
     *
     * @param name
@@ -396,10 +423,43 @@ public class ClassModelManager implements IModelManager
     */
    public Clazz haveClass(String name, Clazz superClass, Consumer<? super ClassManager> body)
    {
-      final Clazz clazz = this.haveClass(name);
-      this.haveSuper(clazz, superClass);
+      final Clazz clazz = this.haveClass(name, superClass);
       body.accept(new ClassManager(clazz));
       return clazz;
+   }
+
+   /**
+    * Creates a {@link Clazz} by reflectively inspecting the given {@link Class}.
+    * All fields define attributes no matter the visibility,
+    * unless the {@link org.fulib.builder.reflect.Link} annotation is present, in which case they define associations.
+    * Other annotations in {@link org.fulib.builder.reflect} can be used for more customization.
+    *
+    * @param classDef the reflective class that defines the {@link Clazz}
+    *
+    * @return the newly created or existing {@link Clazz}
+    *
+    * @see <a href="https://fujaba.github.io/fulib/ClassModelDefinition.md">Class Model Definition</a>
+    *
+    * @since 1.4
+    */
+   public Clazz haveClass(Class<?> classDef)
+   {
+      return ReflectiveClassBuilder.load(classDef, this);
+   }
+
+   /**
+    * Adds all nested classes of the given class using {@link #haveClass(Class)}.
+    *
+    * @param genModel
+    *    the class from which to add nested classes
+    *
+    * @return a list of newly created or existing {@link Clazz} objects
+    *
+    * @since 1.4
+    */
+   public List<Clazz> haveNestedClasses(Class<?> genModel)
+   {
+      return Arrays.stream(genModel.getDeclaredClasses()).map(this::haveClass).collect(Collectors.toList());
    }
 
    /**
@@ -527,9 +587,7 @@ public class ClassModelManager implements IModelManager
    // --------------- Associations ---------------
 
    /**
-    * Creates an association like {@link #associate(Clazz, String, int, Clazz, String, int)},
-    * but with the target role name inferred from the name of the source class,
-    * and the target cardinality 1.
+    * Alias {@link #haveRole(Clazz, String, int, Clazz)}, but with the last two parameters swapped.
     *
     * @param srcClass
     *    the source class
@@ -542,10 +600,31 @@ public class ClassModelManager implements IModelManager
     *
     * @return the new {@link AssocRole} in the source class.
     *
-    * @deprecated since 1.2; use {@link #associate(Clazz, String, int, Clazz)}, which provides better parameter symmetry.
+    * @deprecated since 1.2; use {@link #haveRole(Clazz, String, int, Clazz)}, which provides better parameter symmetry.
     */
    @Deprecated
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize)
+   {
+      return this.associate(srcClass, srcRole, srcSize, tgtClass);
+   }
+
+   /**
+    * Alias for {@link #associate(Clazz, String, int, Clazz)}.
+    *
+    * @param srcClass
+    *    the source class
+    * @param srcRole
+    *    the role name in the source class
+    * @param srcSize
+    *    the cardinality in the source class
+    * @param tgtClass
+    *    the target class
+    *
+    * @return the new {@link AssocRole} in the source class.
+    *
+    * @since 1.3
+    */
+   public AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass)
    {
       return this.associate(srcClass, srcRole, srcSize, tgtClass);
    }
@@ -575,7 +654,8 @@ public class ClassModelManager implements IModelManager
    }
 
    /**
-    * Creates an association from the source class to the target class.
+    * Alias for {@link #haveRole(Clazz, String, int, Clazz, String, int)}, but with the third and fourth parameters
+    * swapped.
     *
     * @param srcClass
     *    the source class
@@ -586,16 +666,42 @@ public class ClassModelManager implements IModelManager
     * @param srcSize
     *    the cardinality in the source class
     * @param tgtRole
-    *    the role name in the target class
+    *    the role name in the target class, or {@code null} to make the association unidirectional
     * @param tgtSize
     *    the cardinality in the target class
     *
     * @return the new {@link AssocRole} in the source class.
     *
-    * @deprecated since 1.2; use {@link #associate(Clazz, String, int, Clazz, String, int)}, which provides better parameter symmetry.
+    * @deprecated since 1.2; use {@link #haveRole(Clazz, String, int, Clazz, String, int)}, which provides better
+    * parameter symmetry.
     */
    @Deprecated
    public AssocRole haveRole(Clazz srcClass, String srcRole, Clazz tgtClass, int srcSize, String tgtRole, int tgtSize)
+   {
+      return this.associate(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize);
+   }
+
+   /**
+    * Alias for {@link #associate(Clazz, String, int, Clazz, String, int)}.
+    *
+    * @param srcClass
+    *    the source class
+    * @param srcRole
+    *    the role name in the source class
+    * @param srcSize
+    *    the cardinality in the source class
+    * @param tgtClass
+    *    the target class
+    * @param tgtRole
+    *    the role name in the target class, or {@code null} to make the association unidirectional
+    * @param tgtSize
+    *    the cardinality in the target class
+    *
+    * @return the new {@link AssocRole} in the source class.
+    *
+    * @since 1.3
+    */
+   public AssocRole haveRole(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize)
    {
       return this.associate(srcClass, srcRole, srcSize, tgtClass, tgtRole, tgtSize);
    }
@@ -612,7 +718,7 @@ public class ClassModelManager implements IModelManager
     * @param tgtClass
     *    the target class
     * @param tgtRole
-    *    the role name in the target class
+    *    the role name in the target class, or {@code null} to make the association unidirectional
     * @param tgtSize
     *    the cardinality in the target class
     *
@@ -622,6 +728,11 @@ public class ClassModelManager implements IModelManager
     */
    public AssocRole associate(Clazz srcClass, String srcRole, int srcSize, Clazz tgtClass, String tgtRole, int tgtSize)
    {
+      if (srcRole == null)
+      {
+         throw new NullPointerException("srcRole must not be null");
+      }
+
       final AtomicBoolean modified = new AtomicBoolean(false);
 
       final AssocRole role = this.haveRole(srcClass, srcRole, srcSize, modified);
@@ -666,18 +777,26 @@ public class ClassModelManager implements IModelManager
          role = new AssocRole()
             .setClazz(owner)
             .setName(name)
-            .setCardinality(cardinality)
-            .setPropertyStyle(owner.getPropertyStyle())
-            .setCollectionType(owner.getModel().getDefaultCollectionType());
+            .setPropertyStyle(owner.getPropertyStyle());
+         this.setCardinality(owner, cardinality, role);
       }
-      else if (role.getCardinality() == cardinality)
+      else if (role.getCardinality() == cardinality || cardinality == 0)
       {
          return role;
       }
 
       modified.set(true);
-      role.setCardinality(cardinality);
+      this.setCardinality(owner, cardinality, role);
       return role;
+   }
+
+   private void setCardinality(Clazz owner, int cardinality, AssocRole role)
+   {
+      role.setCardinality(cardinality);
+      if (cardinality != Type.ONE)
+      {
+         role.setCollectionType(owner.getModel().getDefaultCollectionType());
+      }
    }
 
    private void link(AssocRole src, AssocRole tgt, AtomicBoolean modified)
@@ -716,7 +835,7 @@ public class ClassModelManager implements IModelManager
 
    public FMethod haveMethod(Clazz owner, String declaration, String body)
    {
-      FMethod method = this.getMethod(declaration);
+      FMethod method = this.getMethod(owner, declaration);
 
       if (method == null)
       {

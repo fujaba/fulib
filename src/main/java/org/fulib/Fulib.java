@@ -1,6 +1,7 @@
 package org.fulib;
 
 import org.fulib.builder.ClassModelBuilder;
+import org.fulib.builder.ClassModelManager;
 
 public class Fulib
 {
@@ -20,7 +21,10 @@ public class Fulib
     *    the package name
     *
     * @return a class model builder for the given package name and with the default source folder "src/main/java"
+    *
+    * @deprecated since 1.5; use {@link ClassModelManager} instead
     */
+   @Deprecated
    public static ClassModelBuilder classModelBuilder(String packagename)
    {
       return new ClassModelBuilder(packagename);
@@ -45,7 +49,10 @@ public class Fulib
     *    the source folder
     *
     * @return a class model builder for the given package name and source folder
+    *
+    * @deprecated since 1.5; use {@link ClassModelManager} instead
     */
+   @Deprecated
    public static ClassModelBuilder classModelBuilder(String packagename, String sourceFolder)
    {
       return new ClassModelBuilder(packagename, sourceFolder);

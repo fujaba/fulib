@@ -1,0 +1,241 @@
+- c: 	ClassModel
+  classes: 	example 	university 	student 	person 	page
+  defaultCollectionType: 	c1
+  defaultPropertyStyle: 	POJO
+  defaultRoleType: 	"java.util.ArrayList<%s>"
+  mainJavaDir: 	"src/main/java"
+  packageName: 	org.fulib.docs
+  packageSrcFolder: 	"src/main/java/org/fulib/docs"
+
+- example: 	Clazz
+  attributes: 	example_label 	example_score 	example_fullName 	example_height 	example_color 	example_ints 	example_students
+  model: 	c
+  modified: 	false
+  name: 	Example
+  propertyStyle: 	POJO
+
+- university: 	Clazz
+  model: 	c
+  modified: 	false
+  name: 	University
+  propertyStyle: 	POJO
+  roles: 	university_students 	university_president 	university_employees
+
+- student: 	Clazz
+  model: 	c
+  modified: 	false
+  name: 	Student
+  propertyStyle: 	POJO
+  roles: 	student_uni
+
+- person: 	Clazz
+  attributes: 	person_name 	person_age 	person_vip
+  model: 	c
+  modified: 	false
+  name: 	Person
+  propertyStyle: 	POJO
+  roles: 	person_University_president 	person_University_employees
+
+- page: 	Clazz
+  attributes: 	page_lines
+  model: 	c
+  modified: 	false
+  name: 	Page
+  propertyStyle: 	POJO
+
+- c1: 	CollectionType
+  implClass: 	class java.util.ArrayList
+  implTemplate: 	"java.util.ArrayList<%s>"
+  itf: 	org.fulib.classmodel.CollectionInterface.List
+  qualifiedImplName: 	java.util.ArrayList
+  simpleImplName: 	ArrayList
+
+- example_label: 	Attribute
+  clazz: 	example
+  id: 	Example_label
+  initialization: 	"\"P1\""
+  modified: 	false
+  name: 	label
+  propertyStyle: 	POJO
+  type: 	String
+  typeSignature: 	String
+
+- example_score: 	Attribute
+  clazz: 	example
+  id: 	Example_score
+  initialization: 	100
+  modified: 	false
+  name: 	score
+  propertyStyle: 	POJO
+  type: 	int
+  typeSignature: 	int
+
+- example_fullName: 	Attribute
+  clazz: 	example
+  description: 	"the full name including first, middle and last names"
+  descriptionLines: 	"the full name including first, middle and last names"
+  id: 	Example_fullName
+  modified: 	false
+  name: 	fullName
+  propertyStyle: 	POJO
+  type: 	String
+  typeSignature: 	String
+
+- example_height: 	Attribute
+  clazz: 	example
+  description: 	"the height in meters"
+  descriptionLines: 	"the height in meters"
+  id: 	Example_height
+  modified: 	false
+  name: 	height
+  propertyStyle: 	POJO
+  since: 	1.2
+  type: 	double
+  typeSignature: 	double
+
+- example_color: 	Attribute
+  clazz: 	example
+  id: 	Example_color
+  modified: 	false
+  name: 	color
+  propertyStyle: 	POJO
+  type: 	Color
+  typeSignature: 	Color
+
+- example_ints: 	Attribute
+  clazz: 	example
+  collectionType: 	c3
+  id: 	Example_ints
+  modified: 	false
+  name: 	ints
+  propertyStyle: 	POJO
+  type: 	int
+  typeSignature: 	int
+
+- example_students: 	Attribute
+  clazz: 	example
+  collectionType: 	c4
+  id: 	Example_students
+  modified: 	false
+  name: 	students
+  propertyStyle: 	POJO
+  type: 	Student
+  typeSignature: 	Student
+
+- university_students: 	AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	university
+  collectionType: 	c1
+  id: 	University_students
+  modified: 	false
+  name: 	students
+  other: 	student_uni
+  propertyStyle: 	POJO
+  roleType: 	"java.util.ArrayList<%s>"
+
+- university_president: 	AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	university
+  id: 	University_president
+  modified: 	false
+  name: 	president
+  other: 	person_University_president
+  propertyStyle: 	POJO
+
+- university_employees: 	AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	university
+  collectionType: 	c1
+  id: 	University_employees
+  modified: 	false
+  name: 	employees
+  other: 	person_University_employees
+  propertyStyle: 	POJO
+  roleType: 	"java.util.ArrayList<%s>"
+
+- student_uni: 	AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	student
+  id: 	Student_uni
+  modified: 	false
+  name: 	uni
+  other: 	university_students
+  propertyStyle: 	POJO
+
+- person_name: 	Attribute
+  clazz: 	person
+  id: 	Person_name
+  modified: 	false
+  name: 	name
+  propertyStyle: 	POJO
+  type: 	String
+  typeSignature: 	String
+
+- person_age: 	Attribute
+  clazz: 	person
+  id: 	Person_age
+  modified: 	false
+  name: 	age
+  propertyStyle: 	POJO
+  type: 	int
+  typeSignature: 	int
+
+- person_vip: 	Attribute
+  clazz: 	person
+  id: 	Person_vip
+  modified: 	false
+  name: 	vip
+  propertyStyle: 	POJO
+  type: 	boolean
+  typeSignature: 	boolean
+
+- person_University_president: 	AssocRole
+  aggregation: 	false
+  cardinality: 	0
+  clazz: 	person
+  collectionType: 	c1
+  id: 	Person_University_president
+  modified: 	false
+  other: 	university_president
+  propertyStyle: 	POJO
+  roleType: 	"java.util.ArrayList<%s>"
+
+- person_University_employees: 	AssocRole
+  aggregation: 	false
+  cardinality: 	0
+  clazz: 	person
+  collectionType: 	c1
+  id: 	Person_University_employees
+  modified: 	false
+  other: 	university_employees
+  propertyStyle: 	POJO
+  roleType: 	"java.util.ArrayList<%s>"
+
+- page_lines: 	Attribute
+  clazz: 	page
+  collectionType: 	c1
+  id: 	Page_lines
+  modified: 	false
+  name: 	lines
+  propertyStyle: 	POJO
+  type: 	String
+  typeSignature: 	String
+
+- c3: 	CollectionType
+  implClass: 	class it.unimi.dsi.fastutil.ints.IntArrayList
+  implTemplate: 	it.unimi.dsi.fastutil.ints.IntArrayList
+  itf: 	org.fulib.classmodel.CollectionInterface.List
+  qualifiedImplName: 	it.unimi.dsi.fastutil.ints.IntArrayList
+  simpleImplName: 	IntArrayList
+
+- c4: 	CollectionType
+  implClass: 	class org.fulib.docs.StudentRegister
+  implTemplate: 	org.fulib.docs.StudentRegister
+  itf: 	org.fulib.classmodel.CollectionInterface.List
+  qualifiedImplName: 	org.fulib.docs.StudentRegister
+  simpleImplName: 	StudentRegister
+

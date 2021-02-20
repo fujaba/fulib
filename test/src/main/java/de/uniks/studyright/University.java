@@ -1,6 +1,5 @@
 package de.uniks.studyright;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +9,9 @@ import java.util.List;
 import java.util.Objects;
 public class University
 {
+   public static final String PROPERTY_STUDENTS = "students";
+   public static final String PROPERTY_ROOMS = "rooms";
+   public static final String PROPERTY_NAME = "name";
 
    public static final String PROPERTY_name = "name";
 
@@ -39,7 +41,7 @@ public class University
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
@@ -58,7 +60,7 @@ public class University
       {
          this.students.add(value);
          value.setUni(this);
-         this.firePropertyChange(PROPERTY_students, null, value);
+         this.firePropertyChange(PROPERTY_STUDENTS, null, value);
       }
       return this;
    }
@@ -86,7 +88,7 @@ public class University
       if (this.students != null && this.students.remove(value))
       {
          value.setUni(null);
-         this.firePropertyChange(PROPERTY_students, value, null);
+         this.firePropertyChange(PROPERTY_STUDENTS, value, null);
       }
       return this;
    }
@@ -124,7 +126,7 @@ public class University
       {
          this.rooms.add(value);
          value.setUni(this);
-         this.firePropertyChange(PROPERTY_rooms, null, value);
+         this.firePropertyChange(PROPERTY_ROOMS, null, value);
       }
       return this;
    }
@@ -152,7 +154,7 @@ public class University
       if (this.rooms != null && this.rooms.remove(value))
       {
          value.setUni(null);
-         this.firePropertyChange(PROPERTY_rooms, value, null);
+         this.firePropertyChange(PROPERTY_ROOMS, value, null);
       }
       return this;
    }
@@ -175,6 +177,15 @@ public class University
       return this;
    }
 
+   public PropertyChangeSupport listeners()
+   {
+      if (this.listeners == null)
+      {
+         this.listeners = new PropertyChangeSupport(this);
+      }
+      return this.listeners;
+   }
+
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {
       if (this.listeners != null)
@@ -183,44 +194,6 @@ public class University
          return true;
       }
       return false;
-   }
-
-   public boolean addPropertyChangeListener(PropertyChangeListener listener)
-   {
-      if (this.listeners == null)
-      {
-         this.listeners = new PropertyChangeSupport(this);
-      }
-      this.listeners.addPropertyChangeListener(listener);
-      return true;
-   }
-
-   public boolean addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
-   {
-      if (this.listeners == null)
-      {
-         this.listeners = new PropertyChangeSupport(this);
-      }
-      this.listeners.addPropertyChangeListener(propertyName, listener);
-      return true;
-   }
-
-   public boolean removePropertyChangeListener(PropertyChangeListener listener)
-   {
-      if (this.listeners != null)
-      {
-         this.listeners.removePropertyChangeListener(listener);
-      }
-      return true;
-   }
-
-   public boolean removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
-   {
-      if (this.listeners != null)
-      {
-         this.listeners.removePropertyChangeListener(propertyName, listener);
-      }
-      return true;
    }
 
    @Override
@@ -233,8 +206,8 @@ public class University
 
    public void removeYou()
    {
-      this.withoutStudents(new ArrayList<>(this.getStudents()));
       this.withoutRooms(new ArrayList<>(this.getRooms()));
+      this.withoutStudents(new ArrayList<>(this.getStudents()));
    }
 
 }

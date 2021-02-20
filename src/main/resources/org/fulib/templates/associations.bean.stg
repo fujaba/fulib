@@ -3,6 +3,9 @@ import "associations.pojo.stg"
 // --------------- Simple Accessors ---------------
 
 setMethod(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> set<role.name; format="cap">(<other.clazz.name> value)
    {
       if (this.<role.name> == value)
@@ -25,7 +28,7 @@ setMethod(role, other) ::= <<
          value.<withThis(other)>;
       }
 <endif>
-      this.firePropertyChange(PROPERTY_<role.name>, oldValue, value);
+      this.firePropertyChange(PROPERTY_<role.name; format="upper_snake">, oldValue, value);
       return this;
    }
 >>
@@ -33,6 +36,9 @@ setMethod(role, other) ::= <<
 // --------------- With ---------------
 
 withItem(role, other) ::= <<
+<if(role.description)>
+   <witherJavaDoc(role)>
+<endif>
    public <role.clazz.name> with<role.name; format="cap">(<other.clazz.name> value)
    {
       if (this.<role.name> == null)
@@ -45,7 +51,7 @@ withItem(role, other) ::= <<
 <if(other.name)>
          value.<withThis(other)>;
 <endif>
-         this.firePropertyChange(PROPERTY_<role.name>, null, value);
+         this.firePropertyChange(PROPERTY_<role.name; format="upper_snake">, null, value);
       }
       return this;
    }
@@ -54,6 +60,9 @@ withItem(role, other) ::= <<
 // --------------- Without ---------------
 
 withoutItem(role, other) ::= <<
+<if(role.description)>
+   <withouterJavaDoc(role)>
+<endif>
    public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name> value)
    {
       if (this.<role.name> != null && this.<role.name>.remove(value))
@@ -61,7 +70,7 @@ withoutItem(role, other) ::= <<
 <if(other.name)>
          value.<withoutThis(other)>;
 <endif>
-         this.firePropertyChange(PROPERTY_<role.name>, value, null);
+         this.firePropertyChange(PROPERTY_<role.name; format="upper_snake">, value, null);
       }
       return this;
    }

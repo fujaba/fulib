@@ -2,9 +2,9 @@ import "attributes.bean.stg"
 
 propertyType(attr, prefix="") ::= <%
 <if(attr.collection)>
-   import(javafx.beans.property.<prefix>ListProperty)\<<box(attr)>>
+   import(javafx.beans.property.<prefix>ListProperty)\<<box(attr.type)>>
 <elseif(primitive.(attr.type))>
-   import(javafx.beans.property.<prefix><box(attr)>Property)
+   import(javafx.beans.property.<prefix><box(attr.type)>Property)
 <else>
    import(javafx.beans.property.<prefix>ObjectProperty)\<<attr.type>>
 <endif>
@@ -18,16 +18,19 @@ initMethod(attr) ::= <<
    private <propertyType(attr)> _init<attr.name; format="cap">()
    {
       final <propertyType(attr)> result = new <propertyType(attr, "Simple")>(<if(attr.collection)>javafx.collections.FXCollections.observableArrayList()<endif>);
-      result.addListener((observable, oldValue, newValue) -> this.firePropertyChange(PROPERTY_<attr.name>, oldValue, newValue));
+      result.addListener((observable, oldValue, newValue) -> this.firePropertyChange(PROPERTY_<attr.name; format="upper_snake">, oldValue, newValue));
       return result;
    }
 >>
 
 attrGet(attr) ::= <<
+<if(attr.description)>
+   <getterJavaDoc(attr)>
+<endif>
 <if(attr.collection)>
-   public java.util.List\<<box(attr)>\> get<attr.name; format="cap">()
+   public java.util.List\<<box(attr.type)>\> <getterName(attr)>()
 <else>
-   public <attr.type> get<attr.name; format="cap">()
+   public <attr.type> <getterName(attr)>()
 <endif>
    {
       return this.<attr.name>.getValue();
@@ -35,6 +38,9 @@ attrGet(attr) ::= <<
 >>
 
 attrSet(attr) ::= <<
+<if(attr.description)>
+   <setterJavaDoc(attr)>
+<endif>
    public <attr.clazz.name> set<attr.name; format="cap">(<attr.type> value)
    {
       if (<if(primitive.(attr.type))>value != this.<attr.name>.getValue()<else>!import(java.util.Objects).equals(value, this.<attr.name>.getValue())<endif>)
@@ -46,6 +52,9 @@ attrSet(attr) ::= <<
 >>
 
 propertyGet(attr) ::= <<
+<if(attr.description)>
+   <getterJavaDoc(attr)>
+<endif>
    public <propertyType(attr)> <attr.name>Property()
    {
       return this.<attr.name>;
@@ -53,7 +62,10 @@ propertyGet(attr) ::= <<
 >>
 
 attrWithItem(attr) ::= <<
-   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr)> value)
+<if(attr.description)>
+   <witherJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> with<attr.name; format="cap">(<box(attr.type)> value)
    {
       this.<attr.name>.add(value);
       return this;
@@ -61,7 +73,10 @@ attrWithItem(attr) ::= <<
 >>
 
 attrWithoutItem(attr) ::= <<
-   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr)> value)
+<if(attr.description)>
+   <withouterJavaDoc(attr)>
+<endif>
+   public <attr.clazz.name> without<attr.name; format="cap">(<box(attr.type)> value)
    {
       this.<attr.name>.removeAll(value);
       return this;

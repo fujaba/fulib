@@ -5,6 +5,7 @@ import org.fulib.builder.Type;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -42,21 +43,21 @@ public class JavaFXAssociationTest extends BeanAssociationTest
       Object studyFuture = uniClass.newInstance();
 
       Method setName = uniClass.getMethod("setName", String.class);
-      Method addPropertyChangeListener = uniClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
       setName.invoke(studyRight, "Study Right");
       setName.invoke(studyFuture, "Study Future");
-      addPropertyChangeListener.invoke(studyRight, listener);
-      addPropertyChangeListener.invoke(studyFuture, listener);
+      Method addPropertyChangeListener = uniClass.getMethod("listeners");
+      ((PropertyChangeSupport) addPropertyChangeListener.invoke(studyRight)).addPropertyChangeListener(listener);
+      ((PropertyChangeSupport) addPropertyChangeListener.invoke(studyFuture)).addPropertyChangeListener(listener);
 
       Object karli = studClass.newInstance();
       Object lee = studClass.newInstance();
 
       setName = studClass.getMethod("setName", String.class);
-      addPropertyChangeListener = studClass.getMethod("addPropertyChangeListener", PropertyChangeListener.class);
       setName.invoke(karli, "Karli");
       setName.invoke(lee, "Lee");
-      addPropertyChangeListener.invoke(karli, listener);
-      addPropertyChangeListener.invoke(lee, listener);
+      addPropertyChangeListener = studClass.getMethod("listeners");
+      ((PropertyChangeSupport) addPropertyChangeListener.invoke(karli)).addPropertyChangeListener(listener);
+      ((PropertyChangeSupport) addPropertyChangeListener.invoke(lee)).addPropertyChangeListener(listener);
 
       // ok, create a link
       assertThat(studyRight, hasProperty("students", is(empty())));

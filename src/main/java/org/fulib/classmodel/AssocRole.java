@@ -4,6 +4,9 @@ import org.fulib.builder.Type;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class AssocRole
@@ -22,6 +25,31 @@ public class AssocRole
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_clazz = "clazz";
    public static final String PROPERTY_other = "other";
+   /** @since 1.3 */
+   public static final String PROPERTY_description = "description";
+   /** @since 1.3 */
+   public static final String PROPERTY_since = "since";
+
+   /** @since 1.3 */
+   public static final String PROPERTY_NAME = "name";
+   /** @since 1.3 */
+   public static final String PROPERTY_CARDINALITY = "cardinality";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_COLLECTION_TYPE = "collectionType";
+   /** @since 1.3 */
+   public static final String PROPERTY_AGGREGATION = "aggregation";
+   /** @since 1.3 */
+   public static final String PROPERTY_PROPERTY_STYLE = "propertyStyle";
+   /** @since 1.3 */
+   public static final String PROPERTY_DESCRIPTION = "description";
+   /** @since 1.3 */
+   public static final String PROPERTY_SINCE = "since";
+   /** @since 1.3 */
+   public static final String PROPERTY_MODIFIED = "modified";
+   /** @since 1.3 */
+   public static final String PROPERTY_CLAZZ = "clazz";
+   /** @since 1.3 */
+   public static final String PROPERTY_OTHER = "other";
 
    // =============== Fields ===============
 
@@ -34,6 +62,8 @@ public class AssocRole
    private CollectionType collectionType;
    private boolean aggregation;
    private String propertyStyle;
+   private String description;
+   private String since;
    private boolean modified;
 
    // =============== Properties ===============
@@ -61,7 +91,7 @@ public class AssocRole
       {
          value.withRoles(this);
       }
-      this.firePropertyChange(PROPERTY_clazz, oldValue, value);
+      this.firePropertyChange(PROPERTY_CLAZZ, oldValue, value);
       return this;
    }
 
@@ -88,7 +118,7 @@ public class AssocRole
       {
          value.setOther(this);
       }
-      this.firePropertyChange(PROPERTY_other, oldValue, value);
+      this.firePropertyChange(PROPERTY_OTHER, oldValue, value);
       return this;
    }
 
@@ -96,11 +126,14 @@ public class AssocRole
     * @return a string that uniquely identifies this role within the enclosing class model
     *
     * @since 1.2
+    * @deprecated since 1.3; for serialization purposes only
     */
+   @Deprecated
    public String getId()
    {
-      final String className = this.getClazz() == null ? "___" : this.getClazz().getName();
-      return className + "_" + this.getName();
+      final Clazz clazz = this.getClazz();
+      final String name = this.getName();
+      return (clazz != null ? clazz.getName() : "_") + "_" + (name != null ? name : this.getOther().getId());
    }
 
    public String getName()
@@ -117,7 +150,7 @@ public class AssocRole
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
@@ -135,7 +168,7 @@ public class AssocRole
 
       final int oldValue = this.cardinality;
       this.cardinality = value;
-      this.firePropertyChange(PROPERTY_cardinality, oldValue, value);
+      this.firePropertyChange(PROPERTY_CARDINALITY, oldValue, value);
       return this;
    }
 
@@ -171,9 +204,9 @@ public class AssocRole
 
    /**
     * @param value
-    *    the new collection type
+    *    the collection type
     *
-    * @return this instance, to allow method chaining
+    * @return this
     *
     * @since 1.2
     */
@@ -186,7 +219,7 @@ public class AssocRole
 
       final CollectionType oldValue = this.collectionType;
       this.collectionType = value;
-      this.firePropertyChange(PROPERTY_collectionType, oldValue, value);
+      this.firePropertyChange(PROPERTY_COLLECTION_TYPE, oldValue, value);
       return this;
    }
 
@@ -198,7 +231,8 @@ public class AssocRole
    @Deprecated
    public String getRoleType()
    {
-      return this.getCollectionType().getImplTemplate();
+      final CollectionType collectionType = this.getCollectionType();
+      return collectionType != null ? collectionType.getImplTemplate() : null;
    }
 
    /**
@@ -217,7 +251,8 @@ public class AssocRole
 
    /**
     * @return a boolean indicating whether this role is an aggregation,
-    * i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or {@code removeYou} on the source object
+    * i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or
+    * {@code removeYou} on the source object
     */
    public boolean getAggregation()
    {
@@ -227,9 +262,10 @@ public class AssocRole
    /**
     * @param value
     *    a boolean indicating whether this role is an aggregation,
-    *    i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or {@code removeYou} on the source object
+    *    i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or
+    *    {@code removeYou} on the source object
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public AssocRole setAggregation(boolean value)
    {
@@ -240,12 +276,13 @@ public class AssocRole
 
       final boolean oldValue = this.aggregation;
       this.aggregation = value;
-      this.firePropertyChange(PROPERTY_aggregation, oldValue, value);
+      this.firePropertyChange(PROPERTY_AGGREGATION, oldValue, value);
       return this;
    }
 
    /**
-    * @return the property style of this role
+    * @return the property style.
+    * Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     */
    public String getPropertyStyle()
    {
@@ -254,10 +291,10 @@ public class AssocRole
 
    /**
     * @param value
-    *    the property style to use for this role.
+    *    the property style.
     *    Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public AssocRole setPropertyStyle(String value)
    {
@@ -268,7 +305,81 @@ public class AssocRole
 
       final String oldValue = this.propertyStyle;
       this.propertyStyle = value;
-      this.firePropertyChange(PROPERTY_propertyStyle, oldValue, value);
+      this.firePropertyChange(PROPERTY_PROPERTY_STYLE, oldValue, value);
+      return this;
+   }
+
+   /**
+    * @return the description of this role, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String getDescription()
+   {
+      return this.description;
+   }
+
+   /**
+    * @param value
+    *    the description of this role, used for generating JavaDocs
+    *
+    * @return this
+    *
+    * @since 1.3
+    */
+   public AssocRole setDescription(String value)
+   {
+      if (Objects.equals(value, this.description))
+      {
+         return this;
+      }
+
+      final String oldValue = this.description;
+      this.description = value;
+      this.firePropertyChange(PROPERTY_DESCRIPTION, oldValue, value);
+      return this;
+   }
+
+   /**
+    * @return the lines of the description of this attribute, used for generating JavaDocs
+    *
+    * @since 1.3
+    * @deprecated for internal use only
+    */
+   @Deprecated
+   public List<String> getDescriptionLines()
+   {
+      return this.getDescription() == null ? Collections.emptyList() : Arrays.asList(this.getDescription().split("\n"));
+   }
+
+   /**
+    * @return the version when this role was introduced, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String getSince()
+   {
+      return this.since;
+   }
+
+   /**
+    * @param value
+    *    the version when this role was introduced, used for generating JavaDocs
+    *
+    * @return this
+    *
+    * @since 1.3
+    */
+   public AssocRole setSince(String value)
+   {
+      if (Objects.equals(value, this.since))
+      {
+         return this;
+      }
+
+      final String oldValue = this.since;
+      this.since = value;
+      this.firePropertyChange(PROPERTY_SINCE, oldValue, value);
       return this;
    }
 
@@ -284,7 +395,7 @@ public class AssocRole
     * @param value
     *    a boolean indicating whether this role was modified. For internal use only.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public AssocRole setModified(boolean value)
    {
@@ -295,7 +406,7 @@ public class AssocRole
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange(PROPERTY_modified, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODIFIED, oldValue, value);
       return this;
    }
 
@@ -364,7 +475,6 @@ public class AssocRole
    {
       this.setClazz(null);
       this.setOther(null);
-      this.setOther(null);
    }
 
    @Override
@@ -373,6 +483,8 @@ public class AssocRole
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getName());
       result.append(' ').append(this.getPropertyStyle());
+      result.append(' ').append(this.getDescription());
+      result.append(' ').append(this.getSince());
       return result.substring(1);
    }
 }

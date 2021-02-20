@@ -1,9 +1,19 @@
 package org.fulib.classmodel;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.fulib.builder.Type;
+import org.fulib.parser.FragmentMapBuilder;
+import org.fulib.parser.FulibClassLexer;
+import org.fulib.parser.FulibClassParser;
+import org.fulib.util.Validator;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class Attribute
@@ -16,8 +26,31 @@ public class Attribute
    public static final String PROPERTY_collectionType = "collectionType";
    public static final String PROPERTY_initialization = "initialization";
    public static final String PROPERTY_propertyStyle = "propertyStyle";
+   /** @since 1.3 */
+   public static final String PROPERTY_description = "description";
+   /** @since 1.3 */
+   public static final String PROPERTY_since = "since";
    public static final String PROPERTY_modified = "modified";
    public static final String PROPERTY_clazz = "clazz";
+
+   /** @since 1.3 */
+   public static final String PROPERTY_NAME = "name";
+   /** @since 1.3 */
+   public static final String PROPERTY_TYPE = "type";
+   /** @since 1.3 */ // no fulib
+   public static final String PROPERTY_COLLECTION_TYPE = "collectionType";
+   /** @since 1.3 */
+   public static final String PROPERTY_INITIALIZATION = "initialization";
+   /** @since 1.3 */
+   public static final String PROPERTY_PROPERTY_STYLE = "propertyStyle";
+   /** @since 1.3 */
+   public static final String PROPERTY_MODIFIED = "modified";
+   /** @since 1.3 */
+   public static final String PROPERTY_DESCRIPTION = "description";
+   /** @since 1.3 */
+   public static final String PROPERTY_SINCE = "since";
+   /** @since 1.3 */
+   public static final String PROPERTY_CLAZZ = "clazz";
 
    // =============== Fields ===============
 
@@ -29,7 +62,11 @@ public class Attribute
    private CollectionType collectionType;
    private String initialization;
    private String propertyStyle;
+   private String description;
+   private String since;
    private boolean modified;
+
+   private String typeSignature;
 
    // =============== Properties ===============
 
@@ -56,7 +93,7 @@ public class Attribute
       {
          value.withAttributes(this);
       }
-      this.firePropertyChange(PROPERTY_clazz, oldValue, value);
+      this.firePropertyChange(PROPERTY_CLAZZ, oldValue, value);
       return this;
    }
 
@@ -64,11 +101,13 @@ public class Attribute
     * @return a string that uniquely identifies this attribute within the enclosing class model
     *
     * @since 1.2
+    * @deprecated since 1.3; for serialization purposes only
     */
+   @Deprecated
    public String getId()
    {
-      final String className = this.getClazz() != null ? this.getClazz().getName() : "___";
-      return className + "_" + this.getName();
+      final Clazz clazz = this.getClazz();
+      return (clazz != null ? clazz.getName() : "_") + "_" + this.getName();
    }
 
    public String getName()
@@ -85,7 +124,7 @@ public class Attribute
 
       final String oldValue = this.name;
       this.name = value;
-      this.firePropertyChange(PROPERTY_name, oldValue, value);
+      this.firePropertyChange(PROPERTY_NAME, oldValue, value);
       return this;
    }
 
@@ -94,7 +133,7 @@ public class Attribute
       return this.type;
    }
 
-   public Attribute setType(String value)
+   public Attribute setType(String value) // no fulib
    {
       if (Objects.equals(value, this.type))
       {
@@ -103,8 +142,51 @@ public class Attribute
 
       final String oldValue = this.type;
       this.type = value;
+      this.typeSignature = buildTypeSignature(value);
       this.firePropertyChange(PROPERTY_type, oldValue, value);
       return this;
+   }
+
+   private static String buildTypeSignature(String type)
+   {
+      if (Validator.isSimpleName(type))
+      {
+         // fast-path - if the type is just an identifier (no generics, no annotations, ...),
+         // we can skip all the parser overhead because the signature will be same as the type anyway.
+         return type;
+      }
+
+      final CharStream input = CharStreams.fromString(type);
+      final FulibClassLexer lexer = new FulibClassLexer(input);
+      final FulibClassParser parser = new FulibClassParser(new CommonTokenStream(lexer));
+      final FulibClassParser.TypeContext typeCtx = parser.type();
+      return FragmentMapBuilder.getTypeSignature(typeCtx);
+   }
+
+   /**
+    *
+    * @return whether the {@link #getType() type} of this attribute is {@code boolean}.
+    *
+    * @deprecated for internal use only
+    *
+    * @since 1.5
+    */
+   public boolean isBoolean()
+   {
+      return Type.BOOLEAN.equals(this.type);
+   }
+
+   /**
+    * @return the signature of this attribute's {@linkplain #getType() type}
+    *
+    * @deprecated for internal use only
+    *
+    * @since 1.2.2
+    */
+   @Deprecated
+   public String getTypeSignature()
+   {
+      return this.typeSignature;
    }
 
    /**
@@ -119,9 +201,9 @@ public class Attribute
 
    /**
     * @param value
-    *    the new collection type
+    *    the collection type
     *
-    * @return this instance, to allow method chaining
+    * @return this
     *
     * @since 1.2
     */
@@ -134,7 +216,7 @@ public class Attribute
 
       final CollectionType oldValue = this.collectionType;
       this.collectionType = value;
-      this.firePropertyChange(PROPERTY_collectionType, oldValue, value);
+      this.firePropertyChange(PROPERTY_COLLECTION_TYPE, oldValue, value);
       return this;
    }
 
@@ -162,12 +244,13 @@ public class Attribute
 
       final String oldValue = this.initialization;
       this.initialization = value;
-      this.firePropertyChange(PROPERTY_initialization, oldValue, value);
+      this.firePropertyChange(PROPERTY_INITIALIZATION, oldValue, value);
       return this;
    }
 
    /**
-    * @return the property style of this attribute
+    * @return the property style.
+    * Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     */
    public String getPropertyStyle()
    {
@@ -176,10 +259,10 @@ public class Attribute
 
    /**
     * @param value
-    *    the property style to use for this attribute.
+    *    the property style.
     *    Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public Attribute setPropertyStyle(String value)
    {
@@ -190,7 +273,81 @@ public class Attribute
 
       final String oldValue = this.propertyStyle;
       this.propertyStyle = value;
-      this.firePropertyChange(PROPERTY_propertyStyle, oldValue, value);
+      this.firePropertyChange(PROPERTY_PROPERTY_STYLE, oldValue, value);
+      return this;
+   }
+
+   /**
+    * @return the description of this attribute, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String getDescription()
+   {
+      return this.description;
+   }
+
+   /**
+    * @param value
+    *    the description of this attribute, used for generating JavaDocs
+    *
+    * @return this
+    *
+    * @since 1.3
+    */
+   public Attribute setDescription(String value)
+   {
+      if (Objects.equals(value, this.description))
+      {
+         return this;
+      }
+
+      final String oldValue = this.description;
+      this.description = value;
+      this.firePropertyChange(PROPERTY_DESCRIPTION, oldValue, value);
+      return this;
+   }
+
+   /**
+    * @return the lines of the description of this attribute, used for generating JavaDocs
+    *
+    * @since 1.3
+    * @deprecated for internal use only
+    */
+   @Deprecated
+   public List<String> getDescriptionLines()
+   {
+      return this.getDescription() == null ? Collections.emptyList() : Arrays.asList(this.getDescription().split("\n"));
+   }
+
+   /**
+    * @return the version when this attribute was introduced, used for generating JavaDocs
+    *
+    * @since 1.3
+    */
+   public String getSince()
+   {
+      return this.since;
+   }
+
+   /**
+    * @param value
+    *    the version when this attribute was introduced, used for generating JavaDocs
+    *
+    * @return this
+    *
+    * @since 1.3
+    */
+   public Attribute setSince(String value)
+   {
+      if (Objects.equals(value, this.since))
+      {
+         return this;
+      }
+
+      final String oldValue = this.since;
+      this.since = value;
+      this.firePropertyChange(PROPERTY_SINCE, oldValue, value);
       return this;
    }
 
@@ -206,7 +363,7 @@ public class Attribute
     * @param value
     *    a boolean indicating whether this attribute was modified. For internal use only.
     *
-    * @return this instance, to allow method chaining
+    * @return this
     */
    public Attribute setModified(boolean value)
    {
@@ -217,7 +374,7 @@ public class Attribute
 
       final boolean oldValue = this.modified;
       this.modified = value;
-      this.firePropertyChange(PROPERTY_modified, oldValue, value);
+      this.firePropertyChange(PROPERTY_MODIFIED, oldValue, value);
       return this;
    }
 
@@ -295,6 +452,8 @@ public class Attribute
       result.append(' ').append(this.getType());
       result.append(' ').append(this.getInitialization());
       result.append(' ').append(this.getPropertyStyle());
+      result.append(' ').append(this.getDescription());
+      result.append(' ').append(this.getSince());
       return result.substring(1);
    }
 }

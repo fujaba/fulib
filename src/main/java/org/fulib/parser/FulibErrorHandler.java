@@ -4,13 +4,13 @@ import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 
-class FulibErrorHandler extends BaseErrorListener
+public class FulibErrorHandler extends BaseErrorListener
 {
-   private final PrintWriter out;
+   private final Appendable out;
 
-   FulibErrorHandler(PrintWriter out)
+   public FulibErrorHandler(Appendable out)
    {
       this.out = out;
    }
@@ -25,6 +25,23 @@ class FulibErrorHandler extends BaseErrorListener
 
    private void report(String file, int line, int column, String type, String msg)
    {
-      this.out.println(file + ":" + line + ":" + column + ": " + type + ": " + msg);
+      try
+      {
+         this.out
+            .append(file)
+            .append(':')
+            .append(String.valueOf(line))
+            .append(':')
+            .append(String.valueOf(column))
+            .append(": ")
+            .append(type)
+            .append(": ")
+            .append(msg)
+            .append('\n');
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
    }
 }

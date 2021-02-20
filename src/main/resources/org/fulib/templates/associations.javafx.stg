@@ -2,29 +2,38 @@ import "associations.bean.stg"
 
 // --------------- Overrides ---------------
 
-roleAttrDecl(role, other) ::= <<
+rolePropertyType(role, other) ::= <%
 <if(role.toMany)>
-   private import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> <role.name> = _init<role.name; format="cap">();
+import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>>
 <else>
-   private import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> <role.name> = _init<role.name; format="cap">();
+import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>>
 <endif>
+%>
+
+roleAttrDecl(role, other) ::= <<
+   private <rolePropertyType(role, other)> <role.name> = _init<role.name; format="cap">();
 >>
 
 getMethod(role, other) ::= <<
+<if(role.description)>
+   <getterJavaDoc(role)>
+<endif>
 <if(role.toMany)>
    public import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> get<role.name; format="cap">()
    {
       return this.<role.name>;
-   }
 <else>
    public <other.clazz.name> get<role.name; format="cap">()
    {
       return this.<role.name>.getValue();
-   }
 <endif>
+   }
 >>
 
 setMethod(role, other) ::= <<
+<if(role.description)>
+   <setterJavaDoc(role)>
+<endif>
    public <role.clazz.name> set<role.name; format="cap">(<other.clazz.name> value)
    {
       if (value != this.<role.name>.getValue())
@@ -36,6 +45,9 @@ setMethod(role, other) ::= <<
 >>
 
 withItem(role, other) ::= <<
+<if(role.description)>
+   <witherJavaDoc(role)>
+<endif>
    public <role.clazz.name> with<role.name; format="cap">(<other.clazz.name> value)
    {
       if (!this.<role.name>.contains(value))
@@ -47,6 +59,9 @@ withItem(role, other) ::= <<
 >>
 
 withoutItem(role, other) ::= <<
+<if(role.description)>
+   <withouterJavaDoc(role)>
+<endif>
    public <role.clazz.name> without<role.name; format="cap">(<other.clazz.name> value)
    {
       this.<role.name>.remove(value);
@@ -57,6 +72,9 @@ withoutItem(role, other) ::= <<
 // --------------- Additional Templates ---------------
 
 propertyMethod(role, other) ::= <<
+<if(role.description)>
+   <getterJavaDoc(role)>
+<endif>
    public import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> <role.name>Property()
    {
       return this.<role.name>;
@@ -64,32 +82,34 @@ propertyMethod(role, other) ::= <<
 >>
 
 initMethod(role, other) ::= <<
-<if(role.toMany)>
-   private import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> _init<role.name; format="cap">()
+   private <rolePropertyType(role, other)> _init<role.name; format="cap">()
    {
+<if(role.toMany)>
       final import(javafx.beans.property.SimpleListProperty)\<<other.clazz.name>\> result = new import(javafx.beans.property.SimpleListProperty)(javafx.collections.FXCollections.observableArrayList());
       result.addListener((javafx.collections.ListChangeListener\<? super <other.clazz.name>\>) change -> {
          while (change.next())
          {
             for (final <other.clazz.name> value : change.getRemoved())
             {
+               <if(role.other.name)>
                value.<withoutThis(other)>;
-               this.firePropertyChange(PROPERTY_<role.name>, value, null);
+               <endif>
+               this.firePropertyChange(PROPERTY_<role.name; format="upper_snake">, value, null);
             }
             for (final <other.clazz.name> value : change.getAddedSubList())
             {
+               <if(role.other.name)>
                value.<withThis(other)>;
-               this.firePropertyChange(PROPERTY_<role.name>, null, value);
+               <endif>
+               this.firePropertyChange(PROPERTY_<role.name; format="upper_snake">, null, value);
             }
          }
       });
       return result;
-   }
 <else>
-   private import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> _init<role.name; format="cap">()
-   {
       final import(javafx.beans.property.ObjectProperty)\<<other.clazz.name>\> result = new import(javafx.beans.property.SimpleObjectProperty)\<>();
       result.addListener((observable, oldValue, newValue) -> {
+         <if(role.other.name)>
          if (oldValue != null)
          {
             oldValue.<withoutThis(other)>;
@@ -98,9 +118,10 @@ initMethod(role, other) ::= <<
          {
             newValue.<withThis(other)>;
          }
-         this.firePropertyChange(PROPERTY_<role.name>, oldValue, newValue);
+         <endif>
+         this.firePropertyChange(PROPERTY_<role.name; format="upper_snake">, oldValue, newValue);
       });
       return result;
-   }
 <endif>
+   }
 >>
