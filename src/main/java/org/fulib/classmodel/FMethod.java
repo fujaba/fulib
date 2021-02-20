@@ -44,7 +44,7 @@ public class FMethod
    private String name;
    private String annotations;
    private String modifiers = "public";
-   private LinkedHashMap<String, String> params;
+   private final LinkedHashMap<String, String> params = new LinkedHashMap<>();
    private final Map<String, String> typeParams = new LinkedHashMap<>();
    private String returnType;
    private String methodBody;
@@ -249,15 +249,7 @@ public class FMethod
 
    private void setParams(FulibClassParser.ParameterListContext paramsCtx)
    {
-      if (this.params == null)
-      {
-         this.params = new LinkedHashMap<>();
-      }
-      else
-      {
-         this.params.clear();
-      }
-
+      this.params.clear();
       for (final FulibClassParser.ParameterContext paramCtx : paramsCtx.parameter())
       {
          final String name = paramCtx.IDENTIFIER().getText();
@@ -326,14 +318,12 @@ public class FMethod
    }
 
    /**
+    * @return a mutable, ordered map of parameters, where the key is the name and the value is the type.
+    *
     * @since 1.2
     */
    public LinkedHashMap<String, String> getParams()
    {
-      if (this.params == null)
-      {
-         this.params = new LinkedHashMap<>();
-      }
       return this.params;
    }
 
