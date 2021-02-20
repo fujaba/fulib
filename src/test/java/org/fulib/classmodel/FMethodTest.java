@@ -64,6 +64,22 @@ class FMethodTest
       assertThat(parametricTypes.getParams(), hasEntry("matrix", "Map<Integer, Map<Integer, String>>"));
       assertThat(parametricTypes.getSignature(),
                  equalTo("class/Foo/method/parametricTypes(List<Integer>,Map<Integer,Map<Integer,String>>)"));
+
+      final FMethod typeParams = new FMethod().setClazz(clazz);
+      typeParams.setDeclaration(
+         "public <T, N extends Number, X extends Comparable & Serializable> @NonNull Map<T, X> typeParams(List<N> numbers, Map<N, Map<N, T>> matrix)");
+      assertThat(typeParams.getModifiers(), equalTo("public"));
+      assertThat(typeParams.getReturnType(), equalTo("@NonNull Map<T, X>"));
+      assertThat(typeParams.getName(), equalTo("typeParams"));
+      assertThat(typeParams.getParams(), aMapWithSize(2));
+      assertThat(typeParams.getParams(), hasEntry("numbers", "List<N>"));
+      assertThat(typeParams.getParams(), hasEntry("matrix", "Map<N, Map<N, T>>"));
+      assertThat(typeParams.getTypeParams(), aMapWithSize(3));
+      assertThat(typeParams.getTypeParams(), hasEntry("T", null));
+      assertThat(typeParams.getTypeParams(), hasEntry("N", "Number"));
+      assertThat(typeParams.getTypeParams(), hasEntry("X", "Comparable & Serializable"));
+      assertThat(typeParams.getSignature(),
+                 equalTo("class/Foo/method/typeParams(List<N>,Map<N,Map<N,T>>)"));
    }
 
    @Test
