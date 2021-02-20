@@ -10,9 +10,7 @@ import org.fulib.util.Validator;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FMethod
@@ -46,7 +44,8 @@ public class FMethod
    private String name;
    private String annotations;
    private String modifiers = "public";
-   private LinkedHashMap<String, String> params;
+   private final LinkedHashMap<String, String> params = new LinkedHashMap<>();
+   private final Map<String, String> typeParams = new LinkedHashMap<>();
    private String returnType;
    private String methodBody;
 
@@ -131,6 +130,21 @@ public class FMethod
 
       builder.append(this.modifiers);
       builder.append(' ');
+      if (!this.typeParams.isEmpty())
+      {
+         builder.append('<');
+         for (final Map.Entry<String, String> entry : this.typeParams.entrySet())
+         {
+            builder.append(entry.getKey());
+            if (entry.getValue() != null)
+            {
+               builder.append(" extends ");
+               builder.append(entry.getValue());
+            }
+            builder.append(", ");
+         }
+         builder.setCharAt(builder.length() - 2, '>');
+      }
       builder.append(this.returnType);
       builder.append(' ');
       builder.append(this.name);
@@ -195,7 +209,8 @@ public class FMethod
 
       this.setModifiers(methodCtx.modifier().stream().map(FMethod::inputText).collect(Collectors.joining(" ")));
 
-      String returnType = inputText(memberCtx.type());
+      final FulibClassParser.TypeParamListContext typeParams = memberCtx.typeParamList();
+      String returnType = inputText(typeParams != null ? memberCtx.annotatedType(0) : memberCtx.type());
 
       for (int arrayDimensions = memberCtx.arraySuffix().size(); arrayDimensions > 0; arrayDimensions--)
       {
@@ -204,6 +219,7 @@ public class FMethod
          returnType += "[]";
       }
 
+      this.setTypeParams(typeParams);
       this.setReturnType(returnType);
       this.setName(memberCtx.IDENTIFIER().getText());
       this.setParams(memberCtx.parameterList());
@@ -212,17 +228,28 @@ public class FMethod
       return this;
    }
 
-   private void setParams(FulibClassParser.ParameterListContext paramsCtx)
+   private void setTypeParams(FulibClassParser.TypeParamListContext paramsCtx)
    {
-      if (this.params == null)
+      this.typeParams.clear();
+      if (paramsCtx == null)
       {
-         this.params = new LinkedHashMap<>();
-      }
-      else
-      {
-         this.params.clear();
+         return;
       }
 
+      for (final FulibClassParser.TypeParamContext typeParamCtx : paramsCtx.typeParam())
+      {
+         final String name = typeParamCtx.IDENTIFIER().getText();
+         final List<FulibClassParser.AnnotatedTypeContext> types = typeParamCtx.annotatedType();
+         final String type = types.isEmpty()
+            ? null
+            : types.stream().map(FMethod::inputText).collect(Collectors.joining(" & "));
+         this.typeParams.put(name, type);
+      }
+   }
+
+   private void setParams(FulibClassParser.ParameterListContext paramsCtx)
+   {
+      this.params.clear();
       for (final FulibClassParser.ParameterContext paramCtx : paramsCtx.parameter())
       {
          final String name = paramCtx.IDENTIFIER().getText();
@@ -291,15 +318,24 @@ public class FMethod
    }
 
    /**
+    * @return a mutable, ordered map of parameters, where the key is the name and the value is the type.
+    *
     * @since 1.2
     */
    public LinkedHashMap<String, String> getParams()
    {
-      if (this.params == null)
-      {
-         this.params = new LinkedHashMap<>();
-      }
       return this.params;
+   }
+
+   /**
+    * @return an mutable, ordered map of type parameters, where the key is the name and the value is either {code null}
+    * for a plain type parameter {@code T} or the type bound {@code T extends Bound}.
+    *
+    * @since 1.5
+    */
+   public Map<String, String> getTypeParams()
+   {
+      return typeParams;
    }
 
    /**
