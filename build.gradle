@@ -11,7 +11,7 @@ buildscript {
       }
    }
    dependencies {
-      classpath 'org.openjfx:javafx-plugin:0.0.8'
+      classpath 'org.openjfx:javafx-plugin:0.0.9'
    }
 }
 
@@ -24,9 +24,9 @@ plugins {
    // https://plugins.gradle.org/plugin/de.clashsoft.simple-publish
    id 'de.clashsoft.simple-publish' version '0.6.0'
    // https://plugins.gradle.org/plugin/com.palantir.revapi
-   id 'com.palantir.revapi' version '1.4.3'
+   id 'com.palantir.revapi' version '1.4.4'
    // https://plugins.gradle.org/plugin/org.fulib.fulibGradle
-   id 'org.fulib.fulibGradle' version '0.4.0'
+   id 'org.fulib.fulibGradle' version '0.5.0'
 }
 
 if (JavaVersion.current().java11Compatible) {
