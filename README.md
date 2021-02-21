@@ -24,7 +24,7 @@ We have an Online Version at www.fulib.org where you can find docs and tutorials
 plugins {
     // ...
     // https://plugins.gradle.org/plugin/org.fulib.fulibGradle
-    id 'org.fulib.fulibGradle' version '0.4.0'
+    id 'org.fulib.fulibGradle' version '0.5.0'
 }
 
 repositories {
@@ -36,7 +36,7 @@ dependencies {
     // ...
 
     // https://mvnrepository.com/artifact/org.fulib/fulibScenarios
-    fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.5.0'
+    fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.6.2'
 
     // optional, to override the version of fulib used by fulibScenarios:
     // https://mvnrepository.com/artifact/org.fulib/fulib
