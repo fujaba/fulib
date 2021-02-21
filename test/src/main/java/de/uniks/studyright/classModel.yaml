@@ -1,4 +1,4 @@
-- c: 	ClassModel
+- c: 	org.fulib.classmodel.ClassModel
   classes: 	room 	university 	student
   defaultCollectionType: 	c1
   defaultPropertyStyle: 	Bean
@@ -7,7 +7,7 @@
   packageName: 	de.uniks.studyright
   packageSrcFolder: 	"src/main/java/de/uniks/studyright"
 
-- room: 	Clazz
+- room: 	org.fulib.classmodel.Clazz
   attributes: 	room_roomNo 	room_topic 	room_credits
   model: 	c
   modified: 	false
@@ -15,7 +15,7 @@
   propertyStyle: 	Bean
   roles: 	room_uni 	room_students
 
-- university: 	Clazz
+- university: 	org.fulib.classmodel.Clazz
   attributes: 	university_name
   model: 	c
   modified: 	false
@@ -23,7 +23,7 @@
   propertyStyle: 	Bean
   roles: 	university_rooms 	university_students
 
-- student: 	Clazz
+- student: 	org.fulib.classmodel.Clazz
   attributes: 	student_name 	student_studentId 	student_credits 	student_motivation
   model: 	c
   modified: 	false
@@ -31,14 +31,14 @@
   propertyStyle: 	Bean
   roles: 	student_in 	student_uni
 
-- c1: 	CollectionType
+- c1: 	org.fulib.classmodel.CollectionType
   implClass: 	class java.util.ArrayList
   implTemplate: 	"java.util.ArrayList<%s>"
   itf: 	org.fulib.classmodel.CollectionInterface.List
   qualifiedImplName: 	java.util.ArrayList
   simpleImplName: 	ArrayList
 
-- room_roomNo: 	Attribute
+- room_roomNo: 	org.fulib.classmodel.Attribute
   clazz: 	room
   id: 	Room_roomNo
   modified: 	false
@@ -47,7 +47,7 @@
   type: 	String
   typeSignature: 	String
 
-- room_topic: 	Attribute
+- room_topic: 	org.fulib.classmodel.Attribute
   clazz: 	room
   id: 	Room_topic
   modified: 	false
@@ -56,7 +56,7 @@
   type: 	String
   typeSignature: 	String
 
-- room_credits: 	Attribute
+- room_credits: 	org.fulib.classmodel.Attribute
   clazz: 	room
   id: 	Room_credits
   modified: 	false
@@ -65,7 +65,7 @@
   type: 	int
   typeSignature: 	int
 
-- room_uni: 	AssocRole
+- room_uni: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	room
@@ -75,7 +75,7 @@
   other: 	university_rooms
   propertyStyle: 	Bean
 
-- room_students: 	AssocRole
+- room_students: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	room
@@ -87,7 +87,7 @@
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- university_name: 	Attribute
+- university_name: 	org.fulib.classmodel.Attribute
   clazz: 	university
   id: 	University_name
   modified: 	false
@@ -96,7 +96,7 @@
   type: 	String
   typeSignature: 	String
 
-- university_rooms: 	AssocRole
+- university_rooms: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	university
@@ -108,7 +108,7 @@
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- university_students: 	AssocRole
+- university_students: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	university
@@ -120,7 +120,7 @@
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 
-- student_name: 	Attribute
+- student_name: 	org.fulib.classmodel.Attribute
   clazz: 	student
   id: 	Student_name
   modified: 	false
@@ -129,7 +129,7 @@
   type: 	String
   typeSignature: 	String
 
-- student_studentId: 	Attribute
+- student_studentId: 	org.fulib.classmodel.Attribute
   clazz: 	student
   id: 	Student_studentId
   modified: 	false
@@ -138,7 +138,7 @@
   type: 	String
   typeSignature: 	String
 
-- student_credits: 	Attribute
+- student_credits: 	org.fulib.classmodel.Attribute
   clazz: 	student
   id: 	Student_credits
   modified: 	false
@@ -147,7 +147,7 @@
   type: 	int
   typeSignature: 	int
 
-- student_motivation: 	Attribute
+- student_motivation: 	org.fulib.classmodel.Attribute
   clazz: 	student
   id: 	Student_motivation
   modified: 	false
@@ -156,7 +156,7 @@
   type: 	double
   typeSignature: 	double
 
-- student_in: 	AssocRole
+- student_in: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	student
@@ -166,7 +166,7 @@
   other: 	room_students
   propertyStyle: 	Bean
 
-- student_uni: 	AssocRole
+- student_uni: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	student
