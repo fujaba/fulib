@@ -157,3 +157,19 @@
 
 * The reflective class model builder now properly replaces fully qualified class names with imports. #80
 * Fixed JavaFX templates generating invalid code for unidirectional associations. #81
+
+# fulib v1.5.0
+
+## New Features
+
++ Added `typeParams` for `FMethod`s. #34 #89
++ Classes with property change support now expose the `PropertyChangeSupport` object via the `listeners()` method. #83 #84
+
+## Improvements
+
+* The code generator no longer adds `add/removePropertyChangeListener` methods. #83 #84
+* Getters for boolean attributes now start with `is` instead of `get`. #85 #86
+
+## Deprecations
+
+* Deprecated the `*Builder` classes and related methods. #82 #87
