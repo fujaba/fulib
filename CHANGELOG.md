@@ -173,3 +173,9 @@
 ## Deprecations
 
 * Deprecated the `*Builder` classes and related methods. #82 #87
+
+# fulib v1.5.1
+
+## Bugfixes
+
+* Generated code now includes FMethod type parameters. #90
