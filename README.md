@@ -1,7 +1,6 @@
 # fulib - Fujaba library
 
 [![Java CI](https://github.com/fujaba/fulib/workflows/Java%20CI/badge.svg)](https://github.com/fujaba/fulib/actions)
-[![Download](https://api.bintray.com/packages/fujaba/maven/fulib/images/download.svg)](https://bintray.com/fujaba/maven/fulib/_latestVersion "Download")
 
 Fulib is a library that provides code generation for UML like models and some model management functionalities.
 Using a domain-specific language provided by Java APIs, it allows you to define classes, attributes and associations with a meta model.
@@ -31,7 +30,6 @@ plugins {
 repositories {
     // ...
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
