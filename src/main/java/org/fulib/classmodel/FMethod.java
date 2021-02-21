@@ -125,7 +125,7 @@ public class FMethod
       if (this.annotations != null && !this.annotations.isEmpty())
       {
          builder.append(this.annotations);
-         builder.append("\n   ");
+         builder.append('\n');
       }
 
       builder.append(this.modifiers);

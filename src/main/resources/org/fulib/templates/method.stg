@@ -3,9 +3,7 @@ method: <method.signature>
 >>
 
 method(method, body) ::= <<
-   <if(method.annotations)><method.annotations>
-   <endif>
-   <method.modifiers> <method.returnType> <method.name>(<method.paramsString>)
+   <method.declaration>
    {
       <body>
    }
