@@ -120,7 +120,7 @@ public class GenModel implements ClassModelDecorator
 
 Within `GenModel`, we define our data model using a familiar yet shortened Java syntax.
 Every nested class is translated to a top-level class in the `src/main/java` source directory.
-[Class Model Definition](docs/ClassModelDefinition.md) in the docs describes this with more details and options.
+The [docs](docs/README.md) describe this with more details and options.
 For now, we present a simple example in which we define three classes each with some attributes and associations.
 
 Attributes are defined just like a normal field.
