@@ -6,6 +6,8 @@ It uses the package name `de.uniks.studyright`, which you can replace according 
 Create a class `GenModel` in the `de.uniks.studyright` package and **put it in the `src/gen/java` source directory**.
 The name `GenModel` is only a convention, you can also use a different one.
 
+`src/gen/java/de/uniks/studyright/GenModel.java`:
+
 <!-- insert_code_fragment: test.GenModel | fenced:java -->
 ```java
 package de.uniks.studyright;

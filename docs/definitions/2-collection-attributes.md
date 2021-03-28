@@ -4,6 +4,8 @@ Attributes with collection types, i.e. those extending `Collection`, are treated
 Instead of a setter, those will generate `with` and `without` methods.
 The getter will make sure that the collection cannot be modified from the outside.
 
+`src/gen/java/org/fulib/docs/GenModel.java`:
+
 <!-- insert_code_fragment: docs.GenModel.Page | fenced:java -->
 ```java
 class Page
@@ -12,6 +14,8 @@ class Page
 }
 ```
 <!-- end_code_fragment: -->
+
+`src/main/java/org/fulib/docs/Page.java`:
 
 <!-- insert_code_fragment: docs.Page | fenced:java -->
 ```java

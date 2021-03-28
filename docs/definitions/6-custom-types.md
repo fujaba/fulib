@@ -3,6 +3,8 @@
 The `@Type` annotation can override the type of an attribute or association if it cannot be otherwise named or determined.
 This is useful if the type is not available in the gen source set, or when using a collection type that does not have a generic type argument.
 
+`src/gen/java/org/fulib/docs/GenModel.java`:
+
 <!-- insert_code_fragment: docs.GenModel.Type | fenced:java -->
 ```java
 @Type("Color")
@@ -15,6 +17,8 @@ IntArrayList ints; // it.unimi.dsi.fastutil.ints.IntArrayList
 StudentRegister students;
 ```
 <!-- end_code_fragment: -->
+
+`src/gen/java/org/fulib/docs/StudentRegister.java` **and** `src/main/java/org/fulib/docs/StudentRegister.java`:
 
 <!-- insert_code_fragment: docs.StudentRegister | fenced:java -->
 ```java
@@ -32,6 +36,8 @@ class StudentRegister extends ArrayList<Student>
 ```
 <!-- end_code_fragment: -->
 
+`src/main/java/org/fulib/docs/Color.java`:
+
 <!-- insert_code_fragment: docs.Color | fenced:java -->
 ```java
 public enum Color
@@ -40,6 +46,8 @@ public enum Color
 }
 ```
 <!-- end_code_fragment: -->
+
+`src/main/java/org/fulib/docs/CustomTypes.java`:
 
 <!-- insert_code_fragment: docs.Type | fenced:java -->
 ```java

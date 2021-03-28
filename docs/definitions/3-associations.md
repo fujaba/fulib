@@ -3,6 +3,8 @@
 The `@Link` annotation is required to define an association.
 All you have to do is pass the name of reverse role in the target class:
 
+`src/gen/java/org/fulib/docs/GenModel.java`:
+
 <!-- insert_code_fragment: docs.GenModel.Student | fenced:java -->
 ```java
 class Student
@@ -32,6 +34,8 @@ class University
 The `@Link` annotation is primarily intended for *bidirectional* associations.
 The generated code will ensure referential integrity when setting a student's university or when adding or removing students to a university.
 In case you want a *unidirectional* association, you can simply omit the annotation argument, as shown with `president` and `employees` in the `University` example.
+
+`src/main/java/org/fulib/docs/Student.java`:
 
 <!-- insert_code_fragment: docs.Student | fenced:java -->
 ```java
@@ -73,6 +77,8 @@ public class Student
 }
 ```
 <!-- end_code_fragment: -->
+
+`src/main/java/org/fulib/docs/University.java`:
 
 <!-- insert_code_fragment: docs.University | fenced:java -->
 ```java

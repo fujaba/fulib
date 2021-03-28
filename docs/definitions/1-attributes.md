@@ -3,6 +3,8 @@
 Class models for fulib are defined using familiar Java syntax.
 We start by declaring a simple class with some attributes.
 
+`src/gen/java/org/fulib/docs/GenModel.java`:
+
 <!-- insert_code_fragment: docs.GenModel.Person | fenced:java -->
 ```java
 class Person
@@ -23,6 +25,8 @@ This will generate a `Person` class with a `private` field and `public` getters 
 
 For attributes with the type `boolean`, the getter starts with `is`<sup>since v1.5</sup>.
 All other types use `get`.
+
+`src/main/java/org/fulib/docs/Person.java`:
 
 <!-- insert_code_fragment: docs.Person | fenced:java -->
 ```java

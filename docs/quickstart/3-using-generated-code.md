@@ -3,6 +3,8 @@
 Now you can use the generated classes from your code (in `src/main/java` and `src/test/java`).
 Here's an example for our university model:
 
+`src/test/java/de/uniks/studyright/Test.java`:
+
 <!-- insert_code_fragment: test.UniversityModelUsage | fenced:java -->
 ```java
 University studyRight = new University().setName("Study Right");
@@ -17,5 +19,7 @@ studyRight.withStudents(alice, bob);
 <!-- end_code_fragment: -->
 
 The code using the model creates the object structure shown in the object diagram below.
+
+`doc/images/studyRightObjects.png`:
 
 ![simple object diagram](../../test/doc/images/studyRightObjects.png)

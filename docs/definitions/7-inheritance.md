@@ -2,6 +2,8 @@
 
 You can easily make model classes extend other model classes, again using familiar Java syntax:
 
+`src/gen/java/org/fulib/docs/GenModel.java`:
+
 ```java
 class Person
 {

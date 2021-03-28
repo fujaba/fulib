@@ -7,6 +7,8 @@ Fulib can be configured for documenting your model, specifically for generating 
 
 Note that `@Since` only has an effect if `@Description` is also present.
 
+`src/gen/java/org/fulib/docs/GenModel.java`:
+
 <!-- insert_code_fragment: docs.GenModel.Description | fenced:java -->
 ```java
 @Description("the full name including first, middle and last names")
@@ -17,6 +19,8 @@ String fullName;
 double height;
 ```
 <!-- end_code_fragment: -->
+
+`src/main/java/org/fulib/docs/Person.java`:
 
 <!-- insert_code_fragment: docs.Description | fenced:java -->
 ```java

@@ -6,4 +6,6 @@ You can check out the results in the `de.uniks.studyright` package in the `src/m
 
 Rendered as a class diagram this model looks like this:
 
+`src/main/java/de/uniks/studyright/classDiagram.png`:
+
 ![University class diagram](../../test/src/main/java/de/uniks/studyright/classDiagram.png)
