@@ -9,3 +9,4 @@ This chapter explains the various options for defining class models.
 * [JavaDocs](5-javadocs.md)
 * [Custom Types](6-custom-types.md)
 * [Inheritance](7-inheritance.md)
+* [Methods](8-methods.md)

@@ -8,6 +8,6 @@ public class UpdateCodeFragments
    {
       final CodeFragments fragments = FulibTools.codeFragments();
       fragments.load("test/");
-      fragments.write("README.md", "doc/");
+      fragments.write("README.md", "docs/");
    }
 }
