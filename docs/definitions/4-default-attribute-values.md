@@ -1,4 +1,4 @@
-# Default Attributes Values
+# Default Attribute Values
 
 Attributes (but not associations) can be initialized with a default value.
 This is possible using the `@InitialValue` annotation, which takes a string representing a Java expression.
