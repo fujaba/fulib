@@ -36,7 +36,7 @@ if (JavaVersion.current().java11Compatible) {
 // --------------- General Settings ---------------
 
 group = 'org.fulib'
-version = 'git describe --tags'.execute().text[1..-2] // strip v and \n
+version = 'git describe --tags'.execute([], rootDir).text[1..-2] // strip v and \n
 description = 'Fulib is a Java-code generating library.'
 
 modifyPom {
