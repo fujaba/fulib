@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="jobCollection" nsURI="http://www.transformation-tool-contest.eu/ttc21/jobCollection"
+    nsPrefix="jobs">
+  <eClassifiers xsi:type="ecore:EClass" name="JobCollection">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="labware" upperBound="-1"
+        eType="#//Labware" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jobs" lowerBound="1" upperBound="-1"
+        eType="#//Job" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LiquidTransferJob" eSuperTypes="#//Job">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
+        eType="#//Labware"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tips" lowerBound="1" upperBound="8"
+        eType="#//TipLiquidTransfer" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" lowerBound="1"
+        eType="#//Labware"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Labware">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Trough" eSuperTypes="#//Labware"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Microplate" eSuperTypes="#//Labware"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TubeRunner" eSuperTypes="#//Labware">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="barcodes" upperBound="16"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="JobStatus">
+    <eLiterals name="Planned"/>
+    <eLiterals name="Executing" value="1"/>
+    <eLiterals name="Succeeded" value="2"/>
+    <eLiterals name="Failed" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TipLiquidTransfer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sourceCavityIndex" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="volume" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetCavityIndex" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" lowerBound="1"
+        eType="#//JobStatus"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Job" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" lowerBound="1" eType="#//JobStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="protocolStepName" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="previous" upperBound="-1"
+        eType="#//Job" eOpposite="#//Job/next"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="next" upperBound="-1" eType="#//Job"
+        eOpposite="#//Job/previous"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WashJob" eSuperTypes="#//Job">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="microplate" lowerBound="1"
+        eType="#//Microplate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cavities" lowerBound="1"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IncubateJob" eSuperTypes="#//Job">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="microplate" lowerBound="1"
+        eType="#//Microplate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="temperature" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double" defaultValueLiteral="293.15"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
+  </eClassifiers>
+</ecore:EPackage>

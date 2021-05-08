@@ -5,10 +5,20 @@ import org.fulib.StrUtil;
 import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
 import org.fulib.yaml.EventSource;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static org.fulib.builder.Type.BEAN;
@@ -32,11 +42,10 @@ import static org.fulib.yaml.EventSource.EVENT_TYPE;
  */
 public class ClassModelManager implements IModelManager
 {
+
    // =============== Classes ===============
 
-   /**
-    * @since 1.2
-    */
+   /** @since 1.2 */
    public class ClassManager
    {
       private final Clazz clazz;
@@ -434,12 +443,12 @@ public class ClassModelManager implements IModelManager
     * unless the {@link org.fulib.builder.reflect.Link} annotation is present, in which case they define associations.
     * Other annotations in {@link org.fulib.builder.reflect} can be used for more customization.
     *
-    * @param classDef the reflective class that defines the {@link Clazz}
+    * @param classDef
+    *    the reflective class that defines the {@link Clazz}
     *
     * @return the newly created or existing {@link Clazz}
     *
     * @see <a href="https://fujaba.github.io/fulib/ClassModelDefinition.md">Class Model Definition</a>
-    *
     * @since 1.4
     */
    public Clazz haveClass(Class<?> classDef)
@@ -460,6 +469,26 @@ public class ClassModelManager implements IModelManager
    public List<Clazz> haveNestedClasses(Class<?> genModel)
    {
       return Arrays.stream(genModel.getDeclaredClasses()).map(this::haveClass).collect(Collectors.toList());
+   }
+
+   public void haveEcore(String ecoreResourceName)
+   {
+      InputStream resource = this.getClass().getResourceAsStream(ecoreResourceName);
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder builder = null;
+      try
+      {
+         builder = factory.newDocumentBuilder();
+         Document document = builder.parse(resource);
+         Element root = document.getDocumentElement();
+         root.normalize();
+         ECoreVisitor visitor = new ECoreVisitor().setClassModelManager(this);
+         visitor.visit(root);
+      }
+      catch (ParserConfigurationException | SAXException | IOException e)
+      {
+         Logger.getGlobal().log(Level.SEVERE, "could not parse ecore file", e);
+      }
    }
 
    /**
@@ -774,10 +803,7 @@ public class ClassModelManager implements IModelManager
 
          modified.set(true);
 
-         role = new AssocRole()
-            .setClazz(owner)
-            .setName(name)
-            .setPropertyStyle(owner.getPropertyStyle());
+         role = new AssocRole().setClazz(owner).setName(name).setPropertyStyle(owner.getPropertyStyle());
          this.setCardinality(owner, cardinality, role);
       }
       else if (role.getCardinality() == cardinality || cardinality == 0)

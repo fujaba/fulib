@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="laboratoryAutomation" nsURI="http://www.transformation-tool-contest.eu/ttc21/laboratoryAutomation"
+    nsPrefix="lab">
+  <eClassifiers xsi:type="ecore:EClass" name="Assay">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="steps" lowerBound="1" upperBound="-1"
+        eType="#//ProtocolStep" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reagents" upperBound="-1"
+        eType="#//Reagent" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Sample">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sampleID" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" lowerBound="1" eType="#//SampleState"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JobRequest">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assay" lowerBound="1" eType="#//Assay"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="samples" lowerBound="1"
+        upperBound="-1" eType="#//Sample" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProtocolStep" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="#//ProtocolStep"
+        eOpposite="#//ProtocolStep/previous"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="previous" eType="#//ProtocolStep"
+        eOpposite="#//ProtocolStep/next"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AddReagent" eSuperTypes="#//ProtocolStep">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="volume" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reagent" lowerBound="1"
+        eType="#//Reagent"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DistributeSample" eSuperTypes="#//ProtocolStep">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="volume" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Reagent">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SampleState">
+    <eLiterals name="Waiting"/>
+    <eLiterals name="Processing" value="1"/>
+    <eLiterals name="Finished" value="2"/>
+    <eLiterals name="Error" value="3" literal="Error"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Incubate" eSuperTypes="#//ProtocolStep">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="temperature" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double" defaultValueLiteral="293.15"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Wash" eSuperTypes="#//ProtocolStep"/>
+</ecore:EPackage>
