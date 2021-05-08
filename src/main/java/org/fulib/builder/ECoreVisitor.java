@@ -1,5 +1,6 @@
 package org.fulib.builder;
 
+import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.Clazz;
 import org.w3c.dom.*;
@@ -83,7 +84,30 @@ public class ECoreVisitor
          m.haveAttribute(clazz, name, attrType);
       }
       else if (xsiType.equals("ecore:EReference")) {
-         Logger.getGlobal().severe("EReference structural feature not yet implemented " + name);
+         Clazz otherClazz = m.haveClass(eType);
+         String containment = element.getAttribute("containment");
+         String otherName = element.getAttribute("eOpposite");
+         if (containment.equals("true")) {
+            otherName = "parent";
+            int card = upperBound.equals("-1") ? Type.ONE : Type.MANY;
+            if (clazz.getRole(otherName) == null) {
+               m.associate(clazz, name, card, otherClazz, otherName, Type.ONE);
+            }
+         }
+         else if (otherName.isEmpty()) {
+            int card = upperBound.equals("-1") ? Type.ONE : Type.MANY;
+            m.associate(clazz, name, card, otherClazz, null, card);
+         }
+         else {
+            int card = upperBound.equals("-1") ? Type.ONE : Type.MANY;
+            String[] split = otherName.split("/+");
+            otherName = split[2];
+
+            int otherCard = otherClazz.getRole(otherName) != null
+               ? otherClazz.getRole(otherName).getCardinality()
+               : Type.MANY;
+            m.associate(clazz, name, card, otherClazz, otherName, otherCard);
+         }
       }
       else {
          Logger.getGlobal().severe("unknown type for structural feature: " + xsiType);
