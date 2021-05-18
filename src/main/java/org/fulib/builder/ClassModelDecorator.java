@@ -1,5 +1,7 @@
 package org.fulib.builder;
 
+import org.fulib.ClassModelGenerator;
+
 /**
  * ClassModelDecorator specifies hooks for various steps of the fulib lifecycle.
  *
@@ -14,4 +16,14 @@ public interface ClassModelDecorator
     *    the class model manager
     */
    void decorate(ClassModelManager m);
+
+   /**
+    * Hook for modifying the code generation phase.
+    *
+    * @param generator
+    *    the generator
+    */
+   default void decorate(ClassModelGenerator generator)
+   {
+   }
 }
