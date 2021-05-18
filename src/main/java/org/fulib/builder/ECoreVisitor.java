@@ -1,25 +1,30 @@
 package org.fulib.builder;
 
-import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.Clazz;
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.logging.Level;
+import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 
 class ECoreVisitor
 {
+   private static final Map<String, BiConsumer<ECoreVisitor, Element>> METHOD_MAP;
+
+   static
+   {
+      METHOD_MAP = new HashMap<>();
+      METHOD_MAP.put("ecore:EPackage", ECoreVisitor::visitEPackage);
+      METHOD_MAP.put("eClassifiers", ECoreVisitor::visitEClassifier);
+      METHOD_MAP.put("eStructuralFeatures", ECoreVisitor::visitEStructuralFeature);
+      METHOD_MAP.put("eLiterals", ECoreVisitor::visitELiteral);
+   }
+
    private final ClassModelManager m;
    private Clazz clazz;
 
@@ -38,31 +43,18 @@ class ECoreVisitor
       visit(root);
    }
 
-   Map<String, Consumer<Element>> methodMap = null;
-
    private void visit(Element root)
    {
-      initMethodMap();
-      String tagName = root.getTagName();
+      final String tagName = root.getTagName();
+      final BiConsumer<ECoreVisitor, Element> visitFunction = METHOD_MAP.get(tagName);
 
-      Consumer<Element> visitFunction = methodMap.get(tagName);
-
-      if (visitFunction != null) {
-         visitFunction.accept(root);
+      if (visitFunction != null)
+      {
+         visitFunction.accept(this, root);
       }
-      else {
+      else
+      {
          Logger.getGlobal().severe(String.format("Don't know how to handle %s", tagName));
-      }
-   }
-
-   private void initMethodMap()
-   {
-      if (methodMap == null) {
-         methodMap = new LinkedHashMap<>();
-         methodMap.put("ecore:EPackage", this::visitEPackage);
-         methodMap.put("eClassifiers", this::visitEClassifier);
-         methodMap.put("eStructuralFeatures", this::visitEStructuralFeature);
-         methodMap.put("eLiterals", this::visitELiteral);
       }
    }
 
