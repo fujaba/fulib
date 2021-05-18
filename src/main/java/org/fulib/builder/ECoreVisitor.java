@@ -28,11 +28,11 @@ class ECoreVisitor
       this.m = m;
    }
 
-   void load(InputStream source) throws Exception
+   void load(String uri) throws Exception
    {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
-      Document document = builder.parse(source);
+      Document document = builder.parse(uri);
       Element root = document.getDocumentElement();
       root.normalize();
       visit(root);

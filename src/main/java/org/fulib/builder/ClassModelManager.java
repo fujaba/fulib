@@ -6,7 +6,6 @@ import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
 import org.fulib.yaml.EventSource;
 
-import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -464,11 +463,11 @@ public class ClassModelManager implements IModelManager
       return Arrays.stream(genModel.getDeclaredClasses()).map(this::haveClass).collect(Collectors.toList());
    }
 
-   public void haveEcore(String ecoreResourceName)
+   public void haveEcore(String uri)
    {
-      try (final InputStream input = getClass().getResourceAsStream(ecoreResourceName))
+      try
       {
-         new ECoreVisitor(this).load(input);
+         new ECoreVisitor(this).load(uri);
       }
       catch (Exception ex)
       {
