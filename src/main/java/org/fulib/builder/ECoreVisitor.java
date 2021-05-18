@@ -74,8 +74,8 @@ class ECoreVisitor
 
    private void visitEStructuralFeature(Element element)
    {
-      String xsiType = element.getAttribute("xsi:type");
-      String name = element.getAttribute("name");
+      final String xsiType = element.getAttribute("xsi:type");
+      final String name = element.getAttribute("name");
       String eType = element.getAttribute("eType");
       eType = eType.substring(eType.lastIndexOf("/") + 1);
       final String upperBound = element.getAttribute("upperBound");
@@ -92,10 +92,10 @@ class ECoreVisitor
       }
       else if (xsiType.equals("ecore:EReference"))
       {
-         Clazz otherClazz = m.haveClass(eType);
-         String containment = element.getAttribute("containment");
+         final Clazz otherClazz = m.haveClass(eType);
+         final String containment = element.getAttribute("containment");
          String otherName = element.getAttribute("eOpposite");
-         if (containment.equals("true"))
+         if ("true".equals(containment))
          {
             otherName = "parent";
             if (clazz.getRole(otherName) == null)
@@ -105,16 +105,12 @@ class ECoreVisitor
          }
          else if (otherName.isEmpty())
          {
-            m.associate(clazz, name, card, otherClazz, null, card);
+            m.associate(clazz, name, card, otherClazz, null, 0);
          }
          else
          {
-            String[] split = otherName.split("/+");
-            otherName = split[2];
-
-            int otherCard =
-               otherClazz.getRole(otherName) != null ? otherClazz.getRole(otherName).getCardinality() : Type.MANY;
-            m.associate(clazz, name, card, otherClazz, otherName, otherCard);
+            otherName = otherName.substring(otherName.lastIndexOf('/') + 1);
+            m.associate(clazz, name, card, otherClazz, otherName, 0);
          }
       }
       else
