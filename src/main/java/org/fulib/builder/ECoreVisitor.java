@@ -66,9 +66,7 @@ class ECoreVisitor
 
    private void visitELiteral(Element element)
    {
-      clazz.setPropertyStyle(Type.POJO);
-      String name = element.getAttribute("name");
-      m.haveAttribute(clazz, name, Type.STRING, String.format("\"%s\"", name));
+      // TODO this should add an enum literal, which are not yet supported by fulib
    }
 
    private void visitEStructuralFeature(Element element)
