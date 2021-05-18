@@ -1,6 +1,7 @@
 package org.fulib.builder;
 
 import org.fulib.Fulib;
+import org.fulib.Plugin;
 import org.fulib.StrUtil;
 import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
@@ -242,6 +243,19 @@ public class ClassModelManager implements IModelManager
    public ClassModelBuilder asBuilder()
    {
       return new ClassModelBuilder(this.classModel);
+   }
+
+   /**
+    * Applies the given plugin to this manager.
+    *
+    * @param plugin
+    *    the plugin to apply
+    *
+    * @since 1.6
+    */
+   public void apply(Plugin<? super ClassModelManager> plugin)
+   {
+      plugin.apply(this);
    }
 
    // --------------- Settings ---------------
