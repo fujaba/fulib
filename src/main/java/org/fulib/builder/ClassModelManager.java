@@ -10,8 +10,6 @@ import org.fulib.yaml.EventSource;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static org.fulib.builder.Type.BEAN;
@@ -475,32 +473,6 @@ public class ClassModelManager implements IModelManager
    public List<Clazz> haveNestedClasses(Class<?> genModel)
    {
       return Arrays.stream(genModel.getDeclaredClasses()).map(this::haveClass).collect(Collectors.toList());
-   }
-
-   /**
-    * Extends the class model with definitions from an {@code ecore} (Eclipse Modeling Framework) file.
-    * Currently, the following definitions are supported:
-    * <ul>
-    *    <li>Classes, including Superclass</li>
-    *    <li>Attributes, including collections</li>
-    *    <li>Associations, including {@code containment}</li>
-    * </ul>
-    *
-    * @param uri
-    *    the URI of the Ecore file, e.g. {@code getClass().getResource("example.ecore").toString()}
-    *
-    * @since 1.6
-    */
-   public void haveEcore(String uri)
-   {
-      try
-      {
-         new ECoreVisitor(this).load(uri);
-      }
-      catch (Exception ex)
-      {
-         Logger.getGlobal().log(Level.SEVERE, "could not parse ecore file", ex);
-      }
    }
 
    /**

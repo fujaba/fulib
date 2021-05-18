@@ -4,6 +4,7 @@ import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
+import org.fulib.emf.ECoreLoaderPlugin;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -20,7 +21,7 @@ public class ECoreVisitorTest
       ClassModelManager m = new ClassModelManager();
       m.setPackageName(packageName);
 
-      m.haveEcore(getClass().getResource("laboratoryAutomation.ecore").toString());
+      m.apply(new ECoreLoaderPlugin(getClass().getResource("laboratoryAutomation.ecore").toString()));
 
       final ClassModel classModel = m.getClassModel();
 
@@ -71,7 +72,7 @@ public class ECoreVisitorTest
       ClassModelManager m = new ClassModelManager();
       m.setPackageName(packageName);
 
-      m.haveEcore(getClass().getResource("jobCollection.ecore").toString());
+      m.apply(new ECoreLoaderPlugin(getClass().getResource("jobCollection.ecore").toString()));
 
       final ClassModel classModel = m.getClassModel();
 

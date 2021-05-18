@@ -1,5 +1,7 @@
-package org.fulib.builder;
+package org.fulib.emf;
 
+import org.fulib.builder.ClassModelManager;
+import org.fulib.builder.Type;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.Clazz;
 import org.w3c.dom.*;
