@@ -15,7 +15,9 @@ public interface ClassModelDecorator
     * @param m
     *    the class model manager
     */
-   void decorate(ClassModelManager m);
+   default void decorate(ClassModelManager m)
+   {
+   }
 
    /**
     * Hook for modifying the code generation phase.
