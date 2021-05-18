@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 class ECoreVisitor
 {
    private static final Map<String, BiConsumer<ECoreVisitor, Element>> METHOD_MAP;
+   private static final Map<String, String> TYPE_MAP;
 
    static
    {
@@ -23,6 +24,12 @@ class ECoreVisitor
       METHOD_MAP.put("eClassifiers", ECoreVisitor::visitEClassifier);
       METHOD_MAP.put("eStructuralFeatures", ECoreVisitor::visitEStructuralFeature);
       METHOD_MAP.put("eLiterals", ECoreVisitor::visitELiteral);
+
+      TYPE_MAP = new HashMap<>();
+      TYPE_MAP.put("Int", Type.INT);
+      TYPE_MAP.put("Double", Type.DOUBLE);
+      TYPE_MAP.put("Float", Type.FLOAT);
+      TYPE_MAP.put("Long", Type.LONG);
    }
 
    private final ClassModelManager m;
@@ -65,35 +72,23 @@ class ECoreVisitor
       Attribute attribute = m.haveAttribute(clazz, name, Type.STRING, String.format("\"%s\"", name));
    }
 
-   LinkedHashMap<String, String> typeMap = null;
-
    private void visitEStructuralFeature(Element element)
    {
-      initTypeMap();
       String xsiType = element.getAttribute("xsi:type");
       String name = element.getAttribute("name");
       String eType = element.getAttribute("eType");
       eType = eType.substring(eType.lastIndexOf("/") + 1);
-      String upperBound = element.getAttribute("upperBound");
-      upperBound = upperBound.isEmpty() ? "-1" : "-n";
+      final String upperBound = element.getAttribute("upperBound");
+      final int card = upperBound.isEmpty() ? Type.ONE : Type.MANY;
 
       if (xsiType.equals("ecore:EAttribute"))
       {
-         if ("Int Double String".indexOf(eType) < 0)
+         final String attrType = TYPE_MAP.getOrDefault(eType, eType);
+         final Attribute attribute = m.haveAttribute(clazz, name, attrType);
+         if (card != Type.ONE)
          {
-            eType = "String";
+            attribute.setCollectionType(m.getClassModel().getDefaultCollectionType());
          }
-         if (upperBound.equals("-n"))
-         {
-            clazz.withImports("java.util.ArrayList;");
-         }
-
-         String attrType = typeMap.get(eType + upperBound);
-         if (attrType == null)
-         {
-            Logger.getGlobal().severe("Don't know how to implement attribute type " + eType);
-         }
-         m.haveAttribute(clazz, name, attrType);
       }
       else if (xsiType.equals("ecore:EReference"))
       {
@@ -103,7 +98,6 @@ class ECoreVisitor
          if (containment.equals("true"))
          {
             otherName = "parent";
-            int card = upperBound.equals("-1") ? Type.ONE : Type.MANY;
             if (clazz.getRole(otherName) == null)
             {
                m.associate(clazz, name, card, otherClazz, otherName, Type.ONE);
@@ -111,12 +105,10 @@ class ECoreVisitor
          }
          else if (otherName.isEmpty())
          {
-            int card = upperBound.equals("-1") ? Type.ONE : Type.MANY;
             m.associate(clazz, name, card, otherClazz, null, card);
          }
          else
          {
-            int card = upperBound.equals("-1") ? Type.ONE : Type.MANY;
             String[] split = otherName.split("/+");
             otherName = split[2];
 
@@ -128,20 +120,6 @@ class ECoreVisitor
       else
       {
          Logger.getGlobal().severe("unknown type for structural feature: " + xsiType);
-      }
-   }
-
-   private void initTypeMap()
-   {
-      if (typeMap == null)
-      {
-         typeMap = new LinkedHashMap<>();
-         typeMap.put("Int-1", "int");
-         typeMap.put("Int-n", "ArrayList<Integer>");
-         typeMap.put("Double-1", "double");
-         typeMap.put("Double-n", "ArrayList<Double>");
-         typeMap.put("String-1", "String");
-         typeMap.put("String-n", "ArrayList<String>");
       }
    }
 
