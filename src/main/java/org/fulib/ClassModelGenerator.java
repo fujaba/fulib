@@ -14,7 +14,7 @@ import java.util.List;
 public class ClassModelGenerator
 {
    private final ClassModel classModel;
-   private final List<Generator> generators = new ArrayList<>();
+   private final List<AbstractGenerator> generators = new ArrayList<>();
 
    public ClassModelGenerator(ClassModel classModel)
    {
@@ -26,18 +26,18 @@ public class ClassModelGenerator
       return this.classModel;
    }
 
-   public List<Generator> getGenerators()
+   public List<AbstractGenerator> getGenerators()
    {
       return Collections.unmodifiableList(this.generators);
    }
 
-   public ClassModelGenerator withGenerator(Generator generator)
+   public ClassModelGenerator withGenerator(AbstractGenerator generator)
    {
       this.generators.add(generator);
       return this;
    }
 
-   public ClassModelGenerator withoutGenerator(Generator generator)
+   public ClassModelGenerator withoutGenerator(AbstractGenerator generator)
    {
       this.generators.remove(generator);
       return this;
@@ -57,11 +57,11 @@ public class ClassModelGenerator
    /**
     * Invokes all generators.
     *
-    * @see Generator#generate(ClassModel)
+    * @see AbstractGenerator#generate(ClassModel)
     */
    public void generate()
    {
-      for (final Generator generator : this.generators)
+      for (final AbstractGenerator generator : this.generators)
       {
          generator.generate(this.classModel);
       }
