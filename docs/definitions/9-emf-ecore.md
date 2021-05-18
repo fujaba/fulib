@@ -6,7 +6,7 @@ By putting the `.ecore` file into `src/gen/resource`, you can load it with a `Cl
 `src/gen/java/org/fulib/docs/GenModel.java`:
 
 ```java
-cmm.haveEcore(getClass().getResource("example.ecore").toString());
+cmm.apply(new ECoreLoaderPlugin(getClass().getResource("example.ecore").toString()));
 ```
 
 Fulib can parse the following components from EMF:
