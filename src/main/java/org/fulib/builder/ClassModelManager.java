@@ -5,14 +5,7 @@ import org.fulib.StrUtil;
 import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
 import org.fulib.yaml.EventSource;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -473,21 +466,13 @@ public class ClassModelManager implements IModelManager
 
    public void haveEcore(String ecoreResourceName)
    {
-      InputStream resource = this.getClass().getResourceAsStream(ecoreResourceName);
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder builder = null;
-      try
+      try (final InputStream input = getClass().getResourceAsStream(ecoreResourceName))
       {
-         builder = factory.newDocumentBuilder();
-         Document document = builder.parse(resource);
-         Element root = document.getDocumentElement();
-         root.normalize();
-         ECoreVisitor visitor = new ECoreVisitor().setClassModelManager(this);
-         visitor.visit(root);
+         new ECoreVisitor(this).load(input);
       }
-      catch (ParserConfigurationException | SAXException | IOException e)
+      catch (Exception ex)
       {
-         Logger.getGlobal().log(Level.SEVERE, "could not parse ecore file", e);
+         Logger.getGlobal().log(Level.SEVERE, "could not parse ecore file", ex);
       }
    }
 

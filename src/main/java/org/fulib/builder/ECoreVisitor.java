@@ -4,27 +4,43 @@ import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.Clazz;
 import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ECoreVisitor
+class ECoreVisitor
 {
-   private ClassModelManager m;
+   private final ClassModelManager m;
    private Clazz clazz;
 
-   public ECoreVisitor setClassModelManager(ClassModelManager m)
+   ECoreVisitor(ClassModelManager m)
    {
       this.m = m;
-      return this;
+   }
+
+   void load(InputStream source) throws Exception
+   {
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      Document document = builder.parse(source);
+      Element root = document.getDocumentElement();
+      root.normalize();
+      visit(root);
    }
 
    Map<String, Consumer<Element>> methodMap = null;
 
-   public void visit(Element root)
+   private void visit(Element root)
    {
       initMethodMap();
       String tagName = root.getTagName();
