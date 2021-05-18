@@ -1,17 +1,20 @@
-package org.fulib.builder;
+package org.fulib.emf;
 
+import org.fulib.builder.ClassModelManager;
+import org.fulib.builder.Type;
 import org.fulib.classmodel.AssocRole;
 import org.fulib.classmodel.Attribute;
 import org.fulib.classmodel.ClassModel;
 import org.fulib.classmodel.Clazz;
 import org.fulib.emf.ECoreLoaderPlugin;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ECoreVisitorTest
+public class ECoreLoaderTest
 {
    @Test
    void laboratyAutomation()
@@ -36,7 +39,7 @@ public class ECoreVisitorTest
 
       // Attributes
       final Attribute assayName = assay.getAttribute("name");
-      assertThat("attribute types are kept", assayName.getType(), is(Type.STRING));
+      assertThat("attribute types are kept", assayName.getType(), CoreMatchers.is(Type.STRING));
 
       final Attribute sampleState = sample.getAttribute("state");
       assertThat("custom attributes types are kept", sampleState.getType(), is("SampleState"));
