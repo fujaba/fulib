@@ -19,7 +19,7 @@ public class ECoreLoaderTest
    @Test
    void laboratyAutomation()
    {
-      final String packageName = "org.fulib.test.laboratoryAutomation";
+      final String packageName = "org.fulib.emf.laboratoryAutomation";
 
       ClassModelManager m = new ClassModelManager();
       m.setPackageName(packageName);
@@ -70,7 +70,7 @@ public class ECoreLoaderTest
    @Test
    void jobCollection()
    {
-      final String packageName = "org.fulib.test.jobCollection";
+      final String packageName = "org.fulib.emf.jobCollection";
 
       ClassModelManager m = new ClassModelManager();
       m.setPackageName(packageName);
