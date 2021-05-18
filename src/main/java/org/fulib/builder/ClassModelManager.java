@@ -463,6 +463,20 @@ public class ClassModelManager implements IModelManager
       return Arrays.stream(genModel.getDeclaredClasses()).map(this::haveClass).collect(Collectors.toList());
    }
 
+   /**
+    * Extends the class model with definitions from an {@code ecore} (Eclipse Modeling Framework) file.
+    * Currently, the following definitions are supported:
+    * <ul>
+    *    <li>Classes, including Superclass</li>
+    *    <li>Attributes, including collections</li>
+    *    <li>Associations, including {@code containment}</li>
+    * </ul>
+    *
+    * @param uri
+    *    the URI of the Ecore file, e.g. {@code getClass().getResource("example.ecore").toString()}
+    *
+    * @since 1.6
+    */
    public void haveEcore(String uri)
    {
       try
