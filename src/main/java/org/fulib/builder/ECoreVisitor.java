@@ -77,54 +77,64 @@ class ECoreVisitor
       String upperBound = element.getAttribute("upperBound");
       upperBound = upperBound.isEmpty() ? "-1" : "-n";
 
-      if (xsiType.equals("ecore:EAttribute")) {
-         if ("Int Double String".indexOf(eType) < 0) {
+      if (xsiType.equals("ecore:EAttribute"))
+      {
+         if ("Int Double String".indexOf(eType) < 0)
+         {
             eType = "String";
          }
-         if (upperBound.equals("-n")) {
+         if (upperBound.equals("-n"))
+         {
             clazz.withImports("java.util.ArrayList;");
          }
 
          String attrType = typeMap.get(eType + upperBound);
-         if (attrType == null) {
+         if (attrType == null)
+         {
             Logger.getGlobal().severe("Don't know how to implement attribute type " + eType);
          }
          m.haveAttribute(clazz, name, attrType);
       }
-      else if (xsiType.equals("ecore:EReference")) {
+      else if (xsiType.equals("ecore:EReference"))
+      {
          Clazz otherClazz = m.haveClass(eType);
          String containment = element.getAttribute("containment");
          String otherName = element.getAttribute("eOpposite");
-         if (containment.equals("true")) {
+         if (containment.equals("true"))
+         {
             otherName = "parent";
             int card = upperBound.equals("-1") ? Type.ONE : Type.MANY;
-            if (clazz.getRole(otherName) == null) {
+            if (clazz.getRole(otherName) == null)
+            {
                m.associate(clazz, name, card, otherClazz, otherName, Type.ONE);
             }
          }
-         else if (otherName.isEmpty()) {
+         else if (otherName.isEmpty())
+         {
             int card = upperBound.equals("-1") ? Type.ONE : Type.MANY;
             m.associate(clazz, name, card, otherClazz, null, card);
          }
-         else {
+         else
+         {
             int card = upperBound.equals("-1") ? Type.ONE : Type.MANY;
             String[] split = otherName.split("/+");
             otherName = split[2];
 
-            int otherCard = otherClazz.getRole(otherName) != null
-               ? otherClazz.getRole(otherName).getCardinality()
-               : Type.MANY;
+            int otherCard =
+               otherClazz.getRole(otherName) != null ? otherClazz.getRole(otherName).getCardinality() : Type.MANY;
             m.associate(clazz, name, card, otherClazz, otherName, otherCard);
          }
       }
-      else {
+      else
+      {
          Logger.getGlobal().severe("unknown type for structural feature: " + xsiType);
       }
    }
 
    private void initTypeMap()
    {
-      if (typeMap == null) {
+      if (typeMap == null)
+      {
          typeMap = new LinkedHashMap<>();
          typeMap.put("Int-1", "int");
          typeMap.put("Int-n", "ArrayList<Integer>");
@@ -140,9 +150,9 @@ class ECoreVisitor
       String name = element.getAttribute("name");
       clazz = m.haveClass(name);
 
-
       String eSuperTypes = element.getAttribute("eSuperTypes");
-      if (eSuperTypes.length() > 0) {
+      if (eSuperTypes.length() > 0)
+      {
          eSuperTypes = eSuperTypes.substring("#//".length());
          Clazz superClass = m.haveClass(eSuperTypes);
          m.haveSuper(clazz, superClass);
@@ -160,18 +170,21 @@ class ECoreVisitor
    {
       NodeList childNodes = element.getChildNodes();
 
-      for (int i = 0; i < childNodes.getLength(); i++) {
+      for (int i = 0; i < childNodes.getLength(); i++)
+      {
          Node node = childNodes.item(i);
-         if (node instanceof Element) {
+         if (node instanceof Element)
+         {
             visit((Element) node);
          }
-         else if (node instanceof Text) {
+         else if (node instanceof Text)
+         {
             // ignore
          }
-         else {
+         else
+         {
             Logger.getGlobal().severe("child is no element");
          }
       }
    }
-
 }
