@@ -7,7 +7,6 @@ import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
@@ -69,7 +68,7 @@ class ECoreVisitor
    {
       clazz.setPropertyStyle(Type.POJO);
       String name = element.getAttribute("name");
-      Attribute attribute = m.haveAttribute(clazz, name, Type.STRING, String.format("\"%s\"", name));
+      m.haveAttribute(clazz, name, Type.STRING, String.format("\"%s\"", name));
    }
 
    private void visitEStructuralFeature(Element element)
@@ -81,17 +80,17 @@ class ECoreVisitor
       final String upperBound = element.getAttribute("upperBound");
       final int card = upperBound.isEmpty() ? Type.ONE : Type.MANY;
 
-      if (xsiType.equals("ecore:EAttribute"))
+      switch (xsiType)
       {
+      case "ecore:EAttribute":
          final String attrType = TYPE_MAP.getOrDefault(eType, eType);
          final Attribute attribute = m.haveAttribute(clazz, name, attrType);
          if (card != Type.ONE)
          {
             attribute.setCollectionType(m.getClassModel().getDefaultCollectionType());
          }
-      }
-      else if (xsiType.equals("ecore:EReference"))
-      {
+         break;
+      case "ecore:EReference":
          final Clazz otherClazz = m.haveClass(eType);
          final String containment = element.getAttribute("containment");
          String otherName = element.getAttribute("eOpposite");
@@ -112,10 +111,10 @@ class ECoreVisitor
             otherName = otherName.substring(otherName.lastIndexOf('/') + 1);
             m.associate(clazz, name, card, otherClazz, otherName, 0);
          }
-      }
-      else
-      {
+         break;
+      default:
          Logger.getGlobal().severe("unknown type for structural feature: " + xsiType);
+         break;
       }
    }
 
@@ -125,7 +124,7 @@ class ECoreVisitor
       clazz = m.haveClass(name);
 
       String eSuperTypes = element.getAttribute("eSuperTypes");
-      if (eSuperTypes.length() > 0)
+      if (!eSuperTypes.isEmpty())
       {
          eSuperTypes = eSuperTypes.substring("#//".length());
          Clazz superClass = m.haveClass(eSuperTypes);
@@ -153,7 +152,7 @@ class ECoreVisitor
          }
          else if (node instanceof Text)
          {
-            // ignore
+            // ignored
          }
          else
          {
