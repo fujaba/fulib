@@ -44,6 +44,17 @@ public class ClassModelGenerator
    }
 
    /**
+    * Applies the given plugin to this generator.
+    *
+    * @param plugin
+    *    the plugin to apply
+    */
+   public void apply(Plugin<? super ClassModelGenerator> plugin)
+   {
+      plugin.apply(this);
+   }
+
+   /**
     * Invokes all generators.
     *
     * @see Generator#generate(ClassModel)
