@@ -146,6 +146,16 @@ class ReflectiveClassBuilder
          {
             out.append(resolved.getSimpleName());
          }
+         else if (ClassModelDecorator.class.isAssignableFrom(resolved.getEnclosingClass()))
+         {
+            // resolved is nested class within another GenModel
+            out
+               .append("import(")
+               .append(resolvedPackage.getName())
+               .append('.')
+               .append(resolved.getSimpleName())
+               .append(')');
+         }
          else
          {
             out.append("import(").append(canonicalName).append(')');
