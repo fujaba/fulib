@@ -146,6 +146,16 @@ class ReflectiveClassBuilder
          {
             out.append(resolved.getSimpleName());
          }
+         else if (resolved.getEnclosingClass() != null && ClassModelDecorator.class.isAssignableFrom(resolved.getEnclosingClass()))
+         {
+            // resolved is nested class within another GenModel
+            out
+               .append("import(")
+               .append(resolvedPackage.getName())
+               .append('.')
+               .append(resolved.getSimpleName())
+               .append(')');
+         }
          else
          {
             out.append("import(").append(canonicalName).append(')');
@@ -176,6 +186,7 @@ class ReflectiveClassBuilder
 
    private static void loadAssoc(Field field, Link link, Clazz clazz, ClassModelManager manager)
    {
+      final Class<?> owner = field.getDeclaringClass();
       final String name = field.getName();
       final CollectionType collectionType = getCollectionType(field.getType());
 
@@ -186,10 +197,11 @@ class ReflectiveClassBuilder
       }
 
       final Class<?> other = getOther(field, collectionType);
+      validateTargetClass(owner, name, other);
 
       if (otherName != null)
       {
-         validateLinkTarget(field.getDeclaringClass(), name, otherName, other);
+         validateLinkTarget(owner, name, otherName, other);
       }
 
       final String otherClazzName = other.getSimpleName();
@@ -200,6 +212,17 @@ class ReflectiveClassBuilder
       role.setCollectionType(collectionType);
       role.setDescription(getDescription(field));
       role.setSince(getSince(field));
+   }
+
+   private static void validateTargetClass(Class<?> owner, String name, Class<?> other)
+   {
+      if (owner.getPackage() != other.getPackage())
+      {
+         throw new InvalidClassModelException(
+            String.format("%s.%s: invalid link: target class %s (%s) must be in the same package (%s)",
+                          owner.getSimpleName(), name, other.getSimpleName(), other.getPackage().getName(),
+                          owner.getPackage().getName()));
+      }
    }
 
    private static void validateLinkTarget(Class<?> owner, String name, String otherName, Class<?> other)

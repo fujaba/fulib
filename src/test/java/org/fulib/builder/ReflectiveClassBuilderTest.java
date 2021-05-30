@@ -1,5 +1,7 @@
 package org.fulib.builder;
 
+import org.fulib.builder.event.GenEvents;
+import org.fulib.builder.model.GenModel;
 import org.fulib.builder.reflect.*;
 import org.fulib.classmodel.*;
 import org.junit.jupiter.api.Test;
@@ -283,5 +285,36 @@ public class ReflectiveClassBuilderTest
 
       assertThat(ex.getMessage(), equalTo(
          "InvalidLinkTargetClass.students: invalid link target: field Student.uni has target type University instead of InvalidLinkTargetClass"));
+   }
+
+   @Test
+   public void crossGenModelReference()
+   {
+      final ClassModelManager cmmEvents = new ClassModelManager();
+      cmmEvents.haveNestedClasses(GenEvents.class);
+
+      final ClassModel classModelEvents = cmmEvents.getClassModel();
+      final Clazz studentEvent = classModelEvents.getClazz("StudentEvent");
+      final Attribute studentEventStudent = studentEvent.getAttribute("student");
+      assertThat(studentEventStudent.getType(), is("import(org.fulib.builder.model.Student)"));
+   }
+
+   class InvalidLinkClassPackage
+   {
+      @Link
+      GenModel.Student student;
+   }
+
+   @Test
+   public void invalidLinkClassPackage()
+   {
+      final ClassModelManager cmm = new ClassModelManager();
+
+      final InvalidClassModelException ex = assertThrows(InvalidClassModelException.class,
+                                                         () -> ReflectiveClassBuilder.load(
+                                                            InvalidLinkClassPackage.class, cmm));
+
+      assertThat(ex.getMessage(), equalTo(
+         "InvalidLinkClassPackage.student: invalid link: target class Student (org.fulib.builder.model) must be in the same package (org.fulib.builder)"));
    }
 }
