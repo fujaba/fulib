@@ -146,7 +146,7 @@ class ReflectiveClassBuilder
          {
             out.append(resolved.getSimpleName());
          }
-         else if (ClassModelDecorator.class.isAssignableFrom(resolved.getEnclosingClass()))
+         else if (resolved.getEnclosingClass() != null && ClassModelDecorator.class.isAssignableFrom(resolved.getEnclosingClass()))
          {
             // resolved is nested class within another GenModel
             out
