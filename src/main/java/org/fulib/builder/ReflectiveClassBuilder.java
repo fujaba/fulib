@@ -6,9 +6,14 @@ import org.fulib.classmodel.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.fulib.builder.Type.*;
 
@@ -57,9 +62,16 @@ class ReflectiveClassBuilder
    private void loadDto(DTO dto, Clazz clazz)
    {
       final Class<?> model = dto.model();
+      final Set<String> include = new HashSet<>(Arrays.asList(dto.pick()));
+      final Set<String> exclude = new HashSet<>(Arrays.asList(dto.omit()));
+
       for (final Field field : model.getDeclaredFields())
       {
-         loadField(field, clazz, true);
+         final String name = field.getName();
+         if ((include.isEmpty() || include.contains(name)) && !exclude.contains(name))
+         {
+            loadField(field, clazz, true);
+         }
       }
    }
 

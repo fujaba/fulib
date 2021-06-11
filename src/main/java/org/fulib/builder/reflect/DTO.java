@@ -10,4 +10,14 @@ import java.lang.annotation.Target;
 public @interface DTO
 {
    Class<?> model();
+
+   /**
+    * @return the names of fields that should be included. Ignored if empty.
+    */
+   String[] pick() default {};
+
+   /**
+    * @return the names of fields that should be excluded
+    */
+   String[] omit() default {};
 }
