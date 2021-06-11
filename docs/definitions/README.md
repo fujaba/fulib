@@ -10,3 +10,4 @@ This chapter explains the various options for defining class models.
 * [Custom Types](6-custom-types.md)
 * [Inheritance](7-inheritance.md)
 * [Methods](8-methods.md)
+* [EMF and Ecore files](9-emf-ecore.md)
