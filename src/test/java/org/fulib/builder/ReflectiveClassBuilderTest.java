@@ -317,4 +317,61 @@ public class ReflectiveClassBuilderTest
       assertThat(ex.getMessage(), equalTo(
          "InvalidLinkClassPackage.student: invalid link: target class Student (org.fulib.builder.model) must be in the same package (org.fulib.builder)"));
    }
+
+   @DTO(model = Person.class)
+   class PersonDto
+   {}
+
+   @Test
+   public void dto()
+   {
+      final ClassModelManager cmm = new ClassModelManager();
+      final Clazz personDto = ReflectiveClassBuilder.load(PersonDto.class, cmm);
+
+      assertThat(personDto.getRole("links"), nullValue());
+
+      final Attribute name = personDto.getAttribute("name");
+      assertThat(name.getType(), is(Type.STRING));
+
+      final Attribute friends = personDto.getAttribute("friends");
+      assertThat(friends.getType(), is(Type.STRING));
+      assertThat(friends.getCollectionType(), is(CollectionType.ArrayList));
+
+      final Attribute dateOfBirth = personDto.getAttribute("dateOfBirth");
+      assertThat(dateOfBirth.getType(), is("import(java.util.Date)"));
+   }
+
+   @DTO(model = Person.class, pick = { "friends" })
+   class PersonLinksDto
+   {}
+
+   @DTO(model = Person.class, omit = { "friends" })
+   class PersonAttributesDto
+   {}
+
+   @Test
+   public void dtoPickOmit()
+   {
+      final ClassModelManager cmm = new ClassModelManager();
+      final Clazz personLinksDto = ReflectiveClassBuilder.load(PersonLinksDto.class, cmm);
+
+      assertThat(personLinksDto.getAttribute("name"), nullValue());
+      assertThat(personLinksDto.getAttribute("dateOfBirth"), nullValue());
+      assertThat(personLinksDto.getRole("links"), nullValue());
+
+      final Attribute friends = personLinksDto.getAttribute("friends");
+      assertThat(friends.getType(), is(Type.STRING));
+      assertThat(friends.getCollectionType(), is(CollectionType.ArrayList));
+
+      final Clazz personAttributesDto = ReflectiveClassBuilder.load(PersonAttributesDto.class, cmm);
+
+      final Attribute name = personAttributesDto.getAttribute("name");
+      assertThat(name.getType(), is(Type.STRING));
+
+      final Attribute dateOfBirth = personAttributesDto.getAttribute("dateOfBirth");
+      assertThat(dateOfBirth.getType(), is("import(java.util.Date)"));
+
+      assertThat(personAttributesDto.getAttribute("links"), nullValue());
+      assertThat(personAttributesDto.getRole("links"), nullValue());
+   }
 }
