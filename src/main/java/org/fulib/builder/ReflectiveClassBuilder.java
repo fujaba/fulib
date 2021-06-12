@@ -6,21 +6,42 @@ import org.fulib.classmodel.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import static org.fulib.builder.Type.MANY;
-import static org.fulib.builder.Type.ONE;
+import static org.fulib.builder.Type.*;
 
 class ReflectiveClassBuilder
 {
    private static final String ID_PATTERN = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
    private static final Pattern CLASS_PATTERN = Pattern.compile(ID_PATTERN + "(?:\\." + ID_PATTERN + ")*");
+   private final ClassModelManager manager;
 
-   static Clazz load(Class<?> classDef, ClassModelManager manager)
+   ReflectiveClassBuilder(ClassModelManager classModelManager)
+   {
+      this.manager = classModelManager;
+   }
+
+   static Clazz load(Class<?> classDef, ClassModelManager classModelManager)
+   {
+      return new ReflectiveClassBuilder(classModelManager).load(classDef);
+   }
+
+   Clazz load(Class<?> classDef)
    {
       final Clazz clazz = manager.haveClass(classDef.getSimpleName());
+
+      final DTO dto = classDef.getAnnotation(DTO.class);
+      if (dto != null)
+      {
+         loadDto(dto, clazz);
+      }
 
       final Class<?> superClass = classDef.getSuperclass();
       if (superClass != null && superClass != Object.class)
@@ -32,13 +53,29 @@ class ReflectiveClassBuilder
 
       for (final Field field : classDef.getDeclaredFields())
       {
-         loadField(field, clazz, manager);
+         loadField(field, clazz, false);
       }
 
       return clazz;
    }
 
-   private static void loadField(Field field, Clazz clazz, ClassModelManager manager)
+   private void loadDto(DTO dto, Clazz clazz)
+   {
+      final Class<?> model = dto.model();
+      final Set<String> include = new HashSet<>(Arrays.asList(dto.pick()));
+      final Set<String> exclude = new HashSet<>(Arrays.asList(dto.omit()));
+
+      for (final Field field : model.getDeclaredFields())
+      {
+         final String name = field.getName();
+         if ((include.isEmpty() || include.contains(name)) && !exclude.contains(name))
+         {
+            loadField(field, clazz, true);
+         }
+      }
+   }
+
+   private void loadField(Field field, Clazz clazz, boolean dto)
    {
       if (field.isSynthetic())
       {
@@ -48,33 +85,40 @@ class ReflectiveClassBuilder
       final Link link = field.getAnnotation(Link.class);
       if (link == null)
       {
-         loadAttribute(field, clazz, manager);
+         loadAttribute(field, clazz, false);
+      }
+      else if (dto)
+      {
+         loadAttribute(field, clazz, true);
       }
       else
       {
-         loadAssoc(field, link, clazz, manager);
+         loadAssoc(field, link, clazz);
       }
    }
 
-   private static void loadAttribute(Field field, Clazz clazz, ClassModelManager manager)
+   private void loadAttribute(Field field, Clazz clazz, boolean dto)
    {
       final String name = field.getName();
       final CollectionType collectionType = getCollectionType(field.getType());
-      final String type = getType(field, collectionType);
+      final String type = dto ? STRING : getType(field, collectionType);
 
       final Attribute attribute = manager.haveAttribute(clazz, name, type);
       attribute.setCollectionType(collectionType);
       attribute.setDescription(getDescription(field));
       attribute.setSince(getSince(field));
 
-      final InitialValue initialValue = field.getAnnotation(InitialValue.class);
-      if (initialValue != null)
+      if (!dto)
       {
-         attribute.setInitialization(initialValue.value());
+         final InitialValue initialValue = field.getAnnotation(InitialValue.class);
+         if (initialValue != null)
+         {
+            attribute.setInitialization(initialValue.value());
+         }
       }
    }
 
-   private static String getType(Field field, CollectionType collectionType)
+   private String getType(Field field, CollectionType collectionType)
    {
       final org.fulib.builder.reflect.Type type = field.getAnnotation(org.fulib.builder.reflect.Type.class);
       if (type != null)
@@ -95,11 +139,11 @@ class ReflectiveClassBuilder
       }
 
       throw new InvalidClassModelException(
-         String.format("%s.%s: cannot determine element type of %s", declaringClass.getSimpleName(),
-                       field.getName(), field.getType().getSimpleName()));
+         String.format("%s.%s: cannot determine element type of %s", declaringClass.getSimpleName(), field.getName(),
+                       field.getType().getSimpleName()));
    }
 
-   private static String toSource(Class<?> base, Type type)
+   private String toSource(Class<?> base, Type type)
    {
       final String input = type.getTypeName();
       final Matcher matcher = CLASS_PATTERN.matcher(input);
@@ -116,7 +160,7 @@ class ReflectiveClassBuilder
       return sb.toString();
    }
 
-   private static void toSource(Class<?> base, String className, StringBuilder out)
+   private void toSource(Class<?> base, String className, StringBuilder out)
    {
       switch (className)
       {
@@ -146,7 +190,8 @@ class ReflectiveClassBuilder
          {
             out.append(resolved.getSimpleName());
          }
-         else if (resolved.getEnclosingClass() != null && ClassModelDecorator.class.isAssignableFrom(resolved.getEnclosingClass()))
+         else if (resolved.getEnclosingClass() != null && ClassModelDecorator.class.isAssignableFrom(
+            resolved.getEnclosingClass()))
          {
             // resolved is nested class within another GenModel
             out
@@ -167,7 +212,7 @@ class ReflectiveClassBuilder
       }
    }
 
-   private static CollectionType getCollectionType(Class<?> type)
+   private CollectionType getCollectionType(Class<?> type)
    {
       if (!Collection.class.isAssignableFrom(type))
       {
@@ -184,7 +229,7 @@ class ReflectiveClassBuilder
       return CollectionType.of(collectionType);
    }
 
-   private static void loadAssoc(Field field, Link link, Clazz clazz, ClassModelManager manager)
+   private void loadAssoc(Field field, Link link, Clazz clazz)
    {
       final Class<?> owner = field.getDeclaringClass();
       final String name = field.getName();
@@ -214,7 +259,7 @@ class ReflectiveClassBuilder
       role.setSince(getSince(field));
    }
 
-   private static void validateTargetClass(Class<?> owner, String name, Class<?> other)
+   private void validateTargetClass(Class<?> owner, String name, Class<?> other)
    {
       if (owner.getPackage() != other.getPackage())
       {
@@ -225,7 +270,7 @@ class ReflectiveClassBuilder
       }
    }
 
-   private static void validateLinkTarget(Class<?> owner, String name, String otherName, Class<?> other)
+   private void validateLinkTarget(Class<?> owner, String name, String otherName, Class<?> other)
    {
       final Field targetField;
       try
@@ -265,7 +310,7 @@ class ReflectiveClassBuilder
       }
    }
 
-   private static Class<?> getOther(Field field, CollectionType collectionType)
+   private Class<?> getOther(Field field, CollectionType collectionType)
    {
       final org.fulib.builder.reflect.Type type = field.getAnnotation(org.fulib.builder.reflect.Type.class);
       if (type != null)
@@ -293,7 +338,7 @@ class ReflectiveClassBuilder
                        field.getName(), field.getType().getSimpleName()));
    }
 
-   private static Class<?> getSiblingClass(Field field, String simpleSiblingName)
+   private Class<?> getSiblingClass(Field field, String simpleSiblingName)
    {
       final Class<?> declaringClass = field.getDeclaringClass();
       final String name = declaringClass.getName();
@@ -312,13 +357,13 @@ class ReflectiveClassBuilder
       }
    }
 
-   private static String getDescription(Field field)
+   private String getDescription(Field field)
    {
       final Description annotation = field.getAnnotation(Description.class);
       return annotation != null ? annotation.value() : null;
    }
 
-   private static String getSince(Field field)
+   private String getSince(Field field)
    {
       final Since annotation = field.getAnnotation(Since.class);
       return annotation != null ? annotation.value() : null;

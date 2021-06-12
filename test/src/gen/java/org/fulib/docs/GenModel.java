@@ -3,15 +3,12 @@ package org.fulib.docs;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.fulib.builder.ClassModelDecorator;
 import org.fulib.builder.ClassModelManager;
-import org.fulib.builder.reflect.Type;
-import org.fulib.builder.reflect.Description;
-import org.fulib.builder.reflect.InitialValue;
-import org.fulib.builder.reflect.Link;
-import org.fulib.builder.reflect.Since;
+import org.fulib.builder.reflect.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({ "unused", "InnerClassMayBeStatic" })
 public class GenModel implements ClassModelDecorator
 {
    // start_code_fragment: docs.GenModel.Person
