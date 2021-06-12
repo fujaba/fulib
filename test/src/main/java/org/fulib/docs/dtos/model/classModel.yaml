@@ -1,0 +1,97 @@
+- c: 	org.fulib.classmodel.ClassModel
+  classes: 	address 	user
+  defaultCollectionType: 	c1
+  defaultPropertyStyle: 	Bean
+  defaultRoleType: 	"java.util.ArrayList<%s>"
+  mainJavaDir: 	"src/main/java"
+  packageName: 	org.fulib.docs.dtos.model
+  packageSrcFolder: 	"src/main/java/org/fulib/docs/dtos/model"
+
+- address: 	org.fulib.classmodel.Clazz
+  attributes: 	address_id 	address_city 	address_street
+  model: 	c
+  modified: 	false
+  name: 	Address
+  propertyStyle: 	Bean
+  roles: 	address_user
+
+- user: 	org.fulib.classmodel.Clazz
+  attributes: 	user_id 	user_name
+  model: 	c
+  modified: 	false
+  name: 	User
+  propertyStyle: 	Bean
+  roles: 	user_address
+
+- c1: 	org.fulib.classmodel.CollectionType
+  implClass: 	class java.util.ArrayList
+  implTemplate: 	"java.util.ArrayList<%s>"
+  itf: 	org.fulib.classmodel.CollectionInterface.List
+  qualifiedImplName: 	java.util.ArrayList
+  simpleImplName: 	ArrayList
+
+- address_id: 	org.fulib.classmodel.Attribute
+  clazz: 	address
+  id: 	Address_id
+  modified: 	false
+  name: 	id
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- address_city: 	org.fulib.classmodel.Attribute
+  clazz: 	address
+  id: 	Address_city
+  modified: 	false
+  name: 	city
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- address_street: 	org.fulib.classmodel.Attribute
+  clazz: 	address
+  id: 	Address_street
+  modified: 	false
+  name: 	street
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- address_user: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	address
+  id: 	Address_user
+  modified: 	false
+  name: 	user
+  other: 	user_address
+  propertyStyle: 	Bean
+
+- user_id: 	org.fulib.classmodel.Attribute
+  clazz: 	user
+  id: 	User_id
+  modified: 	false
+  name: 	id
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- user_name: 	org.fulib.classmodel.Attribute
+  clazz: 	user
+  id: 	User_name
+  modified: 	false
+  name: 	name
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- user_address: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	user
+  id: 	User_address
+  modified: 	false
+  name: 	address
+  other: 	address_user
+  propertyStyle: 	Bean
+
