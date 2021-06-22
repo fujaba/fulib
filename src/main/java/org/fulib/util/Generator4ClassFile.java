@@ -6,6 +6,8 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.StringRenderer;
 
+import javax.swing.text.EditorKit;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -26,6 +28,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
 
    private Clazz clazz;
    private FileFragmentMap fragmentMap;
+   private EditorConfigData editorConfig;
 
    // =============== Properties ===============
 
@@ -58,6 +61,16 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
    {
       this.clazz = clazz;
       this.fragmentMap = fragmentMap;
+      this.editorConfig = new EditorConfigData();
+
+      try
+      {
+         this.editorConfig.load(this.getSourceFileName(clazz));
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
 
       this.generate();
    }

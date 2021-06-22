@@ -13,18 +13,23 @@ class EditorConfigData
 {
    private static final Charset EDITORCONFIG_FILE_ENCODING = StandardCharsets.UTF_8;
 
+   private static final String DEFAULT_INDENT = "   ";
    private static final PropertyType.IndentStyleValue DEFAULT_INDENT_STYLE = PropertyType.IndentStyleValue.space;
    private static final int DEFAULT_INDENT_SIZE = 3;
    private static final PropertyType.EndOfLineValue DEFAULT_EOL = PropertyType.EndOfLineValue.lf;
    private static final boolean DEFAULT_EOF_NEWLINE = true;
    private static final String DEFAULT_CHARSET = "UTF-8";
 
-   final String indent;
-   final String eol;
-   final boolean eofNewline;
-   final String charset;
+   String indent = DEFAULT_INDENT;
+   String eol = DEFAULT_EOL.getEndOfLineString();
+   boolean eofNewline = DEFAULT_EOF_NEWLINE;
+   String charset = DEFAULT_CHARSET;
 
-   public EditorConfigData(String fileName) throws IOException
+   public EditorConfigData()
+   {
+   }
+
+   public void load(String fileName) throws IOException
    {
       final ResourcePropertiesService propService = ResourcePropertiesService
          .builder()
