@@ -48,7 +48,7 @@ of the StudyRight University class model:
 
 Rendered as a class diagram the extended class model looks like:
 
-![simple class diagram](images/FullClassDiagram.png)
+![simple class diagram](classDiagram.png)
 
 Now, we generate the usual model implementation:
 <!-- insert_code_fragment: test4FulibReadme.generate -->
@@ -79,7 +79,7 @@ Once the generated code is compiled we may construct some objects:
 
 This results in:
 
-![object diagram](images/studyRightObjects4Tables.png)
+![object diagram](study-right-objects.png)
 
 Next, we generate table classes:
 
@@ -323,7 +323,7 @@ Study Right 	| wa1338 Arts 	| Bobby m2323 	| sculptures 	| 2 	| drawings 	|
 Study Right 	| wa1338 Arts 	| Bobby m2323 	| sculptures 	| 2 	| sculptures 	| 
 <!-- end_code_fragment: -->
 
-![object diagram](images/studyRightObjectsMoreDone4Tables.png)
+![object diagram](more-done.png)
 
 As the current table contains some confusing cross products let
 us drop the Assignment column:
@@ -393,5 +393,5 @@ Study Right 	| Bobby m2323 	| 24.0 	| drawings, sculptures 	|
 Study Right 	| Carli m2323 	| 65.0 	| integrals, matrices 	| 
 <!-- end_code_fragment: -->
 
-![object diagram](images/studyRightObjectsCreditsAssigned4Tables.png)
+![object diagram](credits-assigned.png)
 

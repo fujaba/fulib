@@ -1,6 +1,7 @@
 package org.fulib.builder;
 
 import org.fulib.Fulib;
+import org.fulib.Plugin;
 import org.fulib.StrUtil;
 import org.fulib.classmodel.*;
 import org.fulib.util.Validator;
@@ -32,11 +33,10 @@ import static org.fulib.yaml.EventSource.EVENT_TYPE;
  */
 public class ClassModelManager implements IModelManager
 {
+
    // =============== Classes ===============
 
-   /**
-    * @since 1.2
-    */
+   /** @since 1.2 */
    public class ClassManager
    {
       private final Clazz clazz;
@@ -243,6 +243,19 @@ public class ClassModelManager implements IModelManager
       return new ClassModelBuilder(this.classModel);
    }
 
+   /**
+    * Applies the given plugin to this manager.
+    *
+    * @param plugin
+    *    the plugin to apply
+    *
+    * @since 1.6
+    */
+   public void apply(Plugin<? super ClassModelManager> plugin)
+   {
+      plugin.apply(this);
+   }
+
    // --------------- Settings ---------------
 
    /**
@@ -434,12 +447,12 @@ public class ClassModelManager implements IModelManager
     * unless the {@link org.fulib.builder.reflect.Link} annotation is present, in which case they define associations.
     * Other annotations in {@link org.fulib.builder.reflect} can be used for more customization.
     *
-    * @param classDef the reflective class that defines the {@link Clazz}
+    * @param classDef
+    *    the reflective class that defines the {@link Clazz}
     *
     * @return the newly created or existing {@link Clazz}
     *
     * @see <a href="https://fujaba.github.io/fulib/ClassModelDefinition.md">Class Model Definition</a>
-    *
     * @since 1.4
     */
    public Clazz haveClass(Class<?> classDef)
@@ -774,10 +787,7 @@ public class ClassModelManager implements IModelManager
 
          modified.set(true);
 
-         role = new AssocRole()
-            .setClazz(owner)
-            .setName(name)
-            .setPropertyStyle(owner.getPropertyStyle());
+         role = new AssocRole().setClazz(owner).setName(name).setPropertyStyle(owner.getPropertyStyle());
          this.setCardinality(owner, cardinality, role);
       }
       else if (role.getCardinality() == cardinality || cardinality == 0)
