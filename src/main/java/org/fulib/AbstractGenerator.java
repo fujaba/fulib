@@ -3,9 +3,11 @@ package org.fulib;
 import org.fulib.classmodel.*;
 import org.fulib.parser.FragmentMapBuilder;
 import org.fulib.util.AbstractGenerator4ClassFile;
+import org.fulib.util.EditorConfigLoader;
 import org.fulib.yaml.YamlIdMap;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,7 +49,7 @@ public abstract class AbstractGenerator
     * Provide your templates for code generation as in:
     * <pre>
     * <!-- insert_code_fragment: testCustomTemplates -->
-    Fulib.generator().setCustomTemplatesFile("templates/custom.stg").generate(model);
+    * Fulib.generator().setCustomTemplatesFile("templates/custom.stg").generate(model);
     * <!-- end_code_fragment: testCustomTemplates -->
     * </pre>
     *
@@ -83,7 +85,7 @@ public abstract class AbstractGenerator
       final String modelFileName = this.getModelFileName();
       final ClassModel oldModel = this.loadClassModel(model.getPackageSrcFolder(), modelFileName);
 
-      final Map<String, FileFragmentMap> files = new HashMap<>();
+      final Map<String, OutputFile> files = new HashMap<>();
 
       final AbstractGenerator4ClassFile generator = this.createGenerator4ClassFile();
       generator.setCustomTemplatesFile(this.getCustomTemplateFile());
@@ -101,10 +103,11 @@ public abstract class AbstractGenerator
       this.generateClasses(model, files, generator);
       this.generateExtraClasses(model, generator);
 
-      for (final FileFragmentMap fragmentMap : files.values())
+      for (final OutputFile outputFile : files.values())
       {
-         fragmentMap.compressBlankLines();
-         fragmentMap.writeFile();
+         outputFile.getFragmentMap().compressBlankLines();
+         final Charset charset = Charset.forName(outputFile.getEditorConfig().getCharset());
+         outputFile.getFragmentMap().writeFile(charset);
       }
 
       this.saveNewClassModel(model, modelFileName);
@@ -116,11 +119,11 @@ public abstract class AbstractGenerator
 
    protected abstract AbstractGenerator4ClassFile createGenerator4ClassFile();
 
-   private void deleteRemovedClassFiles(ClassModel oldModel, Map<String, FileFragmentMap> files)
+   private void deleteRemovedClassFiles(ClassModel oldModel, Map<String, OutputFile> files)
    {
       for (final Clazz clazz : oldModel.getClasses())
       {
-         if (clazz.getModified() && files.get(clazz.getName()).isClassBodyEmpty())
+         if (clazz.getModified() && files.get(clazz.getName()).getFragmentMap().isClassBodyEmpty())
          {
             files.remove(clazz.getName());
 
@@ -139,19 +142,37 @@ public abstract class AbstractGenerator
       }
    }
 
-   private void generateClasses(ClassModel model, Map<String, FileFragmentMap> files,
-      AbstractGenerator4ClassFile generator)
+   private void generateClasses(ClassModel model, Map<String, OutputFile> files, AbstractGenerator4ClassFile generator)
    {
       for (Clazz clazz : model.getClasses())
       {
-         final FileFragmentMap fragmentMap = files.computeIfAbsent(clazz.getName(), s -> {
-            final String sourceFileName = generator.getSourceFileName(clazz);
-            return Files.exists(Paths.get(sourceFileName)) ?
-               FragmentMapBuilder.parse(sourceFileName) :
-               new FileFragmentMap(sourceFileName);
-         });
+         final FileFragmentMap fragmentMap = files
+            .computeIfAbsent(clazz.getName(), s -> getOutputFile(generator, clazz))
+            .getFragmentMap();
          generator.generate(clazz, fragmentMap);
       }
+   }
+
+   private OutputFile getOutputFile(AbstractGenerator4ClassFile generator, Clazz clazz)
+   {
+      final String sourceFileName = generator.getSourceFileName(clazz);
+      final FileFragmentMap newFragmentMap = Files.exists(Paths.get(sourceFileName)) ? FragmentMapBuilder.parse(
+         sourceFileName) : new FileFragmentMap(sourceFileName);
+
+      EditorConfigData editorConfig;
+      try
+      {
+         editorConfig = new EditorConfigLoader().load(sourceFileName);
+      }
+      catch (IOException e)
+      {
+         editorConfig = new EditorConfigData();
+         e.printStackTrace();
+      }
+      final OutputFile outputFile = new OutputFile();
+      outputFile.setFragmentMap(newFragmentMap);
+      outputFile.setEditorConfig(editorConfig);
+      return outputFile;
    }
 
    private ClassModel loadClassModel(String modelFolder, String modelFileName)

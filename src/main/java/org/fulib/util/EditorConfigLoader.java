@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-class EditorConfigLoader
+public class EditorConfigLoader
 {
    private static final Charset EDITORCONFIG_FILE_ENCODING = StandardCharsets.UTF_8;
 
