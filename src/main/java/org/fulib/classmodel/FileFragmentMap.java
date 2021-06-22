@@ -11,16 +11,20 @@ import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.Objects;
 
 public class FileFragmentMap
 {
@@ -755,12 +759,25 @@ public class FileFragmentMap
     */
    public void writeFile()
    {
+      this.writeFile(StandardCharsets.UTF_8);
+   }
+
+   /**
+    * Concatenates all code fragments and writes the resulting text to the file specified by {@link #getFileName()}.
+    *
+    * @param charset
+    *    the charset to use for encoding characters
+    *
+    * @since 1.6
+    */
+   public void writeFile(Charset charset)
+   {
       final Path path = Paths.get(this.fileName);
       try
       {
          Files.createDirectories(path.getParent());
 
-         try (final Writer writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE,
+         try (final Writer writer = Files.newBufferedWriter(path, charset, StandardOpenOption.CREATE,
                                                             StandardOpenOption.TRUNCATE_EXISTING))
          {
             this.write(writer);
