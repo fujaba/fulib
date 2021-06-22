@@ -92,7 +92,7 @@ public class Generator4ClassFile extends AbstractGenerator4ClassFile
       this.generateRemoveYou();
 
       fragmentMap.add(CLASS + '/' + clazz.getName() + '/' + CLASS_END, "}", CLASS_END_NEWLINES);
-      fragmentMap.add(EOF, "", 1);
+      fragmentMap.add(EOF, "", editorConfig.eofNewline ? 1 : 0);
    }
 
    // --------------- Declarations ---------------
