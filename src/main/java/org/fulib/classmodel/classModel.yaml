@@ -1,5 +1,5 @@
-- c: 	ClassModel
-  classes: 	classModel 	clazz 	attribute 	assocRole 	fMethod 	fileFragmentMap 	fragment 	compoundFragment 	codeFragment
+- c: 	org.fulib.classmodel.ClassModel
+  classes: 	compoundFragment 	fragment 	codeFragment 	fileFragmentMap 	editorConfigData 	outputFile 	fMethod 	clazz 	assocRole 	attribute 	classModel
   defaultCollectionType: 	c1
   defaultPropertyStyle: 	Bean
   defaultRoleType: 	"java.util.ArrayList<%s>"
@@ -7,63 +7,7 @@
   packageName: 	org.fulib.classmodel
   packageSrcFolder: 	"src/main/java/org/fulib/classmodel"
 
-- classModel: 	Clazz
-  attributes: 	classModel_packageName 	classModel_mainJavaDir 	classModel_defaultCollectionType 	classModel_defaultPropertyStyle
-  model: 	c
-  modified: 	false
-  name: 	ClassModel
-  propertyStyle: 	Bean
-  roles: 	classModel_classes
-
-- clazz: 	Clazz
-  attributes: 	clazz_name 	clazz_propertyStyle 	clazz_modified 	clazz_imports
-  model: 	c
-  modified: 	false
-  name: 	Clazz
-  propertyStyle: 	Bean
-  roles: 	clazz_model 	clazz_attributes 	clazz_roles 	clazz_methods 	clazz_subClasses 	clazz_superClass
-
-- attribute: 	Clazz
-  attributes: 	attribute_name 	attribute_type 	attribute_collectionType 	attribute_initialization 	attribute_propertyStyle 	attribute_modified 	attribute_description 	attribute_since
-  model: 	c
-  modified: 	false
-  name: 	Attribute
-  propertyStyle: 	Bean
-  roles: 	attribute_clazz
-
-- assocRole: 	Clazz
-  attributes: 	assocRole_name 	assocRole_cardinality 	assocRole_collectionType 	assocRole_aggregation 	assocRole_propertyStyle 	assocRole_description 	assocRole_since 	assocRole_modified
-  model: 	c
-  modified: 	false
-  name: 	AssocRole
-  propertyStyle: 	Bean
-  roles: 	assocRole_clazz 	assocRole_other
-
-- fMethod: 	Clazz
-  attributes: 	fMethod_methodBody 	fMethod_modified 	fMethod_modifiers 	fMethod_annotations
-  model: 	c
-  modified: 	false
-  name: 	FMethod
-  propertyStyle: 	Bean
-  roles: 	fMethod_clazz
-
-- fileFragmentMap: 	Clazz
-  attributes: 	fileFragmentMap_fileName
-  model: 	c
-  modified: 	false
-  name: 	FileFragmentMap
-  propertyStyle: 	Bean
-
-- fragment: 	Clazz
-  attributes: 	fragment_key
-  model: 	c
-  modified: 	false
-  name: 	Fragment
-  propertyStyle: 	Bean
-  roles: 	fragment_parent
-  subClasses: 	codeFragment 	compoundFragment
-
-- compoundFragment: 	Clazz
+- compoundFragment: 	org.fulib.classmodel.Clazz
   model: 	c
   modified: 	false
   name: 	CompoundFragment
@@ -71,7 +15,16 @@
   roles: 	compoundFragment_children
   superClass: 	fragment
 
-- codeFragment: 	Clazz
+- fragment: 	org.fulib.classmodel.Clazz
+  attributes: 	fragment_key
+  model: 	c
+  modified: 	false
+  name: 	Fragment
+  propertyStyle: 	Bean
+  roles: 	fragment_parent
+  subClasses: 	compoundFragment 	codeFragment
+
+- codeFragment: 	org.fulib.classmodel.Clazz
   attributes: 	codeFragment_text
   model: 	c
   modified: 	false
@@ -79,72 +32,270 @@
   propertyStyle: 	Bean
   superClass: 	fragment
 
-- c1: 	CollectionType
+- fileFragmentMap: 	org.fulib.classmodel.Clazz
+  attributes: 	fileFragmentMap_fileName
+  model: 	c
+  modified: 	false
+  name: 	FileFragmentMap
+  propertyStyle: 	Bean
+  roles: 	fileFragmentMap_OutputFile_fragmentMap
+
+- editorConfigData: 	org.fulib.classmodel.Clazz
+  attributes: 	editorConfigData_indent 	editorConfigData_eol 	editorConfigData_eofNewline 	editorConfigData_charset
+  model: 	c
+  modified: 	false
+  name: 	EditorConfigData
+  propertyStyle: 	Bean
+  roles: 	editorConfigData_OutputFile_editorConfig
+
+- outputFile: 	org.fulib.classmodel.Clazz
+  attributes: 	outputFile_fileName
+  model: 	c
+  modified: 	false
+  name: 	OutputFile
+  propertyStyle: 	Bean
+  roles: 	outputFile_editorConfig 	outputFile_fragmentMap
+
+- fMethod: 	org.fulib.classmodel.Clazz
+  attributes: 	fMethod_methodBody 	fMethod_modified 	fMethod_modifiers 	fMethod_annotations
+  model: 	c
+  modified: 	false
+  name: 	FMethod
+  propertyStyle: 	Bean
+  roles: 	fMethod_clazz
+
+- clazz: 	org.fulib.classmodel.Clazz
+  attributes: 	clazz_name 	clazz_propertyStyle 	clazz_modified 	clazz_imports
+  model: 	c
+  modified: 	false
+  name: 	Clazz
+  propertyStyle: 	Bean
+  roles: 	clazz_methods 	clazz_roles 	clazz_attributes 	clazz_model 	clazz_subClasses 	clazz_superClass
+
+- assocRole: 	org.fulib.classmodel.Clazz
+  attributes: 	assocRole_name 	assocRole_cardinality 	assocRole_collectionType 	assocRole_aggregation 	assocRole_propertyStyle 	assocRole_description 	assocRole_since 	assocRole_modified
+  model: 	c
+  modified: 	false
+  name: 	AssocRole
+  propertyStyle: 	Bean
+  roles: 	assocRole_clazz 	assocRole_other
+
+- attribute: 	org.fulib.classmodel.Clazz
+  attributes: 	attribute_name 	attribute_type 	attribute_collectionType 	attribute_initialization 	attribute_propertyStyle 	attribute_modified 	attribute_description 	attribute_since
+  model: 	c
+  modified: 	false
+  name: 	Attribute
+  propertyStyle: 	Bean
+  roles: 	attribute_clazz
+
+- classModel: 	org.fulib.classmodel.Clazz
+  attributes: 	classModel_packageName 	classModel_mainJavaDir 	classModel_defaultCollectionType 	classModel_defaultPropertyStyle
+  model: 	c
+  modified: 	false
+  name: 	ClassModel
+  propertyStyle: 	Bean
+  roles: 	classModel_classes
+
+- c1: 	org.fulib.classmodel.CollectionType
   implClass: 	class java.util.ArrayList
   implTemplate: 	"java.util.ArrayList<%s>"
   itf: 	org.fulib.classmodel.CollectionInterface.List
   qualifiedImplName: 	java.util.ArrayList
   simpleImplName: 	ArrayList
 
-- classModel_packageName: 	Attribute
-  clazz: 	classModel
-  id: 	ClassModel_packageName
-  modified: 	false
-  name: 	packageName
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
-
-- classModel_mainJavaDir: 	Attribute
-  clazz: 	classModel
-  id: 	ClassModel_mainJavaDir
-  modified: 	false
-  name: 	mainJavaDir
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
-
-- classModel_defaultCollectionType: 	Attribute
-  clazz: 	classModel
-  description: 	"the default collection type for to-n roles"
-  descriptionLines: 	"the default collection type for to-n roles"
-  id: 	ClassModel_defaultCollectionType
-  modified: 	false
-  name: 	defaultCollectionType
-  propertyStyle: 	Bean
-  since: 	1.2
-  type: 	CollectionType
-  typeSignature: 	CollectionType
-
-- classModel_defaultPropertyStyle: 	Attribute
-  clazz: 	classModel
-  description: 	"the default property style for attributes and roles.
-Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
-  descriptionLines: 	"the default property style for attributes and roles." 	"Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
-  id: 	ClassModel_defaultPropertyStyle
-  initialization: 	"\"POJO\""
-  modified: 	false
-  name: 	defaultPropertyStyle
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
-
-- classModel_classes: 	AssocRole
+- compoundFragment_children: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	42
-  clazz: 	classModel
+  clazz: 	compoundFragment
   collectionType: 	c1
-  description: 	"the classes contained in this model"
-  descriptionLines: 	"the classes contained in this model"
-  id: 	ClassModel_classes
+  id: 	CompoundFragment_children
   modified: 	false
-  name: 	classes
-  other: 	clazz_model
+  name: 	children
+  other: 	fragment_parent
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
-  since: 	1.2
 
-- clazz_name: 	Attribute
+- fragment_key: 	org.fulib.classmodel.Attribute
+  clazz: 	fragment
+  id: 	Fragment_key
+  modified: 	false
+  name: 	key
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- fragment_parent: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	fragment
+  id: 	Fragment_parent
+  modified: 	false
+  name: 	parent
+  other: 	compoundFragment_children
+  propertyStyle: 	Bean
+
+- codeFragment_text: 	org.fulib.classmodel.Attribute
+  clazz: 	codeFragment
+  id: 	CodeFragment_text
+  modified: 	false
+  name: 	text
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- fileFragmentMap_fileName: 	org.fulib.classmodel.Attribute
+  clazz: 	fileFragmentMap
+  id: 	FileFragmentMap_fileName
+  modified: 	false
+  name: 	fileName
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- fileFragmentMap_OutputFile_fragmentMap: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	0
+  clazz: 	fileFragmentMap
+  collectionType: 	c1
+  id: 	FileFragmentMap_OutputFile_fragmentMap
+  modified: 	false
+  other: 	outputFile_fragmentMap
+  propertyStyle: 	Bean
+  roleType: 	"java.util.ArrayList<%s>"
+
+- editorConfigData_indent: 	org.fulib.classmodel.Attribute
+  clazz: 	editorConfigData
+  id: 	EditorConfigData_indent
+  initialization: 	DEFAULT_INDENT
+  modified: 	false
+  name: 	indent
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- editorConfigData_eol: 	org.fulib.classmodel.Attribute
+  clazz: 	editorConfigData
+  id: 	EditorConfigData_eol
+  initialization: 	DEFAULT_EOL
+  modified: 	false
+  name: 	eol
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- editorConfigData_eofNewline: 	org.fulib.classmodel.Attribute
+  clazz: 	editorConfigData
+  id: 	EditorConfigData_eofNewline
+  initialization: 	DEFAULT_EOF_NEWLINE
+  modified: 	false
+  name: 	eofNewline
+  propertyStyle: 	Bean
+  type: 	boolean
+  typeSignature: 	boolean
+
+- editorConfigData_charset: 	org.fulib.classmodel.Attribute
+  clazz: 	editorConfigData
+  id: 	EditorConfigData_charset
+  initialization: 	DEFAULT_CHARSET
+  modified: 	false
+  name: 	charset
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- editorConfigData_OutputFile_editorConfig: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	0
+  clazz: 	editorConfigData
+  collectionType: 	c1
+  id: 	EditorConfigData_OutputFile_editorConfig
+  modified: 	false
+  other: 	outputFile_editorConfig
+  propertyStyle: 	Bean
+  roleType: 	"java.util.ArrayList<%s>"
+
+- outputFile_fileName: 	org.fulib.classmodel.Attribute
+  clazz: 	outputFile
+  id: 	OutputFile_fileName
+  modified: 	false
+  name: 	fileName
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- outputFile_editorConfig: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	outputFile
+  id: 	OutputFile_editorConfig
+  modified: 	false
+  name: 	editorConfig
+  other: 	editorConfigData_OutputFile_editorConfig
+  propertyStyle: 	Bean
+
+- outputFile_fragmentMap: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	outputFile
+  id: 	OutputFile_fragmentMap
+  modified: 	false
+  name: 	fragmentMap
+  other: 	fileFragmentMap_OutputFile_fragmentMap
+  propertyStyle: 	Bean
+
+- fMethod_methodBody: 	org.fulib.classmodel.Attribute
+  clazz: 	fMethod
+  id: 	FMethod_methodBody
+  modified: 	false
+  name: 	methodBody
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- fMethod_modified: 	org.fulib.classmodel.Attribute
+  clazz: 	fMethod
+  description: 	"a boolean indicating whether this method was modified. For internal use only."
+  descriptionLines: 	"a boolean indicating whether this method was modified. For internal use only."
+  id: 	FMethod_modified
+  modified: 	false
+  name: 	modified
+  propertyStyle: 	Bean
+  type: 	boolean
+  typeSignature: 	boolean
+
+- fMethod_modifiers: 	org.fulib.classmodel.Attribute
+  clazz: 	fMethod
+  description: 	"the modifiers. Defaults to \"public\""
+  descriptionLines: 	"the modifiers. Defaults to \"public\""
+  id: 	FMethod_modifiers
+  initialization: 	"\"public\""
+  modified: 	false
+  name: 	modifiers
+  propertyStyle: 	Bean
+  since: 	1.2
+  type: 	String
+  typeSignature: 	String
+
+- fMethod_annotations: 	org.fulib.classmodel.Attribute
+  clazz: 	fMethod
+  id: 	FMethod_annotations
+  modified: 	false
+  name: 	annotations
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- fMethod_clazz: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	fMethod
+  id: 	FMethod_clazz
+  modified: 	false
+  name: 	clazz
+  other: 	clazz_methods
+  propertyStyle: 	Bean
+
+- clazz_name: 	org.fulib.classmodel.Attribute
   clazz: 	clazz
   id: 	Clazz_name
   modified: 	false
@@ -153,7 +304,7 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   type: 	String
   typeSignature: 	String
 
-- clazz_propertyStyle: 	Attribute
+- clazz_propertyStyle: 	org.fulib.classmodel.Attribute
   clazz: 	clazz
   description: 	"the default property style for attributes and roles.
 Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
@@ -165,7 +316,7 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   type: 	String
   typeSignature: 	String
 
-- clazz_modified: 	Attribute
+- clazz_modified: 	org.fulib.classmodel.Attribute
   clazz: 	clazz
   description: 	"a boolean indicating whether this attribute was modified. For internal use only."
   descriptionLines: 	"a boolean indicating whether this attribute was modified. For internal use only."
@@ -176,7 +327,7 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   type: 	boolean
   typeSignature: 	boolean
 
-- clazz_imports: 	Attribute
+- clazz_imports: 	org.fulib.classmodel.Attribute
   clazz: 	clazz
   collectionType: 	c3
   description: 	"the set of imported members.
@@ -191,47 +342,7 @@ Elements can have one of the formats {@code org.example.Foo}, {@code static org.
   type: 	String
   typeSignature: 	String
 
-- clazz_model: 	AssocRole
-  aggregation: 	false
-  cardinality: 	1
-  clazz: 	clazz
-  id: 	Clazz_model
-  modified: 	false
-  name: 	model
-  other: 	classModel_classes
-  propertyStyle: 	Bean
-
-- clazz_attributes: 	AssocRole
-  aggregation: 	false
-  cardinality: 	42
-  clazz: 	clazz
-  collectionType: 	c1
-  description: 	"the attributes"
-  descriptionLines: 	"the attributes"
-  id: 	Clazz_attributes
-  modified: 	false
-  name: 	attributes
-  other: 	attribute_clazz
-  propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
-  since: 	1.2
-
-- clazz_roles: 	AssocRole
-  aggregation: 	false
-  cardinality: 	42
-  clazz: 	clazz
-  collectionType: 	c1
-  description: 	"the roles"
-  descriptionLines: 	"the roles"
-  id: 	Clazz_roles
-  modified: 	false
-  name: 	roles
-  other: 	assocRole_clazz
-  propertyStyle: 	Bean
-  roleType: 	"java.util.ArrayList<%s>"
-  since: 	1.2
-
-- clazz_methods: 	AssocRole
+- clazz_methods: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz
@@ -246,7 +357,47 @@ Elements can have one of the formats {@code org.example.Foo}, {@code static org.
   roleType: 	"java.util.ArrayList<%s>"
   since: 	1.2
 
-- clazz_subClasses: 	AssocRole
+- clazz_roles: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	clazz
+  collectionType: 	c1
+  description: 	"the roles"
+  descriptionLines: 	"the roles"
+  id: 	Clazz_roles
+  modified: 	false
+  name: 	roles
+  other: 	assocRole_clazz
+  propertyStyle: 	Bean
+  roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
+
+- clazz_attributes: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	clazz
+  collectionType: 	c1
+  description: 	"the attributes"
+  descriptionLines: 	"the attributes"
+  id: 	Clazz_attributes
+  modified: 	false
+  name: 	attributes
+  other: 	attribute_clazz
+  propertyStyle: 	Bean
+  roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
+
+- clazz_model: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	clazz
+  id: 	Clazz_model
+  modified: 	false
+  name: 	model
+  other: 	classModel_classes
+  propertyStyle: 	Bean
+
+- clazz_subClasses: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	clazz
@@ -261,7 +412,7 @@ Elements can have one of the formats {@code org.example.Foo}, {@code static org.
   roleType: 	"java.util.ArrayList<%s>"
   since: 	1.2
 
-- clazz_superClass: 	AssocRole
+- clazz_superClass: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	clazz
@@ -271,103 +422,7 @@ Elements can have one of the formats {@code org.example.Foo}, {@code static org.
   other: 	clazz_subClasses
   propertyStyle: 	Bean
 
-- attribute_name: 	Attribute
-  clazz: 	attribute
-  id: 	Attribute_name
-  modified: 	false
-  name: 	name
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
-
-- attribute_type: 	Attribute
-  clazz: 	attribute
-  id: 	Attribute_type
-  modified: 	false
-  name: 	type
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
-
-- attribute_collectionType: 	Attribute
-  clazz: 	attribute
-  description: 	"the collection type"
-  descriptionLines: 	"the collection type"
-  id: 	Attribute_collectionType
-  modified: 	false
-  name: 	collectionType
-  propertyStyle: 	Bean
-  since: 	1.2
-  type: 	CollectionType
-  typeSignature: 	CollectionType
-
-- attribute_initialization: 	Attribute
-  clazz: 	attribute
-  id: 	Attribute_initialization
-  modified: 	false
-  name: 	initialization
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
-
-- attribute_propertyStyle: 	Attribute
-  clazz: 	attribute
-  description: 	"the property style.
-Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
-  descriptionLines: 	"the property style." 	"Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
-  id: 	Attribute_propertyStyle
-  modified: 	false
-  name: 	propertyStyle
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
-
-- attribute_modified: 	Attribute
-  clazz: 	attribute
-  description: 	"a boolean indicating whether this attribute was modified. For internal use only."
-  descriptionLines: 	"a boolean indicating whether this attribute was modified. For internal use only."
-  id: 	Attribute_modified
-  modified: 	false
-  name: 	modified
-  propertyStyle: 	Bean
-  type: 	boolean
-  typeSignature: 	boolean
-
-- attribute_description: 	Attribute
-  clazz: 	attribute
-  description: 	"the description of this attribute, used for generating JavaDocs"
-  descriptionLines: 	"the description of this attribute, used for generating JavaDocs"
-  id: 	Attribute_description
-  modified: 	false
-  name: 	description
-  propertyStyle: 	Bean
-  since: 	1.3
-  type: 	String
-  typeSignature: 	String
-
-- attribute_since: 	Attribute
-  clazz: 	attribute
-  description: 	"the version when this attribute was introduced, used for generating JavaDocs"
-  descriptionLines: 	"the version when this attribute was introduced, used for generating JavaDocs"
-  id: 	Attribute_since
-  modified: 	false
-  name: 	since
-  propertyStyle: 	Bean
-  since: 	1.3
-  type: 	String
-  typeSignature: 	String
-
-- attribute_clazz: 	AssocRole
-  aggregation: 	false
-  cardinality: 	1
-  clazz: 	attribute
-  id: 	Attribute_clazz
-  modified: 	false
-  name: 	clazz
-  other: 	clazz_attributes
-  propertyStyle: 	Bean
-
-- assocRole_name: 	Attribute
+- assocRole_name: 	org.fulib.classmodel.Attribute
   clazz: 	assocRole
   id: 	AssocRole_name
   modified: 	false
@@ -376,7 +431,7 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   type: 	String
   typeSignature: 	String
 
-- assocRole_cardinality: 	Attribute
+- assocRole_cardinality: 	org.fulib.classmodel.Attribute
   clazz: 	assocRole
   id: 	AssocRole_cardinality
   modified: 	false
@@ -385,7 +440,7 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   type: 	int
   typeSignature: 	int
 
-- assocRole_collectionType: 	Attribute
+- assocRole_collectionType: 	org.fulib.classmodel.Attribute
   clazz: 	assocRole
   description: 	"the collection type"
   descriptionLines: 	"the collection type"
@@ -397,7 +452,7 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   type: 	CollectionType
   typeSignature: 	CollectionType
 
-- assocRole_aggregation: 	Attribute
+- assocRole_aggregation: 	org.fulib.classmodel.Attribute
   clazz: 	assocRole
   description: 	"a boolean indicating whether this role is an aggregation,
 i.e. whether the target objects are {@code removeYou}'d completely when using {@code without*} methods or
@@ -410,7 +465,7 @@ i.e. whether the target objects are {@code removeYou}'d completely when using {@
   type: 	boolean
   typeSignature: 	boolean
 
-- assocRole_propertyStyle: 	Attribute
+- assocRole_propertyStyle: 	org.fulib.classmodel.Attribute
   clazz: 	assocRole
   description: 	"the property style.
 Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
@@ -422,7 +477,7 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   type: 	String
   typeSignature: 	String
 
-- assocRole_description: 	Attribute
+- assocRole_description: 	org.fulib.classmodel.Attribute
   clazz: 	assocRole
   description: 	"the description of this role, used for generating JavaDocs"
   descriptionLines: 	"the description of this role, used for generating JavaDocs"
@@ -434,7 +489,7 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   type: 	String
   typeSignature: 	String
 
-- assocRole_since: 	Attribute
+- assocRole_since: 	org.fulib.classmodel.Attribute
   clazz: 	assocRole
   description: 	"the version when this role was introduced, used for generating JavaDocs"
   descriptionLines: 	"the version when this role was introduced, used for generating JavaDocs"
@@ -446,7 +501,7 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   type: 	String
   typeSignature: 	String
 
-- assocRole_modified: 	Attribute
+- assocRole_modified: 	org.fulib.classmodel.Attribute
   clazz: 	assocRole
   description: 	"a boolean indicating whether this role was modified. For internal use only."
   descriptionLines: 	"a boolean indicating whether this role was modified. For internal use only."
@@ -457,7 +512,7 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   type: 	boolean
   typeSignature: 	boolean
 
-- assocRole_clazz: 	AssocRole
+- assocRole_clazz: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	assocRole
@@ -467,7 +522,7 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   other: 	clazz_roles
   propertyStyle: 	Bean
 
-- assocRole_other: 	AssocRole
+- assocRole_other: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	assocRole
@@ -477,108 +532,161 @@ Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} ar
   other: 	assocRole_other
   propertyStyle: 	Bean
 
-- fMethod_methodBody: 	Attribute
-  clazz: 	fMethod
-  id: 	FMethod_methodBody
+- attribute_name: 	org.fulib.classmodel.Attribute
+  clazz: 	attribute
+  id: 	Attribute_name
   modified: 	false
-  name: 	methodBody
+  name: 	name
   propertyStyle: 	Bean
   type: 	String
   typeSignature: 	String
 
-- fMethod_modified: 	Attribute
-  clazz: 	fMethod
-  description: 	"a boolean indicating whether this method was modified. For internal use only."
-  descriptionLines: 	"a boolean indicating whether this method was modified. For internal use only."
-  id: 	FMethod_modified
+- attribute_type: 	org.fulib.classmodel.Attribute
+  clazz: 	attribute
+  id: 	Attribute_type
+  modified: 	false
+  name: 	type
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- attribute_collectionType: 	org.fulib.classmodel.Attribute
+  clazz: 	attribute
+  description: 	"the collection type"
+  descriptionLines: 	"the collection type"
+  id: 	Attribute_collectionType
+  modified: 	false
+  name: 	collectionType
+  propertyStyle: 	Bean
+  since: 	1.2
+  type: 	CollectionType
+  typeSignature: 	CollectionType
+
+- attribute_initialization: 	org.fulib.classmodel.Attribute
+  clazz: 	attribute
+  id: 	Attribute_initialization
+  modified: 	false
+  name: 	initialization
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- attribute_propertyStyle: 	org.fulib.classmodel.Attribute
+  clazz: 	attribute
+  description: 	"the property style.
+Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  descriptionLines: 	"the property style." 	"Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  id: 	Attribute_propertyStyle
+  modified: 	false
+  name: 	propertyStyle
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- attribute_modified: 	org.fulib.classmodel.Attribute
+  clazz: 	attribute
+  description: 	"a boolean indicating whether this attribute was modified. For internal use only."
+  descriptionLines: 	"a boolean indicating whether this attribute was modified. For internal use only."
+  id: 	Attribute_modified
   modified: 	false
   name: 	modified
   propertyStyle: 	Bean
   type: 	boolean
   typeSignature: 	boolean
 
-- fMethod_modifiers: 	Attribute
-  clazz: 	fMethod
-  description: 	"the modifiers. Defaults to \"public\""
-  descriptionLines: 	"the modifiers. Defaults to \"public\""
-  id: 	FMethod_modifiers
-  initialization: 	"\"public\""
+- attribute_description: 	org.fulib.classmodel.Attribute
+  clazz: 	attribute
+  description: 	"the description of this attribute, used for generating JavaDocs"
+  descriptionLines: 	"the description of this attribute, used for generating JavaDocs"
+  id: 	Attribute_description
   modified: 	false
-  name: 	modifiers
+  name: 	description
   propertyStyle: 	Bean
-  since: 	1.2
+  since: 	1.3
   type: 	String
   typeSignature: 	String
 
-- fMethod_annotations: 	Attribute
-  clazz: 	fMethod
-  id: 	FMethod_annotations
+- attribute_since: 	org.fulib.classmodel.Attribute
+  clazz: 	attribute
+  description: 	"the version when this attribute was introduced, used for generating JavaDocs"
+  descriptionLines: 	"the version when this attribute was introduced, used for generating JavaDocs"
+  id: 	Attribute_since
   modified: 	false
-  name: 	annotations
+  name: 	since
   propertyStyle: 	Bean
+  since: 	1.3
   type: 	String
   typeSignature: 	String
 
-- fMethod_clazz: 	AssocRole
+- attribute_clazz: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	1
-  clazz: 	fMethod
-  id: 	FMethod_clazz
+  clazz: 	attribute
+  id: 	Attribute_clazz
   modified: 	false
   name: 	clazz
-  other: 	clazz_methods
+  other: 	clazz_attributes
   propertyStyle: 	Bean
 
-- fileFragmentMap_fileName: 	Attribute
-  clazz: 	fileFragmentMap
-  id: 	FileFragmentMap_fileName
+- classModel_packageName: 	org.fulib.classmodel.Attribute
+  clazz: 	classModel
+  id: 	ClassModel_packageName
   modified: 	false
-  name: 	fileName
+  name: 	packageName
   propertyStyle: 	Bean
   type: 	String
   typeSignature: 	String
 
-- fragment_key: 	Attribute
-  clazz: 	fragment
-  id: 	Fragment_key
+- classModel_mainJavaDir: 	org.fulib.classmodel.Attribute
+  clazz: 	classModel
+  id: 	ClassModel_mainJavaDir
   modified: 	false
-  name: 	key
+  name: 	mainJavaDir
   propertyStyle: 	Bean
   type: 	String
   typeSignature: 	String
 
-- fragment_parent: 	AssocRole
-  aggregation: 	false
-  cardinality: 	1
-  clazz: 	fragment
-  id: 	Fragment_parent
+- classModel_defaultCollectionType: 	org.fulib.classmodel.Attribute
+  clazz: 	classModel
+  description: 	"the default collection type for to-n roles"
+  descriptionLines: 	"the default collection type for to-n roles"
+  id: 	ClassModel_defaultCollectionType
   modified: 	false
-  name: 	parent
-  other: 	compoundFragment_children
+  name: 	defaultCollectionType
   propertyStyle: 	Bean
+  since: 	1.2
+  type: 	CollectionType
+  typeSignature: 	CollectionType
 
-- compoundFragment_children: 	AssocRole
+- classModel_defaultPropertyStyle: 	org.fulib.classmodel.Attribute
+  clazz: 	classModel
+  description: 	"the default property style for attributes and roles.
+Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  descriptionLines: 	"the default property style for attributes and roles." 	"Currently, only {@link Type#POJO}, {@link Type#BEAN} and {@link Type#JAVA_FX} are supported."
+  id: 	ClassModel_defaultPropertyStyle
+  initialization: 	"\"POJO\""
+  modified: 	false
+  name: 	defaultPropertyStyle
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- classModel_classes: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	42
-  clazz: 	compoundFragment
+  clazz: 	classModel
   collectionType: 	c1
-  id: 	CompoundFragment_children
+  description: 	"the classes contained in this model"
+  descriptionLines: 	"the classes contained in this model"
+  id: 	ClassModel_classes
   modified: 	false
-  name: 	children
-  other: 	fragment_parent
+  name: 	classes
+  other: 	clazz_model
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
+  since: 	1.2
 
-- codeFragment_text: 	Attribute
-  clazz: 	codeFragment
-  id: 	CodeFragment_text
-  modified: 	false
-  name: 	text
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
-
-- c3: 	CollectionType
+- c3: 	org.fulib.classmodel.CollectionType
   implClass: 	class java.util.LinkedHashSet
   implTemplate: 	"java.util.LinkedHashSet<%s>"
   itf: 	org.fulib.classmodel.CollectionInterface.Set

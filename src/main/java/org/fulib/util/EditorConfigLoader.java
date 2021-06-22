@@ -2,6 +2,7 @@ package org.fulib.util;
 
 import org.ec4j.core.*;
 import org.ec4j.core.model.PropertyType;
+import org.fulib.classmodel.EditorConfigData;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -9,42 +10,32 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-class EditorConfigData
+class EditorConfigLoader
 {
    private static final Charset EDITORCONFIG_FILE_ENCODING = StandardCharsets.UTF_8;
 
-   private static final String DEFAULT_INDENT = "   ";
    private static final PropertyType.IndentStyleValue DEFAULT_INDENT_STYLE = PropertyType.IndentStyleValue.space;
    private static final int DEFAULT_INDENT_SIZE = 3;
    private static final PropertyType.EndOfLineValue DEFAULT_EOL = PropertyType.EndOfLineValue.lf;
-   private static final boolean DEFAULT_EOF_NEWLINE = true;
-   private static final String DEFAULT_CHARSET = "UTF-8";
 
-   String indent = DEFAULT_INDENT;
-   String eol = DEFAULT_EOL.getEndOfLineString();
-   boolean eofNewline = DEFAULT_EOF_NEWLINE;
-   String charset = DEFAULT_CHARSET;
-
-   public EditorConfigData()
-   {
-   }
-
-   public void load(String fileName) throws IOException
+   public EditorConfigData load(String fileName) throws IOException
    {
       final ResourcePropertiesService propService = ResourcePropertiesService
          .builder()
          .cache(Cache.Caches.permanent())
-         .loader(EditorConfigLoader.default_())
+         .loader(org.ec4j.core.EditorConfigLoader.default_())
          .rootDirectory(ResourcePath.ResourcePaths.ofPath(Paths.get("."), EDITORCONFIG_FILE_ENCODING))
          .build();
 
       final ResourceProperties props = propService.queryProperties(
          Resource.Resources.ofPath(Paths.get(fileName), EDITORCONFIG_FILE_ENCODING));
 
-      this.indent = getIndent(props);
-      this.eol = getEOL(props);
-      this.eofNewline = props.getValue(PropertyType.insert_final_newline, DEFAULT_EOF_NEWLINE, true);
-      this.charset = props.getValue(PropertyType.charset, DEFAULT_CHARSET, true);
+      final EditorConfigData data = new EditorConfigData();
+      data.setIndent(getIndent(props));
+      data.setEol(getEOL(props));
+      data.setEofNewline(props.getValue(PropertyType.insert_final_newline, EditorConfigData.DEFAULT_EOF_NEWLINE, true));
+      data.setCharset(props.getValue(PropertyType.charset, EditorConfigData.DEFAULT_CHARSET, true));
+      return data;
    }
 
    private static String getIndent(ResourceProperties props)

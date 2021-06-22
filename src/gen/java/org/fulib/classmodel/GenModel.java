@@ -163,6 +163,27 @@ public class GenModel implements ClassModelDecorator
       String annotations;
    }
 
+   class OutputFile
+   {
+      String fileName;
+      @Link
+      EditorConfigData editorConfig;
+      @Link
+      FileFragmentMap fragmentMap;
+   }
+
+   class EditorConfigData
+   {
+      @InitialValue("DEFAULT_INDENT")
+      String indent;
+      @InitialValue("DEFAULT_EOL")
+      String eol;
+      @InitialValue("DEFAULT_EOF_NEWLINE")
+      boolean eofNewline;
+      @InitialValue("DEFAULT_CHARSET")
+      String charset;
+   }
+
    class FileFragmentMap
    {
       String fileName;
