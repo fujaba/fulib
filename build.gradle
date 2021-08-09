@@ -83,7 +83,6 @@ modifyPom {
 repositories {
    mavenLocal()
    mavenCentral()
-   jcenter()
 }
 
 dependencies {
@@ -114,10 +113,10 @@ dependencies {
    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.1'
 
-   genCompile sourceSets.main.output + sourceSets.main.runtimeClasspath
+   genImplementation sourceSets.main.output + sourceSets.main.runtimeClasspath
 
    // https://mvnrepository.com/artifact/org.fulib/fulibTools
-   genCompile group: 'org.fulib', name: 'fulibTools', version: '1.4.1'
+   genImplementation group: 'org.fulib', name: 'fulibTools', version: '1.4.1'
 }
 
 if (JavaVersion.current().java11Compatible) {
