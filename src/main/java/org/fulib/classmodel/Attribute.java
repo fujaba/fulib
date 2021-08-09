@@ -171,6 +171,7 @@ public class Attribute
     *
     * @since 1.5
     */
+   @Deprecated
    public boolean isBoolean()
    {
       return Type.BOOLEAN.equals(this.type);
