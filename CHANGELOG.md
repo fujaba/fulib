@@ -179,3 +179,26 @@
 ## Bugfixes
 
 * Generated code now includes FMethod type parameters. #90
+
+# fulib v1.6.0
+
+## General
+
+* Updated all dependencies. #100
+
+## New Features
+
++ Added an import method for EMF / `ecore` files to `ClassModelManager`. #91 #92
++ Added a simple plugin architecture. #93 #94
++ Added a way to apply plugins to `ClassModelManager`s. #94
++ Added `ClassModelGenerator`, a model for generators. #94
++ Added `ClassModelDecorator` and `ClassModelDecorators` from fulibScenarios. #94
++ Added [DTO mapping](docs/definitions/10-dtos.md). #97 #99
+
+## Improvements
+
++ Attributes reflectively loaded in one `ClassModelDecorator` can now use types from a `ClassModelDecorator` in a different package. #96 #98
+
+## Bugfixes
+
+* Associations declared with `@Link` can no longer reference types in other packages. #98

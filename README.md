@@ -36,11 +36,11 @@ dependencies {
     // ...
 
     // https://mvnrepository.com/artifact/org.fulib/fulibScenarios
-    fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.6.2'
+    fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.7.0'
 
     // optional, to override the version of fulib used by fulibScenarios:
     // https://mvnrepository.com/artifact/org.fulib/fulib
-    fulibScenarios group: 'org.fulib', name: 'fulib', version: '1.5.1'
+    fulibScenarios group: 'org.fulib', name: 'fulib', version: '1.6.0'
 }
 ```
 
