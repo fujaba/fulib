@@ -119,7 +119,7 @@ class FMethodTest
       });
 
       assertThat(ex.getMessage(), equalTo("syntax errors in declaration:\n" + "void (x, y)\n"
-                                          + "<unknown>:1:5: syntax: extraneous input '(' expecting IDENTIFIER\n"
-                                          + "<unknown>:1:7: syntax: mismatched input ',' expecting {'@', '[', IDENTIFIER}\n"));
+                                          + "<unknown>:1:5: syntax: extraneous input '(' expecting {'sealed', 'permits', 'record', IDENTIFIER}\n"
+                                          + "<unknown>:1:7: syntax: mismatched input ',' expecting {'@', '[', 'sealed', 'permits', 'record', IDENTIFIER}\n"));
    }
 }
