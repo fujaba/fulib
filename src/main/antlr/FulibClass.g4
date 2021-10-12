@@ -19,6 +19,7 @@ classMember: (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
            typeParamList?
            (EXTENDS extendsTypes=annotatedTypeList)?
            (IMPLEMENTS implementsTypes=annotatedTypeList)?
+           (permits annotatedTypeList)?
            classBody;
 
 classBody: LBRACE (enumConstants (SEMI (member | SEMI)*)? | (member | SEMI)*) RBRACE;
@@ -73,7 +74,10 @@ typeArgList: LANGLE (typeArg (COMMA typeArg)*)? RANGLE;
 
 // --------------- Misc. ---------------
 
-modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT | VOLATILE | SYNCHRONIZED | NATIVE | STRICTFP | DEFAULT;
+modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT | VOLATILE | SYNCHRONIZED | NATIVE | STRICTFP | DEFAULT | sealed | nonSealed;
+sealed: IDENTIFIER {$text.equals("sealed")}?;
+nonSealed: IDENTIFIER MINUS IDENTIFIER {$text.equals("non-sealed")}?;
+permits: IDENTIFIER {$text.equals("permits")}?;
 annotation: AT (qualifiedName | importTypeName) balancedParens?;
 
 expr: (balancedBraces
@@ -101,6 +105,7 @@ AT: '@';
 AMP: '&';
 QMARK: '?';
 EQ: '=';
+MINUS: '-';
 ELLIPSIS: '...';
 LPAREN: '(';
 RPAREN: ')';
