@@ -23,6 +23,8 @@ plugins {
    id 'com.palantir.revapi' version '1.4.4'
    // https://plugins.gradle.org/plugin/org.fulib.fulibGradle
    id 'org.fulib.fulibGradle' version '0.5.0'
+   // https://plugins.gradle.org/plugin/io.github.gradle-nexus.publish-plugin
+   id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
 }
 
 if (JavaVersion.current().java11Compatible) {
@@ -40,6 +42,56 @@ description = 'Fulib is a Java-code generating library.'
 repositories {
    mavenLocal()
    mavenCentral()
+}
+
+nexusPublishing {
+   repositories {
+      sonatype()
+   }
+}
+
+publishing {
+   publications {
+      mavenJava(MavenPublication) {
+         from(components.java)
+         pom {
+            name = project.name
+            description = project.description
+            url = 'https://github.com/fujaba/fulib'
+            inceptionYear = '2018'
+
+            scm {
+               url = 'https://github.com/fujaba/fulib'
+            }
+
+            licenses {
+               license {
+                  name = 'MIT License'
+                  url = 'https://www.opensource.org/licenses/mit-license.php'
+               }
+            }
+
+            developers {
+               developer {
+                  id = 'zuendorf'
+                  name = 'Albert Zuendorf'
+               }
+               developer {
+                  id = 'digitalhoax'
+                  name = 'Tobias George'
+               }
+               developer {
+                  id = 'eicke123'
+                  name = 'Christoph Eickhoff'
+               }
+               developer {
+                  id = 'Clashsoft'
+                  name = 'Adrian Kunz'
+               }
+            }
+         }
+      }
+   }
 }
 
 dependencies {
