@@ -325,7 +325,7 @@ public class FileFragmentMap
          if (oldFieldPart.EQ() != null)
          {
             // delete everything between the attribute name and the semicolon
-            final int start = oldFieldPart.IDENTIFIER().getSymbol().getStopIndex() + 1;
+            final int start = oldFieldPart.id().getStop().getStopIndex() + 1;
             final int stop = oldFieldMember.SEMI().getSymbol().getStartIndex();
             builder.delete(start, stop);
          }
