@@ -31,3 +31,18 @@ public sealed class Shape
    com.example.quad.Rectangle,
    com.example.quad.simple.Square
 {}
+
+// --------------- Record Examples ---------------
+// https://docs.oracle.com/en/java/javase/17/language/records.html
+
+record Customer() implements Billable {
+}
+
+record Rectangle(double length, double width) {
+   public Rectangle {
+   }
+}
+
+record Triangle<C extends Coordinate>(C top, C left, C right) {
+}
+

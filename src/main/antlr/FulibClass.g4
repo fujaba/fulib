@@ -15,8 +15,9 @@ packageDecl: PACKAGE qualifiedName SEMI;
 importDecl: IMPORT STATIC? qualifiedName (DOT STAR)? SEMI;
 
 classDecl: (modifier | annotation)* classMember;
-classMember: (CLASS | ENUM | AT? INTERFACE) IDENTIFIER
+classMember: (CLASS | ENUM | AT? INTERFACE | record) IDENTIFIER
            typeParamList?
+           parameterList? // Java 17 records allow this
            (EXTENDS extendsTypes=annotatedTypeList)?
            (IMPLEMENTS implementsTypes=annotatedTypeList)?
            (permits annotatedTypeList)?
@@ -32,7 +33,7 @@ initializer: STATIC? balancedBraces;
 
 // constructor: (modifier | annotation)* constructorMember;
 constructorMember: typeParamList? IDENTIFIER
-             parameterList
+             parameterList? // Java 17 record constructors don't require a parameter list
              (THROWS annotatedTypeList)?
              balancedBraces;
 
@@ -78,6 +79,7 @@ modifier: PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | TRANSIENT |
 sealed: IDENTIFIER {$text.equals("sealed")}?;
 nonSealed: IDENTIFIER MINUS IDENTIFIER {$text.equals("non-sealed")}?;
 permits: IDENTIFIER {$text.equals("permits")}?;
+record: IDENTIFIER {$text.equals("record")}?;
 annotation: AT (qualifiedName | importTypeName) balancedParens?;
 
 expr: (balancedBraces

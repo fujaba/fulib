@@ -298,6 +298,11 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    public static String getParamsSignature(ParameterListContext paramsCtx)
    {
+      if (paramsCtx == null)
+      {
+         return "()";
+      }
+
       final StringBuilder builder = new StringBuilder();
       writeParams(builder, paramsCtx);
       return builder.toString();
@@ -305,6 +310,12 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    private static void writeParams(StringBuilder signature, ParameterListContext paramsCtx)
    {
+      if (paramsCtx == null)
+      {
+         signature.append("()");
+         return;
+      }
+
       signature.append('(');
       for (final ParameterContext paramCtx : paramsCtx.parameter())
       {
