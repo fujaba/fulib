@@ -13,6 +13,7 @@ public class FragmentParserTest
       "AllInOneJava8",
       "IdentifierTest",
       "TryWithResourceDemo",
+      "Java17",
    };
 
    @Test

@@ -169,7 +169,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    public void enterClassDecl(ClassDeclContext ctx)
    {
       final ClassMemberContext classMemberCtx = ctx.classMember();
-      this.className = classMemberCtx.IDENTIFIER().getText();
+      this.className = classMemberCtx.id().getText();
 
       final Token start = this.getStartOrJavaDoc(ctx);
       final Token stop = classMemberCtx.classBody().LBRACE().getSymbol();
@@ -186,7 +186,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       final boolean isStatic = memberCtx.modifier().stream().anyMatch(m -> m.STATIC() != null);
       final String kind = isStatic ? STATIC_ATTRIBUTE : ATTRIBUTE;
 
-      final String firstName = nameParts.get(0).IDENTIFIER().getText();
+      final String firstName = nameParts.get(0).id().getText();
       if (size == 1)
       {
          // only one field, straightforward (pass the whole ctx)
@@ -216,13 +216,13 @@ public class FragmentMapBuilder extends FulibClassBaseListener
       for (int i = 1; i < size - 1; i++)
       {
          final FieldNamePartContext namePart = nameParts.get(i);
-         this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + namePart.IDENTIFIER().getText(),
+         this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + namePart.id().getText(),
                               this.getStartOrJavaDoc(namePart), commas.get(i).getSymbol());
       }
 
       // last part includes semicolon
       final FieldNamePartContext lastPart = nameParts.get(size - 1);
-      this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + lastPart.IDENTIFIER().getText(),
+      this.addCodeFragment(CLASS + '/' + this.className + '/' + kind + '/' + lastPart.id().getText(),
                            this.getStartOrJavaDoc(lastPart), memberCtx.getStop());
    }
 
@@ -249,7 +249,7 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    public void enterMethodMember(MethodMemberContext ctx)
    {
       final MemberContext memberCtx = (MemberContext) ctx.parent;
-      final String methodName = ctx.IDENTIFIER().getText();
+      final String methodName = ctx.id().getText();
 
       final StringBuilder signature = new StringBuilder();
 
@@ -298,6 +298,11 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    public static String getParamsSignature(ParameterListContext paramsCtx)
    {
+      if (paramsCtx == null)
+      {
+         return "()";
+      }
+
       final StringBuilder builder = new StringBuilder();
       writeParams(builder, paramsCtx);
       return builder.toString();
@@ -305,6 +310,12 @@ public class FragmentMapBuilder extends FulibClassBaseListener
 
    private static void writeParams(StringBuilder signature, ParameterListContext paramsCtx)
    {
+      if (paramsCtx == null)
+      {
+         signature.append("()");
+         return;
+      }
+
       signature.append('(');
       for (final ParameterContext paramCtx : paramsCtx.parameter())
       {
@@ -391,14 +402,14 @@ public class FragmentMapBuilder extends FulibClassBaseListener
    private static void writeType(ImportTypeContext importTypeCtx, StringBuilder builder)
    {
       // import(org.example.Foo) ends up as only Foo in the code, so the signature should also use the simple name
-      final List<TerminalNode> identifiers = importTypeCtx.importTypeName().qualifiedName().IDENTIFIER();
+      final List<IdContext> identifiers = importTypeCtx.importTypeName().qualifiedName().id();
       builder.append(identifiers.get(identifiers.size() - 1).getText());
       writeTypeArgs(importTypeCtx.typeArgList(), builder);
    }
 
    private static void writeType(ReferenceTypePartContext referenceTypePartCtx, StringBuilder builder)
    {
-      builder.append(referenceTypePartCtx.IDENTIFIER().getText());
+      builder.append(referenceTypePartCtx.id().getText());
       writeTypeArgs(referenceTypePartCtx.typeArgList(), builder);
    }
 

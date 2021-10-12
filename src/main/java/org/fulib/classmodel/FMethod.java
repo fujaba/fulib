@@ -221,7 +221,7 @@ public class FMethod
 
       this.setTypeParams(typeParams);
       this.setReturnType(returnType);
-      this.setName(memberCtx.IDENTIFIER().getText());
+      this.setName(memberCtx.id().getText());
       this.setParams(memberCtx.parameterList());
 
       this.firePropertyChange("declaration", oldValue, value);
@@ -238,7 +238,7 @@ public class FMethod
 
       for (final FulibClassParser.TypeParamContext typeParamCtx : paramsCtx.typeParam())
       {
-         final String name = typeParamCtx.IDENTIFIER().getText();
+         final String name = typeParamCtx.id().getText();
          final List<FulibClassParser.AnnotatedTypeContext> types = typeParamCtx.annotatedType();
          final String type = types.isEmpty()
             ? null
@@ -252,7 +252,7 @@ public class FMethod
       this.params.clear();
       for (final FulibClassParser.ParameterContext paramCtx : paramsCtx.parameter())
       {
-         final String name = paramCtx.IDENTIFIER().getText();
+         final String name = paramCtx.id().getText();
          String type = inputText(paramCtx.type());
          for (int arrayDimensions = paramCtx.arraySuffix().size(); arrayDimensions > 0; arrayDimensions--)
          {

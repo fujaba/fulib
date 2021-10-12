@@ -20,13 +20,11 @@ plugins {
    id 'antlr'
    id 'maven-publish'
    // https://plugins.gradle.org/plugin/com.palantir.revapi
-   id 'com.palantir.revapi' version '1.4.4'
+   id 'com.palantir.revapi' version '1.5.0'
    // https://plugins.gradle.org/plugin/org.fulib.fulibGradle
    id 'org.fulib.fulibGradle' version '0.5.0'
-   // https://plugins.gradle.org/plugin/com.bmuschko.nexus
-   id 'com.bmuschko.nexus' version '2.3.1'
-   // https://plugins.gradle.org/plugin/io.codearte.nexus-staging
-   id 'io.codearte.nexus-staging' version '0.22.0'
+   // https://plugins.gradle.org/plugin/io.github.gradle-nexus.publish-plugin
+   id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
 }
 
 if (JavaVersion.current().java11Compatible) {
@@ -39,50 +37,61 @@ group = 'org.fulib'
 version = 'git describe --tags'.execute([], rootDir).text[1..-2] // strip v and \n
 description = 'Fulib is a Java-code generating library.'
 
-modifyPom {
-   project {
-      name = project.name
-      description = project.description
-      url = 'https://github.com/fujaba/fulib'
-      inceptionYear = '2018'
-
-      scm {
-         url = 'https://github.com/fujaba/fulib'
-      }
-
-      licenses {
-         license {
-            name = 'MIT License'
-            url = 'http://www.opensource.org/licenses/mit-license.php'
-         }
-      }
-
-      developers {
-         developer {
-            id = 'zuendorf'
-            name = 'Albert Zuendorf'
-         }
-         developer {
-            id = 'digitalhoax'
-            name = 'Tobias George'
-         }
-         developer {
-            id = 'eicke123'
-            name = 'Christoph Eickhoff'
-         }
-         developer {
-            id = 'Clashsoft'
-            name = 'Adrian Kunz'
-         }
-      }
-   }
-}
-
 // --------------- Dependencies ---------------
 
 repositories {
    mavenLocal()
    mavenCentral()
+}
+
+nexusPublishing {
+   repositories {
+      sonatype()
+   }
+}
+
+publishing {
+   publications {
+      mavenJava(MavenPublication) {
+         from(components.java)
+         pom {
+            name = project.name
+            description = project.description
+            url = 'https://github.com/fujaba/fulib'
+            inceptionYear = '2018'
+
+            scm {
+               url = 'https://github.com/fujaba/fulib'
+            }
+
+            licenses {
+               license {
+                  name = 'MIT License'
+                  url = 'https://www.opensource.org/licenses/mit-license.php'
+               }
+            }
+
+            developers {
+               developer {
+                  id = 'zuendorf'
+                  name = 'Albert Zuendorf'
+               }
+               developer {
+                  id = 'digitalhoax'
+                  name = 'Tobias George'
+               }
+               developer {
+                  id = 'eicke123'
+                  name = 'Christoph Eickhoff'
+               }
+               developer {
+                  id = 'Clashsoft'
+                  name = 'Adrian Kunz'
+               }
+            }
+         }
+      }
+   }
 }
 
 dependencies {
@@ -105,13 +114,13 @@ dependencies {
    testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: '2.2'
 
    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.2'
+   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8.1'
 
    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params
-   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.7.2'
+   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.8.1'
 
    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
-   testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.2'
+   testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.1'
 
    genImplementation sourceSets.main.output + sourceSets.main.runtimeClasspath
 
@@ -122,7 +131,7 @@ dependencies {
 if (JavaVersion.current().java11Compatible) {
    javafx {
       modules 'javafx.base'
-      configuration = 'testCompile'
+      configuration = 'testImplementation'
    }
 }
 
@@ -150,7 +159,7 @@ test {
 }
 
 revapi {
-   oldVersion = '1.4.1'
+   oldVersion = '1.6.0'
 }
 
 // --------------- ANTLR ---------------
@@ -167,6 +176,6 @@ generateGrammarSource {
 }
 
 // https://github.com/gradle/gradle/issues/820
-configurations.compile {
+configurations.api {
    extendsFrom = extendsFrom.findAll { it != configurations.antlr }
 }
