@@ -115,16 +115,12 @@ public abstract class AbstractGenerator4ClassFile
 
    private STGroup loadSTGroup(String origFileName)
    {
-      STGroup group;
-      try
+      STGroup group = new STGroupFile(origFileName);
+      if (this.customTemplatesFile != null)
       {
-         group = new STGroupFile(this.customTemplatesFile);
-         STGroup origGroup = new STGroupFile(origFileName);
-         group.importTemplates(origGroup);
-      }
-      catch (Exception e)
-      {
-         group = new STGroupFile(origFileName);
+         final STGroup custom = new STGroupFile(this.customTemplatesFile);
+         custom.importTemplates(group);
+         group = custom;
       }
       group.registerRenderer(String.class, new FulibStringRenderer());
       return group;
