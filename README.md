@@ -12,7 +12,7 @@ Great care is taken that no hand-written code is deleted or changed by code gene
 Fulib is able to read and modify any Java code using language features from up to Java 11,
 even if it contains syntax errors or can otherwise not be compiled.
 
-We have an Online Version at www.fulib.org where you can find docs and tutorials for getting started.
+We have an Online Version at [fulib.org](https://fulib.org) where you can find docs and tutorials for getting started.
 
 ## Installation
 
