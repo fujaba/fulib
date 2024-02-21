@@ -1,20 +1,5 @@
 // --------------- Plugins ---------------
 
-buildscript {
-   // unfortunately we need to use the legacy buildscript block
-   // because the plugins {} DSL does not work when the plugin is compiled with a newer Java version
-   // (in this case, javafx-plugin is compiled against 11, while we want the build to work in 8)
-
-   repositories {
-      maven {
-         url 'https://plugins.gradle.org/m2/'
-      }
-   }
-   dependencies {
-      classpath 'org.openjfx:javafx-plugin:0.1.0'
-   }
-}
-
 plugins {
    id 'java-library'
    id 'antlr'
@@ -25,10 +10,8 @@ plugins {
    id 'org.fulib.fulibGradle' version '0.5.0'
    // https://plugins.gradle.org/plugin/io.github.gradle-nexus.publish-plugin
    id 'io.github.gradle-nexus.publish-plugin' version '1.3.0'
-}
-
-if (JavaVersion.current().java11Compatible) {
-   apply plugin: 'org.openjfx.javafxplugin'
+   // https://plugins.gradle.org/plugin/org.openjfx.javafxplugin
+   id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 // --------------- General Settings ---------------
@@ -128,11 +111,9 @@ dependencies {
    genImplementation group: 'org.fulib', name: 'fulibTools', version: '1.5.1'
 }
 
-if (JavaVersion.current().java11Compatible) {
-   javafx {
-      modules 'javafx.base'
-      configuration = 'testImplementation'
-   }
+javafx {
+   modules 'javafx.base'
+   configuration = 'testImplementation'
 }
 
 // --------------- Misc. Settings ---------------
