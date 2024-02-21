@@ -40,7 +40,7 @@ dependencies {
 
     // optional, to override the version of fulib used by fulibScenarios:
     // https://mvnrepository.com/artifact/org.fulib/fulib
-    fulibScenarios group: 'org.fulib', name: 'fulib', version: '1.6.1'
+    fulibScenarios group: 'org.fulib', name: 'fulib', version: '1.6.2'
 }
 ```
 
