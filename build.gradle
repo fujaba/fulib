@@ -19,6 +19,7 @@ plugins {
    id 'java-library'
    id 'antlr'
    id 'maven-publish'
+   id 'signing'
    // https://plugins.gradle.org/plugin/com.palantir.revapi
    id 'com.palantir.revapi' version '1.7.0'
    // https://plugins.gradle.org/plugin/org.fulib.fulibGradle
@@ -44,55 +45,54 @@ repositories {
    mavenCentral()
 }
 
-nexusPublishing {
-   repositories {
-      sonatype()
-   }
+nexusPublishing.repositories.sonatype()
+
+java {
+   withJavadocJar()
+   withSourcesJar()
 }
 
-publishing {
-   publications {
-      mavenJava(MavenPublication) {
-         from(components.java)
-         pom {
-            name = project.name
-            description = project.description
-            url = 'https://github.com/fujaba/fulib'
-            inceptionYear = '2018'
+publishing.publications.create('mavenJava', MavenPublication) {
+   it.from(components.java)
+   it.pom {
+      name = project.name
+      description = project.description
+      url = 'https://github.com/fujaba/fulib'
+      inceptionYear = '2018'
 
-            scm {
-               url = 'https://github.com/fujaba/fulib'
-            }
+      scm {
+         url = 'https://github.com/fujaba/fulib'
+      }
 
-            licenses {
-               license {
-                  name = 'MIT License'
-                  url = 'https://www.opensource.org/licenses/mit-license.php'
-               }
-            }
+      licenses {
+         license {
+            name = 'MIT License'
+            url = 'https://www.opensource.org/licenses/mit-license.php'
+         }
+      }
 
-            developers {
-               developer {
-                  id = 'zuendorf'
-                  name = 'Albert Zuendorf'
-               }
-               developer {
-                  id = 'digitalhoax'
-                  name = 'Tobias George'
-               }
-               developer {
-                  id = 'eicke123'
-                  name = 'Christoph Eickhoff'
-               }
-               developer {
-                  id = 'Clashsoft'
-                  name = 'Adrian Kunz'
-               }
-            }
+      developers {
+         developer {
+            id = 'zuendorf'
+            name = 'Albert Zuendorf'
+         }
+         developer {
+            id = 'digitalhoax'
+            name = 'Tobias George'
+         }
+         developer {
+            id = 'eicke123'
+            name = 'Christoph Eickhoff'
+         }
+         developer {
+            id = 'Clashsoft'
+            name = 'Adrian Kunz'
          }
       }
    }
 }
+
+signing.sign publishing.publications.mavenJava
 
 dependencies {
    // https://mvnrepository.com/artifact/org.fulib/fulibScenarios
