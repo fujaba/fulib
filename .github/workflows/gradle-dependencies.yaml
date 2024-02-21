@@ -1,0 +1,21 @@
+name: Gradle Dependency Submission
+
+on:
+  push:
+    paths:
+      - '**/*.gradle'
+      - '.github/workflows/gradle-dependencies.yaml'
+
+permissions:
+  contents: write
+
+jobs:
+  dependency-submission:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@v3
