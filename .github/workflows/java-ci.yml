@@ -27,7 +27,7 @@ jobs:
             with:
                distribution: temurin
                java-version: ${{ matrix.java }}
-               java-package: jdk+fx
+               java-package: ${{ matrix.java == 8 && 'jdk+fx' || 'jdk' }}
          -  name: Cache Gradle packages
             uses: actions/cache@v4
             with:
