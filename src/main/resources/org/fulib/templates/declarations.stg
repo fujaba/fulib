@@ -1,5 +1,7 @@
 packageDecl(packageName) ::= <<
+<if(!packageName.empty)>
 package <packageName>;
+<endif>
 >>
 
 importDecl(qualifiedName, static) ::= <<
