@@ -6,9 +6,7 @@ buildscript {
    // (in this case, javafx-plugin is compiled against 11, while we want the build to work in 8)
 
    repositories {
-      maven {
-         url 'https://plugins.gradle.org/m2/'
-      }
+      gradlePluginPortal()
    }
    dependencies {
       classpath 'org.openjfx:javafx-plugin:0.0.9'
@@ -141,6 +139,8 @@ if (JavaVersion.current().java11Compatible) {
 // Workaround for a circular dependency error.
 // Now the task needs to be run manually.
 compileJava.dependsOn = compileJava.dependsOn - 'generateScenarioSource'
+
+sourcesJar.dependsOn ':generateScenarioSource'
 
 generateScenarioSource.enabled = false
 tasks.register('genModel', JavaExec) {
