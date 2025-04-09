@@ -1,4 +1,5 @@
-import org.fulib.FulibTools;
+package org.fulib;
+
 import org.fulib.tools.CodeFragments;
 
 public class UpdateCodeFragments
