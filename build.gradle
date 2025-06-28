@@ -1,19 +1,4 @@
 // --------------- Plugins ---------------
-
-buildscript {
-   // unfortunately we need to use the legacy buildscript block
-   // because the plugins {} DSL does not work when the plugin is compiled with a newer Java version
-   // (in this case, javafx-plugin is compiled against 11, while we want the build to work in 8)
-
-   repositories {
-      gradlePluginPortal()
-   }
-   dependencies {
-      // https://github.com/openjfx/javafx-gradle-plugin/releases/tag/0.1.0
-      classpath 'org.openjfx:javafx-plugin:0.1.0'
-   }
-}
-
 plugins {
    id 'java-library'
    id 'antlr'
@@ -25,10 +10,8 @@ plugins {
    id 'org.fulib.fulibGradle' version '0.5.0'
    // https://plugins.gradle.org/plugin/io.github.gradle-nexus.publish-plugin
    id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
-}
-
-if (JavaVersion.current().java11Compatible) {
-   apply plugin: 'org.openjfx.javafxplugin'
+   // https://plugins.gradle.org/plugin/org.openjfx.javafxplugin
+   id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 // --------------- General Settings ---------------
@@ -36,6 +19,9 @@ if (JavaVersion.current().java11Compatible) {
 group = 'org.fulib'
 version = 'git describe --tags'.execute([], rootDir).text[1..-2] // strip v and \n
 description = 'Fulib is a Java-code generating library.'
+
+sourceCompatibility = 8
+targetCompatibility = 8
 
 // --------------- Dependencies ---------------
 
