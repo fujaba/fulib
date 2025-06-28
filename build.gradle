@@ -84,7 +84,7 @@ dependencies {
    fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.7.0'
 
    // https://mvnrepository.com/artifact/org.antlr/antlr4
-   antlr group: 'org.antlr', name: 'antlr4', version: '4.9.3'
+   antlr group: 'org.antlr', name: 'antlr4', version: '4.13.2'
    // 4.9.3 is the last version supporting Java 8
 
    // https://mvnrepository.com/artifact/org.fulib/fulibYaml
@@ -94,7 +94,7 @@ dependencies {
    implementation group: 'org.antlr', name: 'ST4', version: '4.3.4'
 
    // https://mvnrepository.com/artifact/org.antlr/antlr4-runtime
-   implementation group: 'org.antlr', name: 'antlr4-runtime', version: '4.9.3'
+   implementation group: 'org.antlr', name: 'antlr4-runtime', version: '4.13.2'
 
    // https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library
    testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: '2.2'
