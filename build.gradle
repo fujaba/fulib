@@ -81,7 +81,7 @@ signing.sign publishing.publications.mavenJava
 
 dependencies {
    // https://mvnrepository.com/artifact/org.fulib/fulibScenarios
-   fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.7.0'
+   fulibScenarios group: 'org.fulib', name: 'fulibScenarios', version: '1.7.1'
 
    // https://mvnrepository.com/artifact/org.antlr/antlr4
    antlr group: 'org.antlr', name: 'antlr4', version: '4.13.2'
