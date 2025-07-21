@@ -100,13 +100,13 @@ dependencies {
    testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: '3.0'
 
    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.13.3'
+   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.13.4'
 
    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params
-   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.13.3'
+   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.13.4'
 
    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
-   testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.13.3'
+   testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.13.4'
 
    // https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
    testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.13.3'
