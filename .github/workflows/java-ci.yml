@@ -10,9 +10,9 @@ jobs:
       strategy:
          matrix:
             java:
-               - 11
                - 17
                - 21
+               - 25
             os:
                - ubuntu
                - windows
